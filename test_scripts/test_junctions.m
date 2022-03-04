@@ -5,5 +5,4 @@ vecLD.numContours = LD1.numLines;
 vecLD.contours = LD1.lines;
 
 % vecLD = computeJunctions(vecLD);
-vecLD = computeContourProperties(vecLD);
-vecLD = computeCurvature(vecLD);
+resultLD = computeContourProperties(vecLD);

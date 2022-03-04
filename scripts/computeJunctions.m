@@ -43,6 +43,8 @@ k = AddOrientationForJunctions(thisPic,JunctionSimplify(IntersectionInPicture(th
 types = AddTypeForJunctions(k);
 vecLD.junctions = [];
 allTypes = 'TAYXLS';
+vecLD.junctionsBins = allTypes;
+vecLD.junctionsHistograms = zeros(numel(allTypes),1);
 for j = 1:length(k)
     thisJ.contourIDs = k{j}.RelatedSegments(1,:);
     thisJ.segmentIDs = k{j}.RelatedSegments(2,:);
@@ -50,6 +52,7 @@ for j = 1:length(k)
     thisJ.angle      = min(k{j}.Orientations);
     thisJ.type       = allTypes(types(j));
     vecLD.junctions  = vertcat(vecLD.junctions,thisJ);
+    vecLD.junctionsHistograms(types(j)) = vecLD.junctionsHistograms(types(j)) + 1;
 end
 
 
