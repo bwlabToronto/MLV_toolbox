@@ -19,10 +19,13 @@ if isfield(vecLD,'orientation') && ~forceRecompute
 end
 
 vecLD.orientation = {};
+
 for c = 1:vecLD.numContours
-    thisCon = vecLD.contours{c};
-    numSegments = size(thisCon,1);
-    vecLD.orientation{c} = atan2d((thisCon(:,3)-thisCon(:,1)),(thisCon(:,4)-thisCon(:,2)));
-    isNeg = (vecLD.orientation{c} < 0);
-    vecLD.orientation{c}(isNeg) = vec.orientation{c}(isNeg) + 360; 
+    thisCon = vecLD.contours{c};      
+    V = atan2d((thisCon(:,3)-thisCon(:,1)),(thisCon(:,4)-thisCon(:,2)));    
+    isNeg = (V < 0);
+    V(isNeg) = V(isNeg) + 360; 
+    vecLD.orientation{c} = V;
+end
+
 end
