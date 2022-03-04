@@ -18,7 +18,7 @@
 % -------------------------------------------------------------------------
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
-function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage)
+function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,parameters)
 
 thin_boundary = double(~bwmorph(~binaryImage,'skel',inf));
 
