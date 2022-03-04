@@ -13,10 +13,10 @@ if isfield(vecLD,'length') && ~forceRecompute
     return
 end
 
-vecLD.length = {};
+vecLD.lengths = {};
 vecLD.contourLength = [];
 for c = 1:vecLD.numContours
     thisCon = vecLD.contours{c};
-    vecLD.length{c} = sqrt((thisCon(:,3)-thisCon(:,1)).^2+(thisCon(:,4)-thisCon(:,2)).^2);
+    vecLD.lengths{c} = sqrt((thisCon(:,3)-thisCon(:,1)).^2+(thisCon(:,4)-thisCon(:,2)).^2);
     vecLD.contourLength(c) = sum(vecLD.lengths{c});
 end
