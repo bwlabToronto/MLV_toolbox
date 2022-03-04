@@ -31,9 +31,13 @@ end
 if ~isfield(vecLD,'orientation')
     vecLD = computeOrientation(vecLD);
 end
+if ~isfield(vecLD,'length')
+    vecLD = computeLength(vecLD);
+end
 
 thisPic.lines = vecLD.contours;
 thisPic.numLines = vecLD.numContours;
+thisPic.lineLengths = vecLD.contourLength;
 k = AddOrientationForJunctions(IntersectionInPicture(thisPic),thisPic);
 types = AddTypeForJunctions(k);
 vecLD.junctions = []
