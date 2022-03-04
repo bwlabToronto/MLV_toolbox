@@ -4,7 +4,7 @@ function vecLD = computeLength(vecLD)
 % Input:
 %   vecLD - vectorized line drawing data structure
 % Output:
-%   vecLD- a vector LD of struts with orientation information added
+%   vecLD- a vector LD of struts with length information added
 
 if nargin < 2
     forceRecompute = 0;

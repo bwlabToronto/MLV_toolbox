@@ -8,7 +8,6 @@ function vecLD = computeJunctions(vecLD)
 %   vecLD - a vector LD of struts with junction information added
 %
 % Each junction consists of the following information:
-%   contourIDs
+%   contourID_1
 %   segmentID_1
-%   contourID_2
-%
+%   contourID_
