@@ -34,12 +34,12 @@ sphere_points = sample_sphere_2D(number_of_samples);
 %fprintf('Average outward flux is being computed ...\n');
 fluxImage = compute_aof(distImage,IDX,sphere_points,epsilon);
 skeletonImage = fluxImage;
-skeletonImage(fluxImage < 15) = 0;
-skeletonImage(fluxImage > 15) = 1;
+skeletonImage(fluxImage < parameters.threshold*number_of_samples) = 0;
+skeletonImage(fluxImage > parameters.threshold*number_of_samples) = 1;
 skeletonImage = bwmorph(skeletonImage,'skel',inf);
 
 % refine skeleton
-default_threshold_area_removal_size = 20;
+default_threshold_area_removal_size = parameters.area_threshold;
 skeletonImage= bwareaopen(skeletonImage,default_threshold_area_removal_size);
 
 
