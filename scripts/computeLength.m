@@ -1,4 +1,4 @@
-function vecLD = computeLength(vecLD)
+function vecLD = computeLength(vecLD,forceRecompute)
 % vecLD = computeLength(vecLD,whichProps)
 %         computes length for the contours in the vectorized line drawing vecLD
 % Input:
