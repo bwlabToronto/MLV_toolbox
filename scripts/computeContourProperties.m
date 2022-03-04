@@ -39,6 +39,7 @@ origname
 numContours
 contours
 length
+contourLength
 orientation
 curvture
 junctions
