@@ -14,11 +14,11 @@ function vecLD = computeOrientation(vecLD,forceRecompute)
 if nargin < 2
     forceRecompute = 0;
 end
-if isfield(vecLD,'orientation') && ~forceRecompute
+if isfield(vecLD,'orientations') && ~forceRecompute
     return
 end
 
-vecLD.orientation = {};
+vecLD.orientations = {};
 
 for c = 1:vecLD.numContours
     thisCon = vecLD.contours{c};  
@@ -26,7 +26,7 @@ for c = 1:vecLD.numContours
     isNeg = (V < 0);
     V(isNeg) = V(isNeg) + 360; 
     thisCon(:,5) = V;
-    vecLD.orientation{c} = V;
+    vecLD.orientations{c} = V;
     vecLD.contours{c} = thisCon;
 end
 

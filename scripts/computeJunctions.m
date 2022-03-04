@@ -28,19 +28,20 @@ if isfield(vecLD,'junctions') && ~forceRecompute
     return
 end
 
-if ~isfield(vecLD,'orientation')
+if ~isfield(vecLD,'orientations')
     vecLD = computeOrientation(vecLD);
 end
-if ~isfield(vecLD,'length')
+if ~isfield(vecLD,'lengths')
     vecLD = computeLength(vecLD);
 end
 
 thisPic.lines = vecLD.contours;
 thisPic.numLines = vecLD.numContours;
-thisPic.lineLengths = vecLD.contourLength;
-k = AddOrientationForJunctions(IntersectionInPicture(thisPic),thisPic);
+thisPic.lineLengths = vecLD.contourLengths;
+k = AddOrientationForJunctions(thisPic,JunctionSimplify(IntersectionInPicture(thisPic)));
+
 types = AddTypeForJunctions(k);
-vecLD.junctions = []
+vecLD.junctions = [];
 allTypes = 'TAYXLS';
 for j = 1:length(k)
     thisJ.contourIDs = k{j}.RelatedSegments(1,:);
@@ -48,7 +49,7 @@ for j = 1:length(k)
     thisJ.position   = k{j}.Position;
     thisJ.angle      = min(k{j}.Orientations);
     thisJ.type       = allTypes(types(j));
-    vecLD.junctions(j) = thisJ;
+    vecLD.junctions  = vertcat(vecLD.junctions,thisJ);
 end
 
 

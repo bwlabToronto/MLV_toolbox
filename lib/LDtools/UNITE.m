@@ -1,4 +1,4 @@
-edit function USeg=UNITE(Seg1,Seg2)
+function USeg=UNITE(Seg1,Seg2)
 %Given two related segment information, this function will unite them into
 %one.
 %

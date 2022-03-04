@@ -34,12 +34,12 @@ for prop = 1:length(whichProps)
     end
 end
 
-LD structure:
-origname
-numContours
-contours
-length
-contourLength
-orientation
-curvture
-junctions
+% LD structure:
+% origname
+% numContours
+% contours
+% lengths
+% contourLengths
+% orientations
+% curvtures
+% junctions
