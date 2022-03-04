@@ -22,7 +22,6 @@ vecLD.orientation = {};
 
 for c = 1:vecLD.numContours
     thisCon = vecLD.contours{c};  
-    thisCon = thisCon(:,1:4);
     V = atan2d((thisCon(:,4)-thisCon(:,2)),(thisCon(:,3)-thisCon(:,1)));    
     isNeg = (V < 0);
     V(isNeg) = V(isNeg) + 360; 
