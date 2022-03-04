@@ -14,7 +14,7 @@ function vecLD = computeOrientation(vecLD,forceRecompute)
 if nargin < 2
     forceRecompute = 0;
 end
-if isfield(vecLD,'orientation') & ~forceRecompute
+if isfield(vecLD,'orientation') && ~forceRecompute
     return
 end
 
