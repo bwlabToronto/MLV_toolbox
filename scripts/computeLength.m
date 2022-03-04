@@ -9,7 +9,13 @@ function vecLD = computeLength(vecLD)
 % Output:
 %   vecLD- a vector LD of struts with orientation information added
 
-vecLD.orientation = {};
+if nargin < 2
+    forceRecompute = 0;
+end
+if isfield(vecLD,'orientation') & ~forceRecompute
+    return
+end
+
 for c = 1:vecLD.numContours
     thisCon = vecLD.contours{c};
     numSegments = size(thisCon,1);
