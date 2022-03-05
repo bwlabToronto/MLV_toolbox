@@ -24,7 +24,7 @@
 <div class="box"><strong>vecLD = computeLength(vecLD,whichProps)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function vecLD = computeLength(vecLD,forceRecompute) </strong></div>
+<div class="box"><strong>function vecLD = computeLength(vecLD) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> vecLD = computeLength(vecLD,whichProps)
@@ -47,7 +47,7 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = computeLength(vecLD,forceRecompute)</a>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = computeLength(vecLD)</a>
 0002 <span class="comment">% vecLD = computeLength(vecLD,whichProps)</span>
 0003 <span class="comment">%         computes length for the contours in the vectorized line drawing vecLD</span>
 0004 <span class="comment">% Input:</span>
@@ -55,20 +55,13 @@ This function is called by:
 0006 <span class="comment">% Output:</span>
 0007 <span class="comment">%   vecLD- a vector LD of struts with length information added</span>
 0008 
-0009 <span class="keyword">if</span> nargin &lt; 2
-0010     forceRecompute = 0;
-0011 <span class="keyword">end</span>
-0012 <span class="keyword">if</span> isfield(vecLD,<span class="string">'lengths'</span>) &amp;&amp; ~forceRecompute
-0013     <span class="keyword">return</span>
-0014 <span class="keyword">end</span>
-0015 
-0016 vecLD.lengths = {};
-0017 vecLD.contourLengths = [];
-0018 <span class="keyword">for</span> c = 1:vecLD.numContours
-0019     thisCon = vecLD.contours{c};
-0020     vecLD.lengths{c} = sqrt((thisCon(:,3)-thisCon(:,1)).^2+(thisCon(:,4)-thisCon(:,2)).^2);
-0021     vecLD.contourLengths(c) = sum(vecLD.lengths{c});
-0022 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Fri 04-Mar-2022 20:27:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0009 vecLD.lengths = {};
+0010 vecLD.contourLengths = [];
+0011 <span class="keyword">for</span> c = 1:vecLD.numContours
+0012     thisCon = vecLD.contours{c};
+0013     vecLD.lengths{c} = sqrt((thisCon(:,3)-thisCon(:,1)).^2+(thisCon(:,4)-thisCon(:,2)).^2);
+0014     vecLD.contourLengths(c) = sum(vecLD.lengths{c});
+0015 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 04-Mar-2022 22:35:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

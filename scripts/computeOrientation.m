@@ -1,4 +1,4 @@
-function vecLD = computeOrientation(vecLD,forceRecompute)
+function vecLD = computeOrientation(vecLD)
 % vecLD = computeOrientation(vecLD,whichProps)
 %         computes orientations for the contours in the vectorized line
 %         drawing vecLD
@@ -6,17 +6,8 @@ function vecLD = computeOrientation(vecLD,forceRecompute)
 %         To obtain orientaiton from 0 to 180, use mod(ori,180).
 % Input:
 %   vecLD - vectorized line drawing data structure
-%   forceRecompute - set to 1 if you want to recompute orietnations
-%   (default: 0)
 % Output:
 %   vecLD- a vector LD of struts with orientation information added
-
-if nargin < 2
-    forceRecompute = 0;
-end
-if isfield(vecLD,'orientations') && ~forceRecompute
-    return
-end
 
 vecLD.orientations = {};
 

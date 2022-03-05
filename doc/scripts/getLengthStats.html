@@ -48,7 +48,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD,forceRecompute)">computeLength</a>	vecLD = computeLength(vecLD,whichProps)</li></ul>
+<li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>	vecLD = computeLength(vecLD,whichProps)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="getContourPropertiesStats.html" class="code" title="function [histograms,bins,vecLD,whichStats] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[histograms,bins] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
@@ -76,7 +76,7 @@ This function is called by:
 0017 <span class="comment">%   vecLD: the line drawing strcuture with length histogram added</span>
 0018 
 0019 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'lengths'</span>)
-0020     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD,forceRecompute)">computeLength</a>(vecLD);
+0020     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
 0021 <span class="keyword">end</span>
 0022 
 0023 <span class="keyword">if</span> nargin &lt; 4
@@ -108,6 +108,6 @@ This function is called by:
 0049 
 0050 vecLD.lengthsHistogram = lengthsHistogram;
 0051 vecLD.lengthsHistogramBins = bins;</pre></div>
-<hr><address>Generated on Fri 04-Mar-2022 20:27:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 04-Mar-2022 22:35:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

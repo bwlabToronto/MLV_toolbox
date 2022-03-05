@@ -1,17 +1,10 @@
-function vecLD = computeLength(vecLD,forceRecompute)
+function vecLD = computeLength(vecLD)
 % vecLD = computeLength(vecLD,whichProps)
 %         computes length for the contours in the vectorized line drawing vecLD
 % Input:
 %   vecLD - vectorized line drawing data structure
 % Output:
 %   vecLD- a vector LD of struts with length information added
-
-if nargin < 2
-    forceRecompute = 0;
-end
-if isfield(vecLD,'lengths') && ~forceRecompute
-    return
-end
 
 vecLD.lengths = {};
 vecLD.contourLengths = [];
