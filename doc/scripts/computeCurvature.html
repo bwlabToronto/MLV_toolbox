@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeCurvature</title>
+  <meta name="keywords" content="computeCurvature">
+  <meta name="description" content="vecLD = computeCurvature(vecLD,whichProps)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">scripts</a> &gt; computeCurvature.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for scripts&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>computeCurvature
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>vecLD = computeCurvature(vecLD,whichProps)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function vecLD = computeCurvature(vecLD) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> vecLD = computeCurvature(vecLD,whichProps)
+         computes curvature for the contours in the vectorized line
+         drawing vecLD
+ Input:
+   vecLD - vectorized line drawing data structure
+ Output:
+   vecLD- a vector LD of struts with curvature information added</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD,forceRecompute)">computeLength</a>	vecLD = computeLength(vecLD,whichProps)</li><li><a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD,forceRecompute)">computeOrientation</a>	vecLD = computeOrientation(vecLD,whichProps)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="getCurvatureStats.html" class="code" title="function [curvatureHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)">getCurvatureStats</a>	[lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = computeCurvature(vecLD)</a>
+0002 <span class="comment">% vecLD = computeCurvature(vecLD,whichProps)</span>
+0003 <span class="comment">%         computes curvature for the contours in the vectorized line</span>
+0004 <span class="comment">%         drawing vecLD</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   vecLD - vectorized line drawing data structure</span>
+0007 <span class="comment">% Output:</span>
+0008 <span class="comment">%   vecLD- a vector LD of struts with curvature information added</span>
+0009 
+0010 
+0011 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'orientations'</span>)
+0012     vecLD = <a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD,forceRecompute)">computeOrientation</a>(vecLD);
+0013 <span class="keyword">end</span>
+0014 
+0015 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'lengths'</span>)
+0016     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD,forceRecompute)">computeLength</a>(vecLD);
+0017 <span class="keyword">end</span>
+0018 
+0019 vecLD.curvatures = {};
+0020 <span class="keyword">for</span> c = 1:vecLD.numContours
+0021     thisCon = vecLD.contours{c};
+0022     numSegments = size(thisCon,1);
+0023     vecLD.curvatures{c} = [];
+0024     <span class="keyword">if</span> numSegments == 1
+0025         vecLD.curvatures{c} = 0; <span class="comment">% special case of only one straight segment</span>
+0026         <span class="keyword">continue</span>;
+0027     <span class="keyword">end</span>
+0028     <span class="keyword">for</span> s = 1:numSegments
+0029         <span class="keyword">if</span> s == numSegments
+0030             s2 = s-1; <span class="comment">% for the last segment, we refer to the previous segment</span>
+0031         <span class="keyword">else</span>
+0032             s2 = s+1; <span class="comment">% for all other semgents, we refer to the next segment</span>
+0033         <span class="keyword">end</span>
+0034         angleDiff = vecLD.orientations{c}(s) - vecLD.orientations{c}(s2);
+0035         <span class="keyword">if</span> angleDiff &gt; 180
+0036             angleDiff = 360 - angleDiff; <span class="comment">% for angles &gt; 180 we use the opposite angle</span>
+0037         <span class="keyword">end</span>
+0038         vecLD.curvatures{c}(s) = angleDiff / vecLD.lengths{c}(s);
+0039     <span class="keyword">end</span>
+0040 <span class="keyword">end</span>
+0041 
+0042</pre></div>
+<hr><address>Generated on Fri 04-Mar-2022 20:27:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

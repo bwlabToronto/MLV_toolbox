@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getLengthStats</title>
+  <meta name="keywords" content="getLengthStats">
+  <meta name="description" content="[lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">scripts</a> &gt; getLengthStats.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for scripts&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>getLengthStats
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [lengthsHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)
+   computes the length histogram with logarithmiccally scaled bins, weighted by segment length
+
+ Input: 
+   vecLD - vectorized line drawing
+   numBins - number of histogram bins; default: 8
+   minLength - the minimum length: used as the lower bound of the histogram
+               (default: minimum across the contours of this image)
+   maxLength - the maximum length: used as the upper bound of the histogram
+               (default: maximum across the contours of this image)
+
+ Output:
+   lengthHistogram: the histogram of length of line segments, 
+                    weighted by their lengths
+   bins: a vector with the bin centers
+   vecLD: the line drawing strcuture with length histogram added</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD,forceRecompute)">computeLength</a>	vecLD = computeLength(vecLD,whichProps)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getContourPropertiesStats.html" class="code" title="function [histograms,bins,vecLD,whichStats] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[histograms,bins] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [lengthsHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)</a>
+0002 <span class="comment">% [lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)</span>
+0003 <span class="comment">%   computes the length histogram with logarithmiccally scaled bins, weighted by segment length</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   vecLD - vectorized line drawing</span>
+0007 <span class="comment">%   numBins - number of histogram bins; default: 8</span>
+0008 <span class="comment">%   minLength - the minimum length: used as the lower bound of the histogram</span>
+0009 <span class="comment">%               (default: minimum across the contours of this image)</span>
+0010 <span class="comment">%   maxLength - the maximum length: used as the upper bound of the histogram</span>
+0011 <span class="comment">%               (default: maximum across the contours of this image)</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Output:</span>
+0014 <span class="comment">%   lengthHistogram: the histogram of length of line segments,</span>
+0015 <span class="comment">%                    weighted by their lengths</span>
+0016 <span class="comment">%   bins: a vector with the bin centers</span>
+0017 <span class="comment">%   vecLD: the line drawing strcuture with length histogram added</span>
+0018 
+0019 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'lengths'</span>)
+0020     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD,forceRecompute)">computeLength</a>(vecLD);
+0021 <span class="keyword">end</span>
+0022 
+0023 <span class="keyword">if</span> nargin &lt; 4
+0024     maxLength = max(vecLD.contourLengths);
+0025 <span class="keyword">end</span>
+0026 <span class="keyword">if</span> nargin &lt; 3
+0027     minLength = min(vecLD.contourLengths);
+0028 <span class="keyword">end</span>
+0029 <span class="keyword">if</span> nargin &lt; 2
+0030     numBins = 8;
+0031 <span class="keyword">end</span>
+0032 
+0033 logMin = log10(minLength + 1);
+0034 logMax = log10(maxLength + 1);
+0035 binWidth = (logMax-logMin) / numBins; <span class="comment">%the range of the original length is from max to min length value</span>
+0036 binBoundary = [logMin : binWidth : logMax];
+0037 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
+0038 logLengths = log10(vecLD.contourLengths + 1);
+0039 
+0040 lengthsHistogram = zeros(1,numBins);
+0041 <span class="keyword">for</span> c = 1:vecLD.numContours
+0042     <span class="keyword">for</span> b = 1:numBins
+0043         <span class="keyword">if</span> logLengths(c) &lt; binBoundary(b+1) || (b == numBins)
+0044             lengthsHistogram(b) = lengthsHistogram(b) + vecLD.contourLengths(c);
+0045             <span class="keyword">break</span>
+0046         <span class="keyword">end</span>
+0047     <span class="keyword">end</span>
+0048 <span class="keyword">end</span>
+0049 
+0050 vecLD.lengthsHistogram = lengthsHistogram;
+0051 vecLD.lengthsHistogramBins = bins;</pre></div>
+<hr><address>Generated on Fri 04-Mar-2022 20:27:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
