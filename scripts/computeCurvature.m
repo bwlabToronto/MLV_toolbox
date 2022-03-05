@@ -22,12 +22,12 @@ for c = 1:vecLD.numContours
     numSegments = size(thisCon,1);
     vecLD.curvatures{c} = [];
     if numSegments == 1
-        vecLD.curvatures{c}(s) = 0; % special case of only one straight segment
-        break;
+        vecLD.curvatures{c} = 0; % special case of only one straight segment
+        continue;
     end
     for s = 1:numSegments
         if s == numSegments
-            s2 = s-1; % for the last segmetn, we refer to the previous segment
+            s2 = s-1; % for the last segment, we refer to the previous segment
         else
             s2 = s+1; % for all other semgents, we refer to the next segment
         end

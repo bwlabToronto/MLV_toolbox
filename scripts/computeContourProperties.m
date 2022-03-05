@@ -6,6 +6,7 @@ function vecLD = computeContourProperties(vecLD,whichProps)
 %   whichProps - string or cell array of strings that defines which
 %                propertiest to compute. Options are:
 %                'curvature','orientation','length','junctions'
+%                default: {'orientation','length','curvature','junctions'}
 % Output:
 %   vecLD - a vector LD of struts with the requested contour properties added
 

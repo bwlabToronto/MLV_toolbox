@@ -30,17 +30,17 @@ if nargin < 2
     numBins = 8;
 end
 
-logMin = log10(minLength+1);
-logMax = log10(maxLength+1);
+logMin = log10(minLength + 1);
+logMax = log10(maxLength + 1);
 binWidth = (logMax-logMin) / numBins; %the range of the original length is from max to min length value
 binBoundary = [logMin : binWidth : logMax];
 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
 logLengths = log10(vecLD.contourLengths + 1);
 
-lengthsHistogram = zeros(numBins,1);
+lengthsHistogram = zeros(1,numBins);
 for c = 1:vecLD.numContours
     for b = 1:numBins
-        if logLengths(c) < binBoundary(b+1)
+        if logLengths(c) < binBoundary(b+1) || (b == numBins)
             lengthsHistogram(b) = lengthsHistogram(b) + vecLD.contourLengths(c);
             break
         end
