@@ -31,7 +31,7 @@ for c = 1:vecLD.numContours
         else
             s2 = s+1; % for all other semgents, we refer to the next segment
         end
-        angleDiff = vecLD.orientations{c}(s) - vecLD.orientations{c}(s2);
+        angleDiff = abs(vecLD.orientations{c}(s) - vecLD.orientations{c}(s2));
         if angleDiff > 180
             angleDiff = 360 - angleDiff; % for angles > 180 we use the opposite angle
         end

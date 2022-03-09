@@ -1,4 +1,4 @@
-function [histograms,bins,vecLD,whichStats] = getContourPropertiesStats(vecLD, whichStats)
+function [vecLD,histograms,bins,whichStats] = getContourPropertiesStats(vecLD, whichStats)
 % [histograms,bins] = getContourPropertiesStats(vecLD, whichStats)
 %         computes histograms for the contour properties for the vectorized line drawing LD.
 % Input:
@@ -8,11 +8,11 @@ function [histograms,bins,vecLD,whichStats] = getContourPropertiesStats(vecLD, w
 %                'curvature','orientation','length','junctions'
 %                default: {'orientation','length','curvature','junctions'}
 % Output:
+%   vecLD -      vector line drawing with the individual contour stats added
 %   histograms - cell array of histograms for the features 
 %                in the same order as in whichstats
 %   bins -       cell array of bin centers for those histograms
 %                in the same order as in whichstats
-%   vecLD -      vector line drawing with the individual contour stats added
 %   whichStats - the order of stats in the histgrams and bins
 
 if nargin < 2
@@ -29,11 +29,11 @@ for s = 1:length(whichStats)
     thisStat = lower(whichStats{s});
     switch thisStat
         case 'curvature'
-            [histograms{s},bins{s},vecLD] = getCurvatureStats(vecLD);
+            [vecLD,histograms{s},bins{s}] = getCurvatureStats(vecLD);
         case 'orientation'
-            [histograms{s},bins{s},vecLD] = getOrientationStats(vecLD);
+            [vecLD,histograms{s},bins{s}] = getOrientationStats(vecLD);
         case 'length'
-            [histograms{s},bins{s},vecLD] = getLengthStats(vecLD);
+            [vecLD,histograms{s},bins{s}] = getLengthStats(vecLD);
         case 'junctions'
             vecLD = computeJunctions(vecLD);
             histograms{s} = vecLD.junctionsHistograms;

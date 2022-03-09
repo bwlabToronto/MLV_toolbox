@@ -1,4 +1,4 @@
-function [lengthsHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)
+function [vecLD,lengthsHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
 % [lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)
 %   computes the length histogram with logarithmiccally scaled bins, weighted by segment length
 %
@@ -11,10 +11,10 @@ function [lengthsHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,
 %               (default: maximum across the contours of this image)
 %
 % Output:
+%   vecLD: the line drawing strcuture with length histogram added
 %   lengthHistogram: the histogram of length of line segments, 
 %                    weighted by their lengths
 %   bins: a vector with the bin centers
-%   vecLD: the line drawing strcuture with length histogram added
 
 if ~isfield(vecLD, 'lengths')
     vecLD = computeLength(vecLD);
