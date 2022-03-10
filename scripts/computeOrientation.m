@@ -13,11 +13,7 @@ vecLD.orientations = {};
 
 for c = 1:vecLD.numContours
     thisCon = vecLD.contours{c};  
-    V = atan2d((thisCon(:,4)-thisCon(:,2)),(thisCon(:,3)-thisCon(:,1)));    
-    isNeg = (V < 0);
-    V(isNeg) = V(isNeg) + 360; 
-    thisCon(:,5) = V;
-    vecLD.orientations{c} = V;
+    vecLD.orientations{c} = mod(atan2d((thisCon(:,4)-thisCon(:,2)),(thisCon(:,3)-thisCon(:,1))),360);    
     vecLD.contours{c} = thisCon;
 end
 
