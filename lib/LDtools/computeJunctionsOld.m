@@ -1,4 +1,4 @@
-function vecLD = computeJunctions(vecLD)
+function vecLD = computeJunctionsOld(vecLD)
 % vecLD = computeJunctions(vecLD)
 %         computes all junctions between contours in the vectorized line drawing vecLD
 %
@@ -35,29 +35,23 @@ if ~isfield(vecLD,'lengths')
     vecLD = computeLength(vecLD);
 end
 
-% thisPic.lines = vecLD.contours;
-% thisPic.numLines = vecLD.numContours;
-% thisPic.lineLengths = vecLD.contourLengths;
-% k = AddOrientationForJunctions(thisPic,JunctionSimplify(IntersectionInPicture(thisPic)));
-% 
-% types = AddTypeForJunctions(k);
-% vecLD.junctions = [];
-% allTypes = 'TAYXLS';
-% vecLD.junctionsBins = allTypes;
-% vecLD.junctionsHistograms = zeros(numel(allTypes),1);
-% for j = 1:length(k)
-%     thisJ.contourIDs = k{j}.RelatedSegments(1,:);
-%     thisJ.segmentIDs = k{j}.RelatedSegments(2,:);
-%     thisJ.position   = k{j}.Position;
-%     thisJ.angle      = min(k{j}.Orientations);
-%     thisJ.type       = allTypes(types(j));
-%     vecLD.junctions  = vertcat(vecLD.junctions,thisJ);
-%     vecLD.junctionsHistograms(types(j)) = vecLD.junctionsHistograms(types(j)) + 1;
-% end
+thisPic.lines = vecLD.contours;
+thisPic.numLines = vecLD.numContours;
+thisPic.lineLengths = vecLD.contourLengths;
+k = AddOrientationForJunctions(thisPic,JunctionSimplify(IntersectionInPicture(thisPic)));
 
-jcts = detectJunctions(vecLD);
-jcts = cleanupJunctions(jcts);
-jcts = computeJunctionAnglesTypes(jcts,vecLD);
-vecLD.junctions = jcts;
-
+types = AddTypeForJunctions(k);
+vecLD.junctions = [];
+allTypes = 'TAYXLS';
+vecLD.junctionsBins = allTypes;
+vecLD.junctionsHistograms = zeros(numel(allTypes),1);
+for j = 1:length(k)
+    thisJ.contourIDs = k{j}.RelatedSegments(1,:);
+    thisJ.segmentIDs = k{j}.RelatedSegments(2,:);
+    thisJ.position   = k{j}.Position;
+    thisJ.angle      = min(k{j}.Orientations);
+    thisJ.type       = allTypes(types(j));
+    vecLD.junctions  = vertcat(vecLD.junctions,thisJ);
+    vecLD.junctionsHistograms(types(j)) = vecLD.junctionsHistograms(types(j)) + 1;
+end
 

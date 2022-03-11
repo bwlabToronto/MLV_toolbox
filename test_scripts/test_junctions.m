@@ -1,11 +1,20 @@
-LD1 = LD(1);
+load('cities_vecLD.mat');
 
-clear vecLD
-vecLD.numContours = LD1.numLines;
-vecLD.contours = LD1.lines;
+%v1 = computeJunctionsOld(vecLD(1));
 
-% vecLD = computeJunctions(vecLD);
-%resultLD = computeContourProperties(vecLD);
+v2 = computeJunctions(vecLD(1));
 
-[histograms,bins,vecLD,whichStats] = getContourPropertiesStats(vecLD);
+% figure;
+% drawLinedrawing(v1);
+% hold on;
+% drawJunctions(v1.junctions);
+% title('Old');
+
+figure;
+drawLinedrawing(v2);
+hold on;
+drawJunctions(v2.junctions);
+title('New');
+
+%[histograms,bins,vecLD,whichStats] = getContourPropertiesStats(vecLD);
 
