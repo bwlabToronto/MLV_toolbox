@@ -14,6 +14,5 @@ for c = 1:vecLD.numContours
 end
 
 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
-axis ij;
-axis equal;
+axis ij equal;
 
