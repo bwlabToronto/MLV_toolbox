@@ -9,7 +9,7 @@ for c = 1:length(categories)
     for d = 1:numel(LD)
         fprintf(' %d',d);
         clear v;
-        v.originalPhoto = LD(d).origName;
+        v.originalImage = LD(d).origName;
         v.imsize = [800,600];
         v.lineMethod = 'artist';
         v.numContours = LD(d).numLines;
