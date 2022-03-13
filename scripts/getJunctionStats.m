@@ -16,7 +16,7 @@ if nargin < 2
 end
 
 if ~isfield(vecLD,'junctions')
-    vecLD = coputeJunctions(vecLD);
+    vecLD = computeJunctions(vecLD);
 end
 
 % junction types
@@ -27,13 +27,13 @@ typeHist = zeros(1,numel(types));
 for t = 1:numel(types)
     typeHist(t) = sum(strcmp(types{t},junctionTypes));
 end
-vecLD.junctionTypeHist = typeHist;
-vecLD.junctionTypeHistBins = types;
+vecLD.junctionTypeHistogram = typeHist;
+vecLD.junctionTypeHistogramBins = types;
 
 % junctionAngles
 angles = [vecLD.junctions(:).minAngle];
 binStep = 180/numAngleBins;
 angleBins = [binStep/2:binStep:180-binStep/2];
 angleHist = hist(angles,angleBins);
-vecLD.junctionAngleHist = angleHist;
-vecLD.junctionAngleHistBins = angleBins;
+vecLD.junctionAngleHistogram = angleHist;
+vecLD.junctionAngleHistogramBins = angleBins;

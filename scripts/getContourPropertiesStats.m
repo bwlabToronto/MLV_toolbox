@@ -1,4 +1,4 @@
-function [vecLD,histograms,bins,whichStats] = getContourPropertiesStats(vecLD, whichStats)
+function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)
 % [histograms,bins] = getContourPropertiesStats(vecLD, whichStats)
 %         computes histograms for the contour properties for the vectorized line drawing LD.
 % Input:
@@ -25,19 +25,28 @@ end
 
 histograms = {};
 bins = {};
+statsShortNames = {};
 for s = 1:length(whichStats)
     thisStat = lower(whichStats{s});
     switch thisStat
         case 'curvature'
-            [vecLD,histograms{s},bins{s}] = getCurvatureStats(vecLD);
+            [vecLD,histograms{end+1},bins{end+1}] = getCurvatureStats(vecLD);
+            statsShortNames{end+1} = 'curv_';
         case 'orientation'
-            [vecLD,histograms{s},bins{s}] = getOrientationStats(vecLD);
+            [vecLD,histograms{end+1},bins{end+1}] = getOrientationStats(vecLD);
+            statsShortNames{end+1} = 'ori_';
         case 'length'
-            [vecLD,histograms{s},bins{s}] = getLengthStats(vecLD);
+            [vecLD,histograms{end+1},bins{end+1}] = getLengthStats(vecLD);
+            statsShortNames{end+1} = 'len_';
         case 'junctions'
-            vecLD = computeJunctions(vecLD);
-            histograms{s} = vecLD.junctionsHistograms;
-            bins{s} = vecLD.junctionsBins;
+            vecLD = getJunctionStats(vecLD);
+            histograms{end+1} = vecLD.junctionTypeHistogram;
+            bins{end+1} = vecLD.junctionTypeHistogramBins;
+            statsShortNames{end+1} = 'juncType_';
+
+            histograms{end+1} = vecLD.junctionAngleHistogram;
+            bins{s+1} = vecLD.junctionAngleHistogramBins;
+            statsShortNames{end+1} = 'juncAng_';
         otherwise
             error(['Unknown property: ',thisStat]);
     end
