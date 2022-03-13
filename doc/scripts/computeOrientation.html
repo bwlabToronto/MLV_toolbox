@@ -65,15 +65,11 @@ This function is called by:
 0013 
 0014 <span class="keyword">for</span> c = 1:vecLD.numContours
 0015     thisCon = vecLD.contours{c};  
-0016     V = atan2d((thisCon(:,4)-thisCon(:,2)),(thisCon(:,3)-thisCon(:,1)));    
-0017     isNeg = (V &lt; 0);
-0018     V(isNeg) = V(isNeg) + 360; 
-0019     thisCon(:,5) = V;
-0020     vecLD.orientations{c} = V;
-0021     vecLD.contours{c} = thisCon;
-0022 <span class="keyword">end</span>
-0023 
-0024 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Fri 04-Mar-2022 22:35:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0016     vecLD.orientations{c} = mod(atan2d((thisCon(:,4)-thisCon(:,2)),(thisCon(:,3)-thisCon(:,1))),360);    
+0017     vecLD.contours{c} = thisCon;
+0018 <span class="keyword">end</span>
+0019 
+0020 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 13-Mar-2022 14:21:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

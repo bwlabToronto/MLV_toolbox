@@ -42,11 +42,11 @@
    angle      - smallest angle of the junction
    type       - based on the largest angle a, one of: 
                 'T': T junction - three segments: 160 &lt; a &lt; 200
-                'A': arrow juctions - three segments: a &gt; 200
+                'Arrow': arrow juctions - three segments: a &gt; 200
                 'Y': Y junctions - three segments: a &lt; 160
                 'X': X junctions - four segments: 0 &lt; a &lt; 150
                 'L': L junctions - two segments
-                'S': Star junctions - more than four segments</pre></div>
+                'Star': Star junctions - more than four segments</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -77,11 +77,11 @@ This function is called by:
 0014 <span class="comment">%   angle      - smallest angle of the junction</span>
 0015 <span class="comment">%   type       - based on the largest angle a, one of:</span>
 0016 <span class="comment">%                'T': T junction - three segments: 160 &lt; a &lt; 200</span>
-0017 <span class="comment">%                'A': arrow juctions - three segments: a &gt; 200</span>
+0017 <span class="comment">%                'Arrow': arrow juctions - three segments: a &gt; 200</span>
 0018 <span class="comment">%                'Y': Y junctions - three segments: a &lt; 160</span>
 0019 <span class="comment">%                'X': X junctions - four segments: 0 &lt; a &lt; 150</span>
 0020 <span class="comment">%                'L': L junctions - two segments</span>
-0021 <span class="comment">%                'S': Star junctions - more than four segments</span>
+0021 <span class="comment">%                'Star': Star junctions - more than four segments</span>
 0022 
 0023 
 0024 <span class="keyword">if</span> nargin &lt; 2
@@ -98,28 +98,17 @@ This function is called by:
 0035     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
 0036 <span class="keyword">end</span>
 0037 
-0038 thisPic.lines = vecLD.contours;
-0039 thisPic.numLines = vecLD.numContours;
-0040 thisPic.lineLengths = vecLD.contourLengths;
-0041 k = AddOrientationForJunctions(thisPic,JunctionSimplify(IntersectionInPicture(thisPic)));
+0038 <span class="comment">% 3-step process</span>
+0039 
+0040 <span class="comment">% 1. detect any intersections between line segments</span>
+0041 jcts = detectJunctions(vecLD);
 0042 
-0043 types = AddTypeForJunctions(k);
-0044 vecLD.junctions = [];
-0045 allTypes = <span class="string">'TAYXLS'</span>;
-0046 vecLD.junctionsBins = allTypes;
-0047 vecLD.junctionsHistograms = zeros(numel(allTypes),1);
-0048 <span class="keyword">for</span> j = 1:length(k)
-0049     thisJ.contourIDs = k{j}.RelatedSegments(1,:);
-0050     thisJ.segmentIDs = k{j}.RelatedSegments(2,:);
-0051     thisJ.position   = k{j}.Position;
-0052     thisJ.angle      = min(k{j}.Orientations);
-0053     thisJ.type       = allTypes(types(j));
-0054     vecLD.junctions  = vertcat(vecLD.junctions,thisJ);
-0055     vecLD.junctionsHistograms(types(j)) = vecLD.junctionsHistograms(types(j)) + 1;
-0056 <span class="keyword">end</span>
-0057 
-0058 
-0059</pre></div>
-<hr><address>Generated on Fri 04-Mar-2022 22:35:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0043 <span class="comment">% 2. merge junctions that are close by</span>
+0044 jcts = cleanupJunctions(jcts);
+0045 
+0046 <span class="comment">% 3. measure angles and classify junctions</span>
+0047 jcts = computeJunctionAnglesTypes(jcts,vecLD);
+0048 vecLD.junctions = jcts;</pre></div>
+<hr><address>Generated on Sun 13-Mar-2022 14:21:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

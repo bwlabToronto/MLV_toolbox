@@ -81,7 +81,7 @@ This function is called by:
 0031         <span class="keyword">else</span>
 0032             s2 = s+1; <span class="comment">% for all other semgents, we refer to the next segment</span>
 0033         <span class="keyword">end</span>
-0034         angleDiff = vecLD.orientations{c}(s) - vecLD.orientations{c}(s2);
+0034         angleDiff = abs(vecLD.orientations{c}(s) - vecLD.orientations{c}(s2));
 0035         <span class="keyword">if</span> angleDiff &gt; 180
 0036             angleDiff = 360 - angleDiff; <span class="comment">% for angles &gt; 180 we use the opposite angle</span>
 0037         <span class="keyword">end</span>
@@ -90,6 +90,6 @@ This function is called by:
 0040 <span class="keyword">end</span>
 0041 
 0042</pre></div>
-<hr><address>Generated on Fri 04-Mar-2022 22:35:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Sun 13-Mar-2022 14:21:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

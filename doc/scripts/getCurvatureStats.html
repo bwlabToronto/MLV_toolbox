@@ -39,11 +39,11 @@
                  (default: maximum across the contours of this image)
 
  Output:
+   vecLD: the line drawing stucture with curvature histogram added for
+   each contour
    curvatureHistogram: the histogram of length of line segments, 
                     weighted by their lengths
-   bins: a vector with the bin centers
-   vecLD: the line drawing stucture with curvature histogram added for
-   each contour</pre></div>
+   bins: a vector with the bin centers</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -58,7 +58,7 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [curvatureHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</a>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</a>
 0002 <span class="comment">% [lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)</span>
 0003 <span class="comment">%   computes the curvature histogram with logarithmiccally scaled bins, weighted by segment length</span>
 0004 <span class="comment">%</span>
@@ -71,11 +71,11 @@ This function is called by:
 0011 <span class="comment">%                 (default: maximum across the contours of this image)</span>
 0012 <span class="comment">%</span>
 0013 <span class="comment">% Output:</span>
-0014 <span class="comment">%   curvatureHistogram: the histogram of length of line segments,</span>
-0015 <span class="comment">%                    weighted by their lengths</span>
-0016 <span class="comment">%   bins: a vector with the bin centers</span>
-0017 <span class="comment">%   vecLD: the line drawing stucture with curvature histogram added for</span>
-0018 <span class="comment">%   each contour</span>
+0014 <span class="comment">%   vecLD: the line drawing stucture with curvature histogram added for</span>
+0015 <span class="comment">%   each contour</span>
+0016 <span class="comment">%   curvatureHistogram: the histogram of length of line segments,</span>
+0017 <span class="comment">%                    weighted by their lengths</span>
+0018 <span class="comment">%   bins: a vector with the bin centers</span>
 0019 
 0020 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'curvatures'</span>)
 0021     vecLD = <a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>(vecLD);
@@ -112,6 +112,6 @@ This function is called by:
 0052 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
 0053 vecLD.curvatureBins = bins;
 0054 curvatureHistogram = vecLD.sumCurvatureHistogram;</pre></div>
-<hr><address>Generated on Fri 04-Mar-2022 22:35:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Sun 13-Mar-2022 14:21:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
