@@ -42,8 +42,3 @@ for t = 1:length(types)
 end
 legend(h,types,'Location','NorthEastOutside');
 legend boxoff;
-
-
-
-
-
