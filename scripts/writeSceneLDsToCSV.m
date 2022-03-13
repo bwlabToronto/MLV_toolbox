@@ -9,7 +9,7 @@ function resultsTable = writeSceneLDsToCSV(csvFileName)
 % Return:
 %   resultsTable - the table that got written to the CSV file
 
-categories = {'beaches','cities','forests','offices','mountains'};
+categories = {'beaches','cities','forests','highways','mountains','offices'};
 
 resultsTable = table;
 
