@@ -32,8 +32,8 @@ warning('off','MATLAB:divideByZero'); % divide by zero is okay here
 a = (Bx * Cy - By * Cx) / D;
 b = (Ax * Cy - Ay * Cx) / D;
 
-at=min( RE,  AE/max(abs(Ax),abs(Ay)));%calculate the threshold of the ratio
-bt=min( RE,  AE/max(abs(Bx),abs(By)));%calculate the threshold of the ratio
+at=min( RE,  AE/max(abs(Ax),abs(Ay))); %calculate the threshold of the ratio
+bt=min( RE,  AE/max(abs(Bx),abs(By))); %calculate the threshold of the ratio
 
 if (-at<=a) && (a<=1+at) && (-bt <= b) && (b <= 1+bt)
     A1=queryLine(2)-queryLine(4);
