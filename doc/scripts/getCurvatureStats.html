@@ -24,7 +24,7 @@
 <div class="box"><strong>[lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function [curvatureHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature) </strong></div>
+<div class="box"><strong>function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> [lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)
@@ -52,7 +52,7 @@ This function calls:
 <li><a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>	vecLD = computeCurvature(vecLD,whichProps)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="getContourPropertiesStats.html" class="code" title="function [histograms,bins,vecLD,whichStats] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[histograms,bins] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
+<li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[histograms,bins] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
 <!-- crossreference -->
 
 
@@ -112,6 +112,6 @@ This function is called by:
 0052 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
 0053 vecLD.curvatureBins = bins;
 0054 curvatureHistogram = vecLD.sumCurvatureHistogram;</pre></div>
-<hr><address>Generated on Tue 15-Mar-2022 12:45:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Tue 15-Mar-2022 12:47:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

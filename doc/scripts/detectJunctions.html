@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of detectJunctions</title>
+  <meta name="keywords" content="detectJunctions">
+  <meta name="description" content="Junctions = detectJunctions(vecLD)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">scripts</a> &gt; detectJunctions.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for scripts&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>detectJunctions
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Junctions = detectJunctions(vecLD)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function Junctions = detectJunctions(vecLD) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Junctions = detectJunctions(vecLD)
+ Detects any junctions between contours in the vectorized line drawing
+ vecLD.
+
+ Input: 
+    vecLD: the vectorized line drawing
+
+ Output:
+    Junctions: a vector of structs with the following fields:
+               Position - the [x,y] coordinates of the junction point
+               contourIDs - a vector with the indices of the contours
+               participating in this junction - this will always be two as
+               an output of this function. See cleanupJunctions for more.
+               segmentIDs - a vector with the indices to the line segments
+               within the participating contours.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="lineIntersection.html" class="code" title="function Position = lineIntersection(queryLine,refLine,RE,AE)">lineIntersection</a>	Position = lineIntersection(queryLine,refLine,RE,AE)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>	vecLD = computeJunctions(vecLD)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Junctions = detectJunctions(vecLD)</a>
+0002 <span class="comment">% Junctions = detectJunctions(vecLD)</span>
+0003 <span class="comment">% Detects any junctions between contours in the vectorized line drawing</span>
+0004 <span class="comment">% vecLD.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input:</span>
+0007 <span class="comment">%    vecLD: the vectorized line drawing</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Output:</span>
+0010 <span class="comment">%    Junctions: a vector of structs with the following fields:</span>
+0011 <span class="comment">%               Position - the [x,y] coordinates of the junction point</span>
+0012 <span class="comment">%               contourIDs - a vector with the indices of the contours</span>
+0013 <span class="comment">%               participating in this junction - this will always be two as</span>
+0014 <span class="comment">%               an output of this function. See cleanupJunctions for more.</span>
+0015 <span class="comment">%               segmentIDs - a vector with the indices to the line segments</span>
+0016 <span class="comment">%               within the participating contours.</span>
+0017 
+0018 
+0019 <span class="comment">% parameters for heuristic detection</span>
+0020 AE = 2; <span class="comment">% absolute epsilon to accept two lines as &quot;intersecting&quot; even when they may be seprated by 0 pixels</span>
+0021 RE = 0.3; <span class="comment">% relative epsilon - the same relative to the lentgh of a segment - the stricter of the two criteria will be applied</span>
+0022    
+0023 Junctions=[];
+0024 count=0;
+0025 
+0026 <span class="keyword">for</span> queryC = 1:vecLD.numContours <span class="comment">% loop over the query curves</span>
+0027     <span class="keyword">if</span> vecLD.contourLengths(queryC) &lt; AE <span class="comment">% if the curve is too short, then don't consider it</span>
+0028         <span class="keyword">continue</span>;
+0029     <span class="keyword">end</span>
+0030     queryCurve = vecLD.contours{queryC};
+0031     <span class="keyword">for</span> queryS = 1:size(queryCurve,1) <span class="comment">% loop over the query line segments</span>
+0032         <span class="keyword">for</span> refC = queryC+1:vecLD.numContours <span class="comment">% we don't consider intersections fo the curve with itself</span>
+0033             <span class="keyword">if</span> vecLD.contourLengths(refC) &lt; AE <span class="comment">% if the curve is too short, then don't consider it</span>
+0034                 <span class="keyword">continue</span>;
+0035             <span class="keyword">end</span>
+0036             refCurve = vecLD.contours{refC};
+0037 
+0038             <span class="keyword">for</span> refS = 1:size(refCurve,1) <span class="comment">% loop over reference line segments</span>
+0039                 pos = <a href="lineIntersection.html" class="code" title="function Position = lineIntersection(queryLine,refLine,RE,AE)">lineIntersection</a>(queryCurve(queryS,:),refCurve(refS,:),RE,AE);
+0040                 <span class="keyword">if</span> ~isempty(pos)
+0041                     count = count + 1;
+0042                     Junctions(count).position = pos;
+0043                     Junctions(count).contourIDs = [queryC,refC];
+0044                     Junctions(count).segmentIDs = [queryS,refS];
+0045                 <span class="keyword">end</span>
+0046             <span class="keyword">end</span>
+0047         <span class="keyword">end</span>
+0048     <span class="keyword">end</span>
+0049 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 15-Mar-2022 12:47:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

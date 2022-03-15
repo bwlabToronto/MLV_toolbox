@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of renderLinedrawingProperty</title>
+  <meta name="keywords" content="renderLinedrawingProperty">
+  <meta name="description" content="img = renderLinedrawingProperty(vecLD,property,img,imSize,color)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">scripts</a> &gt; renderLinedrawingProperty.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for scripts&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>renderLinedrawingProperty
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>img = renderLinedrawingProperty(vecLD,property,img,imSize,color)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function img = renderLinedrawingProperty(vecLD,property,img,imsize,lineWidth) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> img = renderLinedrawingProperty(vecLD,property,img,imSize,color)
+   Draws the vectorized line drawing into an image.
+
+ Input:
+   vecLD - the vectorized line drawing to be drawn.
+   property - one of 'length','curvature','orientation'
+   img - an existing image to draw into. If [], a new RGB image with a white background 
+         will be initialized. Default: []
+   imsize - the image size in [w,h]. If imsize is different from vecLD.imsize, the
+            drawing will be scaled up or down to the new imsize.
+            default: [] (use vecLD.imsize)
+   linewidth - the width of the contour lines in pixels.
+               default: 1
+
+ Return:
+   img - the RGB image with the contours drawn in.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>	colorIdx = computeColorIndex(vecLD,'property')</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function img = renderLinedrawingProperty(vecLD,property,img,imsize,lineWidth)</a>
+0002 <span class="comment">% img = renderLinedrawingProperty(vecLD,property,img,imSize,color)</span>
+0003 <span class="comment">%   Draws the vectorized line drawing into an image.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   vecLD - the vectorized line drawing to be drawn.</span>
+0007 <span class="comment">%   property - one of 'length','curvature','orientation'</span>
+0008 <span class="comment">%   img - an existing image to draw into. If [], a new RGB image with a white background</span>
+0009 <span class="comment">%         will be initialized. Default: []</span>
+0010 <span class="comment">%   imsize - the image size in [w,h]. If imsize is different from vecLD.imsize, the</span>
+0011 <span class="comment">%            drawing will be scaled up or down to the new imsize.</span>
+0012 <span class="comment">%            default: [] (use vecLD.imsize)</span>
+0013 <span class="comment">%   linewidth - the width of the contour lines in pixels.</span>
+0014 <span class="comment">%               default: 1</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Return:</span>
+0017 <span class="comment">%   img - the RGB image with the contours drawn in.</span>
+0018 
+0019 <span class="keyword">if</span> nargin &lt; 5
+0020     lineWidth = 1;
+0021 <span class="keyword">end</span>
+0022 
+0023 <span class="keyword">if</span> nargin &lt; 4
+0024     imsize = [];
+0025 <span class="keyword">end</span>
+0026 <span class="keyword">if</span> isempty(imsize)
+0027     imsize = vecLD.imsize;
+0028 <span class="keyword">end</span>
+0029 
+0030 <span class="keyword">if</span> nargin &lt; 3
+0031     img = [];
+0032 <span class="keyword">end</span>
+0033 <span class="keyword">if</span> isempty(img)
+0034     img = ones([imsize(2),imsize(1),3]);
+0035 <span class="keyword">end</span>
+0036 
+0037 <span class="comment">% get the color index</span>
+0038 property = lower(property);
+0039 [colorIdx,cmap] = <a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>(vecLD,property);
+0040 
+0041 <span class="comment">% define a vector for scaling the coordinates up or down as needed</span>
+0042 scaleVec = imsize ./ vecLD.imsize;
+0043 scaleVec = [scaleVec,scaleVec];
+0044 
+0045 <span class="comment">% loop over contours</span>
+0046 <span class="keyword">for</span> c = 1:vecLD.numContours
+0047     scaledCoords = vecLD.contours{c} .* repmat(scaleVec,size(vecLD.contours{c},1),1);
+0048     <span class="keyword">for</span> s = 1:size(scaledCoords,1)
+0049         img = insertShape(img,<span class="string">'Line'</span>,scaledCoords,<span class="string">'Color'</span>,cmap(colorIdx{c}(s),:),<span class="string">'LineWidth'</span>,lineWidth,<span class="string">'SmoothEdges'</span>,false);
+0050     <span class="keyword">end</span>
+0051 <span class="keyword">end</span>
+0052 
+0053 <span class="comment">% That's it, we're done.</span>
+0054</pre></div>
+<hr><address>Generated on Tue 15-Mar-2022 12:47:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

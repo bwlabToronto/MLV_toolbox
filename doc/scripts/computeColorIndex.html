@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeColorIndex</title>
+  <meta name="keywords" content="computeColorIndex">
+  <meta name="description" content="colorIdx = computeColorIndex(vecLD,'property')">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">scripts</a> &gt; computeColorIndex.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for scripts&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>computeColorIndex
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>colorIdx = computeColorIndex(vecLD,'property')</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [colorIdx,cmap] = computeColorIndex(vecLD,property) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> colorIdx = computeColorIndex(vecLD,'property')
+
+ Computes a color index for srawing line drawings with their properties.
+ Used by drawLinedrawingPorperties and drawLinedrawingPropertiesToImage
+
+ Input:
+   vecLD - the vectorize line drawing with its properteis computed
+   property - one of 'length','curvature','orientation'
+
+ Return:
+   colorIdx - a cell array with on vector per cell, with entries for each
+   line segment, specifying the index into the color map
+   cmap - the color map appropriate for this property</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="drawLinedrawingProperty.html" class="code" title="function drawLinedrawingProperty(vecLD,property,lineWidth)">drawLinedrawingProperty</a>	drawLinedrawingProperty(vecLD,property)</li><li><a href="renderLinedrawingProperty.html" class="code" title="function img = renderLinedrawingProperty(vecLD,property,img,imsize,lineWidth)">renderLinedrawingProperty</a>	img = renderLinedrawingProperty(vecLD,property,img,imSize,color)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [colorIdx,cmap] = computeColorIndex(vecLD,property)</a>
+0002 <span class="comment">% colorIdx = computeColorIndex(vecLD,'property')</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Computes a color index for srawing line drawings with their properties.</span>
+0005 <span class="comment">% Used by drawLinedrawingPorperties and drawLinedrawingPropertiesToImage</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Input:</span>
+0008 <span class="comment">%   vecLD - the vectorize line drawing with its properteis computed</span>
+0009 <span class="comment">%   property - one of 'length','curvature','orientation'</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Return:</span>
+0012 <span class="comment">%   colorIdx - a cell array with on vector per cell, with entries for each</span>
+0013 <span class="comment">%   line segment, specifying the index into the color map</span>
+0014 <span class="comment">%   cmap - the color map appropriate for this property</span>
+0015 
+0016 property = lower(property);
+0017 
+0018 colorIdx = {};
+0019 numCols = 256;
+0020 
+0021 <span class="keyword">switch</span> property
+0022     <span class="keyword">case</span> <span class="string">'length'</span>
+0023         allLengths = log10(vecLD.contourLengths+1);
+0024         minProp = min(allLengths);
+0025         maxProp = max(allLengths);
+0026         col = round((allLengths - minProp) / (maxProp-minProp) * (numCols-1) + 1);
+0027         <span class="keyword">for</span> c = 1:vecLD.numContours
+0028             colorIdx{c} = zeros(size(vecLD.contours{c},1),1) + col(c);
+0029         <span class="keyword">end</span>
+0030         cmap = jet(numCols);
+0031 
+0032     <span class="keyword">case</span> <span class="string">'curvature'</span>
+0033         allCurv = log10([vecLD.curvatures{:}]+1);
+0034         maxProp = max(allCurv);
+0035         minProp = min(allCurv);
+0036         <span class="keyword">for</span> c = 1:vecLD.numContours
+0037             colorIdx{c} = round((log10(vecLD.curvatures{c}+1) - minProp) / (maxProp-minProp) * (numCols-1) + 1);
+0038         <span class="keyword">end</span>
+0039         cmap = jet(numCols);
+0040 
+0041     <span class="keyword">case</span> <span class="string">'orientation'</span>
+0042         <span class="keyword">for</span> c = 1:vecLD.numContours
+0043             colorIdx{c} = round(mod(vecLD.orientations{c},180) / 180 * (numCols-1) + 1);
+0044         <span class="keyword">end</span>
+0045         cmap = hsv(numCols);
+0046 
+0047     <span class="keyword">otherwise</span>
+0048         error([<span class="string">'Unknown property: '</span>,property]);
+0049 <span class="keyword">end</span>
+0050 
+0051</pre></div>
+<hr><address>Generated on Tue 15-Mar-2022 12:47:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

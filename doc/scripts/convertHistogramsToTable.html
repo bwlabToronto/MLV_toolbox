@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of convertHistogramsToTable</title>
+  <meta name="keywords" content="convertHistogramsToTable">
+  <meta name="description" content="propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">scripts</a> &gt; convertHistogramsToTable.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for scripts&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>convertHistogramsToTable
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)
+
+ Converts the properties histogams into a table with one row.
+ See also: <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a> for getting the input variables to
+ this function.
+
+ Input:
+   histograms - cell array with the histograms
+   bins - the descriptions of the bins of the histograms
+   shortStatsNames - short strings describing each stat
+
+ Return:
+   propTable - a one-row table (dataframe) with the histogram data</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="writeSceneLDsToCSV.html" class="code" title="function resultsTable = writeSceneLDsToCSV(csvFileName)">writeSceneLDsToCSV</a>	allSceneLDsToCSV(csvFileName)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)</a>
+0002 <span class="comment">% propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Converts the properties histogams into a table with one row.</span>
+0005 <span class="comment">% See also: getContourPropertiesStats for getting the input variables to</span>
+0006 <span class="comment">% this function.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Input:</span>
+0009 <span class="comment">%   histograms - cell array with the histograms</span>
+0010 <span class="comment">%   bins - the descriptions of the bins of the histograms</span>
+0011 <span class="comment">%   shortStatsNames - short strings describing each stat</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Return:</span>
+0014 <span class="comment">%   propTable - a one-row table (dataframe) with the histogram data</span>
+0015 
+0016 varnames = {};
+0017 values = {};
+0018 <span class="keyword">for</span> p = 1:length(histograms)
+0019     hh = histograms{p};
+0020     <span class="keyword">for</span> b = 1:numel(hh)
+0021         <span class="keyword">switch</span> class(bins{p}(b))
+0022             <span class="keyword">case</span> <span class="string">'double'</span>
+0023                 <span class="comment">%varnames{end+1} = sprintf('%s%g',shortStatsNames{p},bins{p}(b));</span>
+0024                 varnames{end+1} = sprintf(<span class="string">'%s%d'</span>,shortStatsNames{p},b);
+0025                 values{end+1} = hh(b);
+0026             <span class="keyword">case</span> {<span class="string">'char'</span>,<span class="string">'cell'</span>}
+0027                 varnames{end+1} = [shortStatsNames{p},bins{p}{b}];
+0028                 values{end+1} = hh(b);
+0029             <span class="keyword">otherwise</span>
+0030                 error([<span class="string">'Don''t know how to handle bin names of type: '</span>,class(bins{p}(b))]);
+0031         <span class="keyword">end</span>
+0032     <span class="keyword">end</span>
+0033 <span class="keyword">end</span>
+0034 propertiesTable = cell2table(values,<span class="string">'VariableNames'</span>,varnames);</pre></div>
+<hr><address>Generated on Tue 15-Mar-2022 12:47:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

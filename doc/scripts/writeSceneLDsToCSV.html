@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of writeSceneLDsToCSV</title>
+  <meta name="keywords" content="writeSceneLDsToCSV">
+  <meta name="description" content="allSceneLDsToCSV(csvFileName)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">scripts</a> &gt; writeSceneLDsToCSV.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for scripts&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>writeSceneLDsToCSV
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>allSceneLDsToCSV(csvFileName)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function resultsTable = writeSceneLDsToCSV(csvFileName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> allSceneLDsToCSV(csvFileName)
+   Writes the histogram properties of all scene line drawings to a CSV
+   file.
+
+ Input:
+   csvFileName - file name for the CSV file.
+
+ Return:
+   resultsTable - the table that got written to the CSV file</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="convertHistogramsToTable.html" class="code" title="function propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)">convertHistogramsToTable</a>	propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)</li><li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[histograms,bins] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function resultsTable = writeSceneLDsToCSV(csvFileName)</a>
+0002 <span class="comment">% allSceneLDsToCSV(csvFileName)</span>
+0003 <span class="comment">%   Writes the histogram properties of all scene line drawings to a CSV</span>
+0004 <span class="comment">%   file.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input:</span>
+0007 <span class="comment">%   csvFileName - file name for the CSV file.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Return:</span>
+0010 <span class="comment">%   resultsTable - the table that got written to the CSV file</span>
+0011 
+0012 categories = {<span class="string">'beaches'</span>,<span class="string">'cities'</span>,<span class="string">'forests'</span>,<span class="string">'highways'</span>,<span class="string">'mountains'</span>,<span class="string">'offices'</span>};
+0013 
+0014 resultsTable = table;
+0015 
+0016 <span class="keyword">for</span> c = 1:length(categories)
+0017     fprintf(<span class="string">'\n%s\n===============\n'</span>,categories{c});
+0018     load([categories{c},<span class="string">'_vecLD'</span>]);
+0019     <span class="keyword">for</span> l = 1:numel(vecLD)
+0020         imageName = vecLD(l).originalImage;
+0021         fprintf(<span class="string">'\t%d. %s\n'</span>,l,imageName);
+0022         [thisLD,histograms,bins,shortStats] = <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>(vecLD(l));
+0023         tt = table({imageName},<span class="string">'VariableNames'</span>,{<span class="string">'ImageName'</span>});
+0024         tt = [tt,<a href="convertHistogramsToTable.html" class="code" title="function propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)">convertHistogramsToTable</a>(histograms,bins,shortStats)];
+0025         resultsTable = [resultsTable;tt];
+0026     <span class="keyword">end</span>
+0027 <span class="keyword">end</span>
+0028 
+0029 writetable(resultsTable,csvFileName);
+0030 fprintf(<span class="string">'\nResults table written to: %s\n'</span>,csvFileName);</pre></div>
+<hr><address>Generated on Tue 15-Mar-2022 12:47:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
