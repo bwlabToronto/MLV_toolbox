@@ -19,6 +19,15 @@ function Position = lineIntersection(queryLine,refLine,RE,AE)
 %   If the lines do intersect, the coordintes [x,y] of the intersection point.
 %   Otherwise Position will be empty [].
 
+% first some simple heuristics to kick out obvious cases
+if min(queryLine([1,3])) > max(refLine([1,3])) || ...
+   max(queryLine([1,3])) < min(refLine([1,3])) || ...
+   min(queryLine([2,4])) > max(refLine([1,3])) || ...
+   max(queryLine([2,4])) < min(refLine([2,4]))
+    Position = [];
+    return;
+end
+
 Ay = queryLine(3) - queryLine(1);
 Ax = queryLine(4) - queryLine(2);
 By = refLine(3) - refLine(1);
