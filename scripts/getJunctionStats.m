@@ -29,8 +29,17 @@ end
 theseTypes = {vecLD.junctions(:).type};
 typeHist = zeros(1,numel(junctionTypes));
 
+% prepare the counts of junctions that each contour participates in
+vecLD.junctionContourHistograms = zeros(vecLD.numContours,numel(junctionTypes));
+
+% count it all up
 for t = 1:numel(junctionTypes)
-    typeHist(t) = sum(strcmp(junctionTypes{t},theseTypes));
+    thisJ = strcmp(junctionTypes{t},theseTypes);
+    typeHist(t) = sum(thisJ);
+    contours = [vecLD.junctions(thisJ).contourIDs];
+    for c = unique(contours)
+        vecLD.junctionContourHistograms(c,t) = sum(contours == c);
+    end
 end
 vecLD.junctionTypeHistogram = typeHist;
 vecLD.junctionTypeHistogramBins = junctionTypes;

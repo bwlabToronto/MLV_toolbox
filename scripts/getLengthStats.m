@@ -1,4 +1,4 @@
-function [vecLD,lengthsHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
+function [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
 % [lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)
 %   computes the length histogram with logarithmiccally scaled bins, weighted by segment length
 %
@@ -37,15 +37,17 @@ binBoundary = [logMin : binWidth : logMax];
 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
 logLengths = log10(vecLD.contourLengths + 1);
 
-lengthsHistogram = zeros(1,numBins);
 for c = 1:vecLD.numContours
+    thisHist = zeros(1,numBins);
     for b = 1:numBins
         if logLengths(c) < binBoundary(b+1) || (b == numBins)
-            lengthsHistogram(b) = lengthsHistogram(b) + vecLD.contourLengths(c);
+            thisHist(b) = thisHist(b) + vecLD.contourLengths(c);
             break
         end
     end
+    vecLD.lengthHistograms(c,:) = thisHist;
 end
 
-vecLD.lengthsHistogram = lengthsHistogram;
-vecLD.lengthsHistogramBins = bins;
+vecLD.sumLengthHistogram = sum(vecLD.lengthHistograms,1);
+lengthHistogram = vecLD.sumLengthHistogram;
+vecLD.lengthHistogramBins = bins;
