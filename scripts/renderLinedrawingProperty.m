@@ -34,8 +34,16 @@ if isempty(img)
     img = ones([imsize(2),imsize(1),3]);
 end
 
-% get the color index
 property = lower(property);
+
+% special case for junctions
+if strcmp(property, 'junctions')
+    img = renderLinedrawing(vecLD,img,imsize,[0,0,0],lineWidth);
+    img = renderJunctions(vecLD.junctions,{},img,vecLD.imsize);
+    return;
+end
+
+% get the color index
 [colorIdx,cmap] = computeColorIndex(vecLD,property);
 
 % define a vector for scaling the coordinates up or down as needed

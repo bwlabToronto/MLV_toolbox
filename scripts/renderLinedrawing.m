@@ -1,5 +1,5 @@
-function img = renderLinedrawing(vecLD,img,imsize,color, lineWidth)
-% img = renderLinedrawing(vecLD,img,imSize,color)
+function img = renderLinedrawing(vecLD,img,imsize,color,lineWidth)
+% img = renderLinedrawing(vecLD,img,imSize,color,lineWidth)
 %   Draws the vectorized line drawing into an image.
 %
 % Input:

@@ -13,8 +13,17 @@ if nargin < 3
     lineWidth = 1;
 end
 
-% get the color index
 property = lower(property);
+
+% Junctions are treated differently
+if strcmp(property,'junctions')
+    drawLinedrawing(vecLD,[0,0,0],lineWidth);
+    drawJunctions(vecLD.junctions);
+    return;
+end
+
+
+% get the color index
 [colorIdx,cmap] = computeColorIndex(vecLD,property);
 
 % draw the line segments one at a time
