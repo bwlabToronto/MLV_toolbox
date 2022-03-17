@@ -31,10 +31,10 @@ switch property
 
     case 'curvature'
         allCurv = log10([vecLD.curvatures{:}]+1);
-        maxProp = max(allCurv);
+        maxProp = max(allCurv)*0.8; % Here we're fudging the range a little so that high curvatures are emphasized more
         minProp = min(allCurv);
         for c = 1:vecLD.numContours
-            colorIdx{c} = round((log10(vecLD.curvatures{c}+1) - minProp) / (maxProp-minProp) * (numCols-1) + 1);
+            colorIdx{c} = min(round((log10(vecLD.curvatures{c}+1) - minProp) / (maxProp-minProp) * (numCols-1) + 1),numCols);
         end
         cmap = jet(numCols);
 
