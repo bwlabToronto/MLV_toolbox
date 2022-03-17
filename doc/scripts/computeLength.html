@@ -41,7 +41,7 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>	vecLD = computeCurvature(vecLD,whichProps)</li><li><a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>	vecLD = computeJunctions(vecLD)</li><li><a href="getLengthStats.html" class="code" title="function [vecLD,lengthsHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)">getLengthStats</a>	[lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[oriHistogram,bins,vecLD] = getOrientationStats(vecLD)</li></ul>
+<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>	vecLD = computeCurvature(vecLD,whichProps)</li><li><a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>	vecLD = computeJunctions(vecLD)</li><li><a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)">getLengthStats</a>	[lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[oriHistogram,bins,vecLD] = getOrientationStats(vecLD)</li></ul>
 <!-- crossreference -->
 
 
@@ -60,8 +60,8 @@ This function is called by:
 0011 <span class="keyword">for</span> c = 1:vecLD.numContours
 0012     thisCon = vecLD.contours{c};
 0013     vecLD.lengths{c} = sqrt((thisCon(:,3)-thisCon(:,1)).^2+(thisCon(:,4)-thisCon(:,2)).^2);
-0014     vecLD.contourLengths(c) = sum(vecLD.lengths{c});
+0014     vecLD.contourLengths(c,1) = sum(vecLD.lengths{c});
 0015 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 15-Mar-2022 12:49:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Thu 17-Mar-2022 15:57:17 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

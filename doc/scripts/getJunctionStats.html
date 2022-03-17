@@ -85,19 +85,28 @@ This function is called by:
 0029 theseTypes = {vecLD.junctions(:).type};
 0030 typeHist = zeros(1,numel(junctionTypes));
 0031 
-0032 <span class="keyword">for</span> t = 1:numel(junctionTypes)
-0033     typeHist(t) = sum(strcmp(junctionTypes{t},theseTypes));
-0034 <span class="keyword">end</span>
-0035 vecLD.junctionTypeHistogram = typeHist;
-0036 vecLD.junctionTypeHistogramBins = junctionTypes;
-0037 
-0038 <span class="comment">% junctionAngles</span>
-0039 angles = [vecLD.junctions(:).minAngle];
-0040 binStep = 180/numAngleBins;
-0041 angleBins = [binStep/2:binStep:180-binStep/2];
-0042 angleHist = hist(angles,angleBins);
-0043 vecLD.junctionAngleHistogram = angleHist;
-0044 vecLD.junctionAngleHistogramBins = angleBins;</pre></div>
-<hr><address>Generated on Tue 15-Mar-2022 12:49:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0032 <span class="comment">% prepare the counts of junctions that each contour participates in</span>
+0033 vecLD.junctionContourHistograms = zeros(vecLD.numContours,numel(junctionTypes));
+0034 
+0035 <span class="comment">% count it all up</span>
+0036 <span class="keyword">for</span> t = 1:numel(junctionTypes)
+0037     thisJ = strcmp(junctionTypes{t},theseTypes);
+0038     typeHist(t) = sum(thisJ);
+0039     contours = [vecLD.junctions(thisJ).contourIDs];
+0040     <span class="keyword">for</span> c = unique(contours)
+0041         vecLD.junctionContourHistograms(c,t) = sum(contours == c);
+0042     <span class="keyword">end</span>
+0043 <span class="keyword">end</span>
+0044 vecLD.junctionTypeHistogram = typeHist;
+0045 vecLD.junctionTypeHistogramBins = junctionTypes;
+0046 
+0047 <span class="comment">% junctionAngles</span>
+0048 angles = [vecLD.junctions(:).minAngle];
+0049 binStep = 180/numAngleBins;
+0050 angleBins = [binStep/2:binStep:180-binStep/2];
+0051 angleHist = hist(angles,angleBins);
+0052 vecLD.junctionAngleHistogram = angleHist;
+0053 vecLD.junctionAngleHistogramBins = angleBins;</pre></div>
+<hr><address>Generated on Thu 17-Mar-2022 15:57:17 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

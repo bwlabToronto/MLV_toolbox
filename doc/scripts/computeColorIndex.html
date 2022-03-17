@@ -87,10 +87,10 @@ This function is called by:
 0031 
 0032     <span class="keyword">case</span> <span class="string">'curvature'</span>
 0033         allCurv = log10([vecLD.curvatures{:}]+1);
-0034         maxProp = max(allCurv);
+0034         maxProp = max(allCurv)*0.8; <span class="comment">% Here we're fudging the range a little so that high curvatures are emphasized more</span>
 0035         minProp = min(allCurv);
 0036         <span class="keyword">for</span> c = 1:vecLD.numContours
-0037             colorIdx{c} = round((log10(vecLD.curvatures{c}+1) - minProp) / (maxProp-minProp) * (numCols-1) + 1);
+0037             colorIdx{c} = min(round((log10(vecLD.curvatures{c}+1) - minProp) / (maxProp-minProp) * (numCols-1) + 1),numCols);
 0038         <span class="keyword">end</span>
 0039         cmap = jet(numCols);
 0040 
@@ -105,6 +105,6 @@ This function is called by:
 0049 <span class="keyword">end</span>
 0050 
 0051</pre></div>
-<hr><address>Generated on Tue 15-Mar-2022 12:49:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Thu 17-Mar-2022 15:57:17 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

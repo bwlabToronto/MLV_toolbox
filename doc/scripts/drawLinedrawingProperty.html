@@ -41,7 +41,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>	colorIdx = computeColorIndex(vecLD,'property')</li></ul>
+<li><a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>	colorIdx = computeColorIndex(vecLD,'property')</li><li><a href="drawJunctions.html" class="code" title="function drawJunctions(Junctions,types,MarkerSize,colors)">drawJunctions</a>	drawJunctions(Junctions,types,MarkerSize,colors)</li><li><a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,color,lineWidth)">drawLinedrawing</a>	drawLinedrawing(vecLD,color,lineWidth)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
@@ -65,37 +65,46 @@ This function is called by:
 0013     lineWidth = 1;
 0014 <span class="keyword">end</span>
 0015 
-0016 <span class="comment">% get the color index</span>
-0017 property = lower(property);
-0018 [colorIdx,cmap] = <a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>(vecLD,property);
-0019 
-0020 <span class="comment">% draw the line segments one at a time</span>
-0021 <span class="keyword">for</span> c = 1:vecLD.numContours
-0022     thisC = vecLD.contours{c};
-0023     <span class="keyword">for</span> s = 1:size(thisC,1)
-0024         X = [thisC(s,1);thisC(s,3)];
-0025         Y = [thisC(s,2);thisC(s,4)];
-0026         plot(X,Y,<span class="string">'k-'</span>,<span class="string">'Color'</span>,cmap(colorIdx{c}(s),:),<span class="string">'LineWidth'</span>,lineWidth);
-0027         hold on;
-0028     <span class="keyword">end</span>
-0029 <span class="keyword">end</span>
-0030 
-0031 set(gca,<span class="string">'TickLength'</span>,[0,0]);
-0032 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
-0033 axis ij equal;
-0034 
-0035 <span class="comment">% add a colorbar</span>
-0036 colormap(cmap);
-0037 <span class="keyword">switch</span> property
-0038     <span class="keyword">case</span> <span class="string">'length'</span>
-0039         colorbar(<span class="string">'Ticks'</span>,[0,1],<span class="string">'TickLabels'</span>,{<span class="string">'short'</span>,<span class="string">'long'</span>});
-0040     <span class="keyword">case</span> <span class="string">'curvature'</span>
-0041         colorbar(<span class="string">'Ticks'</span>,[0,1],<span class="string">'TickLabels'</span>,{<span class="string">'straight'</span>,<span class="string">'angular'</span>});
-0042     <span class="keyword">case</span> <span class="string">'orientation'</span>
-0043         colorbar(<span class="string">'Ticks'</span>,[0,0.5,1],<span class="string">'TickLabels'</span>,{<span class="string">'horizontal'</span>,<span class="string">'vertical'</span>,<span class="string">'horizontal'</span>});
-0044     <span class="keyword">otherwise</span>
-0045         error([<span class="string">'Unknown property: '</span>,property]);
-0046 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 15-Mar-2022 12:49:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0016 property = lower(property);
+0017 
+0018 <span class="comment">% Junctions are treated differently</span>
+0019 <span class="keyword">if</span> strcmp(property,<span class="string">'junctions'</span>)
+0020     <a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,color,lineWidth)">drawLinedrawing</a>(vecLD,[0,0,0],lineWidth);
+0021     <a href="drawJunctions.html" class="code" title="function drawJunctions(Junctions,types,MarkerSize,colors)">drawJunctions</a>(vecLD.junctions);
+0022     <span class="keyword">return</span>;
+0023 <span class="keyword">end</span>
+0024 
+0025 
+0026 <span class="comment">% get the color index</span>
+0027 [colorIdx,cmap] = <a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>(vecLD,property);
+0028 
+0029 <span class="comment">% draw the line segments one at a time</span>
+0030 <span class="keyword">for</span> c = 1:vecLD.numContours
+0031     thisC = vecLD.contours{c};
+0032     <span class="keyword">for</span> s = 1:size(thisC,1)
+0033         X = [thisC(s,1);thisC(s,3)];
+0034         Y = [thisC(s,2);thisC(s,4)];
+0035         plot(X,Y,<span class="string">'k-'</span>,<span class="string">'Color'</span>,cmap(colorIdx{c}(s),:),<span class="string">'LineWidth'</span>,lineWidth);
+0036         hold on;
+0037     <span class="keyword">end</span>
+0038 <span class="keyword">end</span>
+0039 
+0040 set(gca,<span class="string">'TickLength'</span>,[0,0]);
+0041 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
+0042 axis ij equal;
+0043 
+0044 <span class="comment">% add a colorbar</span>
+0045 colormap(cmap);
+0046 <span class="keyword">switch</span> property
+0047     <span class="keyword">case</span> <span class="string">'length'</span>
+0048         colorbar(<span class="string">'Ticks'</span>,[0,1],<span class="string">'TickLabels'</span>,{<span class="string">'short'</span>,<span class="string">'long'</span>});
+0049     <span class="keyword">case</span> <span class="string">'curvature'</span>
+0050         colorbar(<span class="string">'Ticks'</span>,[0,1],<span class="string">'TickLabels'</span>,{<span class="string">'straight'</span>,<span class="string">'angular'</span>});
+0051     <span class="keyword">case</span> <span class="string">'orientation'</span>
+0052         colorbar(<span class="string">'Ticks'</span>,[0,0.5,1],<span class="string">'TickLabels'</span>,{<span class="string">'horizontal'</span>,<span class="string">'vertical'</span>,<span class="string">'horizontal'</span>});
+0053     <span class="keyword">otherwise</span>
+0054         error([<span class="string">'Unknown property: '</span>,property]);
+0055 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 17-Mar-2022 15:57:17 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
