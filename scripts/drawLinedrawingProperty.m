@@ -38,8 +38,6 @@ for c = 1:vecLD.numContours
 end
 
 set(gca,'TickLength',[0,0]);
-axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
-axis ij equal;
 
 % add a colorbar
 colormap(cmap);
@@ -53,3 +51,6 @@ switch property
     otherwise
         error(['Unknown property: ',property]);
 end
+
+axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
+axis ij image;

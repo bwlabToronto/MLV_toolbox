@@ -26,5 +26,5 @@ end
 
 set(gca,'TickLength',[0,0]);
 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
-axis ij equal;
+axis ij image;
 
