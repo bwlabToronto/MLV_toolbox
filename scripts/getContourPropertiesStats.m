@@ -41,11 +41,11 @@ for s = 1:length(whichStats)
         case 'junctions'
             vecLD = getJunctionStats(vecLD);
             histograms{end+1} = vecLD.junctionTypeHistogram;
-            bins{end+1} = vecLD.junctionTypeHistogramBins;
+            bins{end+1} = vecLD.junctionTypeBins;
             statsShortNames{end+1} = 'juncType_';
 
             histograms{end+1} = vecLD.junctionAngleHistogram;
-            bins{s+1} = vecLD.junctionAngleHistogramBins;
+            bins{s+1} = vecLD.junctionAngleBins;
             statsShortNames{end+1} = 'juncAng_';
         otherwise
             error(['Unknown property: ',thisStat]);

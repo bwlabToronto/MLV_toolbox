@@ -35,7 +35,6 @@ logMax = log10(maxCurvature + 1);
 binWidth = (logMax-logMin) / numBins; %the range of the original length is from max to min length value
 binBoundary = [logMin : binWidth : logMax];
 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
-logLengths = log10(vecLD.contourLengths + 1);
 
 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);
 for c = 1:vecLD.numContours

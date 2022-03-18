@@ -9,8 +9,14 @@ function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)
 %   lengths.
 %
 % Return:
-%   Junctions - the same junctions with fields types, angles and smallesAngle added
-%               type can be one of: 'L','T','Y','Arrow','Star'
+%   Junctions - the same junctions with fields types, minAngle and maxAngle added
+%                junction type based on maxAngle a, one of 
+%                'T': T junction - three segments: 160 < a < 200
+%                'Arrow': arrow juctions - three segments: a > 200
+%                'Y': Y junctions - three segments: a < 160
+%                'X': X junctions - four segments: 0 < a < 150
+%                'L': L junctions - two segments
+%                'Star': Star junctions - more than four segments
 
 Thresh = 2; % threshold for when to consider a point to be on the junction
 Thresh2 = Thresh * Thresh;

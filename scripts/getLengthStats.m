@@ -50,4 +50,4 @@ end
 
 vecLD.sumLengthHistogram = sum(vecLD.lengthHistograms,1);
 lengthHistogram = vecLD.sumLengthHistogram;
-vecLD.lengthHistogramBins = bins;
+vecLD.lengthBins = bins;
