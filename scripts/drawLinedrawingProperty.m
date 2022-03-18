@@ -5,7 +5,7 @@ function drawLinedrawingProperty(vecLD,property,lineWidth)
 %
 % Input:
 %   vecLD - a line drawing structure
-%   property - one of 'length','curvature','orientation'
+%   property - one of 'length','curvature','orientation','junctions'
 %   linewidth - the width of the contour lines in pixels.
 %               default: 1
 
