@@ -18,7 +18,7 @@ function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)
 %                'L': L junctions - two segments
 %                'Star': Star junctions - more than four segments
 
-Thresh = 2; % threshold for when to consider a point to be on the junction
+Thresh = 2; % threshold (in pixels) for when to consider a point to be on the junction
 Thresh2 = Thresh * Thresh;
 
 for j = 1:length(Junctions)
@@ -27,6 +27,8 @@ for j = 1:length(Junctions)
     for s = 1:numel(Junctions(j).segmentIDs)
         thisC = Junctions(j).contourIDs(s);
         thisS = Junctions(j).segmentIDs(s);
+
+        % the coordinates of the segment we care about here.
         thisSeg = vecLD.contours{thisC}(thisS,:);
         dist1 = sum((p - thisSeg(1:2)).^2);
         dist2 = sum((p - thisSeg(3:4)).^2);
@@ -40,6 +42,9 @@ for j = 1:length(Junctions)
                 if ~any((Junctions(j).contourIDs == thisC) & (Junctions(j).segmentIDs == thisS-1))
                     Junctions(j).contourIDs(end+1) = thisC;
                     Junctions(j).segmentIDs(end+1) = thisS-1;
+
+                    % add the engle of this segment - need to turn by 180
+                    % becasue the junciton psotion is now near the end point of the segment
                     junctionOris(end+1) = mod(vecLD.orientations{thisC}(thisS-1)+180,360);
                 end
             end
@@ -58,13 +63,17 @@ for j = 1:length(Junctions)
                 
 
         else
-            % both end points are far away from the junction point - need
-            % to split the segment and compute the orientation
+            % both end points of the segment are far away from the junction point - need
+            % to split the segment and compute the orientations of both fractions
             junctionOris(end+1) = mod(atan2d((p(2)-thisSeg(2)),(p(1)-thisSeg(1))),360);
             junctionOris(end+1) = mod(atan2d((p(2)-thisSeg(4)),(p(1)-thisSeg(3))),360);
         end
     end
+
+    % sorting orientations to identify neighboring segments
     junctionOris = sort(junctionOris,'ascend');
+
+    % compute the difference in orientation between neighboring segments
     Junctions(j).angles = mod((junctionOris([2:end,1]) - junctionOris),360);
     Junctions(j).minAngle = min(Junctions(j).angles);
     Junctions(j).maxAngle = max(Junctions(j).angles);
@@ -73,6 +82,7 @@ for j = 1:length(Junctions)
     switch numel(Junctions(j).angles)
         case 2
             Junctions(j).type = 'L';
+
         case 3
             if Junctions(j).maxAngle < 160
                 Junctions(j).type = 'Y';
@@ -84,6 +94,7 @@ for j = 1:length(Junctions)
 
         case 4
             Junctions(j).type = 'X';
+            
         otherwise
             Junctions(j).type = 'Star';
     end

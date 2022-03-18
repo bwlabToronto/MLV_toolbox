@@ -38,6 +38,7 @@ if numel(uniqueEquJuncts) < numel(equJuncts)
     error('Equivalence classes of junctions are not disjoint.');
 end
 
+% initialize the resulting junctions with all jucntions that do not have neighbors
 cleanedJunctions = Junctions(isJunctionAvailable);
 
 % now actually merge junctions that are in equivalence classes
@@ -53,6 +54,7 @@ for cl = 1:length(equivalenceClasses)
         thisCont = Junctions(thisClass(j)).contourIDs;
         thisSegm = Junctions(thisClass(j)).segmentIDs;
         for s = 1:numel(thisCont)
+            % make sure we don't already have this contour-segment combination
             if ~any((thisJunct.contourIDs == thisCont(s)) & (thisJunct.segmentIDs == thisSegm(s)))
                 thisJunct.contourIDs(end+1) = thisCont(s);
                 thisJunct.segmentIDs(end+1) = thisSegm(s);

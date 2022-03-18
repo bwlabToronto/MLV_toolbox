@@ -21,13 +21,6 @@ function vecLD = computeJunctions(vecLD)
 %                'Star': Star junctions - more than four segments
 
 
-if nargin < 2
-    forceRecompute = 0;
-end
-if isfield(vecLD,'junctions') && ~forceRecompute
-    return
-end
-
 if ~isfield(vecLD,'orientations')
     vecLD = computeOrientation(vecLD);
 end
@@ -44,5 +37,5 @@ jcts = detectJunctions(vecLD);
 jcts = cleanupJunctions(jcts);
 
 % 3. measure angles and classify junctions
-jcts = computeJunctionAnglesTypes(jcts,vecLD);
-vecLD.junctions = jcts;
+vecLD.junctions = computeJunctionAnglesTypes(jcts,vecLD);
+
