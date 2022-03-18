@@ -17,7 +17,7 @@ property = lower(property);
 
 % Junctions are treated differently
 if strcmp(property,'junctions')
-    drawLinedrawing(vecLD,[0,0,0],lineWidth);
+    drawLinedrawing(vecLD,lineWidth,[0,0,0]);
     drawJunctions(vecLD.junctions);
     return;
 end

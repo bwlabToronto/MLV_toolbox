@@ -1,19 +1,19 @@
-function drawLinedrawing(vecLD,color,lineWidth)
-% drawLinedrawing(vecLD,color,lineWidth)
+function drawLinedrawing(vecLD,lineWidth,color)
+% drawLinedrawing(vecLD,lineWidth,color)
 % Draws a line drawing from a data structure into a figure.
 %
 % Input:
 %   vecLD - a line drawing structure
-%   color - the RGB color for srawing the contours.
-%           default: [0,0,0] (black)
 %   linewidth - the width of the contour lines in pixels.
 %               default: 1
+%   color - the RGB color for srawing the contours.
+%           default: [0,0,0] (black)
 
 if nargin < 3
-    lineWidth = 1;
+    color = [0,0,0];
 end
 if nargin < 2
-    color = [0,0,0];
+    lineWidth = 1;
 end
 
 for c = 1:vecLD.numContours
