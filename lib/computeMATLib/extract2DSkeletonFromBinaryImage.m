@@ -18,13 +18,18 @@
 % -------------------------------------------------------------------------
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
-function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,parameters)
+
+function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)
 
 thin_boundary = double(~bwmorph(~binaryImage,'skel',inf));
 
 
 number_of_samples = 60;
 epsilon = 1 ;
+fraction = 0.025;
+area_threshold = max(floor(fraction*max(size(binaryImage,1),size(binaryImage,2))),1);
+
+
 % Computing Gradient Vector Field
 %fprintf('Distance function and gradient vector field is being computed ...\n');
 [distImage,IDX] = compute_gradient_vector_field(thin_boundary);
@@ -34,13 +39,12 @@ sphere_points = sample_sphere_2D(number_of_samples);
 %fprintf('Average outward flux is being computed ...\n');
 fluxImage = compute_aof(distImage,IDX,sphere_points,epsilon);
 skeletonImage = fluxImage;
-skeletonImage(fluxImage < parameters.threshold*number_of_samples) = 0;
-skeletonImage(fluxImage > parameters.threshold*number_of_samples) = 1;
+skeletonImage(fluxImage < threshold*number_of_samples) = 0;
+skeletonImage(fluxImage > threshold*number_of_samples) = 1;
 skeletonImage = bwmorph(skeletonImage,'skel',inf);
 
 % refine skeleton
-default_threshold_area_removal_size = parameters.area_threshold;
-skeletonImage= bwareaopen(skeletonImage,default_threshold_area_removal_size);
+skeletonImage= bwareaopen(skeletonImage,area_threshold);
 
 
 end
