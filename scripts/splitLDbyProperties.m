@@ -122,6 +122,7 @@ bottomLD.contours = vecLD.contours(bottomIdx);
 bottomLD.lengths = vecLD.lengths(bottomIdx);
 bottomLD.contourLengths = vecLD.contourLengths(bottomIdx);
 bottomLD.orientations = vecLD.orientations(bottomIdx);
+bottomLD = computeJunctions(bottomLD);
 
 topLD.originalImage = vecLD.originalImage;
 topLD.imsize = vecLD.imsize;
@@ -131,3 +132,5 @@ topLD.contours = vecLD.contours(topIdx);
 topLD.lengths = vecLD.lengths(topIdx);
 topLD.contourLengths = vecLD.contourLengths(topIdx);
 topLD.orientations = vecLD.orientations(topIdx);
+topLD = computeJunctions(topLD);
+

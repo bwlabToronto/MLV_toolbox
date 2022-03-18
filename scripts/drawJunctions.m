@@ -21,6 +21,15 @@ if nargin < 2
     types = {};
 end
 
+if ~iscell(types)
+    types = {types};
+end
+
+if isempty(Junctions)
+    warning('No junctions to plot!');
+    return;
+end
+
 junctionTypes = {Junctions(:).type};
 if isempty(types)
     types = unique(junctionTypes);
