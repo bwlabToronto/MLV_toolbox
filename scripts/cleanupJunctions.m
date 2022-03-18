@@ -1,14 +1,14 @@
 function cleanedJunctions = cleanupJunctions(Junctions, Thresh)
-% Junctions = cleanupJunctions(Junctions, Thresh)
-% Cleans up junctions by merging junctions that are within Thresh pixels of
-% each other.
+% cleanedJunctions = cleanupJunctions(Junctions, Thresh)
+%       cleans up junctions by merging junctions that are within Thresh pixels of
+%       each other.
 %
 % Input:
 %   Junctions - as computed by detectJunctions
 %   Thresh - the threshold for merging junctions (in pixels) default: 2
 %
 % Output:
-%   Junctions - cleaned up and merged.
+%   cleanedJunctions - cleaned up and merged.
 
 if nargin < 2
     Thresh=2;

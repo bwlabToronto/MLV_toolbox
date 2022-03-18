@@ -1,6 +1,6 @@
 function [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
-% [lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)
-%   computes the length histogram with logarithmiccally scaled bins, weighted by segment length
+% [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
+%       computes the length histogram with logarithmically scaled bins, weighted by segment length
 %
 % Input: 
 %   vecLD - vectorized line drawing
@@ -11,8 +11,8 @@ function [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,m
 %               (default: maximum across the contours of this image)
 %
 % Output:
-%   vecLD: the line drawing strcuture with length histogram added
-%   lengthHistogram: the histogram of length of line segments, 
+%   vecLD: the line drawing structure with length histogram added
+%   lengthHistogram: the histogram of lengths of line segments, 
 %                    weighted by their lengths
 %   bins: a vector with the bin centers
 

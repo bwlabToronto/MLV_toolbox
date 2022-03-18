@@ -1,7 +1,7 @@
 function Junctions = detectJunctions(vecLD)
 % Junctions = detectJunctions(vecLD)
-% Detects any junctions between contours in the vectorized line drawing
-% vecLD.
+%       detects any junctions between contours in the vectorized line drawing
+%       vecLD.
 %
 % Input: 
 %    vecLD: the vectorized line drawing

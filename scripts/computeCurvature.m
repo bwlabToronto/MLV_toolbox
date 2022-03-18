@@ -1,11 +1,11 @@
 function vecLD = computeCurvature(vecLD)
-% vecLD = computeCurvature(vecLD,whichProps)
+% vecLD = computeCurvature(vecLD)
 %         computes curvature for the contours in the vectorized line
 %         drawing vecLD
 % Input:
 %   vecLD - vectorized line drawing data structure
 % Output:
-%   vecLD- a vector LD of struts with curvature information added
+%   vecLD- a vector LD of structs with curvature information added
 
 
 if ~isfield(vecLD,'orientations')

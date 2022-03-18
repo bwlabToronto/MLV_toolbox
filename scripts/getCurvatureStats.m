@@ -1,6 +1,6 @@
 function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)
-% [lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)
-%   computes the curvature histogram with logarithmiccally scaled bins, weighted by segment length
+% [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)
+%       computes the curvature histogram with logarithmically scaled bins, weighted by segment length
 %
 % Input: 
 %   vecLD - vectorized line drawing
@@ -11,7 +11,7 @@ function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCu
 %                 (default: maximum across the contours of this image)
 %
 % Output:
-%   vecLD: the line drawing stucture with curvature histogram added for
+%   vecLD: the line drawing structure with curvature histogram added for
 %   each contour
 %   curvatureHistogram: the histogram of length of line segments, 
 %                    weighted by their lengths
@@ -50,5 +50,6 @@ for c = 1:vecLD.numContours
 end
 
 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
-vecLD.curvatureBins = bins;
 curvatureHistogram = vecLD.sumCurvatureHistogram;
+vecLD.curvatureBins = bins;
+

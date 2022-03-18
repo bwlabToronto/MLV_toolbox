@@ -1,10 +1,10 @@
 function vecLD = computeLength(vecLD)
-% vecLD = computeLength(vecLD,whichProps)
+% vecLD = computeLength(vecLD)
 %         computes length for the contours in the vectorized line drawing vecLD
 % Input:
 %   vecLD - vectorized line drawing data structure
 % Output:
-%   vecLD- a vector LD of struts with length information added
+%   vecLD- a vector LD of structs with length information added
 
 vecLD.lengths = {};
 vecLD.contourLengths = [];

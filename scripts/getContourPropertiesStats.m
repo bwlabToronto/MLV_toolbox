@@ -1,11 +1,11 @@
 function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)
-% [histograms,bins] = getContourPropertiesStats(vecLD, whichStats)
-%         computes histograms for the contour properties for the vectorized line drawing LD.
+% [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)
+%       computes histograms for the contour properties for the vectorized line drawing LD.
 % Input:
 %   vecLD - vectorized line drawing data structure
 %   whichStats - string or cell array of strings that defines which
-%                propertiest to compute. Options are:
-%                'curvature','orientation','length','junctions'
+%                properties to compute. Options are:
+%                'orientation','length','curvature','junctions'
 %                default: {'orientation','length','curvature','junctions'}
 % Output:
 %   vecLD -      vector line drawing with the individual contour stats added
@@ -13,14 +13,14 @@ function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vec
 %                in the same order as in whichstats
 %   bins -       cell array of bin centers for those histograms
 %                in the same order as in whichstats
-%   whichStats - the order of stats in the histgrams and bins
+%   statsShortNames - the order of stats in the histgrams and bins
 
 if nargin < 2
     whichStats = {'orientation','length','curvature','junctions'};
 end
 
 if ~iscell(whichStats)
-    whichStats = {whichStats}
+    whichStats = {whichStats};
 end
 
 histograms = {};
@@ -29,15 +29,15 @@ statsShortNames = {};
 for s = 1:length(whichStats)
     thisStat = lower(whichStats{s});
     switch thisStat
-        case 'curvature'
-            [vecLD,histograms{end+1},bins{end+1}] = getCurvatureStats(vecLD);
-            statsShortNames{end+1} = 'curv_';
         case 'orientation'
             [vecLD,histograms{end+1},bins{end+1}] = getOrientationStats(vecLD);
             statsShortNames{end+1} = 'ori_';
         case 'length'
             [vecLD,histograms{end+1},bins{end+1}] = getLengthStats(vecLD);
             statsShortNames{end+1} = 'len_';
+        case 'curvature'
+            [vecLD,histograms{end+1},bins{end+1}] = getCurvatureStats(vecLD);
+            statsShortNames{end+1} = 'curv_';  
         case 'junctions'
             vecLD = getJunctionStats(vecLD);
             histograms{end+1} = vecLD.junctionTypeHistogram;

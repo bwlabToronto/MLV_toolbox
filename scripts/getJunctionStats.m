@@ -1,7 +1,6 @@
 function vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)
-% vecLD = getJunctionStats(vecLD)
-% 
-% Computes the histograms for junction types and junction angles.
+% vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)
+%       computes the histograms for junction types and junction angles.
 %
 % Input:
 %   vecLD - vectorized line drawing

@@ -1,8 +1,7 @@
 function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)
 % Junctions = computeJunctionAnglesTypes(Junctions,vecLD)
-%
-% Computed the types and angles for the Junctions and adds them
-% to the Junctions data strcuture.
+%       computes the types and angles for the Junctions and adds them
+%       to the Junctions data structure.
 %
 % Input:
 %   Junctions - the detected and cleaned up junctions
@@ -10,8 +9,8 @@ function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)
 %   lengths.
 %
 % Return:
-%   Junctions - the same junctions with fields type, angles and smallesAngle added
-%               tyle can be one of: 'L','T','Y','Arrow','Star'
+%   Junctions - the same junctions with fields types, angles and smallesAngle added
+%               type can be one of: 'L','T','Y','Arrow','Star'
 
 Thresh = 2; % threshold for when to consider a point to be on the junction
 Thresh2 = Thresh * Thresh;
@@ -31,7 +30,7 @@ for j = 1:length(Junctions)
 
             % if there is a previous segment, it should be taken into account
             if thisS > 1
-                % make sure we don't aleady have this segment
+                % make sure we don't already have this segment
                 if ~any((Junctions(j).contourIDs == thisC) & (Junctions(j).segmentIDs == thisS-1))
                     Junctions(j).contourIDs(end+1) = thisC;
                     Junctions(j).segmentIDs(end+1) = thisS-1;

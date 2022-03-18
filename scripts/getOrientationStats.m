@@ -1,13 +1,13 @@
 function [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)
-% [oriHistogram,bins,vecLD] = getOrientationStats(vecLD)
-%   computes the orientation histogram, weighted by segment length
+% [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)
+%       computes the orientation histogram, weighted by segment length
 %
 % Input: 
 %   vecLD - vectorized line drawing
 %   numBins - number of histogram bins; default: 8
 %
 % Output:
-%   vecLD: the line drawing strcuture with individual contour histograms
+%   vecLD: the line drawing structure with individual orientation histograms
 %   added
 %   oriHistogram: the histogram of orientations of line segmetns, weighted
 %                 by their lengths
