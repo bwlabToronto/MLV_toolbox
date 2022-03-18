@@ -4,7 +4,7 @@
 <head>
   <title>Description of getCurvatureStats</title>
   <meta name="keywords" content="getCurvatureStats">
-  <meta name="description" content="[lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)">
+  <meta name="description" content="[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,14 +21,14 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>[lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)</strong></div>
+<div class="box"><strong>[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> [lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)
-   computes the curvature histogram with logarithmiccally scaled bins, weighted by segment length
+<div class="fragment"><pre class="comment"> [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)
+       computes the curvature histogram with logarithmically scaled bins, weighted by segment length
 
  Input: 
    vecLD - vectorized line drawing
@@ -39,7 +39,7 @@
                  (default: maximum across the contours of this image)
 
  Output:
-   vecLD: the line drawing stucture with curvature histogram added for
+   vecLD: the line drawing structure with curvature histogram added for
    each contour
    curvatureHistogram: the histogram of length of line segments, 
                     weighted by their lengths
@@ -49,18 +49,18 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>	vecLD = computeCurvature(vecLD,whichProps)</li></ul>
+<li><a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>	vecLD = computeCurvature(vecLD)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[histograms,bins] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
+<li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
 <!-- crossreference -->
 
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</a>
-0002 <span class="comment">% [lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)</span>
-0003 <span class="comment">%   computes the curvature histogram with logarithmiccally scaled bins, weighted by segment length</span>
+0002 <span class="comment">% [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</span>
+0003 <span class="comment">%       computes the curvature histogram with logarithmically scaled bins, weighted by segment length</span>
 0004 <span class="comment">%</span>
 0005 <span class="comment">% Input:</span>
 0006 <span class="comment">%   vecLD - vectorized line drawing</span>
@@ -71,7 +71,7 @@ This function is called by:
 0011 <span class="comment">%                 (default: maximum across the contours of this image)</span>
 0012 <span class="comment">%</span>
 0013 <span class="comment">% Output:</span>
-0014 <span class="comment">%   vecLD: the line drawing stucture with curvature histogram added for</span>
+0014 <span class="comment">%   vecLD: the line drawing structure with curvature histogram added for</span>
 0015 <span class="comment">%   each contour</span>
 0016 <span class="comment">%   curvatureHistogram: the histogram of length of line segments,</span>
 0017 <span class="comment">%                    weighted by their lengths</span>
@@ -95,23 +95,24 @@ This function is called by:
 0035 binWidth = (logMax-logMin) / numBins; <span class="comment">%the range of the original length is from max to min length value</span>
 0036 binBoundary = [logMin : binWidth : logMax];
 0037 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
-0038 logLengths = log10(vecLD.contourLengths + 1);
-0039 
-0040 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);
-0041 <span class="keyword">for</span> c = 1:vecLD.numContours
-0042     logCurvatures = log10(vecLD.curvatures{c}+1);
-0043     <span class="keyword">for</span> s = 1:numel(logCurvatures)
-0044         <span class="keyword">for</span> b = 1:numBins
-0045             <span class="keyword">if</span> logCurvatures(s) &lt; binBoundary(b+1) || (b == numBins)
-0046                 vecLD.curvatureHistograms(c,b) = vecLD.curvatureHistograms(c,b) + vecLD.lengths{c}(s);
+0038 
+0039 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);
+0040 <span class="keyword">for</span> c = 1:vecLD.numContours
+0041     logCurvatures = log10(vecLD.curvatures{c}+1);
+0042     <span class="keyword">for</span> s = 1:numel(logCurvatures)
+0043         <span class="keyword">for</span> b = 1:numBins
+0044             <span class="keyword">if</span> logCurvatures(s) &lt; binBoundary(b+1) || (b == numBins)
+0045                 vecLD.curvatureHistograms(c,b) = vecLD.curvatureHistograms(c,b) + vecLD.lengths{c}(s);
+0046                 <span class="keyword">break</span>;
 0047             <span class="keyword">end</span>
 0048         <span class="keyword">end</span>
 0049     <span class="keyword">end</span>
 0050 <span class="keyword">end</span>
 0051 
 0052 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
-0053 vecLD.curvatureBins = bins;
-0054 curvatureHistogram = vecLD.sumCurvatureHistogram;</pre></div>
-<hr><address>Generated on Thu 17-Mar-2022 16:15:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0053 curvatureHistogram = vecLD.sumCurvatureHistogram;
+0054 vecLD.curvatureBins = bins;
+0055</pre></div>
+<hr><address>Generated on Fri 18-Mar-2022 14:38:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

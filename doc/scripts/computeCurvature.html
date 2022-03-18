@@ -4,7 +4,7 @@
 <head>
   <title>Description of computeCurvature</title>
   <meta name="keywords" content="computeCurvature">
-  <meta name="description" content="vecLD = computeCurvature(vecLD,whichProps)">
+  <meta name="description" content="vecLD = computeCurvature(vecLD)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,41 +21,41 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>vecLD = computeCurvature(vecLD,whichProps)</strong></div>
+<div class="box"><strong>vecLD = computeCurvature(vecLD)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function vecLD = computeCurvature(vecLD) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> vecLD = computeCurvature(vecLD,whichProps)
+<div class="fragment"><pre class="comment"> vecLD = computeCurvature(vecLD)
          computes curvature for the contours in the vectorized line
          drawing vecLD
  Input:
    vecLD - vectorized line drawing data structure
  Output:
-   vecLD- a vector LD of struts with curvature information added</pre></div>
+   vecLD- a vector LD of structs with curvature information added</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>	vecLD = computeLength(vecLD,whichProps)</li><li><a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>	vecLD = computeOrientation(vecLD,whichProps)</li></ul>
+<li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>	vecLD = computeLength(vecLD)</li><li><a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>	vecLD = computeOrientation(vecLD)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)">getCurvatureStats</a>	[lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)</li></ul>
+<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)">getCurvatureStats</a>	[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</li></ul>
 <!-- crossreference -->
 
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = computeCurvature(vecLD)</a>
-0002 <span class="comment">% vecLD = computeCurvature(vecLD,whichProps)</span>
+0002 <span class="comment">% vecLD = computeCurvature(vecLD)</span>
 0003 <span class="comment">%         computes curvature for the contours in the vectorized line</span>
 0004 <span class="comment">%         drawing vecLD</span>
 0005 <span class="comment">% Input:</span>
 0006 <span class="comment">%   vecLD - vectorized line drawing data structure</span>
 0007 <span class="comment">% Output:</span>
-0008 <span class="comment">%   vecLD- a vector LD of struts with curvature information added</span>
+0008 <span class="comment">%   vecLD- a vector LD of structs with curvature information added</span>
 0009 
 0010 
 0011 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'orientations'</span>)
@@ -90,6 +90,6 @@ This function is called by:
 0040 <span class="keyword">end</span>
 0041 
 0042</pre></div>
-<hr><address>Generated on Thu 17-Mar-2022 16:15:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 18-Mar-2022 14:38:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

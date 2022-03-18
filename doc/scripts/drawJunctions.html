@@ -86,18 +86,21 @@ This function is called by:
 0030 <span class="keyword">if</span> nargin &lt; 4
 0031     colors = lines(numTypes);
 0032 <span class="keyword">end</span>
-0033 
-0034 positions = reshape([Junctions(:).position],2,length(Junctions))';
-0035 hold on;
-0036 <span class="keyword">for</span> t = 1:length(types)
-0037     typeIdx = strcmp(types{t},junctionTypes);
-0038     h(t) = plot(positions(typeIdx,1),positions(typeIdx,2),<span class="string">'o'</span>,<span class="keyword">...</span>
-0039                 <span class="string">'MarkerFaceColor'</span>,colors(t,:),<span class="keyword">...</span>
-0040                 <span class="string">'MarkerEdgeColor'</span>,colors(t,:),<span class="keyword">...</span>
-0041                 <span class="string">'MarkerSize'</span>,MarkerSize);
-0042 <span class="keyword">end</span>
-0043 legend(h,types,<span class="string">'Location'</span>,<span class="string">'NorthEastOutside'</span>);
-0044 legend boxoff;</pre></div>
-<hr><address>Generated on Thu 17-Mar-2022 16:15:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0033 <span class="keyword">if</span> isempty(colors)
+0034     colors = lines(numTypes);
+0035 <span class="keyword">end</span>
+0036 
+0037 positions = reshape([Junctions(:).position],2,length(Junctions))';
+0038 hold on;
+0039 <span class="keyword">for</span> t = 1:length(types)
+0040     typeIdx = strcmp(types{t},junctionTypes);
+0041     h(t) = plot(positions(typeIdx,1),positions(typeIdx,2),<span class="string">'o'</span>,<span class="keyword">...</span>
+0042                 <span class="string">'MarkerFaceColor'</span>,colors(t,:),<span class="keyword">...</span>
+0043                 <span class="string">'MarkerEdgeColor'</span>,colors(t,:),<span class="keyword">...</span>
+0044                 <span class="string">'MarkerSize'</span>,MarkerSize);
+0045 <span class="keyword">end</span>
+0046 legend(h,types,<span class="string">'Location'</span>,<span class="string">'NorthEastOutside'</span>);
+0047 legend boxoff;</pre></div>
+<hr><address>Generated on Fri 18-Mar-2022 14:38:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

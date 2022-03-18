@@ -4,7 +4,7 @@
 <head>
   <title>Description of getContourPropertiesStats</title>
   <meta name="keywords" content="getContourPropertiesStats">
-  <meta name="description" content="[histograms,bins] = getContourPropertiesStats(vecLD, whichStats)">
+  <meta name="description" content="[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,19 +21,19 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>[histograms,bins] = getContourPropertiesStats(vecLD, whichStats)</strong></div>
+<div class="box"><strong>[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> [histograms,bins] = getContourPropertiesStats(vecLD, whichStats)
-         computes histograms for the contour properties for the vectorized line drawing LD.
+<div class="fragment"><pre class="comment"> [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)
+       computes histograms for the contour properties for the vectorized line drawing LD.
  Input:
    vecLD - vectorized line drawing data structure
    whichStats - string or cell array of strings that defines which
-                propertiest to compute. Options are:
-                'curvature','orientation','length','junctions'
+                properties to compute. Options are:
+                'orientation','length','curvature','junctions'
                 default: {'orientation','length','curvature','junctions'}
  Output:
    vecLD -      vector line drawing with the individual contour stats added
@@ -41,13 +41,13 @@
                 in the same order as in whichstats
    bins -       cell array of bin centers for those histograms
                 in the same order as in whichstats
-   whichStats - the order of stats in the histgrams and bins</pre></div>
+   statsShortNames - the order of stats in the histgrams and bins</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)">getCurvatureStats</a>	[lengthHistogram,bins,vecLD] = getCurvatureStats(vecLD,numBins,minLength,maxLength)</li><li><a href="getJunctionStats.html" class="code" title="function vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>	vecLD = getJunctionStats(vecLD)</li><li><a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)">getLengthStats</a>	[lengthHistogram,bins,vecLD] = getLengthStats(vecLD,numBins,minLength,maxLength)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[oriHistogram,bins,vecLD] = getOrientationStats(vecLD)</li></ul>
+<li><a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)">getCurvatureStats</a>	[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</li><li><a href="getJunctionStats.html" class="code" title="function vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>	vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</li><li><a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)">getLengthStats</a>	[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="test_FeatureRanking.html" class="code" title="">test_FeatureRanking</a>	testing ranking by particular featues</li><li><a href="writeSceneLDsToCSV.html" class="code" title="function resultsTable = writeSceneLDsToCSV(csvFileName)">writeSceneLDsToCSV</a>	allSceneLDsToCSV(csvFileName)</li></ul>
@@ -57,13 +57,13 @@ This function is called by:
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</a>
-0002 <span class="comment">% [histograms,bins] = getContourPropertiesStats(vecLD, whichStats)</span>
-0003 <span class="comment">%         computes histograms for the contour properties for the vectorized line drawing LD.</span>
+0002 <span class="comment">% [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</span>
+0003 <span class="comment">%       computes histograms for the contour properties for the vectorized line drawing LD.</span>
 0004 <span class="comment">% Input:</span>
 0005 <span class="comment">%   vecLD - vectorized line drawing data structure</span>
 0006 <span class="comment">%   whichStats - string or cell array of strings that defines which</span>
-0007 <span class="comment">%                propertiest to compute. Options are:</span>
-0008 <span class="comment">%                'curvature','orientation','length','junctions'</span>
+0007 <span class="comment">%                properties to compute. Options are:</span>
+0008 <span class="comment">%                'orientation','length','curvature','junctions'</span>
 0009 <span class="comment">%                default: {'orientation','length','curvature','junctions'}</span>
 0010 <span class="comment">% Output:</span>
 0011 <span class="comment">%   vecLD -      vector line drawing with the individual contour stats added</span>
@@ -71,14 +71,14 @@ This function is called by:
 0013 <span class="comment">%                in the same order as in whichstats</span>
 0014 <span class="comment">%   bins -       cell array of bin centers for those histograms</span>
 0015 <span class="comment">%                in the same order as in whichstats</span>
-0016 <span class="comment">%   whichStats - the order of stats in the histgrams and bins</span>
+0016 <span class="comment">%   statsShortNames - the order of stats in the histgrams and bins</span>
 0017 
 0018 <span class="keyword">if</span> nargin &lt; 2
 0019     whichStats = {<span class="string">'orientation'</span>,<span class="string">'length'</span>,<span class="string">'curvature'</span>,<span class="string">'junctions'</span>};
 0020 <span class="keyword">end</span>
 0021 
 0022 <span class="keyword">if</span> ~iscell(whichStats)
-0023     whichStats = {whichStats}
+0023     whichStats = {whichStats};
 0024 <span class="keyword">end</span>
 0025 
 0026 histograms = {};
@@ -87,29 +87,29 @@ This function is called by:
 0029 <span class="keyword">for</span> s = 1:length(whichStats)
 0030     thisStat = lower(whichStats{s});
 0031     <span class="keyword">switch</span> thisStat
-0032         <span class="keyword">case</span> <span class="string">'curvature'</span>
-0033             [vecLD,histograms{end+1},bins{end+1}] = <a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)">getCurvatureStats</a>(vecLD);
-0034             statsShortNames{end+1} = <span class="string">'curv_'</span>;
-0035         <span class="keyword">case</span> <span class="string">'orientation'</span>
-0036             [vecLD,histograms{end+1},bins{end+1}] = <a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>(vecLD);
-0037             statsShortNames{end+1} = <span class="string">'ori_'</span>;
-0038         <span class="keyword">case</span> <span class="string">'length'</span>
-0039             [vecLD,histograms{end+1},bins{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)">getLengthStats</a>(vecLD);
-0040             statsShortNames{end+1} = <span class="string">'len_'</span>;
+0032         <span class="keyword">case</span> <span class="string">'orientation'</span>
+0033             [vecLD,histograms{end+1},bins{end+1}] = <a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>(vecLD);
+0034             statsShortNames{end+1} = <span class="string">'ori_'</span>;
+0035         <span class="keyword">case</span> <span class="string">'length'</span>
+0036             [vecLD,histograms{end+1},bins{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)">getLengthStats</a>(vecLD);
+0037             statsShortNames{end+1} = <span class="string">'len_'</span>;
+0038         <span class="keyword">case</span> <span class="string">'curvature'</span>
+0039             [vecLD,histograms{end+1},bins{end+1}] = <a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)">getCurvatureStats</a>(vecLD);
+0040             statsShortNames{end+1} = <span class="string">'curv_'</span>;  
 0041         <span class="keyword">case</span> <span class="string">'junctions'</span>
 0042             vecLD = <a href="getJunctionStats.html" class="code" title="function vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>(vecLD);
 0043             histograms{end+1} = vecLD.junctionTypeHistogram;
-0044             bins{end+1} = vecLD.junctionTypeHistogramBins;
+0044             bins{end+1} = vecLD.junctionTypeBins;
 0045             statsShortNames{end+1} = <span class="string">'juncType_'</span>;
 0046 
 0047             histograms{end+1} = vecLD.junctionAngleHistogram;
-0048             bins{s+1} = vecLD.junctionAngleHistogramBins;
+0048             bins{s+1} = vecLD.junctionAngleBins;
 0049             statsShortNames{end+1} = <span class="string">'juncAng_'</span>;
 0050         <span class="keyword">otherwise</span>
 0051             error([<span class="string">'Unknown property: '</span>,thisStat]);
 0052     <span class="keyword">end</span>
 0053 <span class="keyword">end</span>
 0054</pre></div>
-<hr><address>Generated on Thu 17-Mar-2022 16:15:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 18-Mar-2022 14:38:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

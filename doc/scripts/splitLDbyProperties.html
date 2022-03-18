@@ -159,60 +159,62 @@ This function is called by:
 0075                 <span class="comment">% compute weighted average curvature</span>
 0076                 thisCriterion = NaN(1,vecLD.numContours);
 0077                 <span class="keyword">for</span> c = 1:vecLD.numContours
-0078                     thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2) / vecLD.contourLengths(c);
-0079                 <span class="keyword">end</span>
-0080             <span class="keyword">else</span>
-0081                 thisCriterion = sum(vecLD.contourHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
-0082             <span class="keyword">end</span>
-0083 
-0084         <span class="keyword">case</span> <span class="string">'orientation'</span>
-0085             <span class="keyword">if</span> isempty(histogramWeights)
-0086                 <span class="comment">% project angles onto the main axis to get horizontal - vertical</span>
-0087                 horVer = abs(cosd(vecLD.orientationBins)) - abs(sind(vecLD.orientationBins));
-0088                 thisCriterion = sum(vecLD.orientationHistograms .* repmat(horVer,vecLD.numContours,1),2);
-0089             <span class="keyword">else</span>
-0090                 thisCriterion = sum(vecLD.orientationHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
-0091             <span class="keyword">end</span>
-0092 
-0093         <span class="keyword">case</span> <span class="string">'junctions'</span>
-0094             <span class="keyword">if</span> isempty(histogramWeights)
-0095                 <span class="comment">% just use the sum of all junctions</span>
-0096                 thisCriterion = sum(vecLD.junctionContourHistograms,2);
-0097             <span class="keyword">else</span>
-0098                 thisCriterion = sum(vecLD.junctionContourHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
-0099             <span class="keyword">end</span>
-0100 
-0101         <span class="keyword">otherwise</span>
-0102             error([<span class="string">'Unknown property: '</span>,properties{p}]);        
-0103     <span class="keyword">end</span>
-0104     [~,thisIdx] = sort(thisCriterion,<span class="string">'ascend'</span>);
-0105     thisRank(thisIdx) = [1:numel(thisIdx)];
-0106     totalRank = totalRank + weights(p) * thisRank;
-0107 <span class="keyword">end</span>
-0108 
-0109 <span class="comment">% split by totalRank</span>
-0110 [~,totalIdx] = sort(totalRank,<span class="string">'ascend'</span>);
-0111 sumLen = cumsum(vecLD.contourLengths(totalIdx) / sum(vecLD.contourLengths));
-0112 bottomIdx = totalIdx(find(sumLen &lt;= fraction));
-0113 topIdx = totalIdx(find(sumLen &gt;= (1-fraction)));
-0114 
-0115 bottomLD.originalImage = vecLD.originalImage;
-0116 bottomLD.imsize = vecLD.imsize;
-0117 bottomLD.lineMethod = sprintf(<span class="string">'%s - split bottom %g'</span>,vecLD.lineMethod,fraction);
-0118 bottomLD.numContours = numel(bottomIdx);
-0119 bottomLD.contours = vecLD.contours(bottomIdx);
-0120 bottomLD.lengths = vecLD.lengths(bottomIdx);
-0121 bottomLD.contourLengths = vecLD.contourLengths(bottomIdx);
-0122 bottomLD.orientations = vecLD.orientations(bottomIdx);
-0123 
-0124 topLD.originalImage = vecLD.originalImage;
-0125 topLD.imsize = vecLD.imsize;
-0126 topLD.lineMethod = sprintf(<span class="string">'%s - split top %g'</span>,vecLD.lineMethod,fraction);
-0127 topLD.numContours = numel(topIdx);
-0128 topLD.contours = vecLD.contours(topIdx);
-0129 topLD.lengths = vecLD.lengths(topIdx);
-0130 topLD.contourLengths = vecLD.contourLengths(topIdx);
-0131 topLD.orientations = vecLD.orientations(topIdx);</pre></div>
-<hr><address>Generated on Thu 17-Mar-2022 16:15:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0078                     <span class="comment">%thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2) / vecLD.contourLengths(c);</span>
+0079                     thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2);
+0080                 <span class="keyword">end</span>
+0081             <span class="keyword">else</span>
+0082                 thisCriterion = sum(vecLD.curvatureHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
+0083             <span class="keyword">end</span>
+0084 
+0085         <span class="keyword">case</span> <span class="string">'orientation'</span>
+0086             <span class="keyword">if</span> isempty(histogramWeights)
+0087                 <span class="keyword">for</span> c = 1:vecLD.numContours
+0088                     <span class="comment">% project angles onto the main axes to get horizontal - vertical</span>
+0089                     thisCriterion(c) = sum((abs(cosd(vecLD.orientations{c})) - abs(sind(vecLD.orientations{c}))).*vecLD.lengths{c}',2);
+0090                 <span class="keyword">end</span>
+0091             <span class="keyword">else</span>
+0092                 thisCriterion = sum(vecLD.orientationHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
+0093             <span class="keyword">end</span>
+0094 
+0095         <span class="keyword">case</span> <span class="string">'junctions'</span>
+0096             <span class="keyword">if</span> isempty(histogramWeights)
+0097                 <span class="comment">% just use the sum of all junctions</span>
+0098                 thisCriterion = sum(vecLD.junctionContourHistograms,2);
+0099             <span class="keyword">else</span>
+0100                 thisCriterion = sum(vecLD.junctionContourHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
+0101             <span class="keyword">end</span>
+0102 
+0103         <span class="keyword">otherwise</span>
+0104             error([<span class="string">'Unknown property: '</span>,properties{p}]);        
+0105     <span class="keyword">end</span>
+0106     [~,thisIdx] = sort(thisCriterion,<span class="string">'ascend'</span>);
+0107     thisRank(thisIdx) = [1:numel(thisIdx)];
+0108     totalRank = totalRank + weights(p) * thisRank;
+0109 <span class="keyword">end</span>
+0110 
+0111 <span class="comment">% split by totalRank</span>
+0112 [~,totalIdx] = sort(totalRank,<span class="string">'ascend'</span>);
+0113 sumLen = cumsum(vecLD.contourLengths(totalIdx) / sum(vecLD.contourLengths));
+0114 bottomIdx = totalIdx(find(sumLen &lt;= fraction));
+0115 topIdx = totalIdx(find(sumLen &gt;= (1-fraction)));
+0116 
+0117 bottomLD.originalImage = vecLD.originalImage;
+0118 bottomLD.imsize = vecLD.imsize;
+0119 bottomLD.lineMethod = sprintf(<span class="string">'%s - split bottom %g'</span>,vecLD.lineMethod,fraction);
+0120 bottomLD.numContours = numel(bottomIdx);
+0121 bottomLD.contours = vecLD.contours(bottomIdx);
+0122 bottomLD.lengths = vecLD.lengths(bottomIdx);
+0123 bottomLD.contourLengths = vecLD.contourLengths(bottomIdx);
+0124 bottomLD.orientations = vecLD.orientations(bottomIdx);
+0125 
+0126 topLD.originalImage = vecLD.originalImage;
+0127 topLD.imsize = vecLD.imsize;
+0128 topLD.lineMethod = sprintf(<span class="string">'%s - split top %g'</span>,vecLD.lineMethod,fraction);
+0129 topLD.numContours = numel(topIdx);
+0130 topLD.contours = vecLD.contours(topIdx);
+0131 topLD.lengths = vecLD.lengths(topIdx);
+0132 topLD.contourLengths = vecLD.contourLengths(topIdx);
+0133 topLD.orientations = vecLD.orientations(topIdx);</pre></div>
+<hr><address>Generated on Fri 18-Mar-2022 14:38:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
