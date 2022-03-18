@@ -43,6 +43,7 @@ for c = 1:vecLD.numContours
         for b = 1:numBins
             if logCurvatures(s) < binBoundary(b+1) || (b == numBins)
                 vecLD.curvatureHistograms(c,b) = vecLD.curvatureHistograms(c,b) + vecLD.lengths{c}(s);
+                break;
             end
         end
     end

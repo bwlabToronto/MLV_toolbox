@@ -75,17 +75,19 @@ for p = 1:length(properties)
                 % compute weighted average curvature
                 thisCriterion = NaN(1,vecLD.numContours);
                 for c = 1:vecLD.numContours
-                    thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2) / vecLD.contourLengths(c);
+                    %thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2) / vecLD.contourLengths(c);
+                    thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2);
                 end
             else
-                thisCriterion = sum(vecLD.contourHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
+                thisCriterion = sum(vecLD.curvatureHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
             end
 
         case 'orientation'
             if isempty(histogramWeights)
-                % project angles onto the main axis to get horizontal - vertical
-                horVer = abs(cosd(vecLD.orientationBins)) - abs(sind(vecLD.orientationBins));
-                thisCriterion = sum(vecLD.orientationHistograms .* repmat(horVer,vecLD.numContours,1),2);
+                for c = 1:vecLD.numContours
+                    % project angles onto the main axes to get horizontal - vertical
+                    thisCriterion(c) = sum((abs(cosd(vecLD.orientations{c})) - abs(sind(vecLD.orientations{c}))).*vecLD.lengths{c}',2);
+                end
             else
                 thisCriterion = sum(vecLD.orientationHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
             end

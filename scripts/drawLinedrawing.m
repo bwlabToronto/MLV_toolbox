@@ -20,7 +20,7 @@ for c = 1:vecLD.numContours
     thisC = vecLD.contours{c};
     X = [thisC(:,1);thisC(end,3)];
     Y = [thisC(:,2);thisC(end,4)];
-    plot(X,Y,'k-','Color',color,'LineWidth',lineWidth);
+    plot(X,Y,'-','Color',color,'LineWidth',lineWidth);
     hold on;
 end
 

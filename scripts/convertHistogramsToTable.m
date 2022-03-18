@@ -20,7 +20,6 @@ for p = 1:length(histograms)
     for b = 1:numel(hh)
         switch class(bins{p}(b))
             case 'double'
-                %varnames{end+1} = sprintf('%s%g',shortStatsNames{p},bins{p}(b));
                 varnames{end+1} = sprintf('%s%d',shortStatsNames{p},b);
                 values{end+1} = hh(b);
             case {'char','cell'}

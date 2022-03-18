@@ -30,6 +30,9 @@ numTypes = length(types);
 if nargin < 4
     colors = lines(numTypes);
 end
+if isempty(colors)
+    colors = lines(numTypes);
+end
 
 positions = reshape([Junctions(:).position],2,length(Junctions))';
 hold on;
