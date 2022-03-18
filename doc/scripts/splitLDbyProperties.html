@@ -73,7 +73,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-</ul>
+<li><a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>	vecLD = computeJunctions(vecLD)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
@@ -206,15 +206,18 @@ This function is called by:
 0122 bottomLD.lengths = vecLD.lengths(bottomIdx);
 0123 bottomLD.contourLengths = vecLD.contourLengths(bottomIdx);
 0124 bottomLD.orientations = vecLD.orientations(bottomIdx);
-0125 
-0126 topLD.originalImage = vecLD.originalImage;
-0127 topLD.imsize = vecLD.imsize;
-0128 topLD.lineMethod = sprintf(<span class="string">'%s - split top %g'</span>,vecLD.lineMethod,fraction);
-0129 topLD.numContours = numel(topIdx);
-0130 topLD.contours = vecLD.contours(topIdx);
-0131 topLD.lengths = vecLD.lengths(topIdx);
-0132 topLD.contourLengths = vecLD.contourLengths(topIdx);
-0133 topLD.orientations = vecLD.orientations(topIdx);</pre></div>
-<hr><address>Generated on Fri 18-Mar-2022 14:55:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0125 bottomLD = <a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>(bottomLD);
+0126 
+0127 topLD.originalImage = vecLD.originalImage;
+0128 topLD.imsize = vecLD.imsize;
+0129 topLD.lineMethod = sprintf(<span class="string">'%s - split top %g'</span>,vecLD.lineMethod,fraction);
+0130 topLD.numContours = numel(topIdx);
+0131 topLD.contours = vecLD.contours(topIdx);
+0132 topLD.lengths = vecLD.lengths(topIdx);
+0133 topLD.contourLengths = vecLD.contourLengths(topIdx);
+0134 topLD.orientations = vecLD.orientations(topIdx);
+0135 topLD = <a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>(topLD);
+0136</pre></div>
+<hr><address>Generated on Fri 18-Mar-2022 18:15:55 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

@@ -48,7 +48,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>	colorIdx = computeColorIndex(vecLD,'property')</li><li><a href="renderJunctions.html" class="code" title="function img = renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)">renderJunctions</a>	renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)</li><li><a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,color,lineWidth)">renderLinedrawing</a>	img = renderLinedrawing(vecLD,img,imSize,color,lineWidth)</li></ul>
+<li><a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>	colorIdx = computeColorIndex(vecLD,'property')</li><li><a href="renderJunctions.html" class="code" title="function img = renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)">renderJunctions</a>	renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)</li><li><a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>	img = renderLinedrawing(vecLD,img,imSize,lineWidth,color)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
@@ -97,7 +97,7 @@ This function is called by:
 0038 
 0039 <span class="comment">% special case for junctions</span>
 0040 <span class="keyword">if</span> strcmp(property, <span class="string">'junctions'</span>)
-0041     img = <a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,color,lineWidth)">renderLinedrawing</a>(vecLD,img,imsize,[0,0,0],lineWidth);
+0041     img = <a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>(vecLD,img,imsize,[0,0,0],lineWidth);
 0042     img = <a href="renderJunctions.html" class="code" title="function img = renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)">renderJunctions</a>(vecLD.junctions,{},img,vecLD.imsize);
 0043     <span class="keyword">return</span>;
 0044 <span class="keyword">end</span>
@@ -119,6 +119,6 @@ This function is called by:
 0060 
 0061 <span class="comment">% That's it, we're done.</span>
 0062</pre></div>
-<hr><address>Generated on Fri 18-Mar-2022 14:55:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 18-Mar-2022 18:15:55 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

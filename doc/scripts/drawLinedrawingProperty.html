@@ -41,7 +41,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>	colorIdx = computeColorIndex(vecLD,'property')</li><li><a href="drawJunctions.html" class="code" title="function drawJunctions(Junctions,types,MarkerSize,colors)">drawJunctions</a>	drawJunctions(Junctions,types,MarkerSize,colors)</li><li><a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,color,lineWidth)">drawLinedrawing</a>	drawLinedrawing(vecLD,color,lineWidth)</li></ul>
+<li><a href="computeColorIndex.html" class="code" title="function [colorIdx,cmap] = computeColorIndex(vecLD,property)">computeColorIndex</a>	colorIdx = computeColorIndex(vecLD,'property')</li><li><a href="drawJunctions.html" class="code" title="function drawJunctions(Junctions,types,MarkerSize,colors)">drawJunctions</a>	drawJunctions(Junctions,types,MarkerSize,colors)</li><li><a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,lineWidth,color)">drawLinedrawing</a>	drawLinedrawing(vecLD,lineWidth,color)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="drawAllProperties.html" class="code" title="function drawAllProperties(vecLD)">drawAllProperties</a>	drawAllProperties(vecLD)</li></ul>
@@ -69,7 +69,7 @@ This function is called by:
 0017 
 0018 <span class="comment">% Junctions are treated differently</span>
 0019 <span class="keyword">if</span> strcmp(property,<span class="string">'junctions'</span>)
-0020     <a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,color,lineWidth)">drawLinedrawing</a>(vecLD,[0,0,0],lineWidth);
+0020     <a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,lineWidth,color)">drawLinedrawing</a>(vecLD,lineWidth,[0,0,0]);
 0021     <a href="drawJunctions.html" class="code" title="function drawJunctions(Junctions,types,MarkerSize,colors)">drawJunctions</a>(vecLD.junctions);
 0022     <span class="keyword">return</span>;
 0023 <span class="keyword">end</span>
@@ -106,6 +106,6 @@ This function is called by:
 0054 
 0055 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
 0056 axis ij image;</pre></div>
-<hr><address>Generated on Fri 18-Mar-2022 14:55:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 18-Mar-2022 18:15:55 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

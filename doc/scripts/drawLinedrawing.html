@@ -4,7 +4,7 @@
 <head>
   <title>Description of drawLinedrawing</title>
   <meta name="keywords" content="drawLinedrawing">
-  <meta name="description" content="drawLinedrawing(vecLD,color,lineWidth)">
+  <meta name="description" content="drawLinedrawing(vecLD,lineWidth,color)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,21 +21,21 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>drawLinedrawing(vecLD,color,lineWidth)</strong></div>
+<div class="box"><strong>drawLinedrawing(vecLD,lineWidth,color)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function drawLinedrawing(vecLD,color,lineWidth) </strong></div>
+<div class="box"><strong>function drawLinedrawing(vecLD,lineWidth,color) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> drawLinedrawing(vecLD,color,lineWidth)
+<div class="fragment"><pre class="comment"> drawLinedrawing(vecLD,lineWidth,color)
  Draws a line drawing from a data structure into a figure.
 
  Input:
    vecLD - a line drawing structure
-   color - the RGB color for srawing the contours.
-           default: [0,0,0] (black)
    linewidth - the width of the contour lines in pixels.
-               default: 1</pre></div>
+               default: 1
+   color - the RGB color for srawing the contours.
+           default: [0,0,0] (black)</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -50,22 +50,22 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function drawLinedrawing(vecLD,color,lineWidth)</a>
-0002 <span class="comment">% drawLinedrawing(vecLD,color,lineWidth)</span>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function drawLinedrawing(vecLD,lineWidth,color)</a>
+0002 <span class="comment">% drawLinedrawing(vecLD,lineWidth,color)</span>
 0003 <span class="comment">% Draws a line drawing from a data structure into a figure.</span>
 0004 <span class="comment">%</span>
 0005 <span class="comment">% Input:</span>
 0006 <span class="comment">%   vecLD - a line drawing structure</span>
-0007 <span class="comment">%   color - the RGB color for srawing the contours.</span>
-0008 <span class="comment">%           default: [0,0,0] (black)</span>
-0009 <span class="comment">%   linewidth - the width of the contour lines in pixels.</span>
-0010 <span class="comment">%               default: 1</span>
+0007 <span class="comment">%   linewidth - the width of the contour lines in pixels.</span>
+0008 <span class="comment">%               default: 1</span>
+0009 <span class="comment">%   color - the RGB color for srawing the contours.</span>
+0010 <span class="comment">%           default: [0,0,0] (black)</span>
 0011 
 0012 <span class="keyword">if</span> nargin &lt; 3
-0013     lineWidth = 1;
+0013     color = [0,0,0];
 0014 <span class="keyword">end</span>
 0015 <span class="keyword">if</span> nargin &lt; 2
-0016     color = [0,0,0];
+0016     lineWidth = 1;
 0017 <span class="keyword">end</span>
 0018 
 0019 <span class="keyword">for</span> c = 1:vecLD.numContours
@@ -80,6 +80,6 @@ This function is called by:
 0028 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
 0029 axis ij image;
 0030</pre></div>
-<hr><address>Generated on Fri 18-Mar-2022 14:55:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 18-Mar-2022 18:15:55 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
