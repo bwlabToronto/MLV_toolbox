@@ -1,5 +1,5 @@
-function img = renderLinedrawing(vecLD,img,imsize,color,lineWidth)
-% img = renderLinedrawing(vecLD,img,imSize,color,lineWidth)
+function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)
+% img = renderLinedrawing(vecLD,img,imSize,lineWidth,color)
 %   Draws the vectorized line drawing into an image.
 %
 % Input:
@@ -9,20 +9,21 @@ function img = renderLinedrawing(vecLD,img,imsize,color,lineWidth)
 %   imsize - the image size in [w,h]. If imsize is different from vecLD.imsize, the
 %            drawing will be scaled up or down to the new imsize.
 %            default: [] (use vecLD.imsize)
-%   color - the RGB color for srawing the contours.
-%           default: [0,0,0] (black)
 %   linewidth - the width of the contour lines in pixels.
 %               default: 1
+%   color - the RGB color for drawing the contours.
+%           default: [0,0,0] (black)
 %
 % Return:
 %   img - the RGB image with the contours drawn in.
 
+
 if nargin < 5
-    lineWidth = 1;
+    color = [0,0,0];
 end
 
 if nargin < 4
-    color = [0,0,0];
+    lineWidth = 1;
 end
 
 if nargin < 3
