@@ -1,4 +1,4 @@
-function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)
+function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)
 % [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)
 %       computes the curvature histogram with logarithmically scaled bins, weighted by segment length
 %
@@ -52,4 +52,6 @@ end
 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
 curvatureHistogram = vecLD.sumCurvatureHistogram;
 vecLD.curvatureBins = bins;
+shortName = 'curv';
+
 

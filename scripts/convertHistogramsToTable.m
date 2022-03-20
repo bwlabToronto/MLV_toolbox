@@ -20,10 +20,10 @@ for p = 1:length(histograms)
     for b = 1:numel(hh)
         switch class(bins{p}(b))
             case 'double'
-                varnames{end+1} = sprintf('%s%d',shortStatsNames{p},b);
+                varnames{end+1} = sprintf('%s_%d',shortStatsNames{p},b);
                 values{end+1} = hh(b);
             case {'char','cell'}
-                varnames{end+1} = [shortStatsNames{p},bins{p}{b}];
+                varnames{end+1} = sprintf('%s_%s',shortStatsNames{p},bins{p}{b});
                 values{end+1} = hh(b);
             otherwise
                 error(['Don''t know how to handle bin names of type: ',class(bins{p}(b))]);

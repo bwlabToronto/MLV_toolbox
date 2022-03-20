@@ -1,4 +1,4 @@
-function [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)
+function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins)
 % [vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)
 %       computes the orientation histogram, weighted by segment length
 %
@@ -47,7 +47,7 @@ end
 vecLD.sumOrientionHistogram = sum(vecLD.orientationHistograms,1);
 oriHistogram = vecLD.sumOrientionHistogram;
 vecLD.orientationBins = bins;
-
+shortName = 'ori';
 
 
 

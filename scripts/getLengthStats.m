@@ -1,4 +1,4 @@
-function [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
+function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLength,maxLength)
 % [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
 %       computes the length histogram with logarithmically scaled bins, weighted by segment length
 %
@@ -51,3 +51,4 @@ end
 vecLD.sumLengthHistogram = sum(vecLD.lengthHistograms,1);
 lengthHistogram = vecLD.sumLengthHistogram;
 vecLD.lengthBins = bins;
+shortName = 'len';

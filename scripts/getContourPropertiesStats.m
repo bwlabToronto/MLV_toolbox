@@ -1,4 +1,4 @@
-function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)
+function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)
 % [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)
 %       computes histograms for the contour properties for the vectorized line drawing LD.
 % Input:
@@ -7,6 +7,14 @@ function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vec
 %                properties to compute. Options are:
 %                'orientation','length','curvature','junctions'
 %                default: {'orientation','length','curvature','junctions'}
+%   minmaxLen - this minimum and maximum for the length histogram 
+%               default: [] - use the minimum and maximum for this image
+%   minmaxCurv- this minimum and maximum for the curvature histogram 
+%               default: [] - use the minimum and maximum for this image
+%   junctionTypes - a cell array with the junction types to incldue in the histogram
+%                   deault: {} - use all jucniton types present in this
+%                   image
+%
 % Output:
 %   vecLD -      vector line drawing with the individual contour stats added
 %   histograms - cell array of histograms for the features 
@@ -15,6 +23,15 @@ function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vec
 %                in the same order as in whichstats
 %   statsShortNames - the order of stats in the histgrams and bins
 
+if nargin < 5
+    junctionTypes = {};
+end
+if nargin < 4
+    minmaxCurv = [];
+end
+if nargin < 3
+    minmaxLen = []
+end
 if nargin < 2
     whichStats = {'orientation','length','curvature','junctions'};
 end
@@ -23,30 +40,36 @@ if ~iscell(whichStats)
     whichStats = {whichStats};
 end
 
+numBins = 8;
 histograms = {};
 bins = {};
-statsShortNames = {};
+statsNames = {};
 for s = 1:length(whichStats)
     thisStat = lower(whichStats{s});
     switch thisStat
         case 'orientation'
-            [vecLD,histograms{end+1},bins{end+1}] = getOrientationStats(vecLD);
-            statsShortNames{end+1} = 'ori_';
+            [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getOrientationStats(vecLD,numBins);
         case 'length'
-            [vecLD,histograms{end+1},bins{end+1}] = getLengthStats(vecLD);
-            statsShortNames{end+1} = 'len_';
+            if isempty(minmaxLen)
+                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getLengthStats(vecLD,numBins);
+            else
+                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getLengthStats(vecLD,numBins,minmaxLen(1),minmaxLen(2));
+            end                
         case 'curvature'
-            [vecLD,histograms{end+1},bins{end+1}] = getCurvatureStats(vecLD);
-            statsShortNames{end+1} = 'curv_';  
+            if isempty(minmaxCurv)
+                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getCurvatureStats(vecLD,numBins);
+            else
+                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getCurvatureStats(vecLD,numBins,minmaxCurv(1),minmaxCurv(2));
+            end
         case 'junctions'
-            vecLD = getJunctionStats(vecLD);
-            histograms{end+1} = vecLD.junctionTypeHistogram;
-            bins{end+1} = vecLD.junctionTypeBins;
-            statsShortNames{end+1} = 'juncType_';
-
-            histograms{end+1} = vecLD.junctionAngleHistogram;
-            bins{s+1} = vecLD.junctionAngleBins;
-            statsShortNames{end+1} = 'juncAng_';
+            if isempty(junctionTypes)
+                [vecLD,jHist,jBins,jNames] = getJunctionStats(vecLD,numBins);
+            else
+                [vecLD,jHist,jBins,jNames] = getJunctionStats(vecLD,numBins,junctionTypes);
+            end
+            histograms = [histograms,jHist];
+            bins = [bins,jBins];
+            statsNames = [statsNames,jNames];
         otherwise
             error(['Unknown property: ',thisStat]);
     end

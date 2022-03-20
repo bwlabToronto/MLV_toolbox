@@ -1,4 +1,4 @@
-function vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)
+function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)
 % vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)
 %       computes the histograms for junction types and junction angles.
 %
@@ -50,3 +50,7 @@ angleBins = [binStep/2:binStep:180-binStep/2];
 angleHist = hist(angles,angleBins);
 vecLD.junctionAngleHistogram = angleHist;
 vecLD.junctionAngleBins = angleBins;
+
+histograms = {typeHist,angleHist};
+bins = {junctionTypes,angleBins};
+shortNames = {'juncType','juncAngle'};
