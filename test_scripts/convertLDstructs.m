@@ -16,7 +16,7 @@ for c = 1:length(categories)
         for l = 1:v.numContours
             v.contours{l} = LD(d).lines{l}(:,1:4);
         end
-        vecLD = [vecLD,computeLength(v)];
+        vecLD = [vecLD,computeContourProperties(v)];
     end
     save(outputName,'vecLD');
     fprintf('\nsaved in %s.\n\n',outputName);

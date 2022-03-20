@@ -119,18 +119,12 @@ bottomLD.imsize = vecLD.imsize;
 bottomLD.lineMethod = sprintf('%s - split bottom %g',vecLD.lineMethod,fraction);
 bottomLD.numContours = numel(bottomIdx);
 bottomLD.contours = vecLD.contours(bottomIdx);
-bottomLD.lengths = vecLD.lengths(bottomIdx);
-bottomLD.contourLengths = vecLD.contourLengths(bottomIdx);
-bottomLD.orientations = vecLD.orientations(bottomIdx);
-bottomLD = computeJunctions(bottomLD);
+bottomLD = computeContourProperties(bottomLD);
 
 topLD.originalImage = vecLD.originalImage;
 topLD.imsize = vecLD.imsize;
 topLD.lineMethod = sprintf('%s - split top %g',vecLD.lineMethod,fraction);
 topLD.numContours = numel(topIdx);
 topLD.contours = vecLD.contours(topIdx);
-topLD.lengths = vecLD.lengths(topIdx);
-topLD.contourLengths = vecLD.contourLengths(topIdx);
-topLD.orientations = vecLD.orientations(topIdx);
-topLD = computeJunctions(topLD);
+topLD = computeContourProperties(topLD);
 
