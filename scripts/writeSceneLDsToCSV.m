@@ -32,8 +32,8 @@ for c = 1:length(categories)
     allLDs = [allLDs,vecLD];
 end
 
-fprintf('min/max Length = %g; %g\n',minLen,maxLen);
-fprintf('min/max Curvature = %g; %g\n',minCurv,maxCurv);
+fprintf('min/max Length = %g / %g\n',minLen,maxLen);
+fprintf('min/max Curvature = %g / %g\n',minCurv,maxCurv);
 
 resultsTable = table;
 whichStats = {'orientation','length','curvature','junctions'};
