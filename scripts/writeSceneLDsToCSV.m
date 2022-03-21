@@ -39,13 +39,18 @@ resultsTable = table;
 whichStats = {'orientation','length','curvature','junctions'};
 junctionTypes = {'Arrow','T','X','Y'};
 
+scenesStatsLDs = [];
 for l = 1:numel(allLDs)
     imageName = allLDs(l).originalImage;
-    [~,histograms,bins,statsNames] = getContourPropertiesStats(allLDs(l),whichStats,[minLen,maxLen],[minCurv,maxCurv],junctionTypes);
+    [thisLD,histograms,bins,statsNames] = getContourPropertiesStats(allLDs(l),whichStats,[minLen,maxLen],[minCurv,maxCurv],junctionTypes);
     tt = table({imageName},'VariableNames',{'ImageName'});
     tt = [tt,convertHistogramsToTable(histograms,bins,statsNames)];
     resultsTable = [resultsTable;tt];
+    scenesStatsLDs = [scenesStatsLDs,thisLD];
 end
 
 writetable(resultsTable,csvFileName);
 fprintf('\nResults table written to: %s\n',csvFileName);
+save('sceneStatsLDs','scenesStatsLDs');
+fprintf('\nStats saved in sceneStatsLDs\n');
+

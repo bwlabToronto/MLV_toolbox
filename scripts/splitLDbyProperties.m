@@ -1,4 +1,4 @@
-function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights,histogramWeights)
+function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights)
 % [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights,histogramWeights)
 % Splits up the contours in the line drawing vecLD according to feature
 % properties.
@@ -15,6 +15,16 @@ function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weigh
 %                or a cell array of more than one. If more than one
 %                property is included, the rankings according to the
 %                properties are linearly combined using weights.
+%                Features are ranked as follows:
+%                  'Length': by total length of contours (sum of the histogram)
+%                            topLD: longest; bottomLD: shortest
+%                  'Curvature': by the average curvature, weighted by segment length
+%                           topLD: most angular; bottomLD: most straight
+%                  'Orientation': weighted by cos - sin of the orientation angle
+%                           topLD: most horizontal; bottomLD: most vertical
+%                  'Junctions': weighted by the total number of junctions
+%                               that the contour participates in.
+%                               topLD: most junctions; bottomLD: least junctions
 %
 %   fraction - the fraction of pixels to preserve. default: 0.5
 %              Only whole contours will be assigned. The splitting is
@@ -26,26 +36,13 @@ function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weigh
 %   weights - Array of weigths of the same size as properties. 
 %             default: [] - all proerties are weighted equally, same as ones(1,N)
 %
-%   histogramWeights - a cell array of the same size as properties, with a weight vector 
-%                     for the histograms for each property in the individual cells.
-%                     The histograms are weighted and summed according to the weight vectors 
-%                     and then ranked and combined according to weights.
-%                  default: {} - histograms are weighted  as follows:
-%                  'Length': by total length of contours (sum of the histogram)
-%                            topLD: longest; bottomLD: shortest
-%                  'Curvature': by the average curvature, weighted by segment length
-%                           topLD: most angular; bottomLD: most straight
-%                  'Orientation': weighted by cos - sin of the orientation angle
-%                           topLD: most horizontal; bottomLD: most vertical
-%                  'Junctions': weighted by the total number of junctions
-%                               that the contour participates in.
-%                               topLD: most junctions; bottomLD: least junctions
+% Return:
+%   topLD - line drawing strcture with the top-ranked contours
+%   bottomLD - line drawing structure with the bottom-ranked contours
+
 
 if ~iscell(properties)
     properties = {properties};
-end
-if nargin < 5
-    histogramWeights = {};
 end
 if nargin < 4
     weights = [];
@@ -64,41 +61,24 @@ totalRank = zeros(1,vecLD.numContours);
 for p = 1:length(properties)
     switch lower(properties{p})
         case 'length'
-            if isempty(histogramWeights)
-                thisCriterion = vecLD.contourLengths;
-            else
-                thisCriterion = sum(vecLD.lengthHistograms .* repmat(histogramWeights{p},vecLD.numContours, 1),2);
-            end
+            thisCriterion = vecLD.contourLengths;
 
         case 'curvature'
-            if isempty(histogramWeights)
-                % compute weighted average curvature
-                thisCriterion = NaN(1,vecLD.numContours);
-                for c = 1:vecLD.numContours
-                    %thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2) / vecLD.contourLengths(c);
-                    thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2);
-                end
-            else
-                thisCriterion = sum(vecLD.curvatureHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
+            % compute weighted average curvature
+            thisCriterion = NaN(1,vecLD.numContours);
+            for c = 1:vecLD.numContours
+                thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2);
             end
 
         case 'orientation'
-            if isempty(histogramWeights)
-                for c = 1:vecLD.numContours
-                    % project angles onto the main axes to get horizontal - vertical
-                    thisCriterion(c) = sum((abs(cosd(vecLD.orientations{c})) - abs(sind(vecLD.orientations{c}))).*vecLD.lengths{c}',2);
-                end
-            else
-                thisCriterion = sum(vecLD.orientationHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
+            for c = 1:vecLD.numContours
+                % project angles onto the main axes to get horizontal - vertical
+                thisCriterion(c) = sum((abs(cosd(vecLD.orientations{c})) - abs(sind(vecLD.orientations{c}))).*vecLD.lengths{c}',2);
             end
 
         case 'junctions'
-            if isempty(histogramWeights)
-                % just use the sum of all junctions
-                thisCriterion = sum(vecLD.junctionContourHistograms,2);
-            else
-                thisCriterion = sum(vecLD.junctionContourHistograms .* repmat(histogramWeights{p},vecLD.numContours,1),2);
-            end
+            % just use the sum of all junctions
+            thisCriterion = sum(vecLD.junctionContourHistograms,2);
 
         otherwise
             error(['Unknown property: ',properties{p}]);        
