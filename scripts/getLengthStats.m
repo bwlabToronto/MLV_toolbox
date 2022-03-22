@@ -1,14 +1,12 @@
-function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLength,maxLength)
+function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)
 % [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
 %       computes the length histogram with logarithmically scaled bins, weighted by segment length
 %
 % Input: 
 %   vecLD - vectorized line drawing
 %   numBins - number of histogram bins; default: 8
-%   minLength - the minimum length: used as the lower bound of the histogram
-%               (default: minimum across the contours of this image)
-%   maxLength - the maximum length: used as the upper bound of the histogram
-%               (default: maximum across the contours of this image)
+%   minmaxLength - the minimum and maximum length: used as the lower bound of the histogram
+%               (default: [2,sum(vecLD.imsize)])
 %
 % Output:
 %   vecLD: the line drawing structure with length histogram added
@@ -20,20 +18,16 @@ if ~isfield(vecLD, 'lengths')
     vecLD = computeLength(vecLD);
 end
 
-if nargin < 4
-    maxLength = max(vecLD.contourLengths);
-end
 if nargin < 3
-    minLength = min(vecLD.contourLengths);
+    minmaxLength = [2,sum(vecLD.imsize)];
 end
 if nargin < 2
     numBins = 8;
 end
 
-logMin = log10(minLength + 1);
-logMax = log10(maxLength + 1);
-binWidth = (logMax-logMin) / numBins; %the range of the original length is from max to min length value
-binBoundary = [logMin : binWidth : logMax];
+logMinMax = log10(minmaxLength + 1);
+binWidth = (logMinMax(2)-logMinMax(1)) / numBins; %the range of the original length is from max to min length value
+binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
 logLengths = log10(vecLD.contourLengths + 1);
 

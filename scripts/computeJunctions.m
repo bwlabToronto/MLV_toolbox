@@ -14,10 +14,9 @@ function vecLD = computeJunctions(vecLD)
 %   angle      - smallest angle of the junction
 %   type       - based on the largest angle a, one of: 
 %                'T': T junction - three segments: 160 < a < 200
-%                'Arrow': arrow juctions - three segments: a > 200
 %                'Y': Y junctions - three segments: a < 160
 %                'X': X junctions - four segments: 0 < a < 150
-%                'L': L junctions - two segments
+%                'Arrow': arrow juctions - three segments: a > 200
 %                'Star': Star junctions - more than four segments
 
 

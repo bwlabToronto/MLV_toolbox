@@ -1,14 +1,12 @@
-function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)
-% [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)
+function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)
+% [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minmaxCurvature)
 %       computes the curvature histogram with logarithmically scaled bins, weighted by segment length
 %
 % Input: 
 %   vecLD - vectorized line drawing
 %   numBins - number of histogram bins; default: 8
-%   minCurvature - the minimum curvature: used as the lower bound of the histogram
-%                  (default: minimum across the contours of this image)
-%   maxCurvature - the maximum curvature: used as the upper bound of the histogram
-%                 (default: maximum across the contours of this image)
+%   minmaxCurvature - the minimum nd maximum curvature: used as the lower bound of the histogram
+%                  (default: [0,90])
 %
 % Output:
 %   vecLD: the line drawing structure with curvature histogram added for
@@ -20,20 +18,16 @@ function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,num
 if ~isfield(vecLD, 'curvatures')
     vecLD = computeCurvature(vecLD);
 end
-if nargin < 4
-    maxCurvature = max([vecLD.curvatures{:}]);
-end
 if nargin < 3
-    minCurvature = min([vecLD.curvatures{:}]);
+    minmaxCurvature = [0,90];
 end
 if nargin < 2
     numBins = 8;
 end
 
-logMin = log10(minCurvature + 1);
-logMax = log10(maxCurvature + 1);
-binWidth = (logMax-logMin) / numBins; %the range of the original length is from max to min length value
-binBoundary = [logMin : binWidth : logMax];
+logMinMax = log10(minmaxCurvature + 1);
+binWidth = (logMinMax(2)-logMinMax(1)) / numBins; %the range of the original length is from max to min length value
+binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
 
 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);

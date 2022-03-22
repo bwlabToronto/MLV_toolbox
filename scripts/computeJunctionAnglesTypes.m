@@ -21,6 +21,8 @@ function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)
 Thresh = 2; % threshold (in pixels) for when to consider a point to be on the junction
 Thresh2 = Thresh * Thresh;
 
+removeJunctions = [];
+
 for j = 1:length(Junctions)
     junctionOris = []; % collecting the orientations of all line segments involved in the junction
     p = Junctions(j).position;
@@ -81,7 +83,11 @@ for j = 1:length(Junctions)
     % Now label the junction types
     switch numel(Junctions(j).angles)
         case 2
-            Junctions(j).type = 'L';
+            %Junctions(j).type = 'L';
+            % These would be L juntions, but we don't detect these because
+            % they would occur at each point where one line segment ends
+            % and the next segment starts.
+            removeJunctions = [removeJunctions,j];
 
         case 3
             if Junctions(j).maxAngle < 160
@@ -99,3 +105,4 @@ for j = 1:length(Junctions)
             Junctions(j).type = 'Star';
     end
 end
+Junctions = Junctions(setdiff([1:length(Junctions)],removeJunctions));

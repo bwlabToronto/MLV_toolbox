@@ -47,3 +47,4 @@ for queryC = 1:vecLD.numContours % loop over the query curves
         end
     end
 end
+

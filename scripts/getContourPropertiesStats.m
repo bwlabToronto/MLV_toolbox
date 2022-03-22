@@ -30,7 +30,7 @@ if nargin < 4
     minmaxCurv = [];
 end
 if nargin < 3
-    minmaxLen = []
+    minmaxLen = [];
 end
 if nargin < 2
     whichStats = {'orientation','length','curvature','junctions'};
