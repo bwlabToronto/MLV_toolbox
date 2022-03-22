@@ -44,9 +44,10 @@ vecLD.junctionTypeHistogram = typeHist;
 vecLD.junctionTypeBins = junctionTypes;
 
 % junctionAngles
+maxAngle = 120;
 angles = [vecLD.junctions(:).minAngle];
-binStep = 180/numAngleBins;
-angleBins = [binStep/2:binStep:180-binStep/2];
+binStep = maxAngle/numAngleBins;
+angleBins = [binStep/2:binStep:maxAngle-binStep/2];
 angleHist = hist(angles,angleBins);
 vecLD.junctionAngleHistogram = angleHist;
 vecLD.junctionAngleBins = angleBins;
