@@ -33,7 +33,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
+<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
@@ -54,7 +54,7 @@ This function is called by:
 0010 vecLD.contours = LD1.lines;
 0011 
 0012 vecLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(vecLD);
-0013 vecLD = <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>(vecLD);
+0013 vecLD = <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)">getContourPropertiesStats</a>(vecLD);
 0014 
 0015 
 0016 <span class="comment">% let's assume taht we rank over contour segments</span>
@@ -85,6 +85,6 @@ This function is called by:
 0041 <span class="keyword">end</span>
 0042 
 0043</pre></div>
-<hr><address>Generated on Fri 18-Mar-2022 18:15:55 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

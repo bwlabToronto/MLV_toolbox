@@ -30,7 +30,7 @@
 <div class="fragment"><pre class="comment"> propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)
 
  Converts the properties histogams into a table with one row.
- See also: <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a> for getting the input variables to
+ See also: <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)">getContourPropertiesStats</a> for getting the input variables to
  this function.
 
  Input:
@@ -48,7 +48,7 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="writeSceneLDsToCSV.html" class="code" title="function resultsTable = writeSceneLDsToCSV(csvFileName)">writeSceneLDsToCSV</a>	allSceneLDsToCSV(csvFileName)</li></ul>
+<li><a href="writeSceneLDsToCSV.html" class="code" title="function [resultsTable,statsLD] = writeSceneLDsToCSV(csvFileName)">writeSceneLDsToCSV</a>	allSceneLDsToCSV(csvFileName)</li></ul>
 <!-- crossreference -->
 
 
@@ -76,10 +76,10 @@ This function is called by:
 0020     <span class="keyword">for</span> b = 1:numel(hh)
 0021         <span class="keyword">switch</span> class(bins{p}(b))
 0022             <span class="keyword">case</span> <span class="string">'double'</span>
-0023                 varnames{end+1} = sprintf(<span class="string">'%s%d'</span>,shortStatsNames{p},b);
+0023                 varnames{end+1} = sprintf(<span class="string">'%s_%d'</span>,shortStatsNames{p},b);
 0024                 values{end+1} = hh(b);
 0025             <span class="keyword">case</span> {<span class="string">'char'</span>,<span class="string">'cell'</span>}
-0026                 varnames{end+1} = [shortStatsNames{p},bins{p}{b}];
+0026                 varnames{end+1} = sprintf(<span class="string">'%s_%s'</span>,shortStatsNames{p},bins{p}{b});
 0027                 values{end+1} = hh(b);
 0028             <span class="keyword">otherwise</span>
 0029                 error([<span class="string">'Don''t know how to handle bin names of type: '</span>,class(bins{p}(b))]);
@@ -87,6 +87,6 @@ This function is called by:
 0031     <span class="keyword">end</span>
 0032 <span class="keyword">end</span>
 0033 propertiesTable = cell2table(values,<span class="string">'VariableNames'</span>,varnames);</pre></div>
-<hr><address>Generated on Fri 18-Mar-2022 18:15:55 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

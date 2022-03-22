@@ -42,10 +42,9 @@
    angle      - smallest angle of the junction
    type       - based on the largest angle a, one of: 
                 'T': T junction - three segments: 160 &lt; a &lt; 200
-                'Arrow': arrow juctions - three segments: a &gt; 200
                 'Y': Y junctions - three segments: a &lt; 160
                 'X': X junctions - four segments: 0 &lt; a &lt; 150
-                'L': L junctions - two segments
+                'Arrow': arrow juctions - three segments: a &gt; 200
                 'Star': Star junctions - more than four segments</pre></div>
 
 <!-- crossreference -->
@@ -55,7 +54,7 @@ This function calls:
 <li><a href="cleanupJunctions.html" class="code" title="function cleanedJunctions = cleanupJunctions(Junctions, Thresh)">cleanupJunctions</a>	cleanedJunctions = cleanupJunctions(Junctions, Thresh)</li><li><a href="computeJunctionAnglesTypes.html" class="code" title="function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)">computeJunctionAnglesTypes</a>	Junctions = computeJunctionAnglesTypes(Junctions,vecLD)</li><li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>	vecLD = computeLength(vecLD)</li><li><a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>	vecLD = computeOrientation(vecLD)</li><li><a href="detectJunctions.html" class="code" title="function Junctions = detectJunctions(vecLD)">detectJunctions</a>	Junctions = detectJunctions(vecLD)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="getJunctionStats.html" class="code" title="function vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>	vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</li><li><a href="splitLDbyProperties.html" class="code" title="function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights,histogramWeights)">splitLDbyProperties</a>	[topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights,histogramWeights)</li></ul>
+<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>	vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</li></ul>
 <!-- crossreference -->
 
 
@@ -77,31 +76,30 @@ This function is called by:
 0014 <span class="comment">%   angle      - smallest angle of the junction</span>
 0015 <span class="comment">%   type       - based on the largest angle a, one of:</span>
 0016 <span class="comment">%                'T': T junction - three segments: 160 &lt; a &lt; 200</span>
-0017 <span class="comment">%                'Arrow': arrow juctions - three segments: a &gt; 200</span>
-0018 <span class="comment">%                'Y': Y junctions - three segments: a &lt; 160</span>
-0019 <span class="comment">%                'X': X junctions - four segments: 0 &lt; a &lt; 150</span>
-0020 <span class="comment">%                'L': L junctions - two segments</span>
-0021 <span class="comment">%                'Star': Star junctions - more than four segments</span>
+0017 <span class="comment">%                'Y': Y junctions - three segments: a &lt; 160</span>
+0018 <span class="comment">%                'X': X junctions - four segments: 0 &lt; a &lt; 150</span>
+0019 <span class="comment">%                'Arrow': arrow juctions - three segments: a &gt; 200</span>
+0020 <span class="comment">%                'Star': Star junctions - more than four segments</span>
+0021 
 0022 
-0023 
-0024 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'orientations'</span>)
-0025     vecLD = <a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>(vecLD);
-0026 <span class="keyword">end</span>
-0027 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'lengths'</span>)
-0028     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
-0029 <span class="keyword">end</span>
-0030 
-0031 <span class="comment">% 3-step process</span>
-0032 
-0033 <span class="comment">% 1. detect any intersections between line segments</span>
-0034 jcts = <a href="detectJunctions.html" class="code" title="function Junctions = detectJunctions(vecLD)">detectJunctions</a>(vecLD);
-0035 
-0036 <span class="comment">% 2. merge junctions that are close by</span>
-0037 jcts = <a href="cleanupJunctions.html" class="code" title="function cleanedJunctions = cleanupJunctions(Junctions, Thresh)">cleanupJunctions</a>(jcts);
-0038 
-0039 <span class="comment">% 3. measure angles and classify junctions</span>
-0040 vecLD.junctions = <a href="computeJunctionAnglesTypes.html" class="code" title="function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)">computeJunctionAnglesTypes</a>(jcts,vecLD);
-0041</pre></div>
-<hr><address>Generated on Fri 18-Mar-2022 18:15:55 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0023 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'orientations'</span>)
+0024     vecLD = <a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>(vecLD);
+0025 <span class="keyword">end</span>
+0026 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'lengths'</span>)
+0027     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
+0028 <span class="keyword">end</span>
+0029 
+0030 <span class="comment">% 3-step process</span>
+0031 
+0032 <span class="comment">% 1. detect any intersections between line segments</span>
+0033 jcts = <a href="detectJunctions.html" class="code" title="function Junctions = detectJunctions(vecLD)">detectJunctions</a>(vecLD);
+0034 
+0035 <span class="comment">% 2. merge junctions that are close by</span>
+0036 jcts = <a href="cleanupJunctions.html" class="code" title="function cleanedJunctions = cleanupJunctions(Junctions, Thresh)">cleanupJunctions</a>(jcts);
+0037 
+0038 <span class="comment">% 3. measure angles and classify junctions</span>
+0039 vecLD.junctions = <a href="computeJunctionAnglesTypes.html" class="code" title="function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)">computeJunctionAnglesTypes</a>(jcts,vecLD);
+0040</pre></div>
+<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <head>
   <title>Description of getCurvatureStats</title>
   <meta name="keywords" content="getCurvatureStats">
-  <meta name="description" content="[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)">
+  <meta name="description" content="[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,22 +21,20 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</strong></div>
+<div class="box"><strong>[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minmaxCurvature)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature) </strong></div>
+<div class="box"><strong>function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)
+<div class="fragment"><pre class="comment"> [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minmaxCurvature)
        computes the curvature histogram with logarithmically scaled bins, weighted by segment length
 
  Input: 
    vecLD - vectorized line drawing
    numBins - number of histogram bins; default: 8
-   minCurvature - the minimum curvature: used as the lower bound of the histogram
-                  (default: minimum across the contours of this image)
-   maxCurvature - the maximum curvature: used as the upper bound of the histogram
-                 (default: maximum across the contours of this image)
+   minmaxCurvature - the minimum nd maximum curvature: used as the lower bound of the histogram
+                  (default: [0,90])
 
  Output:
    vecLD: the line drawing structure with curvature histogram added for
@@ -52,67 +50,63 @@ This function calls:
 <li><a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>	vecLD = computeCurvature(vecLD)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
+<li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
 <!-- crossreference -->
 
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</a>
-0002 <span class="comment">% [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minCurvature,maxCurvature)</span>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)</a>
+0002 <span class="comment">% [vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minmaxCurvature)</span>
 0003 <span class="comment">%       computes the curvature histogram with logarithmically scaled bins, weighted by segment length</span>
 0004 <span class="comment">%</span>
 0005 <span class="comment">% Input:</span>
 0006 <span class="comment">%   vecLD - vectorized line drawing</span>
 0007 <span class="comment">%   numBins - number of histogram bins; default: 8</span>
-0008 <span class="comment">%   minCurvature - the minimum curvature: used as the lower bound of the histogram</span>
-0009 <span class="comment">%                  (default: minimum across the contours of this image)</span>
-0010 <span class="comment">%   maxCurvature - the maximum curvature: used as the upper bound of the histogram</span>
-0011 <span class="comment">%                 (default: maximum across the contours of this image)</span>
-0012 <span class="comment">%</span>
-0013 <span class="comment">% Output:</span>
-0014 <span class="comment">%   vecLD: the line drawing structure with curvature histogram added for</span>
-0015 <span class="comment">%   each contour</span>
-0016 <span class="comment">%   curvatureHistogram: the histogram of length of line segments,</span>
-0017 <span class="comment">%                    weighted by their lengths</span>
-0018 <span class="comment">%   bins: a vector with the bin centers</span>
-0019 
-0020 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'curvatures'</span>)
-0021     vecLD = <a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>(vecLD);
-0022 <span class="keyword">end</span>
-0023 <span class="keyword">if</span> nargin &lt; 4
-0024     maxCurvature = max([vecLD.curvatures{:}]);
-0025 <span class="keyword">end</span>
-0026 <span class="keyword">if</span> nargin &lt; 3
-0027     minCurvature = min([vecLD.curvatures{:}]);
-0028 <span class="keyword">end</span>
-0029 <span class="keyword">if</span> nargin &lt; 2
-0030     numBins = 8;
-0031 <span class="keyword">end</span>
+0008 <span class="comment">%   minmaxCurvature - the minimum nd maximum curvature: used as the lower bound of the histogram</span>
+0009 <span class="comment">%                  (default: [0,90])</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Output:</span>
+0012 <span class="comment">%   vecLD: the line drawing structure with curvature histogram added for</span>
+0013 <span class="comment">%   each contour</span>
+0014 <span class="comment">%   curvatureHistogram: the histogram of length of line segments,</span>
+0015 <span class="comment">%                    weighted by their lengths</span>
+0016 <span class="comment">%   bins: a vector with the bin centers</span>
+0017 
+0018 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'curvatures'</span>)
+0019     vecLD = <a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>(vecLD);
+0020 <span class="keyword">end</span>
+0021 <span class="keyword">if</span> nargin &lt; 3
+0022     minmaxCurvature = [0,90];
+0023 <span class="keyword">end</span>
+0024 <span class="keyword">if</span> nargin &lt; 2
+0025     numBins = 8;
+0026 <span class="keyword">end</span>
+0027 
+0028 logMinMax = log10(minmaxCurvature + 1);
+0029 binWidth = (logMinMax(2)-logMinMax(1)) / numBins; <span class="comment">%the range of the original length is from max to min length value</span>
+0030 binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
+0031 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
 0032 
-0033 logMin = log10(minCurvature + 1);
-0034 logMax = log10(maxCurvature + 1);
-0035 binWidth = (logMax-logMin) / numBins; <span class="comment">%the range of the original length is from max to min length value</span>
-0036 binBoundary = [logMin : binWidth : logMax];
-0037 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
-0038 
-0039 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);
-0040 <span class="keyword">for</span> c = 1:vecLD.numContours
-0041     logCurvatures = log10(vecLD.curvatures{c}+1);
-0042     <span class="keyword">for</span> s = 1:numel(logCurvatures)
-0043         <span class="keyword">for</span> b = 1:numBins
-0044             <span class="keyword">if</span> logCurvatures(s) &lt; binBoundary(b+1) || (b == numBins)
-0045                 vecLD.curvatureHistograms(c,b) = vecLD.curvatureHistograms(c,b) + vecLD.lengths{c}(s);
-0046                 <span class="keyword">break</span>;
-0047             <span class="keyword">end</span>
-0048         <span class="keyword">end</span>
-0049     <span class="keyword">end</span>
-0050 <span class="keyword">end</span>
-0051 
-0052 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
-0053 curvatureHistogram = vecLD.sumCurvatureHistogram;
-0054 vecLD.curvatureBins = bins;
-0055</pre></div>
-<hr><address>Generated on Fri 18-Mar-2022 18:15:55 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0033 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);
+0034 <span class="keyword">for</span> c = 1:vecLD.numContours
+0035     logCurvatures = log10(vecLD.curvatures{c}+1);
+0036     <span class="keyword">for</span> s = 1:numel(logCurvatures)
+0037         <span class="keyword">for</span> b = 1:numBins
+0038             <span class="keyword">if</span> logCurvatures(s) &lt; binBoundary(b+1) || (b == numBins)
+0039                 vecLD.curvatureHistograms(c,b) = vecLD.curvatureHistograms(c,b) + vecLD.lengths{c}(s);
+0040                 <span class="keyword">break</span>;
+0041             <span class="keyword">end</span>
+0042         <span class="keyword">end</span>
+0043     <span class="keyword">end</span>
+0044 <span class="keyword">end</span>
+0045 
+0046 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
+0047 curvatureHistogram = vecLD.sumCurvatureHistogram;
+0048 vecLD.curvatureBins = bins;
+0049 shortName = <span class="string">'curv'</span>;
+0050 
+0051</pre></div>
+<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

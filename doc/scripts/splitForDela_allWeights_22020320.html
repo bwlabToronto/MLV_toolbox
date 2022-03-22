@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of splitForDela_allWeights_22020320</title>
+  <meta name="keywords" content="splitForDela_allWeights_22020320">
+  <meta name="description" content="create split drawings for Dela, March 20th, 2022">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">scripts</a> &gt; splitForDela_allWeights_22020320.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for scripts&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>splitForDela_allWeights_22020320
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>create split drawings for Dela, March 20th, 2022</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function splitForDela_allWeights_22020320 </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> create split drawings for Dela, March 20th, 2022</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>	img = renderLinedrawing(vecLD,img,imSize,lineWidth,color)</li><li><a href="splitLDbyHistogramWeights.html" class="code" title="function [topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction,histogramWeights)">splitLDbyHistogramWeights</a>	[topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction,histogramWeights)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% create split drawings for Dela, March 20th, 2022</span>
+0002 <a name="_sub0" href="#_subfunctions" class="code">function splitForDela_allWeights_22020320</a>
+0003 
+0004 load sceneStatsLDs
+0005 <span class="comment">%junctionTypes = {'Arrow','T','X','Y'};</span>
+0006 fraction = 0.5;
+0007 imPath = <span class="string">'../data/Splits/DelaSplits_AllWeights/'</span>;
+0008 
+0009 <span class="comment">% selective model:</span>
+0010 features = {<span class="string">'Orientation'</span>,<span class="string">'Length'</span>,<span class="string">'Curvature'</span>,<span class="string">'Junctions'</span>};
+0011 
+0012 <span class="comment">%  Z_pleasure = - 0.21485550 + 0.01410410 * sumOri_pixels</span>
+0013 <span class="comment">%  -0.00000613 * ori_1 - 0.00000825 * ori_2 - 0.00002273 * ori_3 + 0.00000085 * ori_4 - 0.00001800 * ori_5 - 0.00011014 * ori_6 + 0.00002989 * ori_7 +</span>
+0014 <span class="comment">%  0.00001176 * len_1 - 0.00000157 * len_2 - 0.00011184 * len_3 - 0.00010113 * len_4 - 0.00011391 * len_5 - 0.00007399 * len_6 - 0.00007254 * len_7</span>
+0015 <span class="comment">%  - 0.01401128 * curv_1 - 0.01395625 * curv_2 - 0.01402854 * curv_3 - 0.01398950 * curv_4 - 0.01400942 * curv_5 - 0.01313843 * curv_6 - 0.01661971 * curv_7 +</span>
+0016 <span class="comment">%  0.00153532 * juncType_T + 0.00014966 * juncType_X - 0.00104070 * juncType_Y</span>
+0017 
+0018 histogramWeights = {};
+0019 histogramWeights{1} = [-0.00000613, 0.00000825, 0.00002273, 0.00000085, 0.00001800, 0.00011014, 0.00002989, 0];
+0020 histogramWeights{2} = [0.00001176, -0.00000157, -0.00011184, -0.00010113, -0.00011391, -0.00007399, -0.00007254, 0];
+0021 histogramWeights{3} = [-0.01401128, -0.01395625, -0.01402854, -0.01398950, -0.01400942, -0.01313843, -0.01661971, 0];
+0022 histogramWeights{4} = [0, 0.00153532, 0.00014966, 0.00104070];
+0023 
+0024 <span class="keyword">for</span> l = 1:numel(scenesStatsLDs)
+0025     fprintf(<span class="string">'%d. %s\n'</span>,l,scenesStatsLDs(l).originalImage);
+0026     [topLD, bottomLD] = <a href="splitLDbyHistogramWeights.html" class="code" title="function [topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction,histogramWeights)">splitLDbyHistogramWeights</a>(scenesStatsLDs(l),features,fraction,histogramWeights);
+0027     topName = [imPath,scenesStatsLDs(l).originalImage(1:end-4),<span class="string">'_allWeights_top.png'</span>];
+0028     imwrite(<a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>(topLD),topName);
+0029     bottomName = [imPath,scenesStatsLDs(l).originalImage(1:end-4),<span class="string">'_allWeights_bottom.png'</span>];
+0030     imwrite(<a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>(bottomLD),bottomName);
+0031 <span class="keyword">end</span>
+0032 
+0033</pre></div>
+<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

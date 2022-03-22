@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of splitForDela_selective_22020320</title>
+  <meta name="keywords" content="splitForDela_selective_22020320">
+  <meta name="description" content="create split drawings for Dela, March 20th, 2022">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">scripts</a> &gt; splitForDela_selective_22020320.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for scripts&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>splitForDela_selective_22020320
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>create split drawings for Dela, March 20th, 2022</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function splitForDela_selective_22020320 </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> create split drawings for Dela, March 20th, 2022</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>	img = renderLinedrawing(vecLD,img,imSize,lineWidth,color)</li><li><a href="splitLDbyHistogramWeights.html" class="code" title="function [topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction,histogramWeights)">splitLDbyHistogramWeights</a>	[topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction,histogramWeights)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% create split drawings for Dela, March 20th, 2022</span>
+0002 <a name="_sub0" href="#_subfunctions" class="code">function splitForDela_selective_22020320 </a>
+0003 
+0004 load sceneStatsLDs
+0005 <span class="comment">%junctionTypes = {'Arrow','T','X','Y'};</span>
+0006 fraction = 0.5;
+0007 imPath = <span class="string">'../data/Splits/DelaSplits_Selective/'</span>;
+0008 
+0009 <span class="comment">% selective model:</span>
+0010 <span class="comment">% Z_pleasure = - 0.0902602 + 0.0000069 * sumOri_pixels</span>
+0011 <span class="comment">% + 0.0018016 * juncType_T - 0.0000763 * ori_6 - 0.0000393 * len_5</span>
+0012 features = {<span class="string">'Junctions'</span>,<span class="string">'Orientation'</span>,<span class="string">'Length'</span>};
+0013 histogramWeights = [];
+0014 histogramWeights{1} = [0,0.0018016,0,0];
+0015 histogramWeights{2} = [0,0,0,0,0,0.0000763,0,0];
+0016 histogramWeights{3} = [0,0,0,0,0.0000393,0,0,0];
+0017 
+0018 <span class="keyword">for</span> l = 1:numel(scenesStatsLDs)
+0019     fprintf(<span class="string">'%d. %s\n'</span>,l,scenesStatsLDs(l).originalImage);
+0020     [topLD, bottomLD] = <a href="splitLDbyHistogramWeights.html" class="code" title="function [topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction,histogramWeights)">splitLDbyHistogramWeights</a>(scenesStatsLDs(l),features,fraction,histogramWeights);
+0021     topName = [imPath,scenesStatsLDs(l).originalImage(1:end-4),<span class="string">'_selective_top.png'</span>];
+0022     imwrite(<a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>(topLD),topName);
+0023     bottomName = [imPath,scenesStatsLDs(l).originalImage(1:end-4),<span class="string">'_selective_bottom.png'</span>];
+0024     imwrite(<a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>(bottomLD),bottomName);
+0025 <span class="keyword">end</span>
+0026 
+0027</pre></div>
+<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

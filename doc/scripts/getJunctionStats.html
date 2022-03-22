@@ -24,7 +24,7 @@
 <div class="box"><strong>vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes) </strong></div>
+<div class="box"><strong>function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)
@@ -35,7 +35,7 @@
    numAngleBins - the number of bins for the junction angle histogram
                   default: 8
    junctionTypes - which types of jucntions to include
-                   default: {'Arrow','L','Star','T','X','Y'}
+                   default: {'T','Y','X','Arrow','Star'}
 
  Return:
    vecLD - vectorized line drawing with the junction histograms added</pre></div>
@@ -47,13 +47,13 @@ This function calls:
 <li><a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>	vecLD = computeJunctions(vecLD)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
+<li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
 <!-- crossreference -->
 
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</a>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)</a>
 0002 <span class="comment">% vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</span>
 0003 <span class="comment">%       computes the histograms for junction types and junction angles.</span>
 0004 <span class="comment">%</span>
@@ -62,13 +62,13 @@ This function is called by:
 0007 <span class="comment">%   numAngleBins - the number of bins for the junction angle histogram</span>
 0008 <span class="comment">%                  default: 8</span>
 0009 <span class="comment">%   junctionTypes - which types of jucntions to include</span>
-0010 <span class="comment">%                   default: {'Arrow','L','Star','T','X','Y'}</span>
+0010 <span class="comment">%                   default: {'T','Y','X','Arrow','Star'}</span>
 0011 <span class="comment">%</span>
 0012 <span class="comment">% Return:</span>
 0013 <span class="comment">%   vecLD - vectorized line drawing with the junction histograms added</span>
 0014 
 0015 <span class="keyword">if</span> nargin &lt; 3
-0016     junctionTypes = {<span class="string">'Arrow'</span>,<span class="string">'L'</span>,<span class="string">'Star'</span>,<span class="string">'T'</span>,<span class="string">'X'</span>,<span class="string">'Y'</span>};
+0016     junctionTypes = {<span class="string">'T'</span>,<span class="string">'Y'</span>,<span class="string">'X'</span>,<span class="string">'Arrow'</span>,<span class="string">'Star'</span>};
 0017 <span class="keyword">end</span>
 0018 
 0019 <span class="keyword">if</span> nargin &lt; 2
@@ -99,12 +99,17 @@ This function is called by:
 0044 vecLD.junctionTypeBins = junctionTypes;
 0045 
 0046 <span class="comment">% junctionAngles</span>
-0047 angles = [vecLD.junctions(:).minAngle];
-0048 binStep = 180/numAngleBins;
-0049 angleBins = [binStep/2:binStep:180-binStep/2];
-0050 angleHist = hist(angles,angleBins);
-0051 vecLD.junctionAngleHistogram = angleHist;
-0052 vecLD.junctionAngleBins = angleBins;</pre></div>
-<hr><address>Generated on Fri 18-Mar-2022 18:15:55 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0047 maxAngle = 120;
+0048 angles = [vecLD.junctions(:).minAngle];
+0049 binStep = maxAngle/numAngleBins;
+0050 angleBins = [binStep/2:binStep:maxAngle-binStep/2];
+0051 angleHist = hist(angles,angleBins);
+0052 vecLD.junctionAngleHistogram = angleHist;
+0053 vecLD.junctionAngleBins = angleBins;
+0054 
+0055 histograms = {typeHist,angleHist};
+0056 bins = {junctionTypes,angleBins};
+0057 shortNames = {<span class="string">'juncType'</span>,<span class="string">'juncAngle'</span>};</pre></div>
+<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
