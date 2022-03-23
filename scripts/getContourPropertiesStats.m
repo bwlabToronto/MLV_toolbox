@@ -49,6 +49,8 @@ for s = 1:length(whichStats)
     switch thisStat
         case 'orientation'
             [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getOrientationStats(vecLD,numBins);
+        case 'horver'
+            [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getHorizontalVerticalStats(vecLD,numBins);            
         case 'length'
             if isempty(minmaxLen)
                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getLengthStats(vecLD,numBins);
