@@ -44,7 +44,7 @@ for c = 1:vecLD.numContours
     end
     vecLD.orientationHistograms(c,:) = thisHist;
 end
-vecLD.sumOrientionHistogram = sum(vecLD.orientationHistograms,1);
+vecLD.sumOrientationHistogram = sum(vecLD.orientationHistograms,1);
 oriHistogram = vecLD.sumOrientionHistogram;
 vecLD.orientationBins = bins;
 shortName = 'ori';
