@@ -24,34 +24,52 @@ if ~isfield(vecLD,'junctions')
     vecLD = computeJunctions(vecLD);
 end
 
-% junction types
-theseTypes = {vecLD.junctions(:).type};
-typeHist = zeros(1,numel(junctionTypes));
+% no junctions? return empty arrays for everything
+if isempty(vecLD.junctions)
+    vecLD.junctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
+    vecLD.normJunctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
+    vecLD.junctionTypeHistogram = zeros(1,length(junctionTypes));
+    vecLD.normJunctionTypeHistogram = zeros(1,length(junctionTypes));
+else
 
-% prepare the counts of junctions that each contour participates in
-vecLD.junctionContourHistograms = zeros(vecLD.numContours,numel(junctionTypes));
-
-% count it all up
-for t = 1:numel(junctionTypes)
-    thisJ = strcmp(junctionTypes{t},theseTypes);
-    typeHist(t) = sum(thisJ);
-    contours = [vecLD.junctions(thisJ).contourIDs];
-    for c = unique(contours)
-        vecLD.junctionContourHistograms(c,t) = sum(contours == c);
+    % junction types
+    theseTypes = {vecLD.junctions(:).type};
+    typeHist = zeros(1,numel(junctionTypes));
+    
+    % prepare the counts of junctions that each contour participates in
+    vecLD.junctionContourHistograms = zeros(vecLD.numContours,numel(junctionTypes));
+    
+    % count it all up
+    for t = 1:numel(junctionTypes)
+        thisJ = strcmp(junctionTypes{t},theseTypes);
+        typeHist(t) = sum(thisJ);
+        contours = [vecLD.junctions(thisJ).contourIDs];
+        for c = unique(contours)
+            vecLD.junctionContourHistograms(c,t) = sum(contours == c);
+        end
     end
+    vecLD.normJunctionContourHistograms = vecLD.junctionContourHistograms ./ repmat(vecLD.contourLengths,1,numel(junctionTypes)) * 10000;
+    vecLD.junctionTypeHistogram = typeHist;
+    vecLD.normJunctionTypeHistogram = typeHist / sum(vecLD.contourLengths) * 10000;
 end
-vecLD.junctionTypeHistogram = typeHist;
 vecLD.junctionTypeBins = junctionTypes;
 
 % junctionAngles
 maxAngle = 120;
-angles = [vecLD.junctions(:).minAngle];
 binStep = maxAngle/numAngleBins;
 angleBins = [binStep/2:binStep:maxAngle-binStep/2];
-angleHist = hist(angles,angleBins);
-vecLD.junctionAngleHistogram = angleHist;
+if isempty(vecLD.junctions)
+    vecLD.junctionAngleHistogram = zeros(1,length(junctionTypes));
+    vecLD.normJunctionAngleHistogram = zeros(1,length(junctionTypes));
+    histograms = {[],[]};
+else
+    angles = [vecLD.junctions(:).minAngle];
+    angleHist = hist(angles,angleBins);
+    vecLD.junctionAngleHistogram = angleHist;
+    vecLD.normJunctionAngleHistogram = angleHist / sum(vecLD.contourLengths) * 10000;
+    histograms = {typeHist,angleHist};
+end
 vecLD.junctionAngleBins = angleBins;
 
-histograms = {typeHist,angleHist};
 bins = {junctionTypes,angleBins};
 shortNames = {'juncType','juncAngle'};

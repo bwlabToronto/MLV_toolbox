@@ -31,6 +31,7 @@ binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
 
 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);
+vecLD.normCurvatureHistograms = zeros(vecLD.numContours,numBins);
 for c = 1:vecLD.numContours
     logCurvatures = log10(vecLD.curvatures{c}+1);
     for s = 1:numel(logCurvatures)
@@ -41,9 +42,11 @@ for c = 1:vecLD.numContours
             end
         end
     end
+    vecLD.normCurvatureHistograms(c,:) = vecLD.curvatureHistograms(c,:) / vecLD.contourLengths(c) * 10000;
 end
 
 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
+vecLD.normSumCurvatureHistogram = vecLD.sumCurvatureHistogram / sum(vecLD.contourLengths) * 10000;
 curvatureHistogram = vecLD.sumCurvatureHistogram;
 vecLD.curvatureBins = bins;
 shortName = 'curv';

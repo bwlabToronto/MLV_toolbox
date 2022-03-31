@@ -30,6 +30,8 @@ binWidth = (logMinMax(2)-logMinMax(1)) / numBins; %the range of the original len
 binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
 logLengths = log10(vecLD.contourLengths + 1);
+vecLD.lengthHistograms = NaN(vecLD.numContours,numBins);
+vecLD.normLengthHistograms = NaN(vecLD.numContours,numBins);
 
 for c = 1:vecLD.numContours
     thisHist = zeros(1,numBins);
@@ -40,9 +42,11 @@ for c = 1:vecLD.numContours
         end
     end
     vecLD.lengthHistograms(c,:) = thisHist;
+    vecLD.normLengthHistograms(c,:) = thisHist / vecLD.contourLengths(c) * 10000;
 end
 
 vecLD.sumLengthHistogram = sum(vecLD.lengthHistograms,1);
+vecLD.normSumLengthHistogram = vecLD.sumLengthHistogram / sum(vecLD.contourLengths) * 10000;
 lengthHistogram = vecLD.sumLengthHistogram;
 vecLD.lengthBins = bins;
 shortName = 'len';

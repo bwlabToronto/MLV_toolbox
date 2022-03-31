@@ -28,6 +28,7 @@ bwidth = 180 / numBins;
 bins = [0:bwidth:180-bwidth];
 binEdges = bins + bwidth/2;
 vecLD.orientationHistograms = NaN(vecLD.numContours,numBins);
+vecLD.normOrientationHistograms = NaN(vecLD.numContours, numBins);
 
 for c = 1:vecLD.numContours
     thisHist = zeros(1,numBins);
@@ -43,8 +44,10 @@ for c = 1:vecLD.numContours
         end
     end
     vecLD.orientationHistograms(c,:) = thisHist;
+    vecLD.normOrientationHistograms(c,:) = vecLD.orientationHistograms(c,:) / vecLD.contourLengths(c) * 10000;
 end
 vecLD.sumOrientionHistogram = sum(vecLD.orientationHistograms,1);
+vecLD.normSumOrientationHistogram = vecLD.sumOrientionHistogram / sum(vecLD.contourLengths) * 10000;
 oriHistogram = vecLD.sumOrientionHistogram;
 vecLD.orientationBins = bins;
 shortName = 'ori';
