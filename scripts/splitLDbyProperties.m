@@ -34,7 +34,7 @@ function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weigh
 %              either topLD or bottomLD.
 %
 %   weights - Array of weigths of the same size as properties. 
-%             default: [] - all proerties are weighted equally, same as ones(1,N)
+%             default: [] - all properties are weighted equally, same as ones(1,N)
 %
 % Return:
 %   topLD - line drawing strcture with the top-ranked contours

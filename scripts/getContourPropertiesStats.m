@@ -8,9 +8,9 @@ function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, w
 %                'orientation','length','curvature','junctions'
 %                default: {'orientation','length','curvature','junctions'}
 %   minmaxLen - this minimum and maximum for the length histogram 
-%               default: [] - use the minimum and maximum for this image
+%               default: [2, width+length of the image]
 %   minmaxCurv- this minimum and maximum for the curvature histogram 
-%               default: [] - use the minimum and maximum for this image
+%               default: [0, 90]
 %   junctionTypes - a cell array with the junction types to incldue in the histogram
 %                   deault: {} - use all jucniton types present in this
 %                   image
