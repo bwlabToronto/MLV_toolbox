@@ -87,22 +87,26 @@ This function is called by:
 0030 binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
 0031 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
 0032 logLengths = log10(vecLD.contourLengths + 1);
-0033 
-0034 <span class="keyword">for</span> c = 1:vecLD.numContours
-0035     thisHist = zeros(1,numBins);
-0036     <span class="keyword">for</span> b = 1:numBins
-0037         <span class="keyword">if</span> logLengths(c) &lt; binBoundary(b+1) || (b == numBins)
-0038             thisHist(b) = thisHist(b) + vecLD.contourLengths(c);
-0039             <span class="keyword">break</span>
-0040         <span class="keyword">end</span>
-0041     <span class="keyword">end</span>
-0042     vecLD.lengthHistograms(c,:) = thisHist;
-0043 <span class="keyword">end</span>
-0044 
-0045 vecLD.sumLengthHistogram = sum(vecLD.lengthHistograms,1);
-0046 lengthHistogram = vecLD.sumLengthHistogram;
-0047 vecLD.lengthBins = bins;
-0048 shortName = <span class="string">'len'</span>;</pre></div>
-<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0033 vecLD.lengthHistograms = NaN(vecLD.numContours,numBins);
+0034 vecLD.normLengthHistograms = NaN(vecLD.numContours,numBins);
+0035 
+0036 <span class="keyword">for</span> c = 1:vecLD.numContours
+0037     thisHist = zeros(1,numBins);
+0038     <span class="keyword">for</span> b = 1:numBins
+0039         <span class="keyword">if</span> logLengths(c) &lt; binBoundary(b+1) || (b == numBins)
+0040             thisHist(b) = thisHist(b) + vecLD.contourLengths(c);
+0041             <span class="keyword">break</span>
+0042         <span class="keyword">end</span>
+0043     <span class="keyword">end</span>
+0044     vecLD.lengthHistograms(c,:) = thisHist;
+0045     vecLD.normLengthHistograms(c,:) = thisHist / vecLD.contourLengths(c) * 10000;
+0046 <span class="keyword">end</span>
+0047 
+0048 vecLD.sumLengthHistogram = sum(vecLD.lengthHistograms,1);
+0049 vecLD.normSumLengthHistogram = vecLD.sumLengthHistogram / sum(vecLD.contourLengths) * 10000;
+0050 lengthHistogram = vecLD.sumLengthHistogram;
+0051 vecLD.lengthBins = bins;
+0052 shortName = <span class="string">'len'</span>;</pre></div>
+<hr><address>Generated on Thu 31-Mar-2022 08:40:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

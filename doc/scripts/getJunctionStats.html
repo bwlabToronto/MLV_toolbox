@@ -79,37 +79,55 @@ This function is called by:
 0024     vecLD = <a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>(vecLD);
 0025 <span class="keyword">end</span>
 0026 
-0027 <span class="comment">% junction types</span>
-0028 theseTypes = {vecLD.junctions(:).type};
-0029 typeHist = zeros(1,numel(junctionTypes));
-0030 
-0031 <span class="comment">% prepare the counts of junctions that each contour participates in</span>
-0032 vecLD.junctionContourHistograms = zeros(vecLD.numContours,numel(junctionTypes));
-0033 
-0034 <span class="comment">% count it all up</span>
-0035 <span class="keyword">for</span> t = 1:numel(junctionTypes)
-0036     thisJ = strcmp(junctionTypes{t},theseTypes);
-0037     typeHist(t) = sum(thisJ);
-0038     contours = [vecLD.junctions(thisJ).contourIDs];
-0039     <span class="keyword">for</span> c = unique(contours)
-0040         vecLD.junctionContourHistograms(c,t) = sum(contours == c);
-0041     <span class="keyword">end</span>
-0042 <span class="keyword">end</span>
-0043 vecLD.junctionTypeHistogram = typeHist;
-0044 vecLD.junctionTypeBins = junctionTypes;
-0045 
-0046 <span class="comment">% junctionAngles</span>
-0047 maxAngle = 120;
-0048 angles = [vecLD.junctions(:).minAngle];
-0049 binStep = maxAngle/numAngleBins;
-0050 angleBins = [binStep/2:binStep:maxAngle-binStep/2];
-0051 angleHist = hist(angles,angleBins);
-0052 vecLD.junctionAngleHistogram = angleHist;
-0053 vecLD.junctionAngleBins = angleBins;
-0054 
-0055 histograms = {typeHist,angleHist};
-0056 bins = {junctionTypes,angleBins};
-0057 shortNames = {<span class="string">'juncType'</span>,<span class="string">'juncAngle'</span>};</pre></div>
-<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0027 <span class="comment">% no junctions? return empty arrays for everything</span>
+0028 <span class="keyword">if</span> isempty(vecLD.junctions)
+0029     vecLD.junctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
+0030     vecLD.normJunctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
+0031     vecLD.junctionTypeHistogram = zeros(1,length(junctionTypes));
+0032     vecLD.normJunctionTypeHistogram = zeros(1,length(junctionTypes));
+0033 <span class="keyword">else</span>
+0034 
+0035     <span class="comment">% junction types</span>
+0036     theseTypes = {vecLD.junctions(:).type};
+0037     typeHist = zeros(1,numel(junctionTypes));
+0038     
+0039     <span class="comment">% prepare the counts of junctions that each contour participates in</span>
+0040     vecLD.junctionContourHistograms = zeros(vecLD.numContours,numel(junctionTypes));
+0041     
+0042     <span class="comment">% count it all up</span>
+0043     <span class="keyword">for</span> t = 1:numel(junctionTypes)
+0044         thisJ = strcmp(junctionTypes{t},theseTypes);
+0045         typeHist(t) = sum(thisJ);
+0046         contours = [vecLD.junctions(thisJ).contourIDs];
+0047         <span class="keyword">for</span> c = unique(contours)
+0048             vecLD.junctionContourHistograms(c,t) = sum(contours == c);
+0049         <span class="keyword">end</span>
+0050     <span class="keyword">end</span>
+0051     vecLD.normJunctionContourHistograms = vecLD.junctionContourHistograms ./ repmat(vecLD.contourLengths,1,numel(junctionTypes)) * 10000;
+0052     vecLD.junctionTypeHistogram = typeHist;
+0053     vecLD.normJunctionTypeHistogram = typeHist / sum(vecLD.contourLengths) * 10000;
+0054 <span class="keyword">end</span>
+0055 vecLD.junctionTypeBins = junctionTypes;
+0056 
+0057 <span class="comment">% junctionAngles</span>
+0058 maxAngle = 120;
+0059 binStep = maxAngle/numAngleBins;
+0060 angleBins = [binStep/2:binStep:maxAngle-binStep/2];
+0061 <span class="keyword">if</span> isempty(vecLD.junctions)
+0062     vecLD.junctionAngleHistogram = zeros(1,length(junctionTypes));
+0063     vecLD.normJunctionAngleHistogram = zeros(1,length(junctionTypes));
+0064     histograms = {[],[]};
+0065 <span class="keyword">else</span>
+0066     angles = [vecLD.junctions(:).minAngle];
+0067     angleHist = hist(angles,angleBins);
+0068     vecLD.junctionAngleHistogram = angleHist;
+0069     vecLD.normJunctionAngleHistogram = angleHist / sum(vecLD.contourLengths) * 10000;
+0070     histograms = {typeHist,angleHist};
+0071 <span class="keyword">end</span>
+0072 vecLD.junctionAngleBins = angleBins;
+0073 
+0074 bins = {junctionTypes,angleBins};
+0075 shortNames = {<span class="string">'juncType'</span>,<span class="string">'juncAngle'</span>};</pre></div>
+<hr><address>Generated on Thu 31-Mar-2022 08:40:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

@@ -36,9 +36,9 @@
                 'orientation','length','curvature','junctions'
                 default: {'orientation','length','curvature','junctions'}
    minmaxLen - this minimum and maximum for the length histogram 
-               default: [] - use the minimum and maximum for this image
+               default: [2, width+length of the image]
    minmaxCurv- this minimum and maximum for the curvature histogram 
-               default: [] - use the minimum and maximum for this image
+               default: [0, 90]
    junctionTypes - a cell array with the junction types to incldue in the histogram
                    deault: {} - use all jucniton types present in this
                    image
@@ -55,10 +55,10 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>	[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minmaxCurvature)</li><li><a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>	vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</li><li><a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>	[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)</li></ul>
+<li><a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>	[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minmaxCurvature)</li><li><a href="getHorizontalVerticalStats.html" class="code" title="function [vecLD,HorVerHistogram,bins,shortName] = getHorizontalVerticalStats(vecLD,numBins)">getHorizontalVerticalStats</a>	[vecLD,HorVerHistogram,bins] = getOrientationStats(vecLD,numBins)</li><li><a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>	vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</li><li><a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>	[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="test_FeatureRanking.html" class="code" title="">test_FeatureRanking</a>	testing ranking by particular featues</li><li><a href="writeSceneLDsToCSV.html" class="code" title="function [resultsTable,statsLD] = writeSceneLDsToCSV(csvFileName)">writeSceneLDsToCSV</a>	allSceneLDsToCSV(csvFileName)</li></ul>
+<li><a href="saveSceneLDsToTable.html" class="code" title="function [resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)">saveSceneLDsToTable</a>	allSceneLDsToCSV(csvFileName)</li><li><a href="test_FeatureRanking.html" class="code" title="">test_FeatureRanking</a>	testing ranking by particular featues</li><li><a href="writeSceneLDsToCSV.html" class="code" title="function [resultsTable,statsLD] = writeSceneLDsToCSV(csvFileName)">writeSceneLDsToCSV</a>	allSceneLDsToCSV(csvFileName)</li></ul>
 <!-- crossreference -->
 
 
@@ -74,9 +74,9 @@ This function is called by:
 0008 <span class="comment">%                'orientation','length','curvature','junctions'</span>
 0009 <span class="comment">%                default: {'orientation','length','curvature','junctions'}</span>
 0010 <span class="comment">%   minmaxLen - this minimum and maximum for the length histogram</span>
-0011 <span class="comment">%               default: [] - use the minimum and maximum for this image</span>
+0011 <span class="comment">%               default: [2, width+length of the image]</span>
 0012 <span class="comment">%   minmaxCurv- this minimum and maximum for the curvature histogram</span>
-0013 <span class="comment">%               default: [] - use the minimum and maximum for this image</span>
+0013 <span class="comment">%               default: [0, 90]</span>
 0014 <span class="comment">%   junctionTypes - a cell array with the junction types to incldue in the histogram</span>
 0015 <span class="comment">%                   deault: {} - use all jucniton types present in this</span>
 0016 <span class="comment">%                   image</span>
@@ -115,32 +115,34 @@ This function is called by:
 0049     <span class="keyword">switch</span> thisStat
 0050         <span class="keyword">case</span> <span class="string">'orientation'</span>
 0051             [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>(vecLD,numBins);
-0052         <span class="keyword">case</span> <span class="string">'length'</span>
-0053             <span class="keyword">if</span> isempty(minmaxLen)
-0054                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>(vecLD,numBins);
-0055             <span class="keyword">else</span>
-0056                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>(vecLD,numBins,minmaxLen(1),minmaxLen(2));
-0057             <span class="keyword">end</span>                
-0058         <span class="keyword">case</span> <span class="string">'curvature'</span>
-0059             <span class="keyword">if</span> isempty(minmaxCurv)
-0060                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>(vecLD,numBins);
-0061             <span class="keyword">else</span>
-0062                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>(vecLD,numBins,minmaxCurv(1),minmaxCurv(2));
-0063             <span class="keyword">end</span>
-0064         <span class="keyword">case</span> <span class="string">'junctions'</span>
-0065             <span class="keyword">if</span> isempty(junctionTypes)
-0066                 [vecLD,jHist,jBins,jNames] = <a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>(vecLD,numBins);
-0067             <span class="keyword">else</span>
-0068                 [vecLD,jHist,jBins,jNames] = <a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>(vecLD,numBins,junctionTypes);
-0069             <span class="keyword">end</span>
-0070             histograms = [histograms,jHist];
-0071             bins = [bins,jBins];
-0072             statsNames = [statsNames,jNames];
-0073         <span class="keyword">otherwise</span>
-0074             error([<span class="string">'Unknown property: '</span>,thisStat]);
-0075     <span class="keyword">end</span>
-0076 <span class="keyword">end</span>
-0077</pre></div>
-<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0052         <span class="keyword">case</span> <span class="string">'horver'</span>
+0053             [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getHorizontalVerticalStats.html" class="code" title="function [vecLD,HorVerHistogram,bins,shortName] = getHorizontalVerticalStats(vecLD,numBins)">getHorizontalVerticalStats</a>(vecLD,numBins);            
+0054         <span class="keyword">case</span> <span class="string">'length'</span>
+0055             <span class="keyword">if</span> isempty(minmaxLen)
+0056                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>(vecLD,numBins);
+0057             <span class="keyword">else</span>
+0058                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>(vecLD,numBins,minmaxLen(1),minmaxLen(2));
+0059             <span class="keyword">end</span>                
+0060         <span class="keyword">case</span> <span class="string">'curvature'</span>
+0061             <span class="keyword">if</span> isempty(minmaxCurv)
+0062                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>(vecLD,numBins);
+0063             <span class="keyword">else</span>
+0064                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>(vecLD,numBins,minmaxCurv(1),minmaxCurv(2));
+0065             <span class="keyword">end</span>
+0066         <span class="keyword">case</span> <span class="string">'junctions'</span>
+0067             <span class="keyword">if</span> isempty(junctionTypes)
+0068                 [vecLD,jHist,jBins,jNames] = <a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>(vecLD,numBins);
+0069             <span class="keyword">else</span>
+0070                 [vecLD,jHist,jBins,jNames] = <a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>(vecLD,numBins,junctionTypes);
+0071             <span class="keyword">end</span>
+0072             histograms = [histograms,jHist];
+0073             bins = [bins,jBins];
+0074             statsNames = [statsNames,jNames];
+0075         <span class="keyword">otherwise</span>
+0076             error([<span class="string">'Unknown property: '</span>,thisStat]);
+0077     <span class="keyword">end</span>
+0078 <span class="keyword">end</span>
+0079</pre></div>
+<hr><address>Generated on Thu 31-Mar-2022 08:40:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

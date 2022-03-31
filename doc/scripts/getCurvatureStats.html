@@ -89,24 +89,27 @@ This function is called by:
 0031 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
 0032 
 0033 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);
-0034 <span class="keyword">for</span> c = 1:vecLD.numContours
-0035     logCurvatures = log10(vecLD.curvatures{c}+1);
-0036     <span class="keyword">for</span> s = 1:numel(logCurvatures)
-0037         <span class="keyword">for</span> b = 1:numBins
-0038             <span class="keyword">if</span> logCurvatures(s) &lt; binBoundary(b+1) || (b == numBins)
-0039                 vecLD.curvatureHistograms(c,b) = vecLD.curvatureHistograms(c,b) + vecLD.lengths{c}(s);
-0040                 <span class="keyword">break</span>;
-0041             <span class="keyword">end</span>
-0042         <span class="keyword">end</span>
-0043     <span class="keyword">end</span>
-0044 <span class="keyword">end</span>
-0045 
-0046 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
-0047 curvatureHistogram = vecLD.sumCurvatureHistogram;
-0048 vecLD.curvatureBins = bins;
-0049 shortName = <span class="string">'curv'</span>;
-0050 
-0051</pre></div>
-<hr><address>Generated on Tue 22-Mar-2022 10:49:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0034 vecLD.normCurvatureHistograms = zeros(vecLD.numContours,numBins);
+0035 <span class="keyword">for</span> c = 1:vecLD.numContours
+0036     logCurvatures = log10(vecLD.curvatures{c}+1);
+0037     <span class="keyword">for</span> s = 1:numel(logCurvatures)
+0038         <span class="keyword">for</span> b = 1:numBins
+0039             <span class="keyword">if</span> logCurvatures(s) &lt; binBoundary(b+1) || (b == numBins)
+0040                 vecLD.curvatureHistograms(c,b) = vecLD.curvatureHistograms(c,b) + vecLD.lengths{c}(s);
+0041                 <span class="keyword">break</span>;
+0042             <span class="keyword">end</span>
+0043         <span class="keyword">end</span>
+0044     <span class="keyword">end</span>
+0045     vecLD.normCurvatureHistograms(c,:) = vecLD.curvatureHistograms(c,:) / vecLD.contourLengths(c) * 10000;
+0046 <span class="keyword">end</span>
+0047 
+0048 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
+0049 vecLD.normSumCurvatureHistogram = vecLD.sumCurvatureHistogram / sum(vecLD.contourLengths) * 10000;
+0050 curvatureHistogram = vecLD.sumCurvatureHistogram;
+0051 vecLD.curvatureBins = bins;
+0052 shortName = <span class="string">'curv'</span>;
+0053 
+0054</pre></div>
+<hr><address>Generated on Thu 31-Mar-2022 08:40:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
