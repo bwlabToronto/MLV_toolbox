@@ -100,3 +100,23 @@ fprintf('\nThe mean difference in predicted pleasure between top and bottom is =
 
 
 %% Render the split line drawings into images
+fprintf('Rendering and saving the split images ...\n');
+path = '../data/splits/DelaSplits_RandomForest';
+for d = 1:numel(topLDs)
+    imname = scenesStatsLDs(d).originalImage(1:end-4);
+    fprintf('%d. %s ...\n',d,imname);
+
+    topImg = renderLinedrawing(topLDs(d));
+    topImg = squeeze(topImg(:,:,1)); % use grayscale encoding
+    topName = sprintf('%s/%s_top.png',path,imname);
+    imwrite(topImg,topName);
+
+    bottomImg = renderLinedrawing(bottomLDs(d));
+    bottomImg = squeeze(bottomImg(:,:,1)); % use grayscale encoding
+    bottomName = sprintf('%s/%s_bottom.png',path,imname);
+    imwrite(bottomImg,bottomName);
+end
+
+fprintf('\nDone. Rendered images are located in %s.\n\n',path);
+
+    
