@@ -103,15 +103,15 @@ This function is called by:
 0047     vecLD.normOrientationHistograms(c,:) = vecLD.orientationHistograms(c,:) / vecLD.contourLengths(c) * 10000;
 0048 <span class="keyword">end</span>
 0049 
-0050 vecLD.normSumOrientationHistogram = vecLD.sumOrientionHistogram / sum(vecLD.contourLengths) * 10000;
-0051 vecLD.sumOrientationHistogram = sum(vecLD.orientationHistograms,1);
-0052 oriHistogram = vecLD.sumOrientionHistogram;
+0050 vecLD.sumOrientationHistogram = sum(vecLD.orientationHistograms,1);
+0051 vecLD.normSumOrientationHistogram = vecLD.sumOrientationHistogram / sum(vecLD.contourLengths) * 10000;
+0052 oriHistogram = vecLD.sumOrientationHistogram;
 0053 vecLD.orientationBins = bins;
 0054 shortName = <span class="string">'ori'</span>;
 0055 
 0056 
 0057 
 0058</pre></div>
-<hr><address>Generated on Thu 31-Mar-2022 08:40:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Thu 07-Apr-2022 11:58:19 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

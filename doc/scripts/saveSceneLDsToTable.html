@@ -42,7 +42,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="convertHistogramsToTable.html" class="code" title="function propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)">convertHistogramsToTable</a>	propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)</li><li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
+<li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
@@ -101,7 +101,7 @@ This function is called by:
 0048     <span class="comment">%[thisLD,histograms,bins,statsNames] = getContourPropertiesStats(allLDs(l),whichStats,[minLen,maxLen],[minCurv,maxCurv],junctionTypes);</span>
 0049     [thisLD,histograms,bins,statsNames] = <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)">getContourPropertiesStats</a>(allLDs(l),whichStats);
 0050     tt = table({imageName},<span class="string">'VariableNames'</span>,{<span class="string">'ImageName'</span>});
-0051     tt = [tt,<a href="convertHistogramsToTable.html" class="code" title="function propertiesTable = convertHistogramsToTable(histograms,bins,shortStatsNames)">convertHistogramsToTable</a>(histograms,bins,statsNames)];
+0051     tt = [tt,convertHistogramsToTable(histograms,bins,statsNames)];
 0052     resultsTable = [resultsTable;tt];
 0053     statsLDs = [statsLDs,thisLD];
 0054 <span class="keyword">end</span>
@@ -111,6 +111,6 @@ This function is called by:
 0058 save(<span class="string">'statsLDs'</span>,<span class="string">'statsLDs'</span>);
 0059 fprintf(<span class="string">'\nStats saved in statsLDs\n'</span>);
 0060</pre></div>
-<hr><address>Generated on Thu 31-Mar-2022 08:40:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Thu 07-Apr-2022 11:58:19 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
