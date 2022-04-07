@@ -44,38 +44,6 @@ propTable = [histogramToTable(vecLD.normLengthHistograms, 'len'),...
              histogramToTable(vecLD.normJunctionContourHistograms, 'juncType', vecLD.junctionTypeBins)];
 
 
-% for c = 1:vecLD.numContours
-%     % Orientation
-%     normOri = vecLD.orientationHistograms(c,:) / vecLD.contourLengths(c);
-%     for f = 1:numel(normOri)
-%         vname = sprintf('Norm_ori_%d',f);
-%         propTable(c,vname) = {normOri(f)};
-%     end
-% 
-%     % Length
-%     normLen = vecLD.lengthHistograms(c,:) / vecLD.contourLengths(c);
-%     for f = 1:numel(normLen)
-%         vname = sprintf('Norm_len_%d',f);
-%         propTable(c,vname) = {normLen(f)};
-%     end
-% 
-%     % Curvature
-%     normCurv = vecLD.curvatureHistograms(c,:) / vecLD.contourLengths(c);
-%     for f = 1:numel(normCurv)
-%         vname = sprintf('Norm_curv_%d',f);
-%         propTable(c,vname) = {normCurv(f)};
-%     end
-% 
-%     % Junction types
-%     normJuncTypes = vecLD.junctionContourHistograms(c,:) / vecLD.contourLengths(c);
-%     types = {'T','Y','X','Arrow'};
-%     for t = 1:length(types)
-%         vname = sprintf('juncType_%s',types{t});
-%         idx = find(strcmp(types{t},vecLD.junctionTypeBins));
-%         propTable(c,vname) = {normJuncTypes(idx)};
-%     end
-% end
-
 % Now get the predictions from the stats model
 scores = predict(Mdl,propTable);
 
