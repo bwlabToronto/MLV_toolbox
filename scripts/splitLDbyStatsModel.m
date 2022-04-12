@@ -1,5 +1,5 @@
 function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)
-% [topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction,histogramWeights)
+% [topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction)
 % Splits up the contours in the line drawing vecLD according to feature
 % properties, weighted by the histogramWeights.
 %
@@ -22,11 +22,6 @@ function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)
 %              preserved. This means that it could happen that one contour
 %              in the middle of the distribution does not get assigned to
 %              either topLD or bottomLD.
-%
-%   histogramWeights - a cell array of the same size as properties, with a weight vector 
-%                     for the histograms for each property in the individual cells.
-%                     The histograms are weighted and summed according to the weight vectors 
-%                     and then combined and ranked.
 %
 % Return:
 %   topLD - line drawing strcture with the top-ranked contours

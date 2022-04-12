@@ -12,7 +12,6 @@ imageFeatures = {'normSumLengthHistogram','normSumOrientationHistogram','normSum
 shortNames = {'len','ori','curv','juncType'};
 numFeatures = length(contourFeatures);
 
-
 %% Compile table for training
 trainTable = table();
 fprintf('Compiling features into table.\n\n')
@@ -45,10 +44,10 @@ numTrees = 100;
 Mdl = fitrensemble(trainTable,'Z_pleasure','Method','Bag','CrossVal','off','NumLearningCycles',numTrees);
 Z_predict = predict(Mdl,trainTable);
 
-% figure;
-% plot(trainTable.Z_pleasure,Z_predict,'*');
-% xlabel('Pleasure ratings');
-% ylabel('Predicted pleasure ratings');
+figure;
+plot(trainTable.Z_pleasure,Z_predict,'*');
+xlabel('Pleasure ratings');
+ylabel('Predicted pleasure ratings');
 
 [r,p] = corr(trainTable.Z_pleasure,Z_predict);
 fprintf('\nCorrelation between true and predicted pleasure ratings: r = %f; p = %g\n\n',r,p);
@@ -84,7 +83,7 @@ save('TopBottom','topLDs','bottomLDs','topTable','bottomTable');
 %% Compute pleasure predictions for top and bottom
 topPredictPleasure = predict(Mdl,topTable);
 bottomPredictPleasure = predict(Mdl,bottomTable);
-diffPleasure = topPredictPleasure - bottomPredictPleasure;
+diff = topPredictPleasure - bottomPredictPleasure;
 
 fprintf('Average predicted pleasure for top = %f\n',mean(topPredictPleasure));
 fprintf('Average predicted pleasure for bottom = %f\n',mean(bottomPredictPleasure));
@@ -97,7 +96,6 @@ for i = 1:numel(negDiff);
 end
 
 fprintf('\nThe mean difference in predicted pleasure between top and bottom is = %f\n\n',mean(diff));
-
 
 %% Render the split line drawings into images
 fprintf('Rendering and saving the split images ...\n');
@@ -119,4 +117,10 @@ end
 
 fprintf('\nDone. Rendered images are located in %s.\n\n',path);
 
-    
+%% Export results to csv 
+%writetable(topTable,'Projects/RandomForestFeatures2022/topTable.csv');
+%writetable(bottomTable,'Projects/RandomForestFeatures2022/bottomTable.csv');
+nameTop = table(topTable.ImageName,topPredictPleasure, 'VariableNames',{'ImageName','topPredictPleasure'});
+nameBottom = table(bottomTable.ImageName,bottomPredictPleasure, 'VariableNames',{'ImageName','bottomPredictPleasure'});
+writetable(nameTop,'RandomForestFeatures2022/nameTop.csv');
+writetable(nameBottom,'RandomForestFeatures2022/nameBottom.csv');
