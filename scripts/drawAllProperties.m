@@ -1,26 +1,54 @@
-function drawAllProperties(vecLD)
-% drawAllProperties(vecLD)
-% draws the original line drawing and all of its properties using subplots
+function drawAllProperties(vecLD,mode,properties)
+% drawAllProperties(vecLD,mode,properties)
+% Draws the original line drawing and all of its properties.
+%
+% Input:
+%   vecLD - the vectorized line drawing to be drawn
+%   mode - one of: 'subplot' - draw properties into one figrue usign subplot (default)
+%                  'separate' - draw properties into separate figures
+%   properties: a cell array of text labels of the properteis to be drawn
+%               default: {'Original','Length','Orientation','Curvatgure','Junctions'}
 
-figure;
+if nargin < 3
+    properties = {'Original','Length','Orientation','Curvature','Junctions'};
+end
+if ~iscell(properties)
+    properties = {properties};
+end
+numProps = length(properties);
 
-subplot(2,3,1);
-drawLinedrawing(vecLD);
-title(['Original - ',vecLD.originalImage]);
+if nargin < 2
+    mode = 'subplot';
+end
 
-subplot(2,3,2);
-drawLinedrawingProperty(vecLD,'Length');
-title('Length');
+switch mode
+    case 'subplot'
+        m = floor(sqrt(numProps));
+        n = ceil(numProps / m);
+        figure;
+        for p = 1:numProps
+            subplot(m,n,p);
+            if strcmp(properties{p},'Original')
+                drawLinedrawing(vecLD);
+                title(['Original - ',vecLD.originalImage]);
+            else
+                drawLinedrawingProperty(vecLD,properties{p});
+                title(properties{p});
+            end
+        end
 
-subplot(2,3,3);
-drawLinedrawingProperty(vecLD,'Orientation');
-title('Orientation');
-
-subplot(2,3,5);
-drawLinedrawingProperty(vecLD,'Curvature');
-title('Curvature');
-
-subplot(2,3,6);
-drawLinedrawingProperty(vecLD,'Junctions');
-title('Junctions');
-
+    case 'separate'
+        for p = 1:numProps
+            figure;
+            if strcmp(properties{p},'Original')
+                drawLinedrawing(vecLD);
+                title(['Original - ',vecLD.originalImage]);
+            else
+                drawLinedrawingProperty(vecLD,properties{p});
+                title(properties{p});
+            end
+        end
+        
+    otherwise
+        error(['Unknown mode: ',mode])
+end
