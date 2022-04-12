@@ -1,4 +1,4 @@
-function figIDs drawAllProperties(vecLD,mode,properties)
+function figIDs = drawAllProperties(vecLD,mode,properties)
 % drawAllProperties(vecLD,mode,properties)
 % Draws the original line drawing and all of its properties.
 %
