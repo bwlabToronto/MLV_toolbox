@@ -21,8 +21,15 @@ function allBranches = traceSkeleton(MAT)
 
 
 SegList  = GetConSeg(MAT.skeleton);
-allBranches = cell(size(SegList));
-for i = 1 : length(allBranches)
+% allBranches = cell(size(SegList));
+allBranches = [];
+
+% branch = [];
+for i = 1 : length(SegList)
+    
+    
+    
+    
     XY = SegList{i};
     X = XY(:,1);
     Y = XY(:,2);
@@ -30,10 +37,12 @@ for i = 1 : length(allBranches)
     
     R = MAT.distance_map(C);
     F = MAT.AOF(C);
-    CC = [X,Y,R,F];
-    allBranches{i} = CC;
+%     CC = [X,Y,R,F];
+    branch = struct('X',X,'Y',Y,'Radius',R,'AOF',F);
+    allBranches = [allBranches;branch];
+%     allBranches{i} = CC;
 end
 
-allBranches = allBranches(~cellfun('isempty',allBranches));
+% allBranches = allBranches(~cellfun('isempty',allBranches));
 
 end

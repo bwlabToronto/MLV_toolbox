@@ -25,7 +25,7 @@ function result = computeMATpropertyPerBranch(curBranch,property,K)
 
 
 
-N = size(curBranch,1);
+N = length(curBranch.X);
 [R,dR,dX,dY]=getBranchDerivative(curBranch);
 result = zeros(N,1);
 
@@ -47,6 +47,7 @@ switch lower(property)
                 result(i) = nom/denom;
             end        
         end
+        
         
     case 'separation' 
         % this is computing the inverse of the radius function
@@ -80,8 +81,8 @@ switch lower(property)
         
      case 'mirror'   
         % computing curvature of the medial axis  
-        X = curBranch(:,1);
-        Y = curBranch(:,2);
+        X = curBranch.X;
+        Y = curBranch.Y;
         if length(X)> 3
             [~,~,result] = breakToLineSegments([X,Y]);
         end
@@ -94,21 +95,21 @@ switch lower(property)
 end
 
 result = smoothdata(result,'movmean',3);
-
+result = result.^10;
 
 end
 
 
 function [R,dR,dX,dY]=getBranchDerivative(branch)
 
-R = branch(:,3);
+R = branch.Radius;
 R = smoothdata(R,'movmean',2);
 
 
 if(length(R)>1)
     
-    X = branch(:,1);
-    Y = branch(:,2);
+    X = branch.X;
+    Y = branch.Y;
     dX = diff(X);
     dY = diff(Y);
     dR = diff(R);

@@ -20,29 +20,21 @@
 % The default value of K is 5
 % We should specify the list 
 
-function [skeletalBranches,skeltonImageWithRating] = computeMATproperty(MAT,property,K)
+function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)
 
 if nargin < 3
+    skeletalBranches = traceSkeleton(MAT);
+end
+if nargin < 4
     K = 5;
 end
+skeletonImageWithRating = zeros(size(MAT.skeleton));
 
-skeletalBranches = traceSkeleton(MAT);
-
-skeltonImageWithRating = zeros(size(MAT.skeleton));
-
-
-for i = 1 : length(skeletalBranches)
-    
-    
-    curBranch = skeletalBranches{i};
-    
-    scores = computeMATpropertyPerBranch(curBranch,property,K);    
-    updatedBranch = [curBranch,scores];
-    skeletalBranches{i} = updatedBranch;
-    
-    curBranchInds = sub2ind(size(MAT.skeleton),curBranch(:,1),curBranch(:,2));
-    
-    skeltonImageWithRating(curBranchInds) = scores;
+for i = 1 : length(skeletalBranches)   
+    scores = computeMATpropertyPerBranch(skeletalBranches(i),property,K);    
+    skeletalBranches(i).(property) = scores;
+    curBranchInds = sub2ind(size(MAT.skeleton),skeletalBranches(i).X,skeletalBranches(i).Y);
+    skeletonImageWithRating(curBranchInds) = scores;
 end
 
 
