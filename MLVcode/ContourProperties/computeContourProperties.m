@@ -1,6 +1,6 @@
 function vecLD = computeContourProperties(vecLD,whichProps)
 % vecLD = computeContourProperties(vecLD,whichProps)
-%         computes contour properties for the vectorized line drawing LD.
+%         computes contour properties for the vectorized line drawing.
 % Input:
 %   vecLD - vectorized line drawing data structure
 %   whichProps - string or cell array of strings that defines which

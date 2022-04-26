@@ -6,7 +6,7 @@ function drawJunctions(Junctions,types,MarkerSize,colors)
 % Input:
 %   Junctions - the junctions to be drawn. E.g., from vecLD.junctions.
 %   types - cell array with the types of junctions to be drawn in order
-%           any combination of 'L','T','X','Y','Arrow','Star
+%           any combination of 'T','X','Y','Arrow','Star
 %           default: {} - all junctions
 %   Markersize - the size of the marker for the junctions
 %                default: lines()

@@ -1,11 +1,11 @@
 function drawLinedrawingProperty(vecLD,property,lineWidth)
-% drawLinedrawingProperty(vecLD,property)
+% drawLinedrawingProperty(vecLD,property,lineWidth)
 % Draws a collored line drawing with line color determined by property
 % from a data structure into a figure.
 %
 % Input:
 %   vecLD - a line drawing structure
-%   property - one of 'length','curvature','orientation','junctions'
+%   property - one of 'orientation', 'length','curvature', 'junctions'
 %   linewidth - the width of the contour lines in pixels.
 %               default: 1
 
