@@ -1,8 +1,6 @@
 function vecLD = mergeLineSegments(vecLD,threshParam)
 
-
 for cc = 1 : vecLD.numContours
-    
     curContour = vecLD.contours{cc};
     X = [curContour(:,1); curContour(end,3)];
     Y = [curContour(:,2); curContour(end,4)];
@@ -44,6 +42,11 @@ for cc = 1 : vecLD.numContours
         startXY(i,:) = curLineSeg(1,:);
         endXY(i,:) = curLineSeg(end,:);
     end
-    vecLD.contours{cc} = [startXY,endXY];        
+    curSeg = [startXY,endXY];
+    if ~isempty(curSeg)
+        vecLD.contours{cc} = [startXY,endXY];      
+    end
+end
 
+ vecLD = removeDuplicatedContours(vecLD);
 end
