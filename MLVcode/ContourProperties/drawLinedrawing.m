@@ -6,7 +6,7 @@ function drawLinedrawing(vecLD,lineWidth,color)
 %   vecLD - a line drawing structure
 %   linewidth - the width of the contour lines in pixels.
 %               default: 1
-%   color - the RGB color for srawing the contours.
+%   color - the RGB color for drawing the contours.
 %           default: [0,0,0] (black)
 
 if nargin < 3

@@ -1,5 +1,5 @@
-function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv,junctionTypes)
-% [vecLD,histograms,bins,statsShortNames] = getContourPropertiesStats(vecLD, whichStats)
+function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)
+% [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, minmaxLen, minmaxCurv, whichStats)
 %       computes histograms for the contour properties for the vectorized line drawing LD.
 % Input:
 %   vecLD - vectorized line drawing data structure
@@ -12,7 +12,7 @@ function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, w
 %   minmaxCurv- this minimum and maximum for the curvature histogram 
 %               default: [0, 90]
 %   junctionTypes - a cell array with the junction types to incldue in the histogram
-%                   deault: {} - use all jucniton types present in this
+%                   deault: {} - use all junction types present in this
 %                   image
 %
 % Output:
@@ -21,7 +21,7 @@ function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, w
 %                in the same order as in whichstats
 %   bins -       cell array of bin centers for those histograms
 %                in the same order as in whichstats
-%   statsShortNames - the order of stats in the histgrams and bins
+%   statsNames - the order of stats in the histograms and bins
 
 if nargin < 5
     junctionTypes = {};

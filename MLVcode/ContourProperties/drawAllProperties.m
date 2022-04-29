@@ -7,7 +7,7 @@ function figIDs = drawAllProperties(vecLD,mode,properties)
 %   mode - one of: 'subplot' - draw properties into one figrue usign subplot (default)
 %                  'separate' - draw properties into separate figures
 %   properties: a cell array of text labels of the properteis to be drawn
-%               default: {'Original','Length','Orientation','Curvatgure','Junctions'}
+%               default: {'Original','Length','Orientation','Curvature','Junctions'}
 %
 % Return:
 %   figIDs: a vector of the figure IDs of the individual figures.

@@ -12,6 +12,7 @@ function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins
 %   oriHistogram: the histogram of orientations of line segmetns, weighted
 %                 by their lengths
 %   bins: a vector with the bin centers
+%   shortName: 'ori'
 
 if nargin < 2
     numBins = 8;

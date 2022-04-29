@@ -5,15 +5,16 @@ function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,num
 % Input: 
 %   vecLD - vectorized line drawing
 %   numBins - number of histogram bins; default: 8
-%   minmaxCurvature - the minimum nd maximum curvature: used as the lower bound of the histogram
+%   minmaxCurvature - the minimum and maximum curvature: used as the lower bound of the histogram
 %                  (default: [0,90])
 %
 % Output:
 %   vecLD: the line drawing structure with curvature histogram added for
 %   each contour
-%   curvatureHistogram: the histogram of length of line segments, 
+%   curvatureHistogram: the histogram of curvature of line segments, 
 %                    weighted by their lengths
 %   bins: a vector with the bin centers
+%   shortName: 'curv'
 
 if ~isfield(vecLD, 'curvatures')
     vecLD = computeCurvature(vecLD);

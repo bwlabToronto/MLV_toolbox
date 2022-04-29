@@ -13,6 +13,7 @@ function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,m
 %   lengthHistogram: the histogram of lengths of line segments, 
 %                    weighted by their lengths
 %   bins: a vector with the bin centers
+%   shortName: 'len'
 
 if ~isfield(vecLD, 'lengths')
     vecLD = computeLength(vecLD);

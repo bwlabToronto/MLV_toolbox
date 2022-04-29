@@ -10,7 +10,11 @@ function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBin
 %                   default: {'T','Y','X','Arrow','Star'}
 %
 % Return:
-%   vecLD - vectorized line drawing with the junction histograms added
+%   vecLD: vectorized line drawing with the junction histograms added
+%   histograms: the histograms of junction types and junction angles, 
+%                    weighted by their lengths
+%   bins: a vector with the bin centers
+%   shortNames: {'juncType','juncAngle'}
 
 if nargin < 3
     junctionTypes = {'T','Y','X','Arrow','Star'};
