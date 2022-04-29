@@ -1,10 +1,19 @@
 function drawJunctions(Junctions,types,MarkerSize,colors)
 % drawJunctions(Junctions,types,MarkerSize,colors)
+%   Draws the junctions intot eh current figure.
+%
+% drawJunctions(vecLD,types,MarkerSize,colors)
+%   Draws the line drawing vecLD with the Jucntions superimposed into the
+%   current figure.
 %
 % Draws the junctions into the current figure.
 %
 % Input:
 %   Junctions - the junctions to be drawn. E.g., from vecLD.junctions.
+%
+%   alternatively:
+%   vecLD - the vectoirized line drawing with the junctions included.
+%
 %   types - cell array with the types of junctions to be drawn in order
 %           any combination of 'T','X','Y','Arrow','Star
 %           default: {} - all junctions
@@ -23,6 +32,12 @@ end
 
 if ~iscell(types)
     types = {types};
+end
+
+% special case of a vectorized line drawing
+if isfield(Junctions,'contours')
+    drawLinedrawing(Junctions);
+    Junctions = Junctions.junctions;
 end
 
 if isempty(Junctions)
