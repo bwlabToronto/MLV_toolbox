@@ -23,13 +23,13 @@ rotatedLD.lineMethod = vecLD.lineMethod;
 rotatedLD.numContours = vecLD.numContours;
 rotatedLD.contours = {};
 
-shiftVec = vecLD.imsize([1,2,1,2])/2;
+centerPoint = vecLD.imsize([1,2,1,2])/2;
 
 sinAngle = sind(angle);
 cosAngle = cosd(angle);
 
 for c = 1:vecLD.numContours
-    offset = repmat(shiftVec,size(vecLD.contours{c},1),1);
+    offset = repmat(centerPoint,size(vecLD.contours{c},1),1);
     con = vecLD.contours{c} - offset;
     rot = NaN(size(con));
     rot(:,1) = cosAngle * con(:,1) - sinAngle * con(:,2);
