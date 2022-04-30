@@ -15,7 +15,7 @@ function shiftedLD = randomlyShiftContours(vecLD,maxShift)
 % Output:
 %   shiftedLD - a new vectorized line drawing with the shifted contours.
 %
-% Refences:
+% References:
 % This procedure was used for these two papers:
 %
 % Walther, D. B., & Shen, D. (2014). Nonaccidental properties underlie 
