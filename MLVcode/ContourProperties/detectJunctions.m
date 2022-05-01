@@ -17,7 +17,7 @@ function Junctions = detectJunctions(vecLD)
 
 
 % parameters for heuristic detection
-AE = 2; % absolute epsilon to accept two lines as "intersecting" even when they may be seprated by 0 pixels
+AE = 1; % absolute epsilon to accept two lines as "intersecting" even when they may be seprated by 0 pixels
 RE = 0.3; % relative epsilon - the same relative to the lentgh of a segment - the stricter of the two criteria will be applied
    
 Junctions=[];
