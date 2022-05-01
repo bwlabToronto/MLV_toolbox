@@ -8,7 +8,7 @@ function rotatedLD = rotateLinedrawing(vecLD,angle)
 %
 % Output:
 %   rotatedLD - vectorized line drawing with rotated contours
-%
+
 % References:
 % This procedure was used for:
 %
