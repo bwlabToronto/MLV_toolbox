@@ -1,4 +1,4 @@
-<img src='logo/Logo_Banner.png' width=40%/> 
+<img src='images/Logo_Banner.png' width=40%/> 
 
 --------------------------------------------------------------------------------
 
@@ -22,9 +22,22 @@ We are working on the python version and we have a plan to release the python ve
 
 **Extracting Line Drawings**
 
-**Computing Contour Properties**
+The main function for extracting line drawings is "lineDrawingTracing.m". 
+
+Example usage:
+
+```
+fileName= 'example.jpg';
+vecLD = lineDrawingTracing(fileName);
+drawLinedrawing(vecLD);
+
+```
+
+
 
 **Computing Medial Axis Properties**
+
+**Computing Contour Properties**
 
 **Manipulating Line Drawings**
 
