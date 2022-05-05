@@ -19,6 +19,7 @@ if nargin < 2
     radius = min(vecLD.imsize)/2;
 end
 
+% prep the new data structure
 maskedLD.originalImage = vecLD.originalImage;
 maskedLD.imsize = vecLD.imsize;
 maskedLD.lineMethod = vecLD.lineMethod;
@@ -29,7 +30,7 @@ center = vecLD.imsize / 2;
 
 for c = 1:vecLD.numContours
 
-    % compute distances of all contour points from teh center
+    % compute distances of all contour points from the center
     A = vecLD.contours{c}(:,1:2);
     B = vecLD.contours{c}(:,3:4);
     rA = sqrt(sum((A-center).^2,2));
@@ -97,7 +98,7 @@ for c = 1:vecLD.numContours
         end
         prevInside = currInside;
     end
-    
+
     % save the contour if it is non-empty
     if ~isempty(currContour)
         maskedLD.numContours = maskedLD.numContours + 1;
