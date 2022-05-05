@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of diskFill</title>
+  <meta name="keywords" content="diskFill">
+  <meta name="description" content="Fill a harddisk with garbage files (useful before discarding disk).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; diskFill.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>diskFill
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Fill a harddisk with garbage files (useful before discarding disk).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function diskFill( tDir, nGig ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Fill a harddisk with garbage files (useful before discarding disk).
+
+ USAGE
+  diskFill( tDir, nGig )
+
+ INPUTS
+  tDir    - target directory to fill with garbage
+  nGig    - maximum number of gigabytes to write to disk
+
+ OUTPUTS
+
+ EXAMPLE
+  diskFill( 'k:', 500 )
+
+ See also
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.61
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="ticStatus.html" class="code" title="function id = ticStatus( msg, updateFreq, updateMinT, erasePrev )">ticStatus</a>	Used to display the progress of a long process.</li><li><a href="tocStatus.html" class="code" title="function tocStatus( id, fracDone )">tocStatus</a>	Used to display the progress of a long process.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function diskFill( tDir, nGig )</a>
+0002 <span class="comment">% Fill a harddisk with garbage files (useful before discarding disk).</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% USAGE</span>
+0005 <span class="comment">%  diskFill( tDir, nGig )</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% INPUTS</span>
+0008 <span class="comment">%  tDir    - target directory to fill with garbage</span>
+0009 <span class="comment">%  nGig    - maximum number of gigabytes to write to disk</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% OUTPUTS</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% EXAMPLE</span>
+0014 <span class="comment">%  diskFill( 'k:', 500 )</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% See also</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.61</span>
+0019 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0020 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0021 
+0022 nm = sprintf(<span class="string">'%s/garbage_%s_%05i_%%05i.mat'</span>,tDir,date,round(rand*10^5));
+0023 tid = <a href="ticStatus.html" class="code" title="function id = ticStatus( msg, updateFreq, updateMinT, erasePrev )">ticStatus</a>();
+0024 <span class="keyword">for</span> i=1:nGig
+0025   <span class="comment">% write up to 1 GB of garbage bytes in chunks of 1 MB</span>
+0026   fid=fopen(sprintf(nm,i),<span class="string">'w'</span>); mb=2^20; n=0; o=mb;
+0027   <span class="keyword">while</span>(n&lt;2^30 &amp;&amp; o==mb), o=fwrite(fid,rand(mb,1)); n=n+o; <span class="keyword">end</span>
+0028   <span class="keyword">try</span> fclose(fid); <span class="keyword">catch</span>, <span class="keyword">end</span>; <a href="tocStatus.html" class="code" title="function tocStatus( id, fracDone )">tocStatus</a>( tid, i/nGig ); <span class="comment">%#ok&lt;CTCH&gt;</span>
+0029   <span class="comment">% if write failed (k&lt;1), disk is presumably full</span>
+0030   <span class="keyword">if</span>( o&lt;mb &amp;&amp; i&lt;nGig), <a href="tocStatus.html" class="code" title="function tocStatus( id, fracDone )">tocStatus</a>(tid,1);
+0031     disp(<span class="string">'Congrats, disk is full!'</span>); <span class="keyword">break</span>;
+0032   <span class="keyword">end</span>
+0033 <span class="keyword">end</span>
+0034 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

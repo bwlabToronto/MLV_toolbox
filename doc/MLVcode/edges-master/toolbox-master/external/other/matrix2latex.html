@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of matrix2latex</title>
+  <meta name="keywords" content="matrix2latex">
+  <meta name="description" content="function: matrix2latex(...)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">other</a> &gt; matrix2latex.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\other&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>matrix2latex
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function: matrix2latex(...)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function matrix2latex(matrix, filename, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function: matrix2latex(...)
+ Author:   M. Koehler
+ Contact:  koehler@in.tum.de
+ Version:  1.1
+ Date:     May 09, 2004</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function matrix2latex(matrix, filename, varargin)</a>
+0002 
+0003 <span class="comment">% function: matrix2latex(...)</span>
+0004 <span class="comment">% Author:   M. Koehler</span>
+0005 <span class="comment">% Contact:  koehler@in.tum.de</span>
+0006 <span class="comment">% Version:  1.1</span>
+0007 <span class="comment">% Date:     May 09, 2004</span>
+0008 
+0009 <span class="comment">% This software is published under the GNU GPL, by the free software</span>
+0010 <span class="comment">% foundation. For further reading see: http://www.gnu.org/licenses/licenses.html#GPL</span>
+0011 
+0012 <span class="comment">% Usage:</span>
+0013 <span class="comment">% matrix2late(matrix, filename, varargs)</span>
+0014 <span class="comment">% where</span>
+0015 <span class="comment">%   - matrix is a 2 dimensional numerical or cell array</span>
+0016 <span class="comment">%   - filename is a valid filename, in which the resulting latex code will</span>
+0017 <span class="comment">%   be stored</span>
+0018 <span class="comment">%   - varargs is one ore more of the following (denominator, value) combinations</span>
+0019 <span class="comment">%      + 'rowLabels', array -&gt; Can be used to label the rows of the</span>
+0020 <span class="comment">%      resulting latex table</span>
+0021 <span class="comment">%      + 'columnLabels', array -&gt; Can be used to label the columns of the</span>
+0022 <span class="comment">%      resulting latex table</span>
+0023 <span class="comment">%      + 'alignment', 'value' -&gt; Can be used to specify the alginment of</span>
+0024 <span class="comment">%      the table within the latex document. Valid arguments are: 'l', 'c',</span>
+0025 <span class="comment">%      and 'r' for left, center, and right, respectively</span>
+0026 <span class="comment">%      + 'format', 'value' -&gt; Can be used to format the input data. 'value'</span>
+0027 <span class="comment">%      has to be a valid format string, similar to the ones used in</span>
+0028 <span class="comment">%      fprintf('format', value);</span>
+0029 <span class="comment">%      + 'size', 'value' -&gt; One of latex' recognized font-sizes, e.g. tiny,</span>
+0030 <span class="comment">%      HUGE, Large, large, LARGE, etc.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% Example input:</span>
+0033 <span class="comment">%   matrix = [1.5 1.764; 3.523 0.2];</span>
+0034 <span class="comment">%   rowLabels = {'row 1', 'row 2'};</span>
+0035 <span class="comment">%   columnLabels = {'col 1', 'col 2'};</span>
+0036 <span class="comment">%   matrix2latex(matrix, 'out.tex', 'rowLabels', rowLabels, 'columnLabels', columnLabels, 'alignment', 'c', 'format', '%-6.2f', 'size', 'tiny');</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% The resulting latex file can be included into any latex document by:</span>
+0039 <span class="comment">% /input{out.tex}</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">% Enjoy life!!!</span>
+0042 
+0043     rowLabels = [];
+0044     colLabels = [];
+0045     alignment = <span class="string">'l'</span>;
+0046     format = [];
+0047     textsize = [];
+0048     <span class="keyword">if</span> (rem(nargin,2) == 1 || nargin &lt; 2)
+0049         error(<span class="string">'matrix2latex: '</span>, <span class="string">'Incorrect number of arguments to %s.'</span>, mfilename);
+0050     <span class="keyword">end</span>
+0051 
+0052     okargs = {<span class="string">'rowlabels'</span>,<span class="string">'columnlabels'</span>, <span class="string">'alignment'</span>, <span class="string">'format'</span>, <span class="string">'size'</span>};
+0053     <span class="keyword">for</span> j=1:2:(nargin-2)
+0054         pname = varargin{j};
+0055         pval = varargin{j+1};
+0056         k = strmatch(lower(pname), okargs);
+0057         <span class="keyword">if</span> isempty(k)
+0058             error(<span class="string">'matrix2latex: '</span>, <span class="string">'Unknown parameter name: %s.'</span>, pname);
+0059         <span class="keyword">elseif</span> length(k)&gt;1
+0060             error(<span class="string">'matrix2latex: '</span>, <span class="string">'Ambiguous parameter name: %s.'</span>, pname);
+0061         <span class="keyword">else</span>
+0062             <span class="keyword">switch</span>(k)
+0063                 <span class="keyword">case</span> 1  <span class="comment">% rowlabels</span>
+0064                     rowLabels = pval;
+0065                     <span class="keyword">if</span> isnumeric(rowLabels)
+0066                         rowLabels = cellstr(num2str(rowLabels(:)));
+0067                     <span class="keyword">end</span>
+0068                 <span class="keyword">case</span> 2  <span class="comment">% column labels</span>
+0069                     colLabels = pval;
+0070                     <span class="keyword">if</span> isnumeric(colLabels)
+0071                         colLabels = cellstr(num2str(colLabels(:)));
+0072                     <span class="keyword">end</span>
+0073                 <span class="keyword">case</span> 3  <span class="comment">% alignment</span>
+0074                     alignment = lower(pval);
+0075                     <span class="keyword">if</span> alignment == <span class="string">'right'</span>
+0076                         alignment = <span class="string">'r'</span>;
+0077                     <span class="keyword">end</span>
+0078                     <span class="keyword">if</span> alignment == <span class="string">'left'</span>
+0079                         alignment = <span class="string">'l'</span>;
+0080                     <span class="keyword">end</span>
+0081                     <span class="keyword">if</span> alignment == <span class="string">'center'</span>
+0082                         alignment = <span class="string">'c'</span>;
+0083                     <span class="keyword">end</span>
+0084                     <span class="keyword">if</span> alignment ~= <span class="string">'l'</span> &amp;&amp; alignment ~= <span class="string">'c'</span> &amp;&amp; alignment ~= <span class="string">'r'</span>
+0085                         alignment = <span class="string">'l'</span>;
+0086                         warning(<span class="string">'matrix2latex: '</span>, <span class="string">'Unkown alignment. (Set it to \''left\''.)'</span>);
+0087                     <span class="keyword">end</span>
+0088                 <span class="keyword">case</span> 4  <span class="comment">% format</span>
+0089                     format = lower(pval);
+0090                 <span class="keyword">case</span> 5  <span class="comment">% format</span>
+0091                     textsize = pval;
+0092             <span class="keyword">end</span>
+0093         <span class="keyword">end</span>
+0094     <span class="keyword">end</span>
+0095 
+0096     fid = fopen(filename, <span class="string">'w'</span>);
+0097     
+0098     width = size(matrix, 2);
+0099     height = size(matrix, 1);
+0100 
+0101     <span class="keyword">if</span> isnumeric(matrix)
+0102         matrix = num2cell(matrix);
+0103         <span class="keyword">for</span> h=1:height
+0104             <span class="keyword">for</span> w=1:width
+0105                 <span class="keyword">if</span>(~isempty(format))
+0106                     matrix{h, w} = num2str(matrix{h, w}, format);
+0107                 <span class="keyword">else</span>
+0108                     matrix{h, w} = num2str(matrix{h, w});
+0109                 <span class="keyword">end</span>
+0110             <span class="keyword">end</span>
+0111         <span class="keyword">end</span>
+0112     <span class="keyword">end</span>
+0113     
+0114     <span class="keyword">if</span>(~isempty(textsize))
+0115         fprintf(fid, <span class="string">'\\begin{%s}'</span>, textsize);
+0116     <span class="keyword">end</span>
+0117 
+0118     fprintf(fid, <span class="string">'\\begin{tabular}{|'</span>);
+0119 
+0120     <span class="keyword">if</span>(~isempty(rowLabels))
+0121         fprintf(fid, <span class="string">'l|'</span>);
+0122     <span class="keyword">end</span>
+0123     <span class="keyword">for</span> i=1:width
+0124         fprintf(fid, <span class="string">'%c|'</span>, alignment);
+0125     <span class="keyword">end</span>
+0126     fprintf(fid, <span class="string">'}\r\n'</span>);
+0127     
+0128     fprintf(fid, <span class="string">'\\hline\r\n'</span>);
+0129     
+0130     <span class="keyword">if</span>(~isempty(colLabels))
+0131         <span class="keyword">if</span>(~isempty(rowLabels))
+0132             fprintf(fid, <span class="string">'&amp;'</span>);
+0133         <span class="keyword">end</span>
+0134         <span class="keyword">for</span> w=1:width-1
+0135             fprintf(fid, <span class="string">'\\textbf{%s}&amp;'</span>, colLabels{w});
+0136         <span class="keyword">end</span>
+0137         fprintf(fid, <span class="string">'\\textbf{%s}\\\\\\hline\r\n'</span>, colLabels{width});
+0138     <span class="keyword">end</span>
+0139     
+0140     <span class="keyword">for</span> h=1:height
+0141         <span class="keyword">if</span>(~isempty(rowLabels))
+0142             fprintf(fid, <span class="string">'\\textbf{%s}&amp;'</span>, rowLabels{h});
+0143         <span class="keyword">end</span>
+0144         <span class="keyword">for</span> w=1:width-1
+0145             fprintf(fid, <span class="string">'%s&amp;'</span>, matrix{h, w});
+0146         <span class="keyword">end</span>
+0147         fprintf(fid, <span class="string">'%s\\\\\\hline\r\n'</span>, matrix{h, width});
+0148     <span class="keyword">end</span>
+0149 
+0150     fprintf(fid, <span class="string">'\\end{tabular}\r\n'</span>);
+0151     
+0152     <span class="keyword">if</span>(~isempty(textsize))
+0153         fprintf(fid, <span class="string">'\\end{%s}'</span>, textsize);
+0154     <span class="keyword">end</span>
+0155 
+0156     fclose(fid);</pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

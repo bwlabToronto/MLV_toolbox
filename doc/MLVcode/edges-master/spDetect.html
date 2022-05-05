@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of spDetect</title>
+  <meta name="keywords" content="spDetect">
+  <meta name="description" content="Detect Sticky Superpixels in image.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">edges-master</a> &gt; spDetect.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>spDetect
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Detect Sticky Superpixels in image.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [S,V] = spDetect( I, E, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Detect Sticky Superpixels in image.
+
+ Detect &quot;Sticky Edge Adhesive Superpixels&quot; in image. High quality, fast
+ superpixels that &quot;stick&quot; to edges. Without edge term the code computes
+ superpixels using an iterative approach motivated by both SLIC (Achanta
+ et al., PAMI12) and SEEDS (Bergh et al., ECCV12) superpixels. With edge
+ term added, the superpixels snap to edges, resulting in higher quality
+ boundaries. There is no corresponding publication for this code at this
+ time but please cite our edge detection work if you use this code.
+
+ The most important parameter is k which controls superpixel scale.
+ Note that the edge image E is optional (that is E=[] may be used).
+
+ USAGE
+  opts = spDetect()
+  [S,V] = spDetect( I, [E], [opts] )
+
+ INPUTS
+  I          - [h x w x 3] color input image (in [0,255])
+  E          - [h x w] type single edge image (in [0,1]), or [] array
+  opts       - parameters (struct or name/value pairs)
+   .type       - ['sticky'] options are 'sticky' or 'watershed'
+   .nIter      - [4] number of iterations
+   .nThreads   - [4] number of computation threads
+   .k          - [512] controls scale of superpixels (big k -&gt; big sp)
+   .alpha      - [.5] relative importance of regularity versus data terms
+   .beta       - [.9] relative importance of edge versus color terms
+   .merge      - [0] set to small value to merge nearby superpixels at end
+   .bounds     - [1] if true add boundaries to superpixels
+   .seed       - [] optional initial seed superpixels
+
+ OUTPUTS
+  S          - [h x w] superpixel label map (S==0 are boundaries)
+  V          - [h x w] superpixel visualization
+
+ EXAMPLE
+
+ See also <a href="spDemo.html" class="code" title="">spDemo</a>, <a href="spAffinities.html" class="code" title="function [A,E,U] = spAffinities( S, E, segs, nThreads )">spAffinities</a>, watershed
+
+ Structured Edge Detection Toolbox      Version 3.01
+ Code written by Piotr Dollar, 2014.
+ Licensed under the MSR-LA Full Rights License [see license.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="spDemo.html" class="code" title="">spDemo</a>	Demo for Sticky Superpixels (please see readme.txt first).</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [S,V] = spDetect( I, E, varargin )</a>
+0002 <span class="comment">% Detect Sticky Superpixels in image.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Detect &quot;Sticky Edge Adhesive Superpixels&quot; in image. High quality, fast</span>
+0005 <span class="comment">% superpixels that &quot;stick&quot; to edges. Without edge term the code computes</span>
+0006 <span class="comment">% superpixels using an iterative approach motivated by both SLIC (Achanta</span>
+0007 <span class="comment">% et al., PAMI12) and SEEDS (Bergh et al., ECCV12) superpixels. With edge</span>
+0008 <span class="comment">% term added, the superpixels snap to edges, resulting in higher quality</span>
+0009 <span class="comment">% boundaries. There is no corresponding publication for this code at this</span>
+0010 <span class="comment">% time but please cite our edge detection work if you use this code.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% The most important parameter is k which controls superpixel scale.</span>
+0013 <span class="comment">% Note that the edge image E is optional (that is E=[] may be used).</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% USAGE</span>
+0016 <span class="comment">%  opts = spDetect()</span>
+0017 <span class="comment">%  [S,V] = spDetect( I, [E], [opts] )</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% INPUTS</span>
+0020 <span class="comment">%  I          - [h x w x 3] color input image (in [0,255])</span>
+0021 <span class="comment">%  E          - [h x w] type single edge image (in [0,1]), or [] array</span>
+0022 <span class="comment">%  opts       - parameters (struct or name/value pairs)</span>
+0023 <span class="comment">%   .type       - ['sticky'] options are 'sticky' or 'watershed'</span>
+0024 <span class="comment">%   .nIter      - [4] number of iterations</span>
+0025 <span class="comment">%   .nThreads   - [4] number of computation threads</span>
+0026 <span class="comment">%   .k          - [512] controls scale of superpixels (big k -&gt; big sp)</span>
+0027 <span class="comment">%   .alpha      - [.5] relative importance of regularity versus data terms</span>
+0028 <span class="comment">%   .beta       - [.9] relative importance of edge versus color terms</span>
+0029 <span class="comment">%   .merge      - [0] set to small value to merge nearby superpixels at end</span>
+0030 <span class="comment">%   .bounds     - [1] if true add boundaries to superpixels</span>
+0031 <span class="comment">%   .seed       - [] optional initial seed superpixels</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% OUTPUTS</span>
+0034 <span class="comment">%  S          - [h x w] superpixel label map (S==0 are boundaries)</span>
+0035 <span class="comment">%  V          - [h x w] superpixel visualization</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% EXAMPLE</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% See also spDemo, spAffinities, watershed</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">% Structured Edge Detection Toolbox      Version 3.01</span>
+0042 <span class="comment">% Code written by Piotr Dollar, 2014.</span>
+0043 <span class="comment">% Licensed under the MSR-LA Full Rights License [see license.txt]</span>
+0044 
+0045 <span class="comment">% get default parameters</span>
+0046 dfs = { <span class="string">'type'</span>,<span class="string">'sticky'</span>, <span class="string">'nIter'</span>,4, <span class="string">'nThreads'</span>,4, <span class="string">'k'</span>,512, <span class="keyword">...</span>
+0047   <span class="string">'alpha'</span>,.5, <span class="string">'beta'</span>,.9, <span class="string">'merge'</span>,0, <span class="string">'bounds'</span>,1, <span class="string">'seed'</span>,[] };
+0048 o = getPrmDflt(varargin,dfs,1); <span class="keyword">if</span>(nargin==0), S=o; <span class="keyword">return</span>; <span class="keyword">end</span>
+0049 type=lower(o.type(1)); assert( type==<span class="string">'w'</span> || type==<span class="string">'s'</span> );
+0050 sigs = [ o.k*o.alpha/1e4 o.alpha/1e4 <span class="keyword">...</span>
+0051   (1-o.alpha)*o.beta (1-o.alpha)*(1-o.beta) ];
+0052 
+0053 <span class="comment">% check dimensions and type of image and edge map</span>
+0054 [h,w,~]=size(I); assert(isa(I,<span class="string">'uint8'</span>) &amp;&amp; size(I,3)==3);
+0055 <span class="keyword">if</span>(nargin&lt;2 || isempty(E)), E=zeros(h,w,<span class="string">'single'</span>); <span class="keyword">end</span>
+0056 assert(isa(E,<span class="string">'single'</span>) &amp;&amp; size(E,1)==h &amp;&amp; size(E,2)==w);
+0057 I=rgbConvert(I,<span class="string">'rgb'</span>);
+0058 
+0059 <span class="keyword">if</span>( type==<span class="string">'w'</span> )
+0060   <span class="comment">% run watershed algorithm</span>
+0061   S = uint32(watershed(convTri(E,1))); b=1;
+0062   
+0063 <span class="keyword">else</span>
+0064   <span class="keyword">if</span>( ~isempty(o.seed) )
+0065     <span class="comment">% utilize seed segmentation removing boundaries if necessary</span>
+0066     S = o.seed; assert(isa(S,<span class="string">'uint32'</span>) &amp;&amp; size(S,1)==h &amp;&amp; size(S,2)==w);
+0067     <span class="keyword">if</span>(o.bounds), S = spDetectMex(<span class="string">'boundaries'</span>,S,E,0,o.nThreads); <span class="keyword">end</span>
+0068     
+0069   <span class="keyword">else</span>
+0070     <span class="comment">% initialize superpixels at half resolution</span>
+0071     s=1/2; h1 = h-mod(h,1/s); w1 = w-mod(w,1/s);
+0072     I0 = imResample(I(1:h1,1:w1,:),s);
+0073     E0 = imResample(E(1:h1,1:w1),s);
+0074     S = uint32(reshape(0:h1*w1*s*s-1,h1*s,w1*s));
+0075     
+0076     <span class="comment">% refine superpixels at half resolution</span>
+0077     p = [o.nIter*2 o.nThreads sigs(1)*s*s sigs(2)/s/s sigs(3:4)];
+0078     S = spDetectMex(<span class="string">'sticky'</span>,S,convTri(I0,1),E0,p);
+0079     S = imResample(S,1/s,<span class="string">'nearest'</span>);
+0080     S = uint32(imPad(single(S),[0 h-h1 0 w-w1],<span class="string">'replicate'</span>));
+0081   <span class="keyword">end</span>
+0082   
+0083   <span class="comment">% refine superpixels at full resolution</span>
+0084   p = [o.nIter o.nThreads sigs]; b=0;
+0085   S = spDetectMex(<span class="string">'sticky'</span>,S,convTri(I,1),E,p);
+0086   
+0087 <span class="keyword">end</span>
+0088 
+0089 <span class="comment">% add or remove superpixel boundaries as necessary</span>
+0090 <span class="keyword">if</span>(o.bounds~=b), S = spDetectMex(<span class="string">'boundaries'</span>,S,E,o.bounds,o.nThreads); <span class="keyword">end</span>
+0091 
+0092 <span class="comment">% optionally merge superpixels</span>
+0093 <span class="keyword">if</span>(o.merge&gt;0 &amp;&amp; o.bounds), S = spDetectMex(<span class="string">'merge'</span>,S,E,o.merge); <span class="keyword">end</span>
+0094 
+0095 <span class="comment">% optionally create visualization</span>
+0096 <span class="keyword">if</span>(nargout&gt;=2), V=spDetectMex(<span class="string">'visualize'</span>,S,I,o.bounds); <span class="keyword">end</span>
+0097 
+0098 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

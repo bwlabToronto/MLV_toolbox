@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of diffTracker</title>
+  <meta name="keywords" content="diffTracker">
+  <meta name="description" content="Fast, robust estimation of translation/scale change between two images.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; diffTracker.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>diffTracker
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Fast, robust estimation of translation/scale change between two images.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [delta,err] = diffTracker( I0, I1, sig, ss ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Fast, robust estimation of translation/scale change between two images.
+
+ Approximates the translational offset between two images by assuming the
+ images lie on linear manifold. Specifically, assumes that if I0 and I1
+ are a pair of images related by a translation [dx dy], then (I0+I1)/2 is
+ the image exactly halfway between I0 and I1 (ie I0 translated by [dx/2
+ dy/2]). The above only holds for small translations and spatially smooth
+ images. As such the input images typically need to be spatially smoothed
+ first, the amount of necessary smoothing will increase as the size of
+ translation increases (experiment for best results). The code is quite
+ fast, the bottleneck is the spatial smoothing.
+
+ The actual computation is performed as follows. First we generate an
+ artificial translation of I0 by 1 pixel in x and y, and store the results
+ in Tx and Ty. Also, if ss&gt;1, we generate an artificial scaling Ts of I0
+ by upsampling by a factor of ss. The linearity assumption tells us that:
+  I1 = I0 + (I0-Tx) * dx + (I0-Ty) * dy +  (I0-Ts) * ds
+ Only dx, dy and possibly ds are unknown in the resulting overcomplete set
+ of linear equations, least squares is then used. The error of the
+ estimate can be used as a measure of the quality of the linear fit.
+
+ This function was inspired by the beautiful work ok Yang et al.:
+   H. Yang, M. Pollefeys, G. Welch, J. Frahm, and A. Ilie. Differential
+   camera tracking through linearizing the local appearance manifold.
+   CVPR, 2007.
+
+ USAGE
+  [delta,err] = diffTracker( I0, I1, [sig], [ss] )
+
+ INPUTS
+  I0       - reference grayscale double image
+  I1       - translated version of I0
+  sig      - [0] amount of Gaussian spatial smoothing to apply
+  ss       - [0] scale step for artificial scaling (if &gt;1)
+
+ OUTPUTS
+  delta    - estimated dx/dy/ds
+  err      - squared error of estimate
+
+ EXAMPLE - translation only
+  I = double(imread('cameraman.tif'))/255; dx=3; dy=5;
+  I0=I(1+dy:end,1+dx:end); figure(1); im(I0);
+  I1=I(1:end-dy,1:end-dx); figure(2); im(I1);
+  tic, [delta,err] = diffTracker( I0, I1, 10 ), toc
+
+ EXAMPLE - translation and scale
+  I0 = double(imread('coins.png'))/255; dx=9; dy=-2; ds=1.10;
+  H1 = [eye(2)*ds -[dy; dx]; 0 0 1];
+  I1 = imtransform2(I0,H1);
+  tic, [ds,err] = diffTracker( I0, I1, 25, 1.05 ), toc
+  H2 = [eye(2)*ds(3) -[ds(2); ds(1)]; 0 0 1];
+  I2 = imtransform2(I0,H2);
+  figure(1); im(I0); figure(2); im(I1); figure(3); im(I2);
+
+ See also
+
+ Piotr's Image&amp;Video Toolbox      Version 2.61
+ Copyright 2010 Piotr Dollar.  [pdollar-at-caltech.edu]
+ Please email me if you find bugs, or have suggestions or questions!
+ Licensed under the Lesser GPL [see external/lgpl.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [delta,err] = diffTracker( I0, I1, sig, ss )</a>
+0002 <span class="comment">% Fast, robust estimation of translation/scale change between two images.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Approximates the translational offset between two images by assuming the</span>
+0005 <span class="comment">% images lie on linear manifold. Specifically, assumes that if I0 and I1</span>
+0006 <span class="comment">% are a pair of images related by a translation [dx dy], then (I0+I1)/2 is</span>
+0007 <span class="comment">% the image exactly halfway between I0 and I1 (ie I0 translated by [dx/2</span>
+0008 <span class="comment">% dy/2]). The above only holds for small translations and spatially smooth</span>
+0009 <span class="comment">% images. As such the input images typically need to be spatially smoothed</span>
+0010 <span class="comment">% first, the amount of necessary smoothing will increase as the size of</span>
+0011 <span class="comment">% translation increases (experiment for best results). The code is quite</span>
+0012 <span class="comment">% fast, the bottleneck is the spatial smoothing.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% The actual computation is performed as follows. First we generate an</span>
+0015 <span class="comment">% artificial translation of I0 by 1 pixel in x and y, and store the results</span>
+0016 <span class="comment">% in Tx and Ty. Also, if ss&gt;1, we generate an artificial scaling Ts of I0</span>
+0017 <span class="comment">% by upsampling by a factor of ss. The linearity assumption tells us that:</span>
+0018 <span class="comment">%  I1 = I0 + (I0-Tx) * dx + (I0-Ty) * dy +  (I0-Ts) * ds</span>
+0019 <span class="comment">% Only dx, dy and possibly ds are unknown in the resulting overcomplete set</span>
+0020 <span class="comment">% of linear equations, least squares is then used. The error of the</span>
+0021 <span class="comment">% estimate can be used as a measure of the quality of the linear fit.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% This function was inspired by the beautiful work ok Yang et al.:</span>
+0024 <span class="comment">%   H. Yang, M. Pollefeys, G. Welch, J. Frahm, and A. Ilie. Differential</span>
+0025 <span class="comment">%   camera tracking through linearizing the local appearance manifold.</span>
+0026 <span class="comment">%   CVPR, 2007.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% USAGE</span>
+0029 <span class="comment">%  [delta,err] = diffTracker( I0, I1, [sig], [ss] )</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% INPUTS</span>
+0032 <span class="comment">%  I0       - reference grayscale double image</span>
+0033 <span class="comment">%  I1       - translated version of I0</span>
+0034 <span class="comment">%  sig      - [0] amount of Gaussian spatial smoothing to apply</span>
+0035 <span class="comment">%  ss       - [0] scale step for artificial scaling (if &gt;1)</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% OUTPUTS</span>
+0038 <span class="comment">%  delta    - estimated dx/dy/ds</span>
+0039 <span class="comment">%  err      - squared error of estimate</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">% EXAMPLE - translation only</span>
+0042 <span class="comment">%  I = double(imread('cameraman.tif'))/255; dx=3; dy=5;</span>
+0043 <span class="comment">%  I0=I(1+dy:end,1+dx:end); figure(1); im(I0);</span>
+0044 <span class="comment">%  I1=I(1:end-dy,1:end-dx); figure(2); im(I1);</span>
+0045 <span class="comment">%  tic, [delta,err] = diffTracker( I0, I1, 10 ), toc</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% EXAMPLE - translation and scale</span>
+0048 <span class="comment">%  I0 = double(imread('coins.png'))/255; dx=9; dy=-2; ds=1.10;</span>
+0049 <span class="comment">%  H1 = [eye(2)*ds -[dy; dx]; 0 0 1];</span>
+0050 <span class="comment">%  I1 = imtransform2(I0,H1);</span>
+0051 <span class="comment">%  tic, [ds,err] = diffTracker( I0, I1, 25, 1.05 ), toc</span>
+0052 <span class="comment">%  H2 = [eye(2)*ds(3) -[ds(2); ds(1)]; 0 0 1];</span>
+0053 <span class="comment">%  I2 = imtransform2(I0,H2);</span>
+0054 <span class="comment">%  figure(1); im(I0); figure(2); im(I1); figure(3); im(I2);</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">% See also</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 2.61</span>
+0059 <span class="comment">% Copyright 2010 Piotr Dollar.  [pdollar-at-caltech.edu]</span>
+0060 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0061 <span class="comment">% Licensed under the Lesser GPL [see external/lgpl.txt]</span>
+0062 
+0063 <span class="comment">% get inputs</span>
+0064 <span class="keyword">if</span>(nargin&lt;3 || isempty(sig)), sig=0; <span class="keyword">end</span>
+0065 <span class="keyword">if</span>(nargin&lt;4 || isempty(ss)), ss=0; <span class="keyword">end</span>
+0066 
+0067 <span class="comment">% smooth images, keep only valid region</span>
+0068 <span class="keyword">if</span>( sig&gt;0 ), f=filterGauss(2*ceil(sig*2.25)+1,[],sig^2);
+0069   I0 = conv2(conv2(I0,f',<span class="string">'valid'</span>),f,<span class="string">'valid'</span>);
+0070   I1 = conv2(conv2(I1,f',<span class="string">'valid'</span>),f,<span class="string">'valid'</span>);
+0071 <span class="keyword">end</span>
+0072 
+0073 <span class="comment">% I0 translated by 1 pixel both in x and y, crop I0/I1 so dims match</span>
+0074 <span class="keyword">if</span>(ss&gt;1), Ts=arrayToDims(imResample(I0,ss),size(I0)); <span class="keyword">end</span>
+0075 Ty = I0(2:<span class="keyword">end</span>,1:end-1); Tx = I0(1:end-1,2:end);
+0076 I0 = I0(1:end-1,1:end-1); I1 = I1(1:end-1,1:end-1);
+0077 
+0078 <span class="comment">% I1 = I0 + (I0-Tx)*dx + (I0-Ty)*dy + (I0-Ts)*ds, recover delta accordingly</span>
+0079 dI1=I1(:)-I0(:); dIy=I0(:)-Ty(:); dIx=I0(:)-Tx(:);
+0080 <span class="keyword">if</span>(ss&gt;1), Ts=Ts(1:end-1,1:end-1); dIs=I0(:)-Ts(:); <span class="keyword">else</span> dIs=[]; <span class="keyword">end</span>
+0081 delta = -[dIx dIy dIs] \ dI1;
+0082 
+0083 <span class="comment">% compute squared error (if over certain threshold may wish to discard)</span>
+0084 <span class="keyword">if</span>(nargout&gt;1), err=sum((-[dIx dIy dIs]*delta - dI1).^2) / length(dI1); <span class="keyword">end</span>
+0085 
+0086 <span class="comment">% put scale delta into units independent of ss</span>
+0087 <span class="keyword">if</span>(ss&gt;1), delta(3)=ss^delta(3); <span class="keyword">end</span>
+0088 
+0089 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

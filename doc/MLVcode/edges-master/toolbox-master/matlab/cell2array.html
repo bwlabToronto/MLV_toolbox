@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cell2array</title>
+  <meta name="keywords" content="cell2array">
+  <meta name="description" content="Flattens a cell array of regular arrays into a regular array.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; cell2array.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>cell2array
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Flattens a cell array of regular arrays into a regular array.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function Y = cell2array( X, padEl ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Flattens a cell array of regular arrays into a regular array.
+
+ Each element of X must be a regular array, and must have the same number
+ of dimensions k.  Converts X to an array Y of dimension k+1 where
+ Y(:,:...,:,i) is X{i} padded to be as big as the biggest element in X
+ (along each dimension). Specifically, let di1..dik be the k dimensions of
+ element X{i}.  Let dj=max(dij) for each j.  Then each element of X{i} is
+ padded to have size [d1 ... dk], and then the elements of X are stacked
+ into a vector.  Treats the cell array X as a vector (so ignores the
+ layout of X).
+
+ USAGE
+  Y = cell2array( X, [padEl] )
+
+ INPUTS
+  X          - cell array of regular arrays each with dimension k
+  padEl      - [0] element with which to pad
+
+ OUTPUTS
+  Y         - resulting array of dimension k+1
+
+ EXAMPLE
+  for i=1:10; X{i}=rand(30); end; Y = cell2array(X);
+
+ See also <a href="mat2cell2.html" class="code" title="function C = mat2cell2( X, parts )">MAT2CELL2</a>, CELL2MAT
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.40
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="arrayToDims.html" class="code" title="function IC = arrayToDims( I, dims, padEl )">arrayToDims</a>	Pads or crops I appropriately so that size(IC)==dims.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Y = cell2array( X, padEl )</a>
+0002 <span class="comment">% Flattens a cell array of regular arrays into a regular array.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Each element of X must be a regular array, and must have the same number</span>
+0005 <span class="comment">% of dimensions k.  Converts X to an array Y of dimension k+1 where</span>
+0006 <span class="comment">% Y(:,:...,:,i) is X{i} padded to be as big as the biggest element in X</span>
+0007 <span class="comment">% (along each dimension). Specifically, let di1..dik be the k dimensions of</span>
+0008 <span class="comment">% element X{i}.  Let dj=max(dij) for each j.  Then each element of X{i} is</span>
+0009 <span class="comment">% padded to have size [d1 ... dk], and then the elements of X are stacked</span>
+0010 <span class="comment">% into a vector.  Treats the cell array X as a vector (so ignores the</span>
+0011 <span class="comment">% layout of X).</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% USAGE</span>
+0014 <span class="comment">%  Y = cell2array( X, [padEl] )</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% INPUTS</span>
+0017 <span class="comment">%  X          - cell array of regular arrays each with dimension k</span>
+0018 <span class="comment">%  padEl      - [0] element with which to pad</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% OUTPUTS</span>
+0021 <span class="comment">%  Y         - resulting array of dimension k+1</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% EXAMPLE</span>
+0024 <span class="comment">%  for i=1:10; X{i}=rand(30); end; Y = cell2array(X);</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% See also MAT2CELL2, CELL2MAT</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.40</span>
+0029 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0030 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0031 
+0032 <span class="keyword">if</span>(~iscell(X)); error(<span class="string">'X must be a cell array'</span>); <span class="keyword">end</span>
+0033 <span class="keyword">if</span>(iscell(X{1})); error(<span class="string">'X must contain regular arrays'</span>); <span class="keyword">end</span>
+0034 n = numel(X); nd = ndims(X{1});
+0035 <span class="keyword">for</span> i=2:n
+0036   <span class="keyword">if</span>(ndims(X{i})~=nd); error(<span class="string">'all elem of X must have same dims'</span>); <span class="keyword">end</span>
+0037 <span class="keyword">end</span>
+0038 <span class="keyword">if</span>(nargin&lt;2); padEl=0; <span class="keyword">end</span>
+0039 
+0040 <span class="comment">%%% get maximum and minimum size of any element of X</span>
+0041 maxsiz = size(X{1}); minsiz = size(X{1});
+0042 <span class="keyword">for</span> i=1:n
+0043   siz = size(X{i});
+0044   maxsiz = max( maxsiz, siz );
+0045   minsiz = min( minsiz, siz );
+0046 <span class="keyword">end</span>
+0047 
+0048 <span class="comment">%%% construct Y</span>
+0049 inds=cell(1,nd);  <span class="keyword">for</span> d=1:nd; inds{d} = 1:maxsiz(d); <span class="keyword">end</span>
+0050 Y = zeros( [maxsiz n], class(X{1}) );
+0051 <span class="keyword">if</span>( all(maxsiz==minsiz) )
+0052   <span class="keyword">for</span> i=1:n; Y( inds{:}, i ) = X{i}; <span class="keyword">end</span>
+0053 <span class="keyword">else</span>
+0054   <span class="keyword">for</span> i=1:n; Y( inds{:}, i ) = <a href="arrayToDims.html" class="code" title="function IC = arrayToDims( I, dims, padEl )">arrayToDims</a>( X{i}, maxsiz, padEl); <span class="keyword">end</span>
+0055 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

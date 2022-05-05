@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeLength</title>
+  <meta name="keywords" content="computeLength">
+  <meta name="description" content="vecLD = computeLength(vecLD)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; computeLength.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>computeLength
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>vecLD = computeLength(vecLD)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function vecLD = computeLength(vecLD) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> vecLD = computeLength(vecLD)
+         computes length for the contours in the vectorized line drawing vecLD
+ Input:
+   vecLD - vectorized line drawing data structure
+ Output:
+   vecLD- a vector LD of structs with length information added</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>	vecLD = computeCurvature(vecLD)</li><li><a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>	vecLD = computeJunctions(vecLD)</li><li><a href="getHorizontalVerticalStats.html" class="code" title="function [vecLD,HorVerHistogram,bins,shortName] = getHorizontalVerticalStats(vecLD,numBins)">getHorizontalVerticalStats</a>	[vecLD,HorVerHistogram,bins] = getOrientationStats(vecLD,numBins)</li><li><a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>	[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)</li><li><a href="removeDuplicatedContours.html" class="code" title="function vecLD = removeDuplicatedContours(vecLD)">removeDuplicatedContours</a>	curVecLD = vecLD;</li><li><a href="splitLDmiddleSegmentsVsJunctions.html" class="code" title="function [middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)">splitLDmiddleSegmentsVsJunctions</a>	[middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = computeLength(vecLD)</a>
+0002 <span class="comment">% vecLD = computeLength(vecLD)</span>
+0003 <span class="comment">%         computes length for the contours in the vectorized line drawing vecLD</span>
+0004 <span class="comment">% Input:</span>
+0005 <span class="comment">%   vecLD - vectorized line drawing data structure</span>
+0006 <span class="comment">% Output:</span>
+0007 <span class="comment">%   vecLD- a vector LD of structs with length information added</span>
+0008 
+0009 vecLD.lengths = {};
+0010 vecLD.contourLengths = [];
+0011 <span class="keyword">for</span> c = 1:vecLD.numContours
+0012     thisCon = vecLD.contours{c};
+0013     vecLD.lengths{c} = sqrt((thisCon(:,3)-thisCon(:,1)).^2+(thisCon(:,4)-thisCon(:,2)).^2);
+0014     vecLD.contourLengths(c,1) = sum(vecLD.lengths{c});
+0015 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

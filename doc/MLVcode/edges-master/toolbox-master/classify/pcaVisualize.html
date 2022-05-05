@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of pcaVisualize</title>
+  <meta name="keywords" content="pcaVisualize">
+  <meta name="description" content="Visualization of quality of approximation of X given principal comp.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">classify</a> &gt; pcaVisualize.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\classify&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>pcaVisualize
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Visualization of quality of approximation of X given principal comp.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout=pcaVisualize( U, mu, vars, X, index, ks, fname, show ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Visualization of quality of approximation of X given principal comp.
+
+ X can either represent a single element (a single image or video), or a
+ set of elements. In the latter case, index controls which element of X to
+ apply visualization to, if unspecified it is chosen randomly.
+
+ USAGE
+  varargout=pcaVisualize(U, mu, vars, X, [index], [ks], [fname], [show])
+
+ INPUTS
+  U           - returned by pca.m
+  mu          - returned by pca.m
+  vars        - returned by pca.m
+  X           - Set of images or videos, or a single image or video
+  index       - [] controls which element of X to aplply visualization to
+  ks          - [] ks values of k for pcaApply (ex. ks=[1 4 8 16])
+  fname       - [] if specified outputs avis
+  show        - [1] will display in figure(show) and figure(show+1)
+
+ OUTPUTS
+  M           - [only if X is a movie] movie of xhats (see pcaapply)
+  MDiff       - [only if X is a movie] movie of difference images
+  MU          - [only if X is a movie] movie of eigenmovies
+
+ EXAMPLE
+
+ See also <a href="pca.html" class="code" title="function [U,mu,vars] = pca( X )">PCA</a>, <a href="pcaApply.html" class="code" title="function varargout = pcaApply( X, U, mu, k )">PCAAPPLY</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.30
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="pcaApply.html" class="code" title="function varargout = pcaApply( X, U, mu, k )">pcaApply</a>	Companion function to pca.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout=pcaVisualize( U, mu, vars, X, index, ks, fname, show )</a>
+0002 <span class="comment">% Visualization of quality of approximation of X given principal comp.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% X can either represent a single element (a single image or video), or a</span>
+0005 <span class="comment">% set of elements. In the latter case, index controls which element of X to</span>
+0006 <span class="comment">% apply visualization to, if unspecified it is chosen randomly.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% USAGE</span>
+0009 <span class="comment">%  varargout=pcaVisualize(U, mu, vars, X, [index], [ks], [fname], [show])</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% INPUTS</span>
+0012 <span class="comment">%  U           - returned by pca.m</span>
+0013 <span class="comment">%  mu          - returned by pca.m</span>
+0014 <span class="comment">%  vars        - returned by pca.m</span>
+0015 <span class="comment">%  X           - Set of images or videos, or a single image or video</span>
+0016 <span class="comment">%  index       - [] controls which element of X to aplply visualization to</span>
+0017 <span class="comment">%  ks          - [] ks values of k for pcaApply (ex. ks=[1 4 8 16])</span>
+0018 <span class="comment">%  fname       - [] if specified outputs avis</span>
+0019 <span class="comment">%  show        - [1] will display in figure(show) and figure(show+1)</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% OUTPUTS</span>
+0022 <span class="comment">%  M           - [only if X is a movie] movie of xhats (see pcaapply)</span>
+0023 <span class="comment">%  MDiff       - [only if X is a movie] movie of difference images</span>
+0024 <span class="comment">%  MU          - [only if X is a movie] movie of eigenmovies</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% EXAMPLE</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% See also PCA, PCAAPPLY</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.30</span>
+0031 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0032 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0033 
+0034 <span class="comment">% sizes / dimensions</span>
+0035 siz = size(X);  nd = ndims(X);  [D,r] = size(U);
+0036 <span class="keyword">if</span>(D==prod(siz) &amp;&amp; ~(nd==2 &amp;&amp; siz(2)==1)); siz=[siz, 1]; nd=nd+1; <span class="keyword">end</span>
+0037 n = siz(end);  siz1 = siz(1:end-1);  
+0038 
+0039 <span class="comment">% some error checking</span>
+0040 <span class="keyword">if</span>(prod(siz(1:end-1))~=D); error(<span class="string">'incorrect size for X or U'</span>); <span class="keyword">end</span>
+0041 <span class="keyword">if</span>( nargin&lt;5 || isempty(index) ); index = randint2(1,1,[1 n]); <span class="keyword">end</span>
+0042 <span class="keyword">if</span>( index&gt;n ); error([<span class="string">'index &gt;'</span> num2str(n)]); <span class="keyword">end</span>
+0043 <span class="keyword">if</span>( nargin&lt;6 || isempty(ks) ); maxp=floor(log2(r)); ks=2.^(0:maxp); <span class="keyword">end</span>
+0044 <span class="keyword">if</span>( nargin&lt;7 || isempty(fname)); fname = []; <span class="keyword">end</span>
+0045 <span class="keyword">if</span>( nargin&lt;8 || isempty(show)); show = 1; <span class="keyword">end</span>
+0046 
+0047 <span class="comment">%%% create xhats image of PCA reconstruction</span>
+0048 ks = ks( ks&lt;=r );
+0049 inds = {<span class="string">':'</span>}; inds = inds(:,ones(1,nd-1));
+0050 x = double( X(inds{:},index) );
+0051 xhats = x;  diffs = []; errors = zeros(1,length(ks));
+0052 <span class="keyword">for</span> k=1:length(ks)
+0053   [ ~, xhat, errors(k) ] = <a href="pcaApply.html" class="code" title="function varargout = pcaApply( X, U, mu, k )">pcaApply</a>( x, U, mu, ks(k) );
+0054   xhats = cat( nd, xhats, xhat );
+0055   diffs = cat( nd, diffs, (xhat-x).^2 );
+0056 <span class="keyword">end</span>
+0057 
+0058 <span class="comment">%%% calculate residual at each k for plot purposes</span>
+0059 residuals = vars / sum(vars);
+0060 residuals = 1-cumsum(residuals);
+0061 residuals = [1; residuals(1:max(ks))];
+0062 
+0063 <span class="comment">%%% show decay image</span>
+0064 figure(show); clf;
+0065 plot( 0:max(ks), residuals, <span class="string">'r- .'</span>,  ks, errors, <span class="string">'g- .'</span> );
+0066 hold(<span class="string">'on'</span>); line( [0,max(ks)], [.1,.1] ); hold(<span class="string">'off'</span>);
+0067 title(<span class="string">'error of approximation vs number of eigenbases used'</span>);
+0068 legend(<span class="string">'residuals'</span>,<span class="string">'errors - actual'</span>);
+0069 
+0070 <span class="comment">%%% reshape U to have first dimensions same as x</span>
+0071 k = min(100,r);  st=0;
+0072 Uim = reshape( U(:,1+st:k+st), [ siz1 k ]  );
+0073 
+0074 <span class="comment">%%% visualization</span>
+0075 labels=cell(1,length(ks));
+0076 <span class="keyword">for</span> k=1:length(ks); labels{k} = [<span class="string">'k='</span> num2str(ks(k))]; <span class="keyword">end</span>
+0077 labels2=[{<span class="string">'orig'</span>} labels];
+0078 <span class="keyword">if</span>( nd==3 ) <span class="comment">% images</span>
+0079   figure(show+1); clf;
+0080   subplot(2,2,1); montage2( Uim ); title(<span class="string">'principal components'</span>);
+0081   subplot(2,2,2); im( mu ); title(<span class="string">'mean'</span>);
+0082   subplot(2,2,3); montage2( xhats, struct(<span class="string">'labels'</span>,{labels2}) );
+0083   title(<span class="string">'various approximations of x'</span>);
+0084   subplot(2,2,4); montage2( diffs, struct(<span class="string">'labels'</span>,{labels}) );
+0085   title(<span class="string">'difference images'</span>);
+0086   <span class="keyword">if</span> (~isempty(fname))
+0087     print( [fname <span class="string">'_eigenanalysis.jpg'</span>], <span class="string">'-djpeg'</span> );
+0088   <span class="keyword">end</span>
+0089 
+0090 <span class="keyword">elseif</span>( nd==4 ) <span class="comment">% videos</span>
+0091   <span class="comment">%%% create movies</span>
+0092   <span class="keyword">if</span>( nargout&gt;0 ); figureResized(.6,show+1); clf;
+0093     M = playMovie( xhats, [], [], struct(<span class="string">'labels'</span>,{labels2}) );
+0094     varargout={M};
+0095   <span class="keyword">end</span>;
+0096   <span class="keyword">if</span>( nargout&gt;1 ); figureResized(.6,show+1); clf;
+0097     MDiff = playMovie( diffs );
+0098     varargout{2} = MDiff;
+0099   <span class="keyword">end</span>;
+0100   <span class="keyword">if</span>( nargout&gt;2 ); figureResized(.6,show+1); clf;
+0101     MU = playMovie( Uim );
+0102     varargout{3} = MU;
+0103   <span class="keyword">end</span>;
+0104 
+0105   <span class="comment">%%% optionally record image and movie</span>
+0106   <span class="keyword">if</span> (~isempty(fname))
+0107     print( [fname <span class="string">'_decay.jpg'</span>], <span class="string">'-djpeg'</span> );
+0108     compr = { <span class="string">'Compresion'</span>, <span class="string">'Cinepak'</span> };
+0109     <span class="keyword">if</span>( nargout&gt;0 ); movie2avi(M, [fname <span class="string">'.avi'</span>], compr{:} ); <span class="keyword">end</span>
+0110     <span class="keyword">if</span>( nargout&gt;1 ); movie2avi(MDiff,[fname <span class="string">'_diff.avi'</span>],compr{:} ); <span class="keyword">end</span>;
+0111     <span class="keyword">if</span>( nargout&gt;2 ); movie2avi(MU,<span class="string">'prineigenimages.avi'</span>,compr{:} ); <span class="keyword">end</span>;
+0112   <span class="keyword">end</span>
+0113 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

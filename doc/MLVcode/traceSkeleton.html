@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of traceSkeleton</title>
+  <meta name="keywords" content="traceSkeleton">
+  <meta name="description" content="Copyright Morteza Rezanejad">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; traceSkeleton.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>traceSkeleton
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Copyright Morteza Rezanejad</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function allBranches = traceSkeleton(MAT) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Copyright Morteza Rezanejad
+ McGill University, Montreal, QC 2019
+
+ Contact: morteza [at] cim [dot] mcgill [dot] ca 
+ -------------------------------------------------------------------------
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
+ -------------------------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a>	</li><li><a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>	Copyright Morteza Rezanejad</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Copyright Morteza Rezanejad</span>
+0002 <span class="comment">% McGill University, Montreal, QC 2019</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Contact: morteza [at] cim [dot] mcgill [dot] ca</span>
+0005 <span class="comment">% -------------------------------------------------------------------------</span>
+0006 <span class="comment">% This program is free software: you can redistribute it and/or modify</span>
+0007 <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0008 <span class="comment">% the Free Software Foundation, either version 3 of the License, or</span>
+0009 <span class="comment">% (at your option) any later version.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+0012 <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0013 <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0014 <span class="comment">% GNU General Public License for more details.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0017 <span class="comment">% along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+0018 <span class="comment">% -------------------------------------------------------------------------</span>
+0019 
+0020 <a name="_sub0" href="#_subfunctions" class="code">function allBranches = traceSkeleton(MAT)</a>
+0021 
+0022 
+0023 SegList  = GetConSeg(MAT.skeleton);
+0024 <span class="comment">% allBranches = cell(size(SegList));</span>
+0025 allBranches = [];
+0026 
+0027 <span class="comment">% branch = [];</span>
+0028 <span class="keyword">for</span> i = 1 : length(SegList)
+0029     
+0030     
+0031     
+0032     
+0033     XY = SegList{i};
+0034     X = XY(:,1);
+0035     Y = XY(:,2);
+0036     C = sub2ind(size(MAT.skeleton),X,Y);
+0037     
+0038     R = MAT.distance_map(C);
+0039     F = MAT.AOF(C);
+0040 <span class="comment">%     CC = [X,Y,R,F];</span>
+0041     branch = struct(<span class="string">'X'</span>,X,<span class="string">'Y'</span>,Y,<span class="string">'Radius'</span>,R,<span class="string">'AOF'</span>,F);
+0042     allBranches = [allBranches;branch];
+0043 <span class="comment">%     allBranches{i} = CC;</span>
+0044 <span class="keyword">end</span>
+0045 
+0046 <span class="comment">% allBranches = allBranches(~cellfun('isempty',allBranches));</span>
+0047 
+0048 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of edgesEvalDir</title>
+  <meta name="keywords" content="edgesEvalDir">
+  <meta name="description" content="Calculate edge precision/recall results for directory of edge images.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">edges-master</a> &gt; edgesEvalDir.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>edgesEvalDir
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Calculate edge precision/recall results for directory of edge images.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function varargout = edgesEvalDir( varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Calculate edge precision/recall results for directory of edge images.
+
+ Enhanced replacement for boundaryBench() from BSDS500 code:
+  http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/
+ Uses same format for results and is fully compatible with boundaryBench.
+ Given default prms results are *identical* to boundaryBench with the
+ additional 9th output of R50 (recall at 50% precision).
+
+ The odsF/P/R/T are results at the ODS (optimal dataset scale).
+ The oisF/P/R are results at the OIS (optimal image scale).
+ Naming convention: P=precision, R=recall, F=2/(1/P+1/R), T=threshold.
+
+ In addition to the outputs, edgesEvalDir() creates three files:
+  eval_bdry_img.txt - per image OIS results [imgId T R P F]
+  eval_bdry_thr.txt - per threshold ODS results [T R P F]
+  eval_bdry.txt     - complete results (*re-ordered* copy of output)
+ These files are identical to the ones created by boundaryBench.
+
+ USAGE
+  [odsF,odsP,odsR,odsT,oisF,oisP,oisR,AP,R50] = edgesEvalDir( prms )
+  [ODS,~,~,~,OIS,~,~,AP,R50] = edgesEvalDir( prms )
+
+ INPUTS
+  prms       - parameters (struct or name/value pairs)
+   .resDir     - ['REQ'] dir containing edge detection results (.png)
+   .gtDir      - ['REQ'] dir containing ground truth (.mat)
+   .pDistr     - [{'type','parfor'}] parameters for fevalDistr
+   .cleanup    - [0] if true delete temporary files
+   .thrs       - [99] number or vector of thresholds for evaluation
+   .maxDist    - [.0075] maximum tolerance for edge match
+   .thin       - [1] if true thin boundary maps
+
+ OUTPUTS
+   odsF/P/R/T  - F-measure, precision, recall and threshold at ODS
+   oisF/P/R    - F-measure, precision, and recall at OIS
+   AP          - average precision
+   R50         - recall at 50% precision
+
+ EXAMPLE
+
+ See also <a href="edgesEvalImg.html" class="code" title="function [thrs,cntR,sumR,cntP,sumP,V] = edgesEvalImg( E, G, varargin )">edgesEvalImg</a>, <a href="edgesEvalPlot.html" class="code" title="function edgesEvalPlot( algs, nms, cols )">edgesEvalPlot</a>
+
+ Structured Edge Detection Toolbox      Version 3.01
+ Code written by Piotr Dollar, 2014.
+ Licensed under the MSR-LA Full Rights License [see license.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="edgesEvalImg.html" class="code" title="function [thrs,cntR,sumR,cntP,sumP,V] = edgesEvalImg( E, G, varargin )">edgesEvalImg</a>	Calculate edge precision/recall results for single edge image.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="edgesEval.html" class="code" title="function varargout = edgesEval( model, varargin )">edgesEval</a>	Run and evaluate structured edge detector on BSDS500.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [R,P,F] = computeRPF(cntR,sumR,cntP,sumP)</a></li><li><a href="#_sub2" class="code">function [bstR,bstP,bstF,bstT] = findBestRPF(T,R,P)</a></li><li><a href="#_sub3" class="code">function writeRes( alg, fNm, vals )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = edgesEvalDir( varargin )</a>
+0002 <span class="comment">% Calculate edge precision/recall results for directory of edge images.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Enhanced replacement for boundaryBench() from BSDS500 code:</span>
+0005 <span class="comment">%  http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/</span>
+0006 <span class="comment">% Uses same format for results and is fully compatible with boundaryBench.</span>
+0007 <span class="comment">% Given default prms results are *identical* to boundaryBench with the</span>
+0008 <span class="comment">% additional 9th output of R50 (recall at 50% precision).</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% The odsF/P/R/T are results at the ODS (optimal dataset scale).</span>
+0011 <span class="comment">% The oisF/P/R are results at the OIS (optimal image scale).</span>
+0012 <span class="comment">% Naming convention: P=precision, R=recall, F=2/(1/P+1/R), T=threshold.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% In addition to the outputs, edgesEvalDir() creates three files:</span>
+0015 <span class="comment">%  eval_bdry_img.txt - per image OIS results [imgId T R P F]</span>
+0016 <span class="comment">%  eval_bdry_thr.txt - per threshold ODS results [T R P F]</span>
+0017 <span class="comment">%  eval_bdry.txt     - complete results (*re-ordered* copy of output)</span>
+0018 <span class="comment">% These files are identical to the ones created by boundaryBench.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% USAGE</span>
+0021 <span class="comment">%  [odsF,odsP,odsR,odsT,oisF,oisP,oisR,AP,R50] = edgesEvalDir( prms )</span>
+0022 <span class="comment">%  [ODS,~,~,~,OIS,~,~,AP,R50] = edgesEvalDir( prms )</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% INPUTS</span>
+0025 <span class="comment">%  prms       - parameters (struct or name/value pairs)</span>
+0026 <span class="comment">%   .resDir     - ['REQ'] dir containing edge detection results (.png)</span>
+0027 <span class="comment">%   .gtDir      - ['REQ'] dir containing ground truth (.mat)</span>
+0028 <span class="comment">%   .pDistr     - [{'type','parfor'}] parameters for fevalDistr</span>
+0029 <span class="comment">%   .cleanup    - [0] if true delete temporary files</span>
+0030 <span class="comment">%   .thrs       - [99] number or vector of thresholds for evaluation</span>
+0031 <span class="comment">%   .maxDist    - [.0075] maximum tolerance for edge match</span>
+0032 <span class="comment">%   .thin       - [1] if true thin boundary maps</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% OUTPUTS</span>
+0035 <span class="comment">%   odsF/P/R/T  - F-measure, precision, recall and threshold at ODS</span>
+0036 <span class="comment">%   oisF/P/R    - F-measure, precision, and recall at OIS</span>
+0037 <span class="comment">%   AP          - average precision</span>
+0038 <span class="comment">%   R50         - recall at 50% precision</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% EXAMPLE</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% See also edgesEvalImg, edgesEvalPlot</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% Structured Edge Detection Toolbox      Version 3.01</span>
+0045 <span class="comment">% Code written by Piotr Dollar, 2014.</span>
+0046 <span class="comment">% Licensed under the MSR-LA Full Rights License [see license.txt]</span>
+0047 
+0048 <span class="comment">% get additional parameters</span>
+0049 dfs={ <span class="string">'resDir'</span>,<span class="string">'REQ'</span>, <span class="string">'gtDir'</span>,<span class="string">'REQ'</span>, <span class="string">'pDistr'</span>,{{<span class="string">'type'</span>,<span class="string">'parfor'</span>}}, <span class="keyword">...</span>
+0050   <span class="string">'cleanup'</span>,0, <span class="string">'thrs'</span>,99, <span class="string">'maxDist'</span>,.0075, <span class="string">'thin'</span>,1 };
+0051 p=getPrmDflt(varargin,dfs,1); resDir=p.resDir; gtDir=p.gtDir;
+0052 evalDir=[resDir <span class="string">'-eval/'</span>]; <span class="keyword">if</span>(~exist(evalDir,<span class="string">'dir'</span>)), mkdir(evalDir); <span class="keyword">end</span>
+0053 
+0054 <span class="comment">% check if results already exist, if so load and return</span>
+0055 fNm = fullfile(evalDir,<span class="string">'eval_bdry.txt'</span>);
+0056 <span class="keyword">if</span>(exist(fNm,<span class="string">'file'</span>)), R=dlmread(fNm); R=mat2cell2(R,[1 8]);
+0057   varargout=R([4 3 2 1 7 6 5 8]); <span class="keyword">if</span>(nargout&lt;=8), <span class="keyword">return</span>; <span class="keyword">end</span>;
+0058   R=dlmread(fullfile(evalDir,<span class="string">'eval_bdry_thr.txt'</span>)); P=R(:,3); R=R(:,2);
+0059   [~,o]=unique(P); R50=interp1(P(o),R(o),max(P(o(1)),.5));
+0060   varargout=[varargout R50]; <span class="keyword">return</span>;
+0061 <span class="keyword">end</span>
+0062 
+0063 <span class="comment">% perform evaluation on each image (this part can be very slow)</span>
+0064 assert(exist(resDir,<span class="string">'dir'</span>)==7); assert(exist(gtDir,<span class="string">'dir'</span>)==7);
+0065 ids=dir(fullfile(gtDir,<span class="string">'*.mat'</span>)); ids={ids.name}; n=length(ids);
+0066 do=false(1,n); jobs=cell(1,n); res=cell(1,n);
+0067 <span class="keyword">for</span> i=1:n, id=ids{i}(1:end-4);
+0068   res{i}=fullfile(evalDir,[id <span class="string">'_ev1.txt'</span>]); do(i)=~exist(res{i},<span class="string">'file'</span>);
+0069   im1=fullfile(resDir,[id <span class="string">'.png'</span>]); gt1=fullfile(gtDir,[id <span class="string">'.mat'</span>]);
+0070   jobs{i}={im1,gt1,<span class="string">'out'</span>,res{i},<span class="string">'thrs'</span>,p.thrs,<span class="string">'maxDist'</span>,p.maxDist,<span class="keyword">...</span>
+0071     <span class="string">'thin'</span>,p.thin}; <span class="keyword">if</span>(0), <a href="edgesEvalImg.html" class="code" title="function [thrs,cntR,sumR,cntP,sumP,V] = edgesEvalImg( E, G, varargin )">edgesEvalImg</a>(jobs{i}{:}); <span class="keyword">end</span>
+0072 <span class="keyword">end</span>
+0073 fevalDistr(<span class="string">'edgesEvalImg'</span>,jobs(do),p.pDistr{:});
+0074 
+0075 <span class="comment">% collect evaluation results</span>
+0076 I=dlmread(res{1}); T=I(:,1);
+0077 Z=zeros(numel(T),1); cntR=Z; sumR=Z; cntP=Z; sumP=Z;
+0078 oisCntR=0; oisSumR=0; oisCntP=0; oisSumP=0; scores=zeros(n,5);
+0079 <span class="keyword">for</span> i=1:n
+0080   <span class="comment">% load image results and accumulate</span>
+0081   I = dlmread(res{i});
+0082   cntR1=I(:,2); cntR=cntR+cntR1; sumR1=I(:,3); sumR=sumR+sumR1;
+0083   cntP1=I(:,4); cntP=cntP+cntP1; sumP1=I(:,5); sumP=sumP+sumP1;
+0084   <span class="comment">% compute OIS scores for image</span>
+0085   [R,P,F] = <a href="#_sub1" class="code" title="subfunction [R,P,F] = computeRPF(cntR,sumR,cntP,sumP)">computeRPF</a>(cntR1,sumR1,cntP1,sumP1); [~,k]=max(F);
+0086   [oisR1,oisP1,oisF1,oisT1] = <a href="#_sub2" class="code" title="subfunction [bstR,bstP,bstF,bstT] = findBestRPF(T,R,P)">findBestRPF</a>(T,R,P);
+0087   scores(i,:) = [i oisT1 oisR1 oisP1 oisF1];
+0088   <span class="comment">% oisCnt/Sum will be used to compute dataset OIS scores</span>
+0089   oisCntR=oisCntR+cntR1(k); oisSumR=oisSumR+sumR1(k);
+0090   oisCntP=oisCntP+cntP1(k); oisSumP=oisSumP+sumP1(k);
+0091 <span class="keyword">end</span>
+0092 
+0093 <span class="comment">% compute ODS R/P/F and OIS R/P/F</span>
+0094 [R,P,F] = <a href="#_sub1" class="code" title="subfunction [R,P,F] = computeRPF(cntR,sumR,cntP,sumP)">computeRPF</a>(cntR,sumR,cntP,sumP);
+0095 [odsR,odsP,odsF,odsT] = <a href="#_sub2" class="code" title="subfunction [bstR,bstP,bstF,bstT] = findBestRPF(T,R,P)">findBestRPF</a>(T,R,P);
+0096 [oisR,oisP,oisF] = <a href="#_sub1" class="code" title="subfunction [R,P,F] = computeRPF(cntR,sumR,cntP,sumP)">computeRPF</a>(oisCntR,oisSumR,oisCntP,oisSumP);
+0097 
+0098 <span class="comment">% compute AP/R50 (interpolating 100 values, has minor bug: should be /101)</span>
+0099 <span class="keyword">if</span>(0), R=[0; R; 1]; P=[1; P; 0]; F=[0; F; 0]; T=[1; T; 0]; <span class="keyword">end</span>
+0100 [~,k]=unique(R); k=k(end:-1:1); R=R(k); P=P(k); T=T(k); F=F(k); AP=0;
+0101 <span class="keyword">if</span>(numel(R)&gt;1), AP=interp1(R,P,0:.01:1); AP=sum(AP(~isnan(AP)))/100; <span class="keyword">end</span>
+0102 [~,o]=unique(P); R50=interp1(P(o),R(o),max(P(o(1)),.5));
+0103 
+0104 <span class="comment">% write results to disk</span>
+0105 varargout = {odsF,odsP,odsR,odsT,oisF,oisP,oisR,AP,R50};
+0106 <a href="#_sub3" class="code" title="subfunction writeRes( alg, fNm, vals )">writeRes</a>(evalDir,<span class="string">'eval_bdry_img.txt'</span>,scores);
+0107 <a href="#_sub3" class="code" title="subfunction writeRes( alg, fNm, vals )">writeRes</a>(evalDir,<span class="string">'eval_bdry_thr.txt'</span>,[T R P F]);
+0108 <a href="#_sub3" class="code" title="subfunction writeRes( alg, fNm, vals )">writeRes</a>(evalDir,<span class="string">'eval_bdry.txt'</span>,[varargout{[4 3 2 1 7 6 5 8]}]);
+0109 
+0110 <span class="comment">% optionally perform cleanup</span>
+0111 <span class="keyword">if</span>( p.cleanup ), delete([evalDir <span class="string">'/*_ev1.txt'</span>]);
+0112   delete([resDir <span class="string">'/*.png'</span>]); rmdir(resDir); <span class="keyword">end</span>
+0113 
+0114 <span class="keyword">end</span>
+0115 
+0116 <a name="_sub1" href="#_subfunctions" class="code">function [R,P,F] = computeRPF(cntR,sumR,cntP,sumP)</a>
+0117 <span class="comment">% compute precision, recall and F measure given cnts and sums</span>
+0118 R=cntR./max(eps,sumR); P=cntP./max(eps,sumP); F=2*P.*R./max(eps,P+R);
+0119 <span class="keyword">end</span>
+0120 
+0121 <a name="_sub2" href="#_subfunctions" class="code">function [bstR,bstP,bstF,bstT] = findBestRPF(T,R,P)</a>
+0122 <span class="comment">% linearly interpolate to find best thr for optimizing F</span>
+0123 <span class="keyword">if</span>(numel(T)==1), bstT=T; bstR=R; bstP=P;
+0124   bstF=2*P.*R./max(eps,P+R); <span class="keyword">return</span>; <span class="keyword">end</span>
+0125 A=linspace(0,1,100); B=1-A; bstF=-1;
+0126 <span class="keyword">for</span> j = 2:numel(T)
+0127   Rj=R(j).*A+R(j-1).*B; Pj=P(j).*A+P(j-1).*B; Tj=T(j).*A+T(j-1).*B;
+0128   Fj=2.*Pj.*Rj./max(eps,Pj+Rj); [f,k]=max(Fj);
+0129   <span class="keyword">if</span>(f&gt;bstF), bstT=Tj(k); bstR=Rj(k); bstP=Pj(k); bstF=f; <span class="keyword">end</span>
+0130 <span class="keyword">end</span>
+0131 <span class="keyword">end</span>
+0132 
+0133 <a name="_sub3" href="#_subfunctions" class="code">function writeRes( alg, fNm, vals )</a>
+0134 <span class="comment">% write results to disk</span>
+0135 k=size(vals,2); fNm=fullfile(alg,fNm); fid=fopen(fNm,<span class="string">'w'</span>);
+0136 <span class="keyword">if</span>(fid==-1), error(<span class="string">'Could not open file %s for writing.'</span>,fNm); <span class="keyword">end</span>
+0137 frmt=repmat(<span class="string">'%10g '</span>,[1 k]); frmt=[frmt(1:end-1) <span class="string">'\n'</span>];
+0138 fprintf(fid,frmt,vals'); fclose(fid);
+0139 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

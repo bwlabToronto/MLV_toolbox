@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of localSum</title>
+  <meta name="keywords" content="localSum">
+  <meta name="description" content="Fast routine for box, max and min filtering.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; localSum.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>localSum
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Fast routine for box, max and min filtering.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function I = localSum( I, dims, shape, op ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Fast routine for box, max and min filtering.
+
+ Same effect as calling 'C=convn( I, ones(dims), shape)', except more
+ efficient. Computes local sums by using running sums. To get sum in
+ non-overlapping windows, use shape='block'. Equivalent to doing localSum,
+ and then subsampling (except more efficient). If operation op is set to
+ 'max' or 'min', computes local maxes or mins instead of sums. Note, that
+ when applicable convBox and convMax are significantly faster.
+
+ USAGE
+  I = localSum( I, dims, [shape], [op] )
+
+ INPUTS
+  I       - matrix to compute sum over
+  dims    - size of volume to compute sum over, can be scalar
+  shape   - ['full'] 'valid', 'full', 'same', or 'block'
+  op      - ['sum'] 'max', or 'min'
+
+ OUTPUTS
+  C       - matrix of sums
+
+ EXAMPLE - 1
+  A=rand(500,500,1); dim=25; f=ones(dim,1); shape='same'; r=20;
+  tic, for i=1:r, B = localSum(A,dim,shape); end; toc
+  tic, for i=1:r, C = conv2(conv2(A,f,shape),f',shape); end; toc
+  diff=B-C; im(diff), sum(abs(diff(:)))
+
+ EXAMPLE - 2
+  load trees; I=ind2gray(X,map); figure(1); im(I);
+  I1=localSum(I,3,'block','sum'); figure(2); im(I1); title('sum')
+  I2=localSum(I,3,'block','max'); figure(3); im(I2); title('max')
+  I3=localSum(I,3,'block','min'); figure(4); im(I3); title('min')
+
+ See also convBox, convMax, <a href="imShrink.html" class="code" title="function I = imShrink( I, ratios )">imShrink</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.22
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="imShrink.html" class="code" title="function I = imShrink( I, ratios )">imShrink</a>	Used to shrink a multidimensional array I by integer amount.</li><li><a href="maskCircle.html" class="code" title="function mask = maskCircle( angleStart, angleSiz, r, nSamples )">maskCircle</a>	Creates an image of a 'pie slice' of a circle.</li><li><a href="normxcorrn.html" class="code" title="function C = normxcorrn( T, A, shape, Tm )">normxcorrn</a>	Normalized n-dimensional cross-correlation.</li><li><a href="xeucn.html" class="code" title="function C = xeucn( A, T, shape )">xeucn</a>	n-dimensional euclidean distance between each window in A and template T.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function I = localSum( I, dims, shape, op )</a>
+0002 <span class="comment">% Fast routine for box, max and min filtering.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Same effect as calling 'C=convn( I, ones(dims), shape)', except more</span>
+0005 <span class="comment">% efficient. Computes local sums by using running sums. To get sum in</span>
+0006 <span class="comment">% non-overlapping windows, use shape='block'. Equivalent to doing localSum,</span>
+0007 <span class="comment">% and then subsampling (except more efficient). If operation op is set to</span>
+0008 <span class="comment">% 'max' or 'min', computes local maxes or mins instead of sums. Note, that</span>
+0009 <span class="comment">% when applicable convBox and convMax are significantly faster.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% USAGE</span>
+0012 <span class="comment">%  I = localSum( I, dims, [shape], [op] )</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% INPUTS</span>
+0015 <span class="comment">%  I       - matrix to compute sum over</span>
+0016 <span class="comment">%  dims    - size of volume to compute sum over, can be scalar</span>
+0017 <span class="comment">%  shape   - ['full'] 'valid', 'full', 'same', or 'block'</span>
+0018 <span class="comment">%  op      - ['sum'] 'max', or 'min'</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% OUTPUTS</span>
+0021 <span class="comment">%  C       - matrix of sums</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% EXAMPLE - 1</span>
+0024 <span class="comment">%  A=rand(500,500,1); dim=25; f=ones(dim,1); shape='same'; r=20;</span>
+0025 <span class="comment">%  tic, for i=1:r, B = localSum(A,dim,shape); end; toc</span>
+0026 <span class="comment">%  tic, for i=1:r, C = conv2(conv2(A,f,shape),f',shape); end; toc</span>
+0027 <span class="comment">%  diff=B-C; im(diff), sum(abs(diff(:)))</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% EXAMPLE - 2</span>
+0030 <span class="comment">%  load trees; I=ind2gray(X,map); figure(1); im(I);</span>
+0031 <span class="comment">%  I1=localSum(I,3,'block','sum'); figure(2); im(I1); title('sum')</span>
+0032 <span class="comment">%  I2=localSum(I,3,'block','max'); figure(3); im(I2); title('max')</span>
+0033 <span class="comment">%  I3=localSum(I,3,'block','min'); figure(4); im(I3); title('min')</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% See also convBox, convMax, imShrink</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.22</span>
+0038 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0039 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0040 
+0041 <span class="keyword">if</span>( nargin&lt;3 || isempty(shape)), shape=<span class="string">'full'</span>; <span class="keyword">end</span>
+0042 <span class="keyword">if</span>( nargin&lt;4 || isempty(op)), op=<span class="string">'sum'</span>; <span class="keyword">end</span>
+0043 assert(any(strcmp(shape,{<span class="string">'same'</span>,<span class="string">'valid'</span>,<span class="string">'full'</span>,<span class="string">'block'</span>})));
+0044 assert(any(strcmp(op,{<span class="string">'sum'</span>,<span class="string">'max'</span>,<span class="string">'min'</span>})));
+0045 
+0046 <span class="comment">% standard case (use nlfiltersep)</span>
+0047 <span class="keyword">if</span>( nargin&gt;=3 &amp;&amp; strcmp(shape,<span class="string">'block'</span>) )
+0048   <span class="keyword">switch</span> op
+0049     <span class="keyword">case</span> <span class="string">'sum'</span>, fun = @sum;
+0050     <span class="keyword">case</span> <span class="string">'max'</span>, fun = @(x,d) max(x,[],d);
+0051     <span class="keyword">case</span> <span class="string">'min'</span>, fun = @(x,d) min(x,[],d);
+0052   <span class="keyword">end</span>
+0053 <span class="keyword">else</span>
+0054   <span class="keyword">switch</span> op
+0055     <span class="keyword">case</span> <span class="string">'sum'</span>, fun = @nlfiltersep_sum;
+0056     <span class="keyword">case</span> <span class="string">'max'</span>, fun = @nlfiltersep_max;
+0057     <span class="keyword">case</span> <span class="string">'min'</span>, error(<span class="string">'min not implemented'</span>);
+0058   <span class="keyword">end</span>
+0059 <span class="keyword">end</span>
+0060 I = nlfiltersep( I, dims, shape, fun );
+0061 
+0062 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

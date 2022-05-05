@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of breakToLineSegments</title>
+  <meta name="keywords" content="breakToLineSegments">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; breakToLineSegments.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>breakToLineSegments
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [lineSegs,dists,scores] = breakToLineSegments(XY) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getDistanceFromLineSegment.html" class="code" title="function d = getDistanceFromLineSegment(XY)">getDistanceFromLineSegment</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeMATpropertyPerBranch.html" class="code" title="function result = computeMATpropertyPerBranch(curBranch,property,K)">computeMATpropertyPerBranch</a>	Copyright Morteza Rezanejad</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [lineSegs,dists,scores] = breakToLineSegments(XY)</a>
+0002 
+0003 counter = 1;
+0004 start = 1;
+0005 n = size(XY,1);
+0006 t = start+2;
+0007 threshVal =1;
+0008 toBeRemoved = [];
+0009 <span class="keyword">while</span> t&lt;=n
+0010     t = start+2;
+0011     
+0012     stillStraight = true;
+0013     <span class="keyword">while</span>(stillStraight)
+0014         segXY = XY(start:t,:);
+0015         d = <a href="getDistanceFromLineSegment.html" class="code" title="function d = getDistanceFromLineSegment(XY)">getDistanceFromLineSegment</a>(segXY);
+0016         <span class="keyword">if</span> d &gt; threshVal || t &gt;= n
+0017             stillStraight = false;
+0018             <span class="keyword">if</span> n - t  &lt;= 1
+0019                 t = n+1;
+0020             <span class="keyword">end</span>
+0021             <span class="comment">%fprintf('start = %d, end = %d\n',start,t-1);</span>
+0022             lineSegs{counter} = XY(start:t-1,:);
+0023             dists(counter) = d;
+0024             toBeRemoved = [toBeRemoved,start:t-1];
+0025             counter = counter+1;
+0026             start = t-1;
+0027         <span class="keyword">else</span>
+0028             t = t+1;
+0029         <span class="keyword">end</span>
+0030         
+0031     <span class="keyword">end</span>
+0032 <span class="keyword">end</span>
+0033 
+0034 scores = zeros(size(XY,1),1);
+0035 <span class="comment">% plot(XY(:,1),XY(:,2),'.');</span>
+0036 <span class="comment">% hold on;</span>
+0037 <span class="comment">% size(XY)</span>
+0038 counter = 1;
+0039 <span class="keyword">for</span> i = 1 : length(lineSegs)
+0040 curLS = lineSegs{i};
+0041 N = size(curLS,1);
+0042 <span class="comment">% counter</span>
+0043 <span class="comment">% counter+N-1</span>
+0044 <span class="comment">% disp('----')</span>
+0045 scores(counter:counter+N-1) = 1-1/N;
+0046 counter = counter + N-1;
+0047 <span class="comment">% plot([curLS(1,1),curLS(end,1)],[curLS(1,2),curLS(end,2)],'r-');</span>
+0048 <span class="comment">% plot([curLS(1,1),curLS(end,1)],[curLS(1,2),curLS(end,2)],'c*');</span>
+0049 <span class="keyword">end</span>
+0050 <span class="comment">% axis equal</span>
+0051 <span class="comment">% axis off</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

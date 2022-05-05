@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeAllMATproperties</title>
+  <meta name="keywords" content="computeAllMATproperties">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; computeAllMATproperties.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>computeAllMATproperties
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>	Copyright Morteza Rezanejad</li><li><a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>	Copyright Morteza Rezanejad</li><li><a href="traceSkeleton.html" class="code" title="function allBranches = traceSkeleton(MAT)">traceSkeleton</a>	Copyright Morteza Rezanejad</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 
+0002 <a name="_sub0" href="#_subfunctions" class="code">function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)</a>
+0003 
+0004 skeletalBranches = <a href="traceSkeleton.html" class="code" title="function allBranches = traceSkeleton(MAT)">traceSkeleton</a>(MAT);
+0005 
+0006 <span class="keyword">if</span> nargin &lt; 3
+0007     properties = {<span class="string">'parallelism'</span>, <span class="string">'separation'</span>, <span class="string">'mirror'</span>} ;
+0008 <span class="keyword">end</span>
+0009 
+0010 
+0011 
+0012 <span class="keyword">for</span> propertyInd = 1:length(properties)
+0013     property = properties{propertyInd};      
+0014     [skeletonImageWithRating,skeletalBranches] = <a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>(MAT,property,skeletalBranches);
+0015     contourImageWithRating = <a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>(skeletalBranches,imgLD,skeletonImageWithRating);
+0016     MATskeletonImages.(property) = skeletonImageWithRating;
+0017     MATcontourImages.(property) = contourImageWithRating;
+0018 <span class="keyword">end</span>
+0019 
+0020 
+0021 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

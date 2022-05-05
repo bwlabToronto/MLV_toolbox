@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of visualizeData</title>
+  <meta name="keywords" content="visualizeData">
+  <meta name="description" content="Project high dim. data unto principal components (PCA) for visualization.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">classify</a> &gt; visualizeData.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\classify&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>visualizeData
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Project high dim. data unto principal components (PCA) for visualization.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function visualizeData( X, k, IDX, types, C ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Project high dim. data unto principal components (PCA) for visualization.
+
+ Optionally IDX can be specified to indicate different classes for the
+ points; in this case points in different classes are displayed using
+ different colors. Up to 12 types are handled (for technical reasons
+ involving plot), any cluster with a label&gt;12 is assigned the label 12.
+
+ USAGE
+  visualizeData( X, k, [IDX], [types], [C] )
+
+ INPUTS
+  X       - column vector of data - N vectors of dimension p (X is Nxp)
+  k       - dimension to which to reduce data (2 or 3)
+  IDX     - [] cluster membership [see kmeans2.m]
+  types   - [] cell array of length ntypes of text labels for each type
+  C       - [] cluster centers (Kxp)
+
+ OUTPUTS
+
+ EXAMPLE
+  X = [randn(100,5); randn(100,5)+4];
+  C = [mean(X(1:100,:)); mean(X(101:200,:))];
+  IDX = [ones(100,1); 2*ones(100,1)];
+  visualizeData( X, 2, IDX, {'type1','type2' }, C);
+
+ See also <a href="kmeans2.html" class="code" title="function [ IDX, C, d ] = kmeans2( X, k, varargin )">KMEANS2</a>, <a href="demoCluster.html" class="code" title="">DEMOCLUSTER</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="pca.html" class="code" title="function [U,mu,vars] = pca( X )">pca</a>	Principal components analysis (alternative to princomp).</li><li><a href="pcaApply.html" class="code" title="function varargout = pcaApply( X, U, mu, k )">pcaApply</a>	Companion function to pca.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="demoCluster.html" class="code" title="">demoCluster</a>	Clustering demo.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function visualizeData( X, k, IDX, types, C )</a>
+0002 <span class="comment">% Project high dim. data unto principal components (PCA) for visualization.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Optionally IDX can be specified to indicate different classes for the</span>
+0005 <span class="comment">% points; in this case points in different classes are displayed using</span>
+0006 <span class="comment">% different colors. Up to 12 types are handled (for technical reasons</span>
+0007 <span class="comment">% involving plot), any cluster with a label&gt;12 is assigned the label 12.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% USAGE</span>
+0010 <span class="comment">%  visualizeData( X, k, [IDX], [types], [C] )</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% INPUTS</span>
+0013 <span class="comment">%  X       - column vector of data - N vectors of dimension p (X is Nxp)</span>
+0014 <span class="comment">%  k       - dimension to which to reduce data (2 or 3)</span>
+0015 <span class="comment">%  IDX     - [] cluster membership [see kmeans2.m]</span>
+0016 <span class="comment">%  types   - [] cell array of length ntypes of text labels for each type</span>
+0017 <span class="comment">%  C       - [] cluster centers (Kxp)</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% OUTPUTS</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% EXAMPLE</span>
+0022 <span class="comment">%  X = [randn(100,5); randn(100,5)+4];</span>
+0023 <span class="comment">%  C = [mean(X(1:100,:)); mean(X(101:200,:))];</span>
+0024 <span class="comment">%  IDX = [ones(100,1); 2*ones(100,1)];</span>
+0025 <span class="comment">%  visualizeData( X, 2, IDX, {'type1','type2' }, C);</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% See also KMEANS2, DEMOCLUSTER</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0030 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0031 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0032 
+0033 <span class="keyword">if</span>( nargin&lt;3 || isempty(IDX) ); IDX=[]; <span class="keyword">end</span>
+0034 <span class="keyword">if</span>( nargin&lt;4 || isempty(types) ); types=[]; <span class="keyword">end</span>
+0035 <span class="keyword">if</span>( nargin&lt;5 || isempty(C) ); C=[]; <span class="keyword">end</span>
+0036 
+0037 <span class="comment">% apply PCA if necessary</span>
+0038 <span class="keyword">if</span>( size(X,2)~= k )
+0039   [ U, mu ] = <a href="pca.html" class="code" title="function [U,mu,vars] = pca( X )">pca</a>( X' );
+0040   X = <a href="pcaApply.html" class="code" title="function varargout = pcaApply( X, U, mu, k )">pcaApply</a>( X', U, mu, k )';
+0041   <span class="keyword">if</span>(~isempty(C)); C = <a href="pcaApply.html" class="code" title="function varargout = pcaApply( X, U, mu, k )">pcaApply</a>( C', U, mu, k )'; <span class="keyword">end</span>
+0042 <span class="keyword">end</span>
+0043 
+0044 <span class="comment">%%% get k</span>
+0045 k = size(X,2);
+0046 <span class="keyword">if</span>( k==1 ); X = [X zeros(size(X))]; k = 2; <span class="keyword">end</span>
+0047 <span class="keyword">if</span>( k&gt;3 ); error( <span class="string">'k must be &lt;= 3'</span>); <span class="keyword">end</span>
+0048 
+0049 <span class="comment">%%% show points</span>
+0050 <span class="keyword">if</span>( isempty(IDX) )
+0051   <span class="keyword">if</span>( k==2 )
+0052     plot( X(:,1), X(:,2), <span class="string">'.'</span> );
+0053   <span class="keyword">elseif</span>( k==3 )
+0054     plot3( X(:,1), X(:,2), X(:,3), <span class="string">'.'</span> );
+0055   <span class="keyword">end</span>;
+0056 
+0057 <span class="keyword">else</span>
+0058   IDX(IDX&gt;12)=12;  m=max(IDX);
+0059 
+0060   <span class="keyword">if</span>( k==2)
+0061     <span class="comment">% plot points</span>
+0062     R = cell(1,3*m+3);
+0063     <span class="keyword">for</span> i=1:m;
+0064       R((3*i-2):(3*i)) = {X(IDX==i,1), X(IDX==i,2), <span class="string">'.'</span>};
+0065     <span class="keyword">end</span>;
+0066     R((3*m+1):(3*m+3)) = {X(IDX==-1,1), X(IDX==-1,2), <span class="string">'k.'</span>};
+0067     plot( R{:} );
+0068 
+0069     <span class="comment">% plot centers</span>
+0070     <span class="keyword">if</span>( ~isempty(C) )
+0071       R=cell(1,3*m);
+0072       <span class="keyword">for</span> i=1:m;  R((3*i-2):(3*i)) = {C(i,1), C(i,2), <span class="string">'x'</span>}; <span class="keyword">end</span>
+0073       hold(<span class="string">'on'</span>);  plot( R{:}, <span class="string">'MarkerSize'</span>, 30 );  hold(<span class="string">'off'</span>);
+0074     <span class="keyword">end</span>;
+0075 
+0076   <span class="keyword">elseif</span>( k==3 )
+0077     <span class="comment">% plot points</span>
+0078     R = cell(1,4*m+4);
+0079     <span class="keyword">for</span> i=1:m;
+0080       R((4*i-3):(4*i)) = {X(IDX==i,1), X(IDX==i,2), X(IDX==i,3), <span class="string">'.'</span>};
+0081     <span class="keyword">end</span>;
+0082     R((4*m+1):(4*m+4)) = {X(IDX==-1,1), X(IDX==-1,2), X(IDX==-1,3), <span class="string">'k.'</span>};
+0083     plot3( R{:} );
+0084 
+0085     <span class="comment">% plot centers</span>
+0086     <span class="keyword">if</span>( ~isempty(C) )
+0087       R=cell(1,4*m);
+0088       <span class="keyword">for</span> i=1:m;  R((4*i-3):(4*i)) = {C(i,1), C(i,2), C(i,3), <span class="string">'x'</span>}; <span class="keyword">end</span>
+0089       hold(<span class="string">'on'</span>); plot3( R{:}, <span class="string">'MarkerSize'</span>, 30 );  hold(<span class="string">'off'</span>);
+0090     <span class="keyword">end</span>
+0091   <span class="keyword">end</span>
+0092 <span class="keyword">end</span>
+0093 axis(<span class="string">'equal'</span>);
+0094 
+0095 <span class="comment">%%% show legend if types is provided</span>
+0096 <span class="keyword">if</span>(~isempty(types));  legend(types); <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

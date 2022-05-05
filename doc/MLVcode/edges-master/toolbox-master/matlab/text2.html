@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of text2</title>
+  <meta name="keywords" content="text2">
+  <meta name="description" content="Wrapper for text.m that ensures displayed text fits in figure.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; text2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>text2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Wrapper for text.m that ensures displayed text fits in figure.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = text2( varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Wrapper for text.m that ensures displayed text fits in figure.
+
+ When text is called, Matlab displays the text, but does nothing to ensure
+ that all of the text fits in the figure.  This function, after calling
+ text, shrinks the axes until the text is fully visible.  Note that since
+ font doesn't resize as the figure does, just because the text fully fits
+ after text2 is called, no guaranties are made after the figure is
+ resized.  Hence it is a good idea to resize the figure appropriately
+ before calling text2.
+
+ Same input/output options as Matlab's text.m command.
+
+ USAGE
+  varargout = text2( varargin )
+
+ INPUTS
+  varargin   - input to Matlab's text
+
+ OUTPUTS
+  varargout  - output to Matlab's text
+
+ EXAMPLE
+  figure(1); clf; text( -1 , 2, 'hello world' )  % will not appear
+  figure(2); clf; text2( -1 , 2, 'hello world' ) % will appear
+
+ See also TEXT, <a href="imLabel.html" class="code" title="function imLabel( labels, position, S, pvPairs )">IMLABEL</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="imLabel.html" class="code" title="function imLabel( labels, position, S, pvPairs )">imLabel</a>	Improved method for labeling figure axes.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = text2( varargin )</a>
+0002 <span class="comment">% Wrapper for text.m that ensures displayed text fits in figure.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% When text is called, Matlab displays the text, but does nothing to ensure</span>
+0005 <span class="comment">% that all of the text fits in the figure.  This function, after calling</span>
+0006 <span class="comment">% text, shrinks the axes until the text is fully visible.  Note that since</span>
+0007 <span class="comment">% font doesn't resize as the figure does, just because the text fully fits</span>
+0008 <span class="comment">% after text2 is called, no guaranties are made after the figure is</span>
+0009 <span class="comment">% resized.  Hence it is a good idea to resize the figure appropriately</span>
+0010 <span class="comment">% before calling text2.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Same input/output options as Matlab's text.m command.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% USAGE</span>
+0015 <span class="comment">%  varargout = text2( varargin )</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% INPUTS</span>
+0018 <span class="comment">%  varargin   - input to Matlab's text</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% OUTPUTS</span>
+0021 <span class="comment">%  varargout  - output to Matlab's text</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% EXAMPLE</span>
+0024 <span class="comment">%  figure(1); clf; text( -1 , 2, 'hello world' )  % will not appear</span>
+0025 <span class="comment">%  figure(2); clf; text2( -1 , 2, 'hello world' ) % will appear</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% See also TEXT, IMLABEL</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0030 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0031 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0032 
+0033 <span class="comment">%%% call text normally</span>
+0034 hs = text( varargin{:} );
+0035 <span class="keyword">if</span>(nargout&gt;=1); varargout={hs}; <span class="keyword">end</span>;
+0036 
+0037 <span class="comment">%%% now make sure text fits</span>
+0038 <span class="comment">%%% update the OuterPosition (not regular Position) so good resize behavior</span>
+0039 nhs = length(hs);
+0040 <span class="keyword">for</span> i=1:nhs;  set(hs(i),<span class="string">'Units'</span>,<span class="string">'Normalized'</span>);  <span class="keyword">end</span>;
+0041 oldunits = get(gca,<span class="string">'Units'</span>); set(gca,<span class="string">'Units'</span>,<span class="string">'Normalized'</span>);
+0042 opos = get(gca,<span class="string">'OuterPosition'</span>); <span class="comment">%x y w h</span>
+0043 updated = 1; updatedpos=1;
+0044 <span class="keyword">while</span>( updated ); updated=0;
+0045   <span class="keyword">for</span> p=1:4
+0046     <span class="keyword">if</span>( updatedpos ); updatedpos=0;
+0047       <span class="comment">% get overall pos of text in normalized AXIS coordinates</span>
+0048       pos = [inf inf -inf -inf]; <span class="comment">% [l b r t]</span>
+0049       <span class="keyword">for</span> i=1:nhs
+0050         extent = get(hs(i),<span class="string">'Extent'</span>); <span class="comment">% slow [l b w h]</span>
+0051         pos(1:2) = min( pos(1:2), extent(1:2) );
+0052         pos(3:4) = max( pos(3:4), extent(1:2) + extent(3:4) );
+0053       <span class="keyword">end</span>;
+0054       pos = pos * 1.05;
+0055       pos(3:4) = pos(3:4) - pos(1:2);  <span class="comment">% [l b w h]</span>
+0056 
+0057       <span class="comment">% convert pos to normalized FIGURE coordinates</span>
+0058       <span class="comment">% must move origin, and also account for scaling</span>
+0059       axisPos = get(gca,<span class="string">'Position'</span>);
+0060       pos(1) = axisPos(1) + pos(1) * axisPos(3);
+0061       pos(2) = axisPos(2) + pos(2) * axisPos(4);
+0062       pos(3) = pos(3) * axisPos(3);
+0063       pos(4) = pos(4) * axisPos(4);
+0064     <span class="keyword">end</span>
+0065 
+0066     <span class="comment">% if necessary, move OuterPosition of axes accordingly</span>
+0067     <span class="keyword">if</span>( p&lt;=2 &amp;&amp; pos(p)&lt;0 )
+0068       step = min(.1,max(.001,-pos(p)/50));
+0069       opos(p) = opos(p)+step;
+0070       opos(p+2) = opos(p+2)-step;
+0071       set(gca,<span class="string">'OuterPosition'</span>,opos);
+0072       updated=1; updatedpos=1;
+0073     <span class="keyword">elseif</span>( p&gt;2 &amp;&amp; (pos(p-2)+pos(p))&gt;1 )
+0074       step = min(.1,max(.001,pos(p)/50));
+0075       opos(p)=opos(p)-step;
+0076       set(gca,<span class="string">'OuterPosition'</span>,opos);
+0077       updated=1; updatedpos=1;
+0078     <span class="keyword">end</span>
+0079   <span class="keyword">end</span>
+0080 <span class="keyword">end</span>
+0081 set(gca,<span class="string">'Units'</span>,oldunits);
+0082 
+0083 <span class="comment">%   if necessary, move OuterPosition of axes accordingly</span>
+0084 <span class="comment">%   if(p&lt;=2 &amp;&amp; pos(p)&lt;0 )</span>
+0085 <span class="comment">%       step = max(.01,abs(pos(p))/1.5);</span>
+0086 <span class="comment">%       opos, step, pos, p</span>
+0087 <span class="comment">%       opos(p)=opos(p)+step;</span>
+0088 <span class="comment">%       opos(p+2)=opos(p+2)-step;</span>
+0089 <span class="comment">%       updated=1; updatedpos=1;</span>
+0090 <span class="comment">%       set(gca,'OuterPosition',opos);</span>
+0091 <span class="comment">%   elseif( p&gt;2 &amp;&amp; pos(p)&gt;1 )</span>
+0092 <span class="comment">%       step = max(.01,(pos(p)-1)/1.5);</span>
+0093 <span class="comment">%       opos(p)=opos(p)-step;</span>
+0094 <span class="comment">%       updated=1; updatedpos=1;</span>
+0095 <span class="comment">%       set(gca,'OuterPosition',opos);</span>
+0096 <span class="comment">%   end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

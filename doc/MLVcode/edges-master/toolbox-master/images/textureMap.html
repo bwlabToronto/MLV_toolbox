@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of textureMap</title>
+  <meta name="keywords" content="textureMap">
+  <meta name="description" content="Maps texture in I according to rsDst and csDst.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; textureMap.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>textureMap
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Maps texture in I according to rsDst and csDst.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [J,boundX,boundY] = textureMap( I, rsDst, csDst, bbox, fillVal ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Maps texture in I according to rsDst and csDst.
+
+ I has (nrows*ncols) coordinates.  Each coordinate has an associated
+ intensity value.  A transformation on I can be defined by giving the
+ destination (r',c') of the intensity associated with coordinate (r,c) in
+ I -- ie I(r,c).  Applying the transformation, we ask what intensity is
+ associated with a coordinate (r0',c0') by interpolating between the
+ intensities at the closest coordinates (r',c').  In the function below
+ specify the destination of (r,c) by (rsDst(r,c), csDst(r,c)).
+
+ If the inverse mapping is also available -- ie, if we can go from the
+ coordinates in the destination to the coordinates in the source, then a
+ much more efficient procedure can be used to textureMap that involves
+ interp2 instead of griddata. Use imtransform2 for this case.
+
+ The bounding box of the image is set by the BBOX argument, a string that
+ can be 'loose' (default) or 'crop'. When BBOX is 'loose', J includes the
+ whole transformed image, which generally is larger than I. When BBOX is
+ 'crop' J is cropped to include only the central portion of the
+ transformed image and is the same size as I.
+
+ USAGE
+  J = textureMap( I, rsDst, csDst, [bbox], [fillVal] )
+
+ INPUTS
+  I           - 2D input image
+  rsDst       - rsDst(i,j) is row loc where I(i,j) gets mapped to
+  csDst       - csDst(i,j) is col loc where I(i,j) gets mapped to
+  bbox        - ['loose'] see above for meaning of bbox 'loose' or 'crop'
+  fillVal     - [0] Value of the empty warps
+
+ OUTPUTS
+  J           - result of texture mapping
+  boundaryX   - returns the smallest/biggest x coordinate of the output
+  boundaryY   - returns the smallest/biggest y coordinate of the output
+
+ EXAMPLE
+  load trees; I=X; angle=55; R=rotationMatrix(-angle/180*pi);
+  m=size(I,1); n=size(I,2); m2=(m+1)/2; n2=(n+1)/2;
+  [cs,rs]=meshgrid(1:n,1:m); vs=R*[cs(:)-n2 rs(:)-m2]';
+  tic; J1 = imrotate(I,angle,'bilinear','crop'); toc
+  tic, J2 = textureMap(I,vs(2,:)+m2,vs(1,:)+n2,'crop',nan); toc
+  figure(1); clf; subplot(2,2,1); im(I); subplot(2,2,2); im(J1-J2);
+  subplot(2,2,3); im(J1); subplot(2,2,4); im(J2);
+
+ See also <a href="imtransform2.html" class="code" title="function J = imtransform2( I, H, varargin )">IMTRANSFORM2</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.61
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [J,boundX,boundY] = textureMap( I, rsDst, csDst, bbox, fillVal )</a>
+0002 <span class="comment">% Maps texture in I according to rsDst and csDst.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% I has (nrows*ncols) coordinates.  Each coordinate has an associated</span>
+0005 <span class="comment">% intensity value.  A transformation on I can be defined by giving the</span>
+0006 <span class="comment">% destination (r',c') of the intensity associated with coordinate (r,c) in</span>
+0007 <span class="comment">% I -- ie I(r,c).  Applying the transformation, we ask what intensity is</span>
+0008 <span class="comment">% associated with a coordinate (r0',c0') by interpolating between the</span>
+0009 <span class="comment">% intensities at the closest coordinates (r',c').  In the function below</span>
+0010 <span class="comment">% specify the destination of (r,c) by (rsDst(r,c), csDst(r,c)).</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% If the inverse mapping is also available -- ie, if we can go from the</span>
+0013 <span class="comment">% coordinates in the destination to the coordinates in the source, then a</span>
+0014 <span class="comment">% much more efficient procedure can be used to textureMap that involves</span>
+0015 <span class="comment">% interp2 instead of griddata. Use imtransform2 for this case.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% The bounding box of the image is set by the BBOX argument, a string that</span>
+0018 <span class="comment">% can be 'loose' (default) or 'crop'. When BBOX is 'loose', J includes the</span>
+0019 <span class="comment">% whole transformed image, which generally is larger than I. When BBOX is</span>
+0020 <span class="comment">% 'crop' J is cropped to include only the central portion of the</span>
+0021 <span class="comment">% transformed image and is the same size as I.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% USAGE</span>
+0024 <span class="comment">%  J = textureMap( I, rsDst, csDst, [bbox], [fillVal] )</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% INPUTS</span>
+0027 <span class="comment">%  I           - 2D input image</span>
+0028 <span class="comment">%  rsDst       - rsDst(i,j) is row loc where I(i,j) gets mapped to</span>
+0029 <span class="comment">%  csDst       - csDst(i,j) is col loc where I(i,j) gets mapped to</span>
+0030 <span class="comment">%  bbox        - ['loose'] see above for meaning of bbox 'loose' or 'crop'</span>
+0031 <span class="comment">%  fillVal     - [0] Value of the empty warps</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% OUTPUTS</span>
+0034 <span class="comment">%  J           - result of texture mapping</span>
+0035 <span class="comment">%  boundaryX   - returns the smallest/biggest x coordinate of the output</span>
+0036 <span class="comment">%  boundaryY   - returns the smallest/biggest y coordinate of the output</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% EXAMPLE</span>
+0039 <span class="comment">%  load trees; I=X; angle=55; R=rotationMatrix(-angle/180*pi);</span>
+0040 <span class="comment">%  m=size(I,1); n=size(I,2); m2=(m+1)/2; n2=(n+1)/2;</span>
+0041 <span class="comment">%  [cs,rs]=meshgrid(1:n,1:m); vs=R*[cs(:)-n2 rs(:)-m2]';</span>
+0042 <span class="comment">%  tic; J1 = imrotate(I,angle,'bilinear','crop'); toc</span>
+0043 <span class="comment">%  tic, J2 = textureMap(I,vs(2,:)+m2,vs(1,:)+n2,'crop',nan); toc</span>
+0044 <span class="comment">%  figure(1); clf; subplot(2,2,1); im(I); subplot(2,2,2); im(J1-J2);</span>
+0045 <span class="comment">%  subplot(2,2,3); im(J1); subplot(2,2,4); im(J2);</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% See also IMTRANSFORM2</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.61</span>
+0050 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0051 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0052 
+0053 <span class="keyword">if</span>(nargin&lt;4 || isempty(bbox)), bbox=<span class="string">'loose'</span>; <span class="keyword">end</span>
+0054 <span class="keyword">if</span>(nargin&lt;5 || isempty(fillVal)), fillVal=0; <span class="keyword">end</span>
+0055 <span class="keyword">if</span>(isa(I,<span class="string">'uint8'</span>)), I=double(I); <span class="keyword">end</span>; m=size(I,1); n=size(I,2);
+0056 rsDst=rsDst(:); assert(numel(rsDst)==m*n);
+0057 csDst=csDst(:); assert(numel(csDst)==m*n);
+0058 
+0059 <span class="comment">% find sampling points</span>
+0060 <span class="keyword">if</span>( strcmp(<span class="string">'loose'</span>,bbox) )
+0061   minr=floor(min(rsDst)); maxr=ceil(max(rsDst));
+0062   minc=floor(min(csDst)); maxc=ceil(max(csDst));
+0063   [cs,rs] = meshgrid( minc:maxc, minr:maxr );
+0064   boundX=[minc maxc]; boundY=[minr maxr];
+0065 <span class="keyword">elseif</span>( strcmp(<span class="string">'crop'</span>,bbox) )
+0066   [cs,rs]=meshgrid(1:n,1:m); boundX=[1 n]; boundY=[1 m];
+0067 <span class="keyword">else</span>
+0068   error(<span class="string">'illegal value for bbox: %s'</span>,bbox);
+0069 <span class="keyword">end</span>
+0070 
+0071 <span class="comment">% Get values at cs and rs</span>
+0072 <span class="keyword">if</span>(exist(<span class="string">'TriScatteredInterp'</span>,<span class="string">'file'</span>))
+0073   F=TriScatteredInterp(csDst,rsDst,I(:),<span class="string">'linear'</span>); J=F(cs,rs); <span class="comment">%#ok&lt;REMFF1&gt;</span>
+0074 <span class="keyword">else</span>
+0075   J=griddata(csDst,rsDst,I(:),cs,rs);
+0076 <span class="keyword">end</span>
+0077 <span class="keyword">if</span>(~isnan(fillVal)), J(isnan(J))=fillVal; <span class="keyword">end</span>
+0078 
+0079 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

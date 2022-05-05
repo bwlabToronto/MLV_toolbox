@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of confMatrixShow</title>
+  <meta name="keywords" content="confMatrixShow">
+  <meta name="description" content="Used to display a confusion matrix.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">classify</a> &gt; confMatrixShow.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\classify&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>confMatrixShow
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Used to display a confusion matrix.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function confMatrixShow( CM, types, pvPairs, nDigits, showCnts ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Used to display a confusion matrix.
+
+ See confMatrix for general format and info on confusion matricies. This
+ function normalizes the CM before displaying, hence all values range in
+ [0,1] and rows sum to 1.
+
+ USAGE
+  confMatrixShow( CM, [types], [pvPairs], [nDigits], [showCnts] )
+
+ INPUTS
+  CM          - [nTypes x nTypes] confusion array -- see confMatrix
+  types       - [] cell array of length nTypes of text labels
+  pvPairs     - [{'FontSize',20}] parameter / value list for text.m
+  nDigits     - [2] number of digits after decimal to display
+  showCnts    - [0] show total count per row to the right
+
+ OUTPUTS
+
+ EXAMPLE
+  CM = randint2(6,6,[1,100])+eye(6)*500;
+  types = { 'anger','disgust','fear','joy','sadness','surprise' };
+  confMatrixShow( CM, types, {'FontSize',20}, [], 0 )
+  title('confusion matrix','FontSize',24);
+
+ See also <a href="confMatrix.html" class="code" title="function CM = confMatrix( IDXtrue, IDXpred, ntypes )">confMatrix</a>, imLabel, dispMatrixIm
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.50
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function confMatrixShow( CM, types, pvPairs, nDigits, showCnts )</a>
+0002 <span class="comment">% Used to display a confusion matrix.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% See confMatrix for general format and info on confusion matricies. This</span>
+0005 <span class="comment">% function normalizes the CM before displaying, hence all values range in</span>
+0006 <span class="comment">% [0,1] and rows sum to 1.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% USAGE</span>
+0009 <span class="comment">%  confMatrixShow( CM, [types], [pvPairs], [nDigits], [showCnts] )</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% INPUTS</span>
+0012 <span class="comment">%  CM          - [nTypes x nTypes] confusion array -- see confMatrix</span>
+0013 <span class="comment">%  types       - [] cell array of length nTypes of text labels</span>
+0014 <span class="comment">%  pvPairs     - [{'FontSize',20}] parameter / value list for text.m</span>
+0015 <span class="comment">%  nDigits     - [2] number of digits after decimal to display</span>
+0016 <span class="comment">%  showCnts    - [0] show total count per row to the right</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% OUTPUTS</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% EXAMPLE</span>
+0021 <span class="comment">%  CM = randint2(6,6,[1,100])+eye(6)*500;</span>
+0022 <span class="comment">%  types = { 'anger','disgust','fear','joy','sadness','surprise' };</span>
+0023 <span class="comment">%  confMatrixShow( CM, types, {'FontSize',20}, [], 0 )</span>
+0024 <span class="comment">%  title('confusion matrix','FontSize',24);</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% See also confMatrix, imLabel, dispMatrixIm</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.50</span>
+0029 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0030 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0031 
+0032 <span class="keyword">if</span>( nargin&lt;2 ); types=[]; <span class="keyword">end</span>
+0033 <span class="keyword">if</span>( nargin&lt;3 || isempty(pvPairs)); pvPairs = {<span class="string">'FontSize'</span>,20}; <span class="keyword">end</span>
+0034 <span class="keyword">if</span>( nargin&lt;4 || isempty(nDigits)); nDigits=2; <span class="keyword">end</span>
+0035 <span class="keyword">if</span>( nargin&lt;5 || isempty(showCnts)); showCnts=0; <span class="keyword">end</span>
+0036 <span class="keyword">if</span>( nDigits&lt;1 || nDigits&gt;10 ); error(<span class="string">'too few or too many digits'</span>); <span class="keyword">end</span>
+0037 <span class="keyword">if</span>( any(CM(:)&lt;0) ); error( <span class="string">'CM must have non-negative entries'</span> ); <span class="keyword">end</span>
+0038 
+0039 <span class="comment">% normalize and round appropriately</span>
+0040 cnts = sum(CM,2);
+0041 CM = CM ./ repmat( cnts+eps, [1 size(CM,2)] );
+0042 CM = round(CM*10^nDigits) / 10^nDigits;
+0043 
+0044 <span class="comment">% display as image using dispMatrixIm</span>
+0045 dispMatrixIm(CM,<span class="string">'maxM'</span>,1,<span class="string">'maxLen'</span>,nDigits+1,<span class="string">'show0'</span>,0,<span class="keyword">...</span>
+0046   <span class="string">'fStr'</span>,<span class="string">'%f'</span>,<span class="string">'invert'</span>,1,<span class="string">'pvPairs'</span>,pvPairs); axis square;
+0047 
+0048 <span class="comment">% now add type labels</span>
+0049 <span class="keyword">if</span>( ~isempty(types) )
+0050   imLabel( types, <span class="string">'left'</span>, 0, pvPairs );
+0051   imLabel( types, <span class="string">'bottom'</span>, -35, pvPairs );
+0052   <span class="keyword">if</span>(showCnts), imLabel(int2str2(cnts),<span class="string">'right'</span>,0,pvPairs); <span class="keyword">end</span>
+0053 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

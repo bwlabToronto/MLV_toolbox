@@ -1,0 +1,799 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of behaviorAnnotator</title>
+  <meta name="keywords" content="behaviorAnnotator">
+  <meta name="description" content="Caltech Behavior Annotator.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">videos</a> &gt; behaviorAnnotator.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\videos&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>behaviorAnnotator
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Caltech Behavior Annotator.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function behaviorAnnotator( fName, aName, tName ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Caltech Behavior Annotator.
+
+ Can only be used to annotated seq files. To annotate other types of video
+ files, they need to be converted to seq files first. For example, to
+ convert an avi file into an seq file, use the following command:
+  seqIo([seqName],'frImgs',struct('codec','jpg'),'aviName',[aviName])
+ Where [seqName] denotes the name of the seq you want to save to and
+ [aviName] is the avi file. See seqIo and seqIo&gt;frimgs for more details.
+
+ Use arrow keys to play the video. Controls are as follows:
+ (1) If stopped: [L] play backward, [R] play forward
+ (2) If playing forward: [L] halve speed, [R] double speed, [U/D] stop
+ (3) If playing backward: [L] double speed, [R] halve speed,[U/D] stop
+ You can explicitly enter a frame or use the slider to jump in the video.
+
+ USAGE
+  behaviorAnnotator( [fName], [aName], [tName] )
+
+ INPUTS
+  fName    - optional seq file to load at start
+  aName    - optional annotation file to load or import at start
+  tName    - optional tracking or detection file to load at start
+
+ OUTPUTS
+
+ EXAMPLE
+  behaviorAnnotator
+
+ See also <a href="behaviorData.html" class="code" title="function A = behaviorData( action, fName, nFrame1 )">behaviorData</a>, <a href="seqIo.html" class="code" title="function out = seqIo( fName, action, varargin )">seqIo</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.60
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="behaviorData.html" class="code" title="function A = behaviorData( action, fName, nFrame1 )">behaviorData</a>	Retrieve and manipulate behavior annotation of a video.</li><li><a href="seqIo.html" class="code" title="function out = seqIo( fName, action, varargin )">seqIo</a>	Utilities for reading and writing seq files.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function makeLayout()</a></li><li><a href="#_sub2" class="code">function keyPress( h, evnt )</a></li><li><a href="#_sub3" class="code">function figResized( h, evnt )</a></li><li><a href="#_sub4" class="code">function exitProg( h, evnt )</a></li><li><a href="#_sub5" class="code">function api = annMakeApi()</a></li><li><a href="#_sub6" class="code">function updateAnn()</a></li><li><a href="#_sub7" class="code">function updateDisp()</a></li><li><a href="#_sub8" class="code">function colBar( hBar, hSl, bs, ts, h, fL, fR )</a></li><li><a href="#_sub9" class="code">function setFrame(flag)</a></li><li><a href="#_sub10" class="code">function buttonPress( str )</a></li><li><a href="#_sub11" class="code">function insertBh( type )</a></li><li><a href="#_sub12" class="code">function setCenter( frame ), fM=round(frame); end</a></li><li><a href="#_sub13" class="code">function hs = dispTrack( frame )</a></li><li><a href="#_sub14" class="code">function api = dispMakeApi()</a></li><li><a href="#_sub15" class="code">function setVid( sr1 )</a></li><li><a href="#_sub16" class="code">function exportVid( nm )</a></li><li><a href="#_sub17" class="code">function setAud(y,fs,nb)</a></li><li><a href="#_sub18" class="code">function dispLoop()</a></li><li><a href="#_sub19" class="code">function setSpeedCb( flag )</a></li><li><a href="#_sub20" class="code">function setSpeed( speed1 )</a></li><li><a href="#_sub21" class="code">function setFrameCb(flag)</a></li><li><a href="#_sub22" class="code">function setFrame( curInd1, speed1, setCenter )</a></li><li><a href="#_sub23" class="code">function requestUpdate(), needUpdate=true; dispLoop(); end</a></li><li><a href="#_sub24" class="code">function info1 = getInfo(), info1=info; end</a></li><li><a href="#_sub25" class="code">function curInd1 = getFrame(), curInd1=round(curInd); end</a></li><li><a href="#_sub26" class="code">function api = menuMakeApi()</a></li><li><a href="#_sub27" class="code">function updateMenus()</a></li><li><a href="#_sub28" class="code">function vidClose()</a></li><li><a href="#_sub29" class="code">function vidOpen( flag )</a></li><li><a href="#_sub30" class="code">function vidInfo()</a></li><li><a href="#_sub31" class="code">function vidExport()</a></li><li><a href="#_sub32" class="code">function audOpen( fAud )</a></li><li><a href="#_sub33" class="code">function annClose()</a></li><li><a href="#_sub34" class="code">function annOpen( flag )</a></li><li><a href="#_sub35" class="code">function annSave()</a></li><li><a href="#_sub36" class="code">function annNew( update )</a></li><li><a href="#_sub37" class="code">function annBackup()</a></li><li><a href="#_sub38" class="code">function trkOpen( flag )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function behaviorAnnotator( fName, aName, tName )</a>
+0002 <span class="comment">% Caltech Behavior Annotator.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Can only be used to annotated seq files. To annotate other types of video</span>
+0005 <span class="comment">% files, they need to be converted to seq files first. For example, to</span>
+0006 <span class="comment">% convert an avi file into an seq file, use the following command:</span>
+0007 <span class="comment">%  seqIo([seqName],'frImgs',struct('codec','jpg'),'aviName',[aviName])</span>
+0008 <span class="comment">% Where [seqName] denotes the name of the seq you want to save to and</span>
+0009 <span class="comment">% [aviName] is the avi file. See seqIo and seqIo&gt;frimgs for more details.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Use arrow keys to play the video. Controls are as follows:</span>
+0012 <span class="comment">% (1) If stopped: [L] play backward, [R] play forward</span>
+0013 <span class="comment">% (2) If playing forward: [L] halve speed, [R] double speed, [U/D] stop</span>
+0014 <span class="comment">% (3) If playing backward: [L] double speed, [R] halve speed,[U/D] stop</span>
+0015 <span class="comment">% You can explicitly enter a frame or use the slider to jump in the video.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% USAGE</span>
+0018 <span class="comment">%  behaviorAnnotator( [fName], [aName], [tName] )</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% INPUTS</span>
+0021 <span class="comment">%  fName    - optional seq file to load at start</span>
+0022 <span class="comment">%  aName    - optional annotation file to load or import at start</span>
+0023 <span class="comment">%  tName    - optional tracking or detection file to load at start</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% OUTPUTS</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% EXAMPLE</span>
+0028 <span class="comment">%  behaviorAnnotator</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% See also behaviorData, seqIo</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.60</span>
+0033 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0034 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0035 
+0036 <span class="comment">% handles to gui objects / other globals</span>
+0037 [hFig,menu,pTop,pMid,pBot,dispApi,A,trk] = deal([]);
+0038 
+0039 <span class="comment">% initialize all</span>
+0040 <a href="#_sub1" class="code" title="subfunction makeLayout()">makeLayout</a>();
+0041 menuApi = <a href="#_sub26" class="code" title="subfunction api = menuMakeApi()">menuMakeApi</a>();
+0042 dispApi = <a href="#_sub14" class="code" title="subfunction api = dispMakeApi()">dispMakeApi</a>();
+0043 annApi  = <a href="#_sub5" class="code" title="subfunction api = annMakeApi()">annMakeApi</a>();
+0044 menuApi.vidClose();
+0045 
+0046 <span class="comment">% open vid, annotation and tracking results if given</span>
+0047 <span class="keyword">if</span>(nargin&gt;=1 &amp;&amp; ~isempty(fName)), menuApi.vidOpen(fName); <span class="keyword">end</span>
+0048 <span class="keyword">if</span>(nargin&gt;=2 &amp;&amp; ~isempty(aName)), menuApi.annOpen(aName); <span class="keyword">end</span>
+0049 <span class="keyword">if</span>(nargin&gt;=3 &amp;&amp; ~isempty(tName)), menuApi.trkOpen(tName); <span class="keyword">end</span>
+0050 
+0051   <a name="_sub1" href="#_subfunctions" class="code">function makeLayout()</a>
+0052     <span class="comment">% common properties</span>
+0053     name = <span class="string">'Caltech Behavior Annotator'</span>;
+0054     bg=<span class="string">'BackgroundColor'</span>; fg=<span class="string">'ForegroundColor'</span>;
+0055     fs=<span class="string">'FontSize'</span>; ha=<span class="string">'HorizontalAlignment'</span>;
+0056     units = {<span class="string">'Units'</span>,<span class="string">'pixels'</span>}; st=<span class="string">'String'</span>; ps=<span class="string">'Position'</span>;
+0057     
+0058     <span class="comment">% initial figures size / pos</span>
+0059     set(0,<span class="string">'Units'</span>,<span class="string">'pixels'</span>);  ss = get(0,<span class="string">'ScreenSize'</span>);
+0060     <span class="keyword">if</span>( ss(3)&lt;800 || ss(4)&lt;600 ); error(<span class="string">'screen too small'</span>); <span class="keyword">end</span>;
+0061     figPos = [(ss(3)-600)/2 (ss(4)-500)/2 600 500];
+0062     
+0063     <span class="comment">% create main figure</span>
+0064     figPrp = {<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="string">'Toolbar'</span>,<span class="string">'auto'</span>, <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="string">'Color'</span>,<span class="string">'k'</span>};
+0065     hFig = figure(figPrp{:},<span class="string">'Visible'</span>,<span class="string">'off'</span>, ps,figPos, <span class="string">'Name'</span>,name );
+0066     set(hFig,<span class="string">'DeleteFcn'</span>,@<a href="#_sub4" class="code" title="subfunction exitProg( h, evnt ) ">exitProg</a>,<span class="string">'ResizeFcn'</span>,@<a href="#_sub3" class="code" title="subfunction figResized( h, evnt ) ">figResized</a>);
+0067     
+0068     <span class="comment">% mid panel</span>
+0069     pMid.hAx=axes(units{:},<span class="string">'Parent'</span>,hFig); set(pMid.hAx,<span class="string">'XTick'</span>,[],<span class="string">'YTick'</span>,[]);
+0070     pMid.hSl=uicontrol(hFig,<span class="string">'Style'</span>,<span class="string">'slider'</span>,<span class="string">'Min'</span>,0,<span class="string">'Max'</span>,1,bg,<span class="string">'k'</span>); imshow(0);
+0071     pMid.hBar=uicontrol(hFig,<span class="string">'Style'</span>,<span class="string">'pushbutton'</span>,units{:},<span class="string">'Enable'</span>,<span class="string">'inactive'</span>);
+0072     pMid.hAdd=uicontextmenu(<span class="string">'Parent'</span>,hFig); pMid.hAdds=[]; pMid.hTxt=[];
+0073     
+0074     <span class="comment">% top panel</span>
+0075     pnlProp = [units {bg,[.1 .1 .1],<span class="string">'BorderType'</span>,<span class="string">'none'</span>}];
+0076     txtPrp = {<span class="string">'Style'</span>,<span class="string">'text'</span>,bg,[.1 .1 .1],fg,<span class="string">'w'</span>,ha};
+0077     edtPrp = {<span class="string">'Style'</span>,<span class="string">'edit'</span>,bg,[.1 .1 .1],fg,<span class="string">'w'</span>,ha};
+0078     pTop.h = uipanel(pnlProp{:},<span class="string">'Parent'</span>,hFig);
+0079     pTop.hBehLbl=uicontrol(pTop.h,txtPrp{:},<span class="string">'Left'</span>,st,<span class="string">'behavior:'</span>);
+0080     pTop.hBh=uicontrol(pTop.h,units{:},<span class="string">'Style'</span>,<span class="string">'popupmenu'</span>,fg,<span class="string">'w'</span>,bg,<span class="string">'k'</span>,st,{<span class="string">''</span>});
+0081     pTop.hFrmLbl=uicontrol(pTop.h,txtPrp{:},<span class="string">'Left'</span>,st,<span class="string">'frame:'</span>);
+0082     pTop.hFrmInd=uicontrol(pTop.h,edtPrp{:},<span class="string">'Right'</span>);
+0083     pTop.hTmLbl=uicontrol(pTop.h,txtPrp{:},<span class="string">'Left'</span>,st,<span class="string">'time:'</span>);
+0084     pTop.hTmVal=uicontrol(pTop.h,txtPrp{:},<span class="string">'Left'</span>);
+0085     pTop.hFrmNum=uicontrol(pTop.h,txtPrp{:},<span class="string">'Left'</span>);
+0086     pTop.hPlyLbl=uicontrol(pTop.h,txtPrp{:},<span class="string">'Left'</span>,st,<span class="string">'speed:'</span>);
+0087     pTop.hPlySpd=uicontrol(pTop.h,txtPrp{:},<span class="string">'Left'</span>,st,<span class="string">'0x'</span>);
+0088     
+0089     <span class="comment">% bottom panel</span>
+0090     pBot.h=uipanel(pnlProp{:},<span class="string">'Parent'</span>,hFig); uiPr=[pBot.h,units,<span class="string">'Style'</span>];
+0091     uiButPr=[uiPr,<span class="string">'pushbutton'</span>, bg,[.9 .9 .9], fs,11, <span class="string">'FontWeight'</span>,<span class="string">'bold'</span>];
+0092     pBot.hStrm=uicontrol(uiPr{:},<span class="string">'popupmenu'</span>,fg,<span class="string">'w'</span>,bg,<span class="string">'k'</span>,st,{<span class="string">''</span>});
+0093     pBot.hBh=uicontrol(uiPr{:},<span class="string">'popupmenu'</span>,fg,<span class="string">'w'</span>,bg,<span class="string">'k'</span>,st,{<span class="string">''</span>});
+0094     pBot.hArrL=uicontrol(uiButPr{:},fg,<span class="string">'k'</span>,st,<span class="string">'&lt;&lt;'</span>);
+0095     pBot.hSl=uicontrol(uiPr{:},<span class="string">'slider'</span>,bg,<span class="string">'k'</span>);
+0096     pBot.hBar=uicontrol(uiPr{:},<span class="string">'pushbutton'</span>,<span class="string">'Enable'</span>,<span class="string">'inactive'</span>);
+0097     pBot.hArrR=uicontrol(uiButPr{:},fg,<span class="string">'k'</span>,st,<span class="string">'&gt;&gt;'</span>);
+0098     pBot.hSetL=uicontrol(uiPr{:},<span class="string">'pushbutton'</span>,fg,<span class="string">'k'</span>,bg,[.9 .9 .9],fs,8);
+0099     pBot.hSetR=uicontrol(uiPr{:},<span class="string">'pushbutton'</span>,fg,<span class="string">'k'</span>,bg,[.9 .9 .9],fs,8);
+0100     pBot.hZm=uicontrol(uiPr{:},<span class="string">'popupmenu'</span>,fg,<span class="string">'w'</span>,bg,<span class="string">'k'</span>,<span class="keyword">...</span>
+0101       st,int2str2([30 60 120 250*2.^(0:5)]),<span class="string">'Value'</span>,5);
+0102     pBot.hDel=uicontrol(uiButPr{:},fg,[.5 0 0],st,<span class="string">'X'</span>);
+0103     
+0104     <span class="comment">% icons for set region button</span>
+0105     I=ones(20,18); I(9:15,10:16)=triu(ones(7));
+0106     I(14:15,4:13)=0; I=repmat(I,[1 1 3]);
+0107     set(pBot.hSetL,<span class="string">'CData'</span>,I(:,end:-1:1,:));
+0108     set(pBot.hSetR,<span class="string">'CData'</span>,I);
+0109     
+0110     <span class="comment">% set the keyPressFcn for all focusable components (except popupmenus)</span>
+0111     set( [hFig, pMid.hSl pBot.hArrL pBot.hSl pBot.hArrR <span class="keyword">...</span>
+0112       pBot.hSetL pBot.hSetR pBot.hDel], <span class="string">'keyPressFcn'</span>,@<a href="#_sub2" class="code" title="subfunction keyPress( h, evnt )">keyPress</a> );
+0113     
+0114     <span class="comment">% create menus</span>
+0115     menu.hVid = uimenu(hFig,<span class="string">'Label'</span>,<span class="string">'Video'</span>);
+0116     menu.hVidOpn = uimenu(menu.hVid,<span class="string">'Label'</span>,<span class="string">'Open'</span>);
+0117     menu.hVidsOpn = uimenu(menu.hVid,<span class="string">'Label'</span>,<span class="string">'Open dual'</span>);
+0118     menu.hVidExp = uimenu(menu.hVid,<span class="string">'Label'</span>,<span class="string">'Export'</span>);
+0119     menu.hVidCls = uimenu(menu.hVid,<span class="string">'Label'</span>,<span class="string">'Close'</span>);
+0120     menu.hVidInf = uimenu(menu.hVid,<span class="string">'Label'</span>,<span class="string">'Info'</span>);
+0121     menu.hVidAud = uimenu(menu.hVid,<span class="string">'Label'</span>,<span class="string">'Audio'</span>);
+0122     menu.hAnn = uimenu(hFig,<span class="string">'Label'</span>,<span class="string">'Annotation'</span>);
+0123     menu.hAnnNew = uimenu(menu.hAnn,<span class="string">'Label'</span>,<span class="string">'New'</span>);
+0124     menu.hAnnOpn = uimenu(menu.hAnn,<span class="string">'Label'</span>,<span class="string">'Open'</span>);
+0125     menu.hAnnCls = uimenu(menu.hAnn,<span class="string">'Label'</span>,<span class="string">'Close'</span>);
+0126     menu.hAnnSav = uimenu(menu.hAnn,<span class="string">'Label'</span>,<span class="string">'Save'</span>);
+0127     menu.hAnnCnf = uimenu(menu.hAnn,<span class="string">'Label'</span>,<span class="string">'Config'</span>);
+0128     menu.hAnnMrg = uimenu(menu.hAnn,<span class="string">'Label'</span>,<span class="string">'Merge'</span>);
+0129     menu.hTrk = uimenu(hFig,<span class="string">'Label'</span>,<span class="string">'Tracking'</span>);
+0130     menu.hTrkOpn = uimenu(menu.hTrk,<span class="string">'Label'</span>,<span class="string">'Open'</span>);
+0131     menu.hTrkCls = uimenu(menu.hTrk,<span class="string">'Label'</span>,<span class="string">'Close'</span>);
+0132     
+0133     <span class="comment">% set hFig to visible upon completion</span>
+0134     set(hFig,<span class="string">'Visible'</span>,<span class="string">'on'</span>); drawnow;
+0135     
+0136     
+0137     <a name="_sub2" href="#_subfunctions" class="code">function keyPress( h, evnt )</a>
+0138       char=int8(evnt.Character); <span class="keyword">if</span>(isempty(char)), char=0; <span class="keyword">end</span>;
+0139       <span class="comment">% arrow keys control either video, main slider, or bottom slider</span>
+0140       <span class="keyword">if</span>( char&gt;=28 &amp;&amp; char&lt;=31 ) <span class="comment">% L/R/U/D = 28/29/30/31</span>
+0141         <span class="keyword">if</span>( h==hFig )
+0142           <span class="keyword">if</span>(char&gt;=30), flag=0; <span class="keyword">else</span> flag=double(char-28)*2-1; <span class="keyword">end</span>
+0143           dispApi.setSpeedCb(flag);
+0144         <span class="keyword">elseif</span>( h~=pBot.hSl &amp;&amp; h~=pMid.hSl )
+0145           flag = mod(double(char),2)*2-1;
+0146           annApi.setFrame(flag);
+0147         <span class="keyword">end</span>
+0148         <span class="keyword">return</span>;
+0149       <span class="keyword">end</span>
+0150       <span class="comment">% all other keys require an annotation to be loaded</span>
+0151       <span class="keyword">if</span>(isempty(A)), <span class="keyword">return</span>; <span class="keyword">end</span>; bp=[];
+0152       <span class="comment">% '-'/'=' control jumps, ','/'.' control moveLeft/Right</span>
+0153       <span class="keyword">if</span>(char==<span class="string">'-'</span>), bp=<span class="string">'prevBeh'</span>; <span class="keyword">end</span>
+0154       <span class="keyword">if</span>(char==<span class="string">'='</span>), bp=<span class="string">'nextBeh'</span>; <span class="keyword">end</span>
+0155       <span class="keyword">if</span>(char==<span class="string">','</span>), bp=<span class="string">'moveLeft'</span>; <span class="keyword">end</span>
+0156       <span class="keyword">if</span>(char==<span class="string">'.'</span>), bp=<span class="string">'moveRight'</span>; <span class="keyword">end</span>
+0157       <span class="keyword">if</span>(~isempty(bp)), annApi.buttonPress(bp); <span class="keyword">return</span>; <span class="keyword">end</span>
+0158       <span class="comment">% make bindings for behavior creation</span>
+0159       [member,type]=ismember( char, int8(A.getKeys()) );
+0160       <span class="keyword">if</span>(member), annApi.insertBh(type); <span class="keyword">return</span>; <span class="keyword">end</span>;
+0161     <span class="keyword">end</span>
+0162     
+0163     <a name="_sub3" href="#_subfunctions" class="code">function figResized( h, evnt ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0164       <span class="comment">% aspect ratio of video</span>
+0165       <span class="keyword">if</span>(isempty(dispApi)), info=[]; <span class="keyword">else</span> info=dispApi.getInfo(); <span class="keyword">end</span>
+0166       <span class="keyword">if</span>(isempty(info)), ar=4/3; <span class="keyword">else</span> ar=info.width/info.height; <span class="keyword">end</span>
+0167       <span class="comment">% enforce minimum size (min width=500+pad*2)</span>
+0168       pos=get(hFig,ps); pad=8; htBot=26; htSl=20; htTop=20;
+0169       mWd=500+pad*2; mHt=500/ar+htBot+htSl+htTop+pad*2;
+0170       <span class="keyword">persistent</span> posPrv;
+0171       <span class="keyword">if</span>(pos(3)&lt;mWd || pos(4)&lt;mHt &amp;&amp; ~isempty(posPrv))
+0172         set(hFig,ps,[posPrv(1:2) mWd mHt]); <a href="#_sub3" class="code" title="subfunction figResized( h, evnt ) ">figResized</a>(); <span class="keyword">return</span>;
+0173       <span class="keyword">end</span>; posPrv=pos;
+0174       <span class="comment">% overall layout</span>
+0175       wd=pos(3)-2*pad; ht=pos(4)-2*pad-htSl-htTop-htBot;
+0176       wd=min(wd,ht*ar); ht=min(ht,wd/ar); x=(pos(3)-wd)/2; y=pad;
+0177       set(pBot.h,ps,[x y wd htBot]); y=y+htBot;
+0178       set(pMid.hSl,ps,[x y wd htSl]); y=y+htSl;
+0179       <span class="keyword">if</span>(~isempty(pMid.hTxt)), set(pMid.hTxt,ps,[wd/2 ht]); <span class="keyword">end</span>
+0180       set(pMid.hAx,ps,[x y wd ht]); y=y+ht;
+0181       set(pTop.h,ps,[x y wd htTop]);
+0182       <span class="comment">% position stuff in top panel</span>
+0183       x=10;
+0184       set(pTop.hBehLbl,ps,[x 3 50 14]); x=x+50;
+0185       set(pTop.hBh,ps,[x 7 140 14]); x=wd-300;
+0186       set(pTop.hPlyLbl,ps,[x 3 40 14]); x=x+40;
+0187       set(pTop.hPlySpd,ps,[x 3 40 14]); x=x+40;
+0188       set(pTop.hTmLbl,ps,[x 3 30 14]); x=x+30;
+0189       set(pTop.hTmVal,ps,[x 3 45 14]); x=x+50;
+0190       set(pTop.hFrmLbl,ps,[x 3 35 14]); x=x+35;
+0191       set(pTop.hFrmInd,ps,[x 3 50 16]); x=x+50;
+0192       set(pTop.hFrmNum,ps,[x 3 60 14]);
+0193       <span class="comment">% position stuff in bottom panel</span>
+0194       x=5; wd0=wd-325;
+0195       set(pBot.hStrm,ps,[x 5 35 20]); x=x+40;
+0196       set(pBot.hBh,  ps,[x 5 85 20]); x=x+95;
+0197       set(pBot.hArrL,ps,[x 4 25 20]); x=x+25;
+0198       set(pBot.hSl, ps,[x 4 wd0 20]); x=x+wd0;
+0199       set(pBot.hArrR,ps,[x 4 25 20]); x=x+30;
+0200       set(pBot.hSetL,ps,[x 4 20 20]); x=x+20;
+0201       set(pBot.hSetR,ps,[x 4 20 20]); x=x+25;
+0202       set(pBot.hZm,  ps,[x 5 50 20]); x=x+60;
+0203       set(pBot.hDel, ps,[x 4 20 20]);
+0204       <span class="comment">% update display</span>
+0205       <span class="keyword">if</span>(~isempty(dispApi)); dispApi.requestUpdate(); <span class="keyword">end</span>;
+0206     <span class="keyword">end</span>
+0207     
+0208     <a name="_sub4" href="#_subfunctions" class="code">function exitProg( h, evnt ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0209       menuApi.vidClose();
+0210     <span class="keyword">end</span>
+0211   <span class="keyword">end</span>
+0212 
+0213   <a name="_sub5" href="#_subfunctions" class="code">function api = annMakeApi()</a>
+0214     <span class="comment">% create api</span>
+0215     clrs=[]; fM=0;
+0216     api = struct( <span class="string">'updateDisp'</span>,@<a href="#_sub7" class="code" title="subfunction updateDisp()">updateDisp</a>, <span class="string">'updateAnn'</span>,@<a href="#_sub6" class="code" title="subfunction updateAnn()">updateAnn</a>, <span class="keyword">...</span>
+0217       <span class="string">'setFrame'</span>,@<a href="#_sub9  22" class="code" title="subfunction setFrame(flag)function setFrame( curInd1, speed1, setCenter )">setFrame</a>, <span class="string">'buttonPress'</span>,@<a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>, <span class="keyword">...</span>
+0218       <span class="string">'insertBh'</span>,@<a href="#_sub11" class="code" title="subfunction insertBh( type )">insertBh</a>,<span class="string">'setCenter'</span>,@setCenter,<span class="string">'dispTrack'</span>,@<a href="#_sub13" class="code" title="subfunction hs = dispTrack( frame )">dispTrack</a> );
+0219     set( pBot.hStrm, <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>(<span class="string">'setStrm'</span>));
+0220     set( pBot.hBh,   <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>(<span class="string">'setType'</span>));
+0221     set( pBot.hSetL, <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>(<span class="string">'moveLeft'</span>));
+0222     set( pBot.hSetR, <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>(<span class="string">'moveRight'</span>));
+0223     set( pBot.hDel,  <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>(<span class="string">'delete'</span>));
+0224     set( pBot.hArrL, <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>(<span class="string">'prevBeh'</span>));
+0225     set( pBot.hArrR, <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>(<span class="string">'nextBeh'</span>));
+0226     set( pBot.hSl,   <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub9  22" class="code" title="subfunction setFrame(flag)function setFrame( curInd1, speed1, setCenter )">setFrame</a>(0));
+0227     set( pBot.hZm,   <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>(<span class="string">'setZoom'</span>));
+0228     set( pTop.hBh,   <span class="string">'callback'</span>, @(h,evnt) <a href="#_sub10" class="code" title="subfunction buttonPress( str )">buttonPress</a>(<span class="string">'gotoBeh'</span>));
+0229     
+0230     <a name="_sub6" href="#_subfunctions" class="code">function updateAnn()</a>
+0231       <span class="comment">% new annotation loaded or annotation closed</span>
+0232       isAnn=~isempty(A); <span class="keyword">if</span>(isAnn), en=<span class="string">'on'</span>; <span class="keyword">else</span> en=<span class="string">'off'</span>; <span class="keyword">end</span>;
+0233       hAll=[pTop.hBh pBot.hBh pBot.hSetL pBot.hArrL pBot.hSl <span class="keyword">...</span>
+0234         pBot.hArrR pBot.hSetR pBot.hZm pBot.hDel];
+0235       set(hAll,<span class="string">'Enable'</span>,en); set([pBot.hBar pMid.hBar],<span class="string">'Visible'</span>,en);
+0236       <span class="keyword">if</span>(~isAnn), strs={<span class="string">''</span>}; <span class="keyword">else</span> strs=A.getNames(); <span class="keyword">end</span>
+0237       set(pBot.hBh,<span class="string">'Value'</span>,1,<span class="string">'String'</span>,strs);
+0238       set(pTop.hBh,<span class="string">'Value'</span>,1,<span class="string">'String'</span>,{<span class="string">''</span>});
+0239       <span class="keyword">if</span>(~isAnn), strs={<span class="string">''</span>}; <span class="keyword">else</span> strs=int2str2(1:A.nStrm()); <span class="keyword">end</span>
+0240       set(pBot.hStrm,<span class="string">'Value'</span>,1,<span class="string">'String'</span>,strs);
+0241       <span class="keyword">if</span>(isAnn), clrs=[.3 .3 .3; uniqueColors(ceil((A.k()-1)/6),6)]; <span class="keyword">end</span>
+0242       <span class="keyword">if</span>(~isempty(pMid.hTxt)), set(pMid.hTxt,<span class="string">'String'</span>,<span class="string">''</span>); <span class="keyword">end</span>
+0243       <span class="comment">% update context menu for inserting behaviors</span>
+0244       <span class="keyword">if</span>(isAnn), ns=A.getNames(); ks=A.getKeys(); k=A.k(); <span class="keyword">else</span> k=0; <span class="keyword">end</span>
+0245       delete(pMid.hAdds); pMid.hAdds=zeros(1,k);
+0246       ls=cell(1,k); <span class="keyword">for</span> t=1:k, ls{t}=[ns{t} <span class="string">' ('</span> ks(t) <span class="string">')'</span>]; <span class="keyword">end</span>
+0247       <span class="keyword">for</span> t=1:k, pMid.hAdds(t)=uimenu(pMid.hAdd,<span class="string">'Label'</span>,ls{t}); <span class="keyword">end</span>
+0248       <span class="keyword">for</span> t=1:k, set(pMid.hAdds(t),<span class="string">'callback'</span>,@(h,e) <a href="#_sub11" class="code" title="subfunction insertBh( type )">insertBh</a>(t)); <span class="keyword">end</span>
+0249       <span class="comment">% finally update display</span>
+0250       <a href="#_sub7" class="code" title="subfunction updateDisp()">updateDisp</a>();
+0251     <span class="keyword">end</span>
+0252     
+0253     <a name="_sub7" href="#_subfunctions" class="code">function updateDisp()</a>
+0254       <span class="keyword">if</span>(isempty(A)), <span class="keyword">return</span>; <span class="keyword">end</span>
+0255       <span class="comment">% get current frame / annotation info</span>
+0256       f=dispApi.getFrame(); id=A.getId(f); type=A.getType(id); n=A.n();
+0257       nFrame=A.nFrame(); bs=A.getBnds(); ts=A.getTypes(); ns=A.getNames();
+0258       <span class="comment">% set bounds for zoomed slider</span>
+0259       h=pBot.hZm; s=get(h,<span class="string">'String'</span>); v=get(h,<span class="string">'Value'</span>); w=str2double(s{v});
+0260       fL=max(0,fM-w/2); fR=min(nFrame,fL+w); fL=max(0,fR-w);
+0261       <span class="comment">% update standard GUI controls</span>
+0262       clr={<span class="string">'ForegroundColor'</span>,clrs(type,:)};
+0263       set(pBot.hBh,<span class="string">'Value'</span>,type,clr{:}); ss=ns(ts);
+0264       <span class="keyword">for</span> i=1:n, ss{i}=sprintf(<span class="string">'%i-%i %s'</span>,bs(i)+1,bs(i+1),ss{i}); <span class="keyword">end</span>
+0265       set(pTop.hBh,<span class="string">'String'</span>,ss,<span class="string">'Value'</span>,id,clr{:});
+0266       <span class="keyword">if</span>( nFrame==1 ), set(pBot.hSl,<span class="string">'Enable'</span>,<span class="string">'off'</span>); <span class="keyword">else</span>
+0267         set(pBot.hSl,<span class="string">'Min'</span>,fL,<span class="string">'Max'</span>,fR-1,<span class="string">'Value'</span>,f,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
+0268         s=1/(fR-fL-1); set(pBot.hSl,<span class="string">'SliderStep'</span>,[s s]);
+0269       <span class="keyword">end</span>
+0270       <span class="comment">% display text label containing info about every stream</span>
+0271       strm0=get(pBot.hStrm,<span class="string">'Value'</span>); nSt=A.nStrm(); s=cell(1,nSt);
+0272       <span class="keyword">for</span> i=1:nSt, A.setStrm(i); j=A.getId(f);
+0273         s{i}=A.getName(j); <span class="keyword">if</span>(i==strm0 &amp;&amp; nSt&gt;1), s{i}=[<span class="string">'['</span> s{i} <span class="string">']'</span>]; <span class="keyword">end</span>
+0274         s{i}=[<span class="string">'\color[rgb]{'</span> num2str(clrs(A.getType(j),:)) <span class="string">'}'</span> s{i} <span class="string">' / '</span>];
+0275       <span class="keyword">end</span>
+0276       s=[s{:}]; s=s(1:end-3); s(s==<span class="string">'_'</span>)=<span class="string">'-'</span>; A.setStrm(strm0);
+0277       set(pMid.hTxt,<span class="string">'String'</span>,s);
+0278       <span class="comment">% update hBar for zoomed slider</span>
+0279       idL=A.getId(fL); idR=A.getId(fR-1);
+0280       bs1=[fL bs(idL+1:idR) fR]-fL; ts1=ts(idL:idR);
+0281       <a href="#_sub8" class="code" title="subfunction colBar( hBar, hSl, bs, ts, h, fL, fR )">colBar</a>( pBot.hBar, pBot.hSl, bs1, ts1, 4 );
+0282       <span class="comment">% update hBar for main slider</span>
+0283       <a href="#_sub8" class="code" title="subfunction colBar( hBar, hSl, bs, ts, h, fL, fR )">colBar</a>( pMid.hBar, pMid.hSl, bs, ts, 6, fL, fR );
+0284       <span class="comment">% finally backup annotation</span>
+0285       menuApi.annBackup();
+0286       
+0287       <a name="_sub8" href="#_subfunctions" class="code">function colBar( hBar, hSl, bs, ts, h, fL, fR )</a>
+0288         <span class="comment">% set position of hBar, adjust according to width of slider (8)</span>
+0289         p=get(hSl,<span class="string">'Position'</span>); w0=16; w1=(p(3)-2*w0)/(bs(end)-bs(1));
+0290         p(1)=p(1)+w0; p(2)=p(2)+p(4)-h; p(3)=p(3)-2*w0; p(4)=h;
+0291         <span class="keyword">if</span>(w1&lt;8), p(1)=p(1)+4; p(3)=p(3)+<a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(w1)-8; <span class="keyword">end</span>
+0292         set(hBar,<span class="string">'Position'</span>,p); w=ceil(p(3)); h=ceil(p(4));
+0293         <span class="comment">% get hbar image</span>
+0294         nFrame=bs(end); bs=<a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(bs/nFrame*w); I=zeros(w,1);
+0295         <span class="keyword">for</span> i1=1:length(ts), I(bs(i1)+1:bs(i1+1),:)=ts(i1); <span class="keyword">end</span>
+0296         I=permute(clrs(I,:),[3 1 2]); I=I(ones(1,h),:,:);
+0297         <span class="keyword">if</span>(nargin==7)
+0298           fL=<a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(fL/nFrame*w); fR=max(1,<a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(fR/nFrame*w));
+0299           I(:,[fL+1 fR],:)=1; I([1 end],fL+1:fR,:)=1;
+0300         <span class="keyword">end</span>
+0301         set(hBar,<span class="string">'CData'</span>,I);
+0302       <span class="keyword">end</span>
+0303     <span class="keyword">end</span>
+0304     
+0305     <a name="_sub9" href="#_subfunctions" class="code">function setFrame(flag)</a>
+0306       assert(~isempty(A)); rng=get(pBot.hSl,{<span class="string">'Min'</span>,<span class="string">'Max'</span>});
+0307       f = min(max(<a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(get(pBot.hSl,<span class="string">'Value'</span>)+flag),rng{1}),rng{2});
+0308       setCenter = (f==rng{1} &amp;&amp; f&gt;0) || (f==rng{2} &amp;&amp; f&lt;A.nFrame()-1);
+0309       set(pBot.hSl,<span class="string">'Value'</span>,f); dispApi.setFrame(f,0,setCenter);
+0310     <span class="keyword">end</span>
+0311     
+0312     <a name="_sub10" href="#_subfunctions" class="code">function buttonPress( str )</a>
+0313       assert(~isempty(A));
+0314       f=dispApi.getFrame(); id=A.getId(f);
+0315       <span class="keyword">switch</span> str
+0316         <span class="keyword">case</span> <span class="string">'setStrm'</span>
+0317           strm = get(pBot.hStrm,<span class="string">'Value'</span>);
+0318           A.setStrm(strm); dispApi.requestUpdate();
+0319         <span class="keyword">case</span> <span class="string">'setType'</span>
+0320           type = get(pBot.hBh,<span class="string">'Value'</span>);
+0321           A.setType(id,type); dispApi.requestUpdate();
+0322         <span class="keyword">case</span> <span class="string">'moveRight'</span>
+0323           <span class="keyword">if</span>(id==A.n()), <span class="keyword">return</span>; <span class="keyword">end</span> <span class="comment">%id==A.getId(get(pBot.hSl,'Max'))</span>
+0324           A.move(id+1,f+1); dispApi.requestUpdate();
+0325         <span class="keyword">case</span> <span class="string">'moveLeft'</span>
+0326           <span class="keyword">if</span>(id==1), <span class="keyword">return</span>; <span class="keyword">end</span> <span class="comment">%id==A.getId(get(pBot.hSl,'Min'))</span>
+0327           A.move(id,f); dispApi.requestUpdate();
+0328         <span class="keyword">case</span> <span class="string">'delete'</span>
+0329           A.setType(id,1); <span class="comment">%A.delete( id );</span>
+0330           dispApi.requestUpdate();
+0331         <span class="keyword">case</span> <span class="string">'prevBeh'</span>
+0332           f1=A.getStart(id); <span class="keyword">if</span>(id&gt;1 &amp;&amp; f==f1), f1=A.getStart(id-1); <span class="keyword">end</span>
+0333           dispApi.setFrame(f1,0);
+0334         <span class="keyword">case</span> <span class="string">'nextBeh'</span>
+0335           f1=A.getEnd(id); <span class="keyword">if</span>(id&lt;A.n()), f1=f1+1; <span class="keyword">end</span>
+0336           dispApi.setFrame(f1,0);
+0337         <span class="keyword">case</span> <span class="string">'setZoom'</span>
+0338           dispApi.setFrame(f,0)
+0339         <span class="keyword">case</span> <span class="string">'gotoBeh'</span>
+0340           f1=A.getStart(get(pTop.hBh,<span class="string">'Value'</span>));
+0341           dispApi.setFrame(f1,0);
+0342         <span class="keyword">otherwise</span>
+0343           assert(false);
+0344       <span class="keyword">end</span>
+0345     <span class="keyword">end</span>
+0346     
+0347     <a name="_sub11" href="#_subfunctions" class="code">function insertBh( type )</a>
+0348       <span class="keyword">if</span>(isempty(A)), <span class="keyword">return</span>; <span class="keyword">end</span>
+0349       A.add(type,dispApi.getFrame());
+0350       dispApi.requestUpdate();
+0351     <span class="keyword">end</span>
+0352     
+0353     <a name="_sub12" href="#_subfunctions" class="code">function setCenter( frame ), fM=round(frame); end</a>
+0354     
+0355     <a name="_sub13" href="#_subfunctions" class="code">function hs = dispTrack( frame )</a>
+0356       <span class="keyword">if</span>(isempty(trk)), hs=[]; <span class="keyword">return</span>; <span class="keyword">end</span>; hs0=[]; hs1=[]; hs2=[];
+0357       cols=[0 1 0; 1 0 0; 0 0 1; 1 1 0; 0 1 1; 1 0 1];
+0358       <span class="keyword">if</span>(isfield(trk,<span class="string">'bbs'</span>)) <span class="comment">% display detections</span>
+0359         bbs=trk.bbs{frame+1}; <span class="keyword">if</span>(isempty(bbs)), bbs=zeros(0,6); <span class="keyword">end</span>
+0360         bbs=bbs(bbs(:,5)&gt;0,:); n=size(bbs,1);
+0361         hs0=zeros(1,n); rPrp={<span class="string">'LineWidth'</span>,2,<span class="string">'LineStyle'</span>,<span class="string">'-'</span>,<span class="string">'EdgeColor'</span>};
+0362         <span class="keyword">if</span>(size(bbs,2)==6), is=mod(bbs(:,6)-1,6)+1; <span class="keyword">else</span> is=ones(1,n); <span class="keyword">end</span>
+0363         <span class="keyword">for</span> b=1:n, hs0(b)=rectangle(<span class="string">'Position'</span>,bbs(b,1:4),rPrp{:},<span class="keyword">...</span>
+0364             cols(is(b),:)); <span class="keyword">end</span>
+0365       <span class="keyword">end</span>
+0366       <span class="keyword">if</span>(isfield(trk,<span class="string">'Y'</span>)) <span class="comment">% display (x,y) tracking results</span>
+0367         <span class="keyword">if</span>(iscell(trk.Y)), Y=trk.Y{frame+1}; <span class="keyword">else</span> Y=trk.Y(:,:,frame+1); <span class="keyword">end</span>
+0368         <span class="keyword">if</span>(isempty(Y)), Y=zeros(0,2); <span class="keyword">end</span>; m=size(Y,1); hs1=zeros(1,m);
+0369         Y=max(Y,1); inf=dispApi.getInfo(); r=min(inf.width,inf.height)/70;
+0370         Y(:,2)=min(Y(:,2),inf.height); Y(:,1)=min(Y(:,1),inf.width);
+0371         rPrp={<span class="string">'LineWidth'</span>,2,<span class="string">'LineStyle'</span>,<span class="string">'-'</span>,<span class="string">'Curvature'</span>,[1 1],<span class="keyword">...</span>
+0372           <span class="string">'EdgeColor'</span>,<span class="string">'w'</span>,<span class="string">'FaceColor'</span>};
+0373         <span class="comment">%D=pdist2(Y,Y)+diag(nan(m,1)); close=min(D)&lt;125^2;</span>
+0374         <span class="comment">%for i=1:m, if(close(i)), cols(i,:)=max(.7,cols(i,:)); end; end</span>
+0375         <span class="keyword">for</span> i=1:m, hs1(i)=rectangle(rPrp{:},cols(i,:),<span class="keyword">...</span>
+0376             <span class="string">'Position'</span>,[Y(i,:)-r 2*r 2*r]); <span class="keyword">end</span>
+0377       <span class="keyword">end</span>
+0378       <span class="keyword">if</span>(isfield(trk,<span class="string">'E'</span>)) <span class="comment">% display ellipse tracking results</span>
+0379         <span class="keyword">if</span>(iscell(trk.E)), E=trk.E{frame+1}; <span class="keyword">else</span> E=trk.E(:,:,frame+1); <span class="keyword">end</span>
+0380         <span class="keyword">if</span>(isempty(E)), E=zeros(0,5); <span class="keyword">end</span>; m=size(E,1); hs2=zeros(3,m);
+0381         hold on; <span class="keyword">for</span> i=1:m, [hs2(1,i),hs2(2,i),hs2(3,i)]=plotEllipse(<span class="keyword">...</span>
+0382             E(i,1),E(i,2),E(i,3),E(i,4),E(i,5),cols(i,:),[],2); <span class="keyword">end</span>
+0383         hold off; hs2=hs2(:)';
+0384       <span class="keyword">end</span>
+0385       hs = [hs0 hs1 hs2];
+0386     <span class="keyword">end</span>
+0387   <span class="keyword">end</span>
+0388 
+0389   <a name="_sub14" href="#_subfunctions" class="code">function api = dispMakeApi()</a>
+0390     <span class="comment">% create api</span>
+0391     [sr, audio, info, nFrame, speed, curInd, hs, <span class="keyword">...</span>
+0392       hImg, needUpdate, prevTime, looping ]=deal([]);
+0393     api = struct( <span class="string">'setVid'</span>,@<a href="#_sub15" class="code" title="subfunction setVid( sr1 )">setVid</a>, <span class="string">'setAud'</span>,@<a href="#_sub17" class="code" title="subfunction setAud(y,fs,nb)">setAud</a>, <span class="keyword">...</span>
+0394       <span class="string">'setSpeedCb'</span>,@<a href="#_sub19" class="code" title="subfunction setSpeedCb( flag )">setSpeedCb</a>, <span class="string">'getInfo'</span>,@<a href="#_sub24" class="code" title="subfunction info1 = getInfo(), info1=info; end">getInfo</a>, <span class="keyword">...</span>
+0395       <span class="string">'getFrame'</span>,@<a href="#_sub25" class="code" title="subfunction curInd1 = getFrame(), curInd1=round(curInd); end">getFrame</a>, <span class="string">'setFrame'</span>,@<a href="#_sub9  22" class="code" title="subfunction setFrame(flag)function setFrame( curInd1, speed1, setCenter )">setFrame</a>, <span class="keyword">...</span>
+0396       <span class="string">'requestUpdate'</span>,@requestUpdate, <span class="string">'exportVid'</span>,@<a href="#_sub16" class="code" title="subfunction exportVid( nm )">exportVid</a> );
+0397     set(pMid.hSl,    <span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub21" class="code" title="subfunction setFrameCb(flag)">setFrameCb</a>(0));
+0398     set(pTop.hFrmInd,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub21" class="code" title="subfunction setFrameCb(flag)">setFrameCb</a>(1));
+0399     
+0400     <a name="_sub15" href="#_subfunctions" class="code">function setVid( sr1 )</a>
+0401       <span class="comment">% reset local variables</span>
+0402       <span class="keyword">if</span>(isstruct(sr)), sr=sr.close(); <span class="keyword">end</span>
+0403       <span class="keyword">if</span>(~isempty(hs)), delete(hs); hs=[]; <span class="keyword">end</span>
+0404       [sr, audio, info, nFrame, speed, curInd, hs, <span class="keyword">...</span>
+0405         hImg, needUpdate, prevTime, looping ]=deal([]);
+0406       sr=sr1; nFrame=0; looping=0; speed=-1; <a href="#_sub9  22" class="code" title="subfunction setFrame(flag)function setFrame( curInd1, speed1, setCenter )">setFrame</a>( 0, 0 );
+0407       <span class="comment">% update GUI</span>
+0408       <span class="keyword">if</span>(~isstruct(sr)), cla(pMid.hAx); pMid.hTxt=[]; <span class="keyword">else</span>
+0409         info=sr.getinfo(); nFrame=info.numFrames;
+0410         sr.seek(0); s=max(1e-6,1/(nFrame-1)); ss={<span class="string">'SliderStep'</span>,[s,s]};
+0411         <span class="keyword">if</span>(nFrame&gt;1), set(pMid.hSl,<span class="string">'Max'</span>,nFrame-1,ss{:}); <span class="keyword">end</span>
+0412         hImg = imshow( zeros(info.height,info.width,<span class="string">'uint8'</span>) );
+0413         set(hImg,<span class="string">'UIContextMenu'</span>,pMid.hAdd);
+0414         pMid.hTxt=text(0,0,<span class="string">''</span>,<span class="string">'FontSize'</span>,25,<span class="string">'Units'</span>,<span class="string">'pixels'</span>,<span class="keyword">...</span>
+0415           <span class="string">'HorizontalAlignment'</span>,<span class="string">'center'</span>, <span class="string">'VerticalAlignment'</span>,<span class="string">'top'</span>);
+0416         <span class="comment">%fprintf('fps of video = %f\n', info.fps); % temp display</span>
+0417       <span class="keyword">end</span>
+0418       set(pMid.hSl,<span class="string">'Value'</span>,0); v=(nFrame&gt;1)+1;
+0419       en={<span class="string">'off'</span>,<span class="string">'on'</span>}; set(pMid.hSl,<span class="string">'Enable'</span>,en{v});
+0420       en={<span class="string">'inactive'</span>,<span class="string">'on'</span>}; set(pTop.hFrmInd,<span class="string">'Enable'</span>,en{v});
+0421       set(pTop.hFrmInd,<span class="string">'String'</span>,<span class="string">'0'</span>); set(pTop.hTmVal,<span class="string">'String'</span>,<span class="string">'0:00'</span>);
+0422       set(pTop.hFrmNum,<span class="string">'String'</span>,[<span class="string">' / '</span> int2str(nFrame)]);
+0423       <span class="comment">% update display</span>
+0424       feval(get(hFig,<span class="string">'ResizeFcn'</span>));
+0425       requestUpdate();
+0426     <span class="keyword">end</span>
+0427     
+0428     <a name="_sub16" href="#_subfunctions" class="code">function exportVid( nm )</a>
+0429       <span class="comment">% prompt for range of frames to export</span>
+0430       prompt={<span class="string">'Start frame:'</span>,<span class="string">'End frame:'</span>,<span class="string">'Frame Skip'</span>,<span class="string">'Quality (0-100)'</span>};
+0431       wi=<a href="#_sub24" class="code" title="subfunction info1 = getInfo(), info1=info; end">getInfo</a>(); dfs={<span class="string">'1'</span>, num2str(wi.numFrames),<span class="string">'1'</span>,<span class="string">'80'</span>};
+0432       rng=str2double(inputdlg(prompt,<span class="string">'Select Export Range'</span>,1,dfs));
+0433       <span class="keyword">if</span>(any(isnan(rng)) || rng(1)&gt;rng(2)), error(<span class="string">'invalid range'</span>); <span class="keyword">end</span>
+0434       f0=max(1,rng(1)); f1=min(rng(2),wi.numFrames); skip=max(1,rng(3));
+0435       wi.codec=<span class="string">'jpg'</span>; wi.quality=rng(4);
+0436       <span class="keyword">try</span> <span class="comment">%#ok&lt;ALIGN&gt; % export video</span>
+0437         <span class="keyword">for</span> f=f0:skip:f1
+0438           <a href="#_sub9  22" class="code" title="subfunction setFrame(flag)function setFrame( curInd1, speed1, setCenter )">setFrame</a>(f,0); I=getframe(pMid.hAx); I=I.cdata;
+0439           c=2; I=I(1+c:end-c,1+c:end-c,:); h=size(I,1); w=size(I,2);
+0440           <span class="keyword">if</span>(f==f0), wi.height=h; wi.width=w; sw=<a href="seqIo.html" class="code" title="function out = seqIo( fName, action, varargin )">seqIo</a>(nm,<span class="string">'w'</span>,wi); <span class="keyword">end</span>
+0441           sw.addframe(I);
+0442         <span class="keyword">end</span>; sw.close();
+0443       <span class="keyword">catch</span> err, sw.close(); throw(err); <span class="keyword">end</span>
+0444     <span class="keyword">end</span>
+0445     
+0446     <a name="_sub17" href="#_subfunctions" class="code">function setAud(y,fs,nb)</a>
+0447       a = abs(1 - (length(y)/fs) / (nFrame/info.fps));
+0448       <span class="keyword">if</span>(a&gt;.01), error(<span class="string">'Audio/video mismatch.'</span>); <span class="keyword">end</span>
+0449       audio.fPlay=audioplayer(y,fs,nb);
+0450       audio.bPlay=audioplayer(flipud(y),fs,nb);
+0451       audio.fs=fs; audio.ln=length(y); <a href="#_sub20" class="code" title="subfunction setSpeed( speed1 )">setSpeed</a>(speed);
+0452       requestUpdate();
+0453     <span class="keyword">end</span>
+0454     
+0455     <a name="_sub18" href="#_subfunctions" class="code">function dispLoop()</a>
+0456       <span class="keyword">if</span>(looping), <span class="keyword">return</span>; <span class="keyword">end</span>; looping=1;
+0457       <span class="keyword">while</span>( 1 )
+0458         <span class="comment">% exit if appropriate, or if vid not loaded do nothing</span>
+0459         <span class="keyword">if</span>(~isstruct(sr) || ~isstruct(info)), looping=0; <span class="keyword">return</span>; <span class="keyword">end</span>
+0460         
+0461         <span class="comment">% stop playing video if at begin/end</span>
+0462         <span class="keyword">if</span>((speed&gt;0&amp;&amp;curInd==nFrame-1) || (speed&lt;0&amp;&amp;curInd==0))
+0463           <a href="#_sub20" class="code" title="subfunction setSpeed( speed1 )">setSpeed</a>(0); needUpdate=1;
+0464         <span class="keyword">end</span>
+0465         
+0466         <span class="comment">% increment/decrement curInd appropriately</span>
+0467         <span class="keyword">if</span>( speed~=0 )
+0468           t=clock(); eTime=etime(t,prevTime);
+0469           del = speed * max(10,info.fps) * min(.1,eTime);
+0470           <span class="keyword">if</span>( speed&gt;0 ), del=min(del, nFrame-curInd-1 ); <span class="keyword">end</span>
+0471           <span class="keyword">if</span>( speed&lt;0 ), del=max(del, -curInd ); <span class="keyword">end</span>
+0472           <a href="#_sub9  22" class="code" title="subfunction setFrame(flag)function setFrame( curInd1, speed1, setCenter )">setFrame</a>(curInd+del, speed); prevTime=t; needUpdate=1;
+0473         <span class="keyword">end</span>
+0474         
+0475         <span class="comment">% update display if necessary</span>
+0476         <span class="keyword">if</span>(~needUpdate), looping=0; <span class="keyword">return</span>; <span class="keyword">else</span>
+0477           sr.seek( <a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(curInd) ); I=sr.getframe();
+0478           <span class="keyword">if</span>(~isempty(hs)), delete(hs); hs=[]; <span class="keyword">end</span>
+0479           hs=annApi.dispTrack(<a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(curInd));
+0480           assert(~isempty(I)); set(hImg,<span class="string">'CData'</span>,I);
+0481           set(pMid.hSl,<span class="string">'Value'</span>,curInd); c=<a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(curInd/info.fps);
+0482           set(pTop.hFrmInd,<span class="string">'String'</span>,int2str(<a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(curInd+1)));
+0483           c0=floor(c/3600); c=mod(c,3600); c1=floor(c/60); c2=mod(c,60);
+0484           <span class="keyword">if</span>(~c0), set(pTop.hTmVal,<span class="string">'String'</span>,sprintf(<span class="string">'%i:%02i'</span>,c1,c2)); <span class="keyword">else</span>
+0485             set(pTop.hTmVal,<span class="string">'String'</span>,sprintf(<span class="string">'%i:%02i:%02i'</span>,c0,c1,c2)); <span class="keyword">end</span>
+0486           annApi.updateDisp(); needUpdate=false; drawnow();
+0487         <span class="keyword">end</span>
+0488       <span class="keyword">end</span>
+0489     <span class="keyword">end</span>
+0490     
+0491     <a name="_sub19" href="#_subfunctions" class="code">function setSpeedCb( flag )</a>
+0492       <span class="keyword">if</span>(~isstruct(sr)),<span class="keyword">return</span>; <span class="keyword">end</span>
+0493       <span class="keyword">if</span>( flag==0 )
+0494         <a href="#_sub20" class="code" title="subfunction setSpeed( speed1 )">setSpeed</a>( 0 );
+0495       <span class="keyword">elseif</span>( speed==0 )
+0496         <a href="#_sub20" class="code" title="subfunction setSpeed( speed1 )">setSpeed</a>( flag ); prevTime=clock();
+0497       <span class="keyword">elseif</span>( sign(speed)==flag &amp;&amp; abs(speed)&lt;2^12 )
+0498         <a href="#_sub20" class="code" title="subfunction setSpeed( speed1 )">setSpeed</a>( speed*2 );
+0499       <span class="keyword">elseif</span>( sign(speed)~=flag &amp;&amp; abs(speed)&gt;1/8 )
+0500         <a href="#_sub20" class="code" title="subfunction setSpeed( speed1 )">setSpeed</a>( speed/2 );
+0501       <span class="keyword">elseif</span>( sign(speed)~=flag )
+0502         <a href="#_sub20" class="code" title="subfunction setSpeed( speed1 )">setSpeed</a>( 0 );
+0503       <span class="keyword">end</span>
+0504       requestUpdate();
+0505     <span class="keyword">end</span>
+0506     
+0507     <a name="_sub20" href="#_subfunctions" class="code">function setSpeed( speed1 )</a>
+0508       <span class="keyword">if</span>((speed1&gt;0&amp;&amp;curInd==nFrame-1)||(speed1&lt;0&amp;&amp;curInd==0)),speed1=0;<span class="keyword">end</span>
+0509       speed=speed1; p=abs(speed); <span class="keyword">if</span>(speed&lt;0), ss=<span class="string">'-'</span>; <span class="keyword">else</span> ss=<span class="string">''</span>; <span class="keyword">end</span>
+0510       <span class="keyword">if</span>(p&lt;1 &amp;&amp; p~=0), s=[<span class="string">'1/'</span> int2str(1/p)]; <span class="keyword">else</span> s=int2str(p); <span class="keyword">end</span>
+0511       set(pTop.hPlySpd,<span class="string">'String'</span>,[ss s <span class="string">'x'</span>]);
+0512       <span class="keyword">if</span>(~isempty(audio))
+0513         stop(audio.fPlay); stop(audio.bPlay); <span class="keyword">if</span>(speed==0), <span class="keyword">return</span>; <span class="keyword">end</span>;
+0514         st=curInd/(nFrame-1); <span class="keyword">if</span>(speed&lt;0), st=1-st; <span class="keyword">end</span>; st=st*audio.ln+1;
+0515         <span class="keyword">if</span>(speed&gt;0), plr=audio.fPlay; <span class="keyword">else</span> plr=audio.bPlay; <span class="keyword">end</span>;
+0516         set(plr,<span class="string">'SampleRate'</span>,audio.fs*p); play(plr,st);
+0517       <span class="keyword">end</span>
+0518     <span class="keyword">end</span>
+0519     
+0520     <a name="_sub21" href="#_subfunctions" class="code">function setFrameCb(flag)</a>
+0521       <span class="keyword">if</span>( flag==0 )
+0522         f=<a href="#_sub12" class="code" title="subfunction setCenter( frame ), fM=round(frame); end">round</a>(get(pMid.hSl,<span class="string">'Value'</span>)); set(pMid.hSl,<span class="string">'Value'</span>,f);
+0523       <span class="keyword">elseif</span>(flag==1)
+0524         f=str2double(get(pTop.hFrmInd,<span class="string">'String'</span>));
+0525         <span class="keyword">if</span>(isnan(f)), requestUpdate(); <span class="keyword">return</span>; <span class="keyword">else</span> f=f-1; <span class="keyword">end</span>
+0526       <span class="keyword">end</span>
+0527       <a href="#_sub9  22" class="code" title="subfunction setFrame(flag)function setFrame( curInd1, speed1, setCenter )">setFrame</a>(f,0);
+0528     <span class="keyword">end</span>
+0529     
+0530     <a name="_sub22" href="#_subfunctions" class="code">function setFrame( curInd1, speed1, setCenter )</a>
+0531       curInd=max(0,min(curInd1,nFrame-1));
+0532       <span class="keyword">if</span>( speed~=speed1 ), <a href="#_sub20" class="code" title="subfunction setSpeed( speed1 )">setSpeed</a>(speed1); <span class="keyword">end</span>
+0533       <span class="keyword">if</span>(nargin&lt;3 || setCenter), annApi.setCenter(curInd); <span class="keyword">end</span>
+0534       requestUpdate();
+0535     <span class="keyword">end</span>
+0536     
+0537     <a name="_sub23" href="#_subfunctions" class="code">function requestUpdate(), needUpdate=true; dispLoop(); end</a>
+0538     
+0539     <a name="_sub24" href="#_subfunctions" class="code">function info1 = getInfo(), info1=info; end</a>
+0540     
+0541     <a name="_sub25" href="#_subfunctions" class="code">function curInd1 = getFrame(), curInd1=round(curInd); end</a>
+0542   <span class="keyword">end</span>
+0543 
+0544   <a name="_sub26" href="#_subfunctions" class="code">function api = menuMakeApi()</a>
+0545     <span class="comment">% create api</span>
+0546     [fVid, fAnn, lastSave]=deal([]);
+0547     api = struct(<span class="string">'vidClose'</span>,@<a href="#_sub28" class="code" title="subfunction vidClose()">vidClose</a>, <span class="string">'annClose'</span>,@<a href="#_sub33" class="code" title="subfunction annClose()">annClose</a>, <span class="keyword">...</span>
+0548       <span class="string">'vidOpen'</span>,@<a href="#_sub29" class="code" title="subfunction vidOpen( flag )">vidOpen</a>, <span class="string">'audOpen'</span>,@<a href="#_sub32" class="code" title="subfunction audOpen( fAud )">audOpen</a>, <span class="string">'trkOpen'</span>,@<a href="#_sub38" class="code" title="subfunction trkOpen( flag )">trkOpen</a>, <span class="keyword">...</span>
+0549       <span class="string">'annOpen'</span>,@<a href="#_sub34" class="code" title="subfunction annOpen( flag )">annOpen</a>, <span class="string">'annBackup'</span>,@<a href="#_sub37" class="code" title="subfunction annBackup()">annBackup</a> );
+0550     set(menu.hVidOpn,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub29" class="code" title="subfunction vidOpen( flag )">vidOpen</a>(1) );
+0551     set(menu.hVidsOpn,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub29" class="code" title="subfunction vidOpen( flag )">vidOpen</a>(2) );
+0552     set(menu.hVidExp,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub31" class="code" title="subfunction vidExport()">vidExport</a>() );
+0553     set(menu.hVidCls,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub28" class="code" title="subfunction vidClose()">vidClose</a>() );
+0554     set(menu.hVidInf,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub30" class="code" title="subfunction vidInfo()">vidInfo</a>() );
+0555     set(menu.hVidAud,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub32" class="code" title="subfunction audOpen( fAud )">audOpen</a>() );
+0556     set(menu.hAnnNew,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub36" class="code" title="subfunction annNew( update )">annNew</a>(0) );
+0557     set(menu.hAnnOpn,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub34" class="code" title="subfunction annOpen( flag )">annOpen</a>(0) );
+0558     set(menu.hAnnCls,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub33" class="code" title="subfunction annClose()">annClose</a>() );
+0559     set(menu.hAnnSav,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub35" class="code" title="subfunction annSave()">annSave</a>() );
+0560     set(menu.hAnnCnf,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub36" class="code" title="subfunction annNew( update )">annNew</a>(1) );
+0561     set(menu.hAnnMrg,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub34" class="code" title="subfunction annOpen( flag )">annOpen</a>(1) );
+0562     set(menu.hTrkOpn,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub38" class="code" title="subfunction trkOpen( flag )">trkOpen</a>(0) );
+0563     set(menu.hTrkCls,<span class="string">'Callback'</span>,@(h,envt) <a href="#_sub38" class="code" title="subfunction trkOpen( flag )">trkOpen</a>([]) );
+0564     
+0565     <a name="_sub27" href="#_subfunctions" class="code">function updateMenus()</a>
+0566       m=menu; <span class="keyword">if</span>(isempty(fVid)), en=<span class="string">'off'</span>; <span class="keyword">else</span> en=<span class="string">'on'</span>; <span class="keyword">end</span>
+0567       set([m.hVidExp m.hVidCls m.hVidInf m.hVidAud m.hAnnNew m.hAnnOpn <span class="keyword">...</span>
+0568         m.hTrkOpn m.hTrkCls],<span class="string">'Enable'</span>,en);
+0569       <span class="keyword">if</span>(isempty(A)), en=<span class="string">'off'</span>; <span class="keyword">else</span> en=<span class="string">'on'</span>; <span class="keyword">end</span>
+0570       set([m.hAnnSav m.hAnnCls m.hAnnCnf m.hAnnMrg],<span class="string">'Enable'</span>,en);
+0571       nm=<span class="string">'Caltech Behavior Annotator'</span>;
+0572       <span class="keyword">if</span>(~isempty(fVid)), [~,nm1]=fileparts(fVid); nm=[nm <span class="string">' - '</span> nm1]; <span class="keyword">end</span>
+0573       set(hFig,<span class="string">'Name'</span>,nm); annApi.updateAnn(); dispApi.requestUpdate();
+0574     <span class="keyword">end</span>
+0575     
+0576     <a name="_sub28" href="#_subfunctions" class="code">function vidClose()</a>
+0577       <span class="keyword">if</span>(~isempty(A)), <a href="#_sub33" class="code" title="subfunction annClose()">annClose</a>(); <span class="keyword">end</span>; <a href="#_sub38" class="code" title="subfunction trkOpen( flag )">trkOpen</a>([]);
+0578       fVid=[]; dispApi.setVid([]); <a href="#_sub27" class="code" title="subfunction updateMenus()">updateMenus</a>();
+0579     <span class="keyword">end</span>
+0580     
+0581     <a name="_sub29" href="#_subfunctions" class="code">function vidOpen( flag )</a>
+0582       <span class="keyword">if</span>(isempty(fVid)), d=<span class="string">'.'</span>; <span class="keyword">else</span> d=fileparts(fVid); <span class="keyword">end</span>
+0583       <span class="keyword">if</span>(all(ischar(flag)))
+0584         [d,f]=fileparts(flag); <span class="keyword">if</span>(isempty(d)), d=<span class="string">'.'</span>; <span class="keyword">end</span>;
+0585         d=[d <span class="string">'/'</span>]; f=[f <span class="string">'.seq'</span>]; flag=1;
+0586       <span class="keyword">elseif</span>( flag==1 )
+0587         [f,d]=uigetfile(<span class="string">'*.seq'</span>,<span class="string">'Select video'</span>,[d <span class="string">'/*.seq'</span>]);
+0588       <span class="keyword">elseif</span>( flag==2 )
+0589         [f,d]=uigetfile(<span class="string">'*.seq'</span>,<span class="string">'Select first video'</span>,[d <span class="string">'/*.seq'</span>]);
+0590         [f2,d2]=uigetfile(<span class="string">'*.seq'</span>,<span class="string">'Select second video'</span>,[d <span class="string">'/*.seq'</span>]);
+0591         <span class="keyword">if</span>( f2==0 ), <span class="keyword">return</span>; <span class="keyword">end</span>
+0592       <span class="keyword">end</span>
+0593       <span class="keyword">if</span>( f==0 ), <span class="keyword">return</span>; <span class="keyword">end</span>; <a href="#_sub28" class="code" title="subfunction vidClose()">vidClose</a>(); fVid=[d f];
+0594       <span class="keyword">try</span>
+0595         <span class="keyword">if</span>( flag==1 ), sr=<a href="seqIo.html" class="code" title="function out = seqIo( fName, action, varargin )">seqIo</a>(fVid,<span class="string">'r'</span>); <span class="keyword">else</span>
+0596           sr=<a href="seqIo.html" class="code" title="function out = seqIo( fName, action, varargin )">seqIo</a>({fVid,[d2 f2]},<span class="string">'rdual'</span>); <span class="keyword">end</span>
+0597         dispApi.setVid(sr); <a href="#_sub27" class="code" title="subfunction updateMenus()">updateMenus</a>();
+0598       <span class="keyword">catch</span> er
+0599         errordlg([<span class="string">'Failed to load: '</span> fVid <span class="string">'. '</span> er.message],<span class="string">'Error'</span>);
+0600         fVid=[]; <span class="keyword">return</span>;
+0601       <span class="keyword">end</span>
+0602     <span class="keyword">end</span>
+0603     
+0604     <a name="_sub30" href="#_subfunctions" class="code">function vidInfo()</a>
+0605       info=dispApi.getInfo(); txt=evalc(<span class="string">'disp(info);'</span>); <span class="comment">%#ok&lt;NASGU&gt;</span>
+0606       <span class="keyword">while</span>(txt(end)==10), txt=txt(1:end-1); <span class="keyword">end</span>; txt=[char([10 10]) txt];
+0607       pos=get(hFig,<span class="string">'Position'</span>); pos(1:2)=pos(1:2)+100; pos(3:4)=[400 400];
+0608       h=figure(<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="string">'Toolbar'</span>,<span class="string">'auto'</span>, <span class="keyword">...</span>
+0609         <span class="string">'Color'</span>,<span class="string">'k'</span>, <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="string">'Visible'</span>,<span class="string">'on'</span>, <span class="keyword">...</span>
+0610         <span class="string">'Name'</span>,<span class="string">''</span>, <span class="string">'Resize'</span>,<span class="string">'off'</span>,<span class="string">'Position'</span>,pos); pos(1:2)=0;
+0611       uicontrol(h,<span class="string">'Style'</span>,<span class="string">'text'</span>,<span class="string">'FontSize'</span>,10,<span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="keyword">...</span>
+0612         <span class="string">'HorizontalAlignment'</span>,<span class="string">'left'</span>,<span class="string">'Position'</span>,pos,<span class="string">'String'</span>,txt,<span class="keyword">...</span>
+0613         <span class="string">'FontName'</span>,<span class="string">'FixedWidth'</span>);
+0614     <span class="keyword">end</span>
+0615     
+0616     <a name="_sub31" href="#_subfunctions" class="code">function vidExport()</a>
+0617       assert(~isempty(fVid)); fNm=[fVid(1:end-4) <span class="string">'-copy.seq'</span>];
+0618       [f,d] = uiputfile(<span class="string">'*.seq'</span>,<span class="string">'Select export file'</span>,fNm);
+0619       <span class="keyword">if</span>(f==0), <span class="keyword">return</span>; <span class="keyword">end</span>; f=[d f];
+0620       <span class="keyword">try</span> dispApi.exportVid(f); <span class="keyword">catch</span> er
+0621         errordlg([<span class="string">'Failed to export: '</span> f <span class="string">'. '</span> er.message],<span class="string">'Error'</span>); <span class="keyword">end</span>
+0622     <span class="keyword">end</span>
+0623     
+0624     <a name="_sub32" href="#_subfunctions" class="code">function audOpen( fAud )</a>
+0625       <span class="keyword">if</span>( nargin==0 ), [f,d]=uigetfile(<span class="string">'*.wav'</span>,<span class="string">'Select audio'</span>,<span class="keyword">...</span>
+0626           [fVid(1:end-3) <span class="string">'wav'</span>]); <span class="keyword">if</span>(f==0), <span class="keyword">return</span>; <span class="keyword">end</span>; fAud=[d f]; <span class="keyword">end</span>
+0627       <span class="keyword">try</span>
+0628         [y,fs,nb]=wavread(fAud); dispApi.setAud(y,fs,nb); <span class="comment">%#ok&lt;REMFF1&gt;</span>
+0629       <span class="keyword">catch</span> er
+0630         errordlg([<span class="string">'Failed to load: '</span> fAud <span class="string">'. '</span> er.message],<span class="string">'Error'</span>);
+0631       <span class="keyword">end</span>
+0632     <span class="keyword">end</span>
+0633     
+0634     <a name="_sub33" href="#_subfunctions" class="code">function annClose()</a>
+0635       assert(~isempty(A)); qstr=<span class="string">'Save Current Annotation?'</span>;
+0636       button = questdlg(qstr,<span class="string">'Save'</span>,<span class="string">'yes'</span>,<span class="string">'no'</span>,<span class="string">'yes'</span>);
+0637       <span class="keyword">if</span>(strcmp(button,<span class="string">'yes'</span>)); <a href="#_sub35" class="code" title="subfunction annSave()">annSave</a>(); <span class="keyword">end</span>
+0638       [fAnn,A,lastSave]=deal([]); <a href="#_sub27" class="code" title="subfunction updateMenus()">updateMenus</a>();
+0639     <span class="keyword">end</span>
+0640     
+0641     <a name="_sub34" href="#_subfunctions" class="code">function annOpen( flag )</a>
+0642       assert(~isempty(fVid)); A1=A; <span class="keyword">if</span>(~isempty(A)), <a href="#_sub33" class="code" title="subfunction annClose()">annClose</a>(); <span class="keyword">end</span>; e=<span class="string">''</span>;
+0643       <span class="keyword">if</span>( all(ischar(flag)) ), f=flag; flag=0;
+0644         [d,f,e]=fileparts(f); <span class="keyword">if</span>(isempty(d)), d=<span class="string">'.'</span>; <span class="keyword">end</span>; d=[d <span class="string">'/'</span>];
+0645         <span class="keyword">if</span>(isempty(e) &amp;&amp; exist([d f <span class="string">'.txt'</span>],<span class="string">'file'</span>)), e=<span class="string">'.txt'</span>; <span class="keyword">end</span>
+0646         <span class="keyword">if</span>(isempty(e) &amp;&amp; exist([d f <span class="string">'.bAnn'</span>],<span class="string">'file'</span>)), e=<span class="string">'.bAnn'</span>; <span class="keyword">end</span>
+0647       <span class="keyword">else</span>
+0648         <span class="keyword">if</span>(isempty(fAnn)), fAnn=[fVid(1:end-3) <span class="string">'txt'</span>]; <span class="keyword">end</span>
+0649         [f,d]=uigetfile(<span class="string">'*.txt;*.bAnn'</span>,<span class="string">'Select Annotation'</span>,fAnn);
+0650       <span class="keyword">end</span>
+0651       <span class="keyword">if</span>( f==0 ), <span class="keyword">return</span>; <span class="keyword">end</span>; fAnn=[d f e];
+0652       <span class="keyword">try</span>
+0653         <span class="keyword">if</span>( flag==1 )
+0654           A=A1; assert(~isempty(A)); A.merge(fAnn);
+0655         <span class="keyword">elseif</span>( flag==0 )
+0656           A=<a href="behaviorData.html" class="code" title="function A = behaviorData( action, fName, nFrame1 )">behaviorData</a>(<span class="string">'load'</span>,fAnn);
+0657           info=dispApi.getInfo(); nFrame=info.numFrames;
+0658           <span class="keyword">if</span>(A.nFrame()~=nFrame), error(<span class="string">'Annotation/video mismatch.'</span>); <span class="keyword">end</span>
+0659         <span class="keyword">end</span>
+0660         <a href="#_sub27" class="code" title="subfunction updateMenus()">updateMenus</a>();
+0661       <span class="keyword">catch</span> er
+0662         errordlg([<span class="string">'Failed to load: '</span> fAnn <span class="string">'. '</span> er.message],<span class="string">'Error'</span>);
+0663         [fAnn,A,lastSave]=deal([]); <span class="keyword">return</span>;
+0664       <span class="keyword">end</span>
+0665     <span class="keyword">end</span>
+0666     
+0667     <a name="_sub35" href="#_subfunctions" class="code">function annSave()</a>
+0668       assert(~isempty(fVid) &amp;&amp; ~isempty(A) &amp;&amp; ~isempty(fAnn));
+0669       [f,d] = uiputfile(<span class="string">'*.txt;*.bAnn'</span>,<span class="string">'Select annotation'</span>,fAnn);
+0670       <span class="keyword">if</span>( f==0 ), <span class="keyword">return</span>; <span class="keyword">end</span>; fAnn=[d f]; A.save(fAnn);
+0671     <span class="keyword">end</span>
+0672     
+0673     <a name="_sub36" href="#_subfunctions" class="code">function annNew( update )</a>
+0674       assert(~isempty(fVid)); A1=A; <span class="keyword">if</span>(~isempty(A)), <a href="#_sub33" class="code" title="subfunction annClose()">annClose</a>(); <span class="keyword">end</span>
+0675       fNm=[fileparts(fVid) <span class="string">'/config.txt'</span>];
+0676       [f,d] = uigetfile(<span class="string">'*.txt'</span>,<span class="string">'Select config file'</span>,fNm);
+0677       <span class="keyword">if</span>( f==0 ), <span class="keyword">return</span>; <span class="keyword">end</span>; f=[d f]; fAnn=[fVid(1:end-3) <span class="string">'txt'</span>];
+0678       <span class="keyword">try</span>
+0679         <span class="keyword">if</span>( update )
+0680           A=A1; assert(~isempty(A)); A.recreate(f); <a href="#_sub27" class="code" title="subfunction updateMenus()">updateMenus</a>();
+0681         <span class="keyword">else</span>
+0682           info=dispApi.getInfo(); nFrame=info.numFrames;
+0683           A=<a href="behaviorData.html" class="code" title="function A = behaviorData( action, fName, nFrame1 )">behaviorData</a>(<span class="string">'create'</span>,f,nFrame); <a href="#_sub27" class="code" title="subfunction updateMenus()">updateMenus</a>();
+0684         <span class="keyword">end</span>
+0685       <span class="keyword">catch</span> er
+0686         errordlg(er.message, <span class="string">'File Error'</span>); A=[];
+0687       <span class="keyword">end</span>
+0688     <span class="keyword">end</span>
+0689     
+0690     <a name="_sub37" href="#_subfunctions" class="code">function annBackup()</a>
+0691       <span class="keyword">if</span>( isempty(lastSave) || etime(clock,lastSave)&gt;60 )
+0692         [d,f]=fileparts(fAnn); f=[d <span class="string">'/'</span> f <span class="string">'-backup.txt'</span>];
+0693         assert(~isempty(A)); A.save(f); lastSave=clock();
+0694       <span class="keyword">end</span>
+0695     <span class="keyword">end</span>
+0696     
+0697     <a name="_sub38" href="#_subfunctions" class="code">function trkOpen( flag )</a>
+0698       <span class="keyword">if</span>(isempty(flag)), trk=[]; dispApi.requestUpdate(); <span class="keyword">return</span>; <span class="keyword">end</span>
+0699       <span class="keyword">if</span>( all(ischar(flag)) ), f=flag; <span class="keyword">else</span> fNm=[fVid(1:end-3) <span class="string">'mat'</span>];
+0700         [f,d]=uigetfile(<span class="string">'*.mat'</span>,<span class="string">'Load Tracking'</span>,fNm); f=[d f];
+0701       <span class="keyword">end</span>
+0702       assert(~isempty(fVid)); <span class="keyword">if</span>(f==0), <span class="keyword">return</span>; <span class="keyword">end</span>
+0703       <span class="keyword">try</span>
+0704         tmp=load(f); assert(any(isfield(tmp,{<span class="string">'Y'</span>,<span class="string">'bbs'</span>,<span class="string">'E'</span>})));
+0705         <span class="keyword">if</span>(isfield(tmp,<span class="string">'Y'</span>)), trk.Y=tmp.Y; T=size(trk.Y,3);
+0706         <span class="keyword">elseif</span>(isfield(tmp,<span class="string">'bbs'</span>)), trk.bbs=tmp.bbs; T=length(trk.bbs);
+0707         <span class="keyword">elseif</span>(isfield(tmp,<span class="string">'E'</span>)), trk.E=tmp.E; T=size(trk.E,3);
+0708         <span class="keyword">end</span>
+0709         info=dispApi.getInfo(); nFrame=info.numFrames;
+0710         <span class="keyword">if</span>(T~=nFrame), error(<span class="string">'Tracking/video mismatch.'</span>); <span class="keyword">end</span>
+0711       <span class="keyword">catch</span> er
+0712         trk=[]; errordlg([<span class="string">'Failed to load: '</span> f <span class="string">'. '</span> er.message],<span class="string">'Error'</span>);
+0713       <span class="keyword">end</span>
+0714       dispApi.requestUpdate();
+0715     <span class="keyword">end</span>
+0716     
+0717   <span class="keyword">end</span>
+0718 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

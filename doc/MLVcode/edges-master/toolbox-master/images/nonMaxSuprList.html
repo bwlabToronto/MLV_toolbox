@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of nonMaxSuprList</title>
+  <meta name="keywords" content="nonMaxSuprList">
+  <meta name="description" content="Applies nonmaximal suppression to a list.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; nonMaxSuprList.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>nonMaxSuprList
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Applies nonmaximal suppression to a list.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [subs,vals,keep] = nonMaxSuprList( subs, vals, radii,thresh, maxn, flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Applies nonmaximal suppression to a list.
+
+ See nonMaxSupr for more information.  Has the same effect as nonMaxSupr
+ except it operates on a list of position/values pairs.  Running time is
+ n^2 in the number of such pairs.  For comparison running time of
+ nonMaxSupr is ord( sum( size(I,d)*radii(d) ).
+
+ This function has an additional parameter - flag. If flag==1, then all
+ locations that are not strictly the biggest in their window are
+ suppressed (ie, keeps max only if it is UNIQUE).  This can be useful for
+ large flat regions -- nonMaxSupr(ones(30),3) does no suppression since
+ all values are equal in each window, but nonMaxSuprList(ones(30),3) w
+ flag==1 suppresses all locations. If flag==2 ties are broken randomly (in
+ fact this allows for slightly faster execution).
+
+ USAGE
+  [subs,vals,keep] = nonMaxSuprList( subs, vals, radii, ...
+    [thresh], [maxn], [flag] )
+
+ INPUTS
+  subs       - subscripts of point locations (m x d)
+  vals       - values at point locations (m x 1)
+  radii      - suppression window dimensions
+  thresh     - [] minimum value below which not to look for (or [])
+  maxn       - [] return at most maxn of the largest vals
+  flag       - [] suppress equal vals (see above)
+
+ OUTPUTS
+  subs       - subscripts of non-suppressed point locations (n x d)
+  vals       - values at non-suppressed point locations (n x 1)
+  keep       - indicies of kept locations from subs (n x 1)
+
+ EXAMPLE
+
+ See also SUBSTOARRAY, <a href="nonMaxSupr.html" class="code" title="function [subs,vals] = nonMaxSupr( I, radii, thresh, maxn )">NONMAXSUPR</a>, <a href="nonMaxSuprWin.html" class="code" title="function [subs,vals,keepLocs] = nonMaxSuprWin( subs, vals,strLocs, endLocs, thresh, maxn )">NONMAXSUPRWIN</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.12
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [subs,vals,keep] = nonMaxSuprList( subs, vals, radii, </a><span class="keyword">...</span>
+0002   thresh, maxn, flag)
+0003 <span class="comment">% Applies nonmaximal suppression to a list.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% See nonMaxSupr for more information.  Has the same effect as nonMaxSupr</span>
+0006 <span class="comment">% except it operates on a list of position/values pairs.  Running time is</span>
+0007 <span class="comment">% n^2 in the number of such pairs.  For comparison running time of</span>
+0008 <span class="comment">% nonMaxSupr is ord( sum( size(I,d)*radii(d) ).</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% This function has an additional parameter - flag. If flag==1, then all</span>
+0011 <span class="comment">% locations that are not strictly the biggest in their window are</span>
+0012 <span class="comment">% suppressed (ie, keeps max only if it is UNIQUE).  This can be useful for</span>
+0013 <span class="comment">% large flat regions -- nonMaxSupr(ones(30),3) does no suppression since</span>
+0014 <span class="comment">% all values are equal in each window, but nonMaxSuprList(ones(30),3) w</span>
+0015 <span class="comment">% flag==1 suppresses all locations. If flag==2 ties are broken randomly (in</span>
+0016 <span class="comment">% fact this allows for slightly faster execution).</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% USAGE</span>
+0019 <span class="comment">%  [subs,vals,keep] = nonMaxSuprList( subs, vals, radii, ...</span>
+0020 <span class="comment">%    [thresh], [maxn], [flag] )</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% INPUTS</span>
+0023 <span class="comment">%  subs       - subscripts of point locations (m x d)</span>
+0024 <span class="comment">%  vals       - values at point locations (m x 1)</span>
+0025 <span class="comment">%  radii      - suppression window dimensions</span>
+0026 <span class="comment">%  thresh     - [] minimum value below which not to look for (or [])</span>
+0027 <span class="comment">%  maxn       - [] return at most maxn of the largest vals</span>
+0028 <span class="comment">%  flag       - [] suppress equal vals (see above)</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% OUTPUTS</span>
+0031 <span class="comment">%  subs       - subscripts of non-suppressed point locations (n x d)</span>
+0032 <span class="comment">%  vals       - values at non-suppressed point locations (n x 1)</span>
+0033 <span class="comment">%  keep       - indicies of kept locations from subs (n x 1)</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% EXAMPLE</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% See also SUBSTOARRAY, NONMAXSUPR, NONMAXSUPRWIN</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.12</span>
+0040 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0041 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0042 
+0043 <span class="keyword">if</span>( nargin&lt;4 || isempty(thresh)); thresh=[]; <span class="keyword">end</span>;
+0044 <span class="keyword">if</span>( nargin&lt;5 || isempty(maxn)); maxn=0; <span class="keyword">end</span>;
+0045 <span class="keyword">if</span>( nargin&lt;6 || isempty(flag)); flag=0; <span class="keyword">end</span>;
+0046 
+0047 vals=vals(:); siz=max(subs,[],1); nvals=length(vals); d=size(subs,2);
+0048 <span class="keyword">if</span>(nvals==0 &amp;&amp; isempty(subs)), keep=[]; <span class="keyword">return</span>; <span class="keyword">end</span>
+0049 [radii,er] = checkNumArgs( radii, size(siz), -1, 1 ); error(er);
+0050 
+0051 <span class="comment">% CAN ADD RECURSION TO SIGNIFICANTLY SPEED IT UP (under certain assump)</span>
+0052 <span class="comment">% simply divide into 2 equal regions, (plus 3rd overlap region) using</span>
+0053 <span class="comment">% nonMaxSuprWin.  then &amp; keep results from all 3.</span>
+0054 <span class="keyword">if</span>( nvals&gt;5000 ); error(<span class="string">'Input too large - use nonMaxSupr.'</span>); <span class="keyword">end</span>;
+0055 
+0056 <span class="comment">% sort according to vals</span>
+0057 <span class="keyword">if</span>(flag==2), vals1=vals+randn(nvals,1)/10000; <span class="keyword">else</span> vals1=vals; <span class="keyword">end</span>
+0058 [~,ord]=sort(vals1,<span class="string">'descend'</span>); [~,unord]=sort(ord);
+0059 vals0=vals; subs0=subs; vals=vals(ord); subs=subs(ord,:);
+0060 
+0061 <span class="comment">% discard vals below thresh</span>
+0062 <span class="keyword">if</span>(~isempty(thresh))
+0063   nvalsd=sum(vals&lt;=thresh); nvals=nvals-nvalsd;
+0064   vals=vals(1:nvals); subs=subs(1:nvals,:);
+0065   <span class="keyword">if</span>(nvals==0), keep=zeros(nvalsd,1); <span class="keyword">return</span>; <span class="keyword">end</span>
+0066 <span class="keyword">end</span>
+0067 
+0068 <span class="comment">% suppress each element that has a larger neighboring element</span>
+0069 <span class="comment">% close(i,j)=1 -&gt; i,j neighbors, bigger(i,j) -&gt; vals(i)&gt;vals(j)</span>
+0070 nOnes=ones(1,nvals); close=true(nvals,nvals);
+0071 <span class="keyword">for</span> i=1:d
+0072   subsi=subs(:,i); subsi=subsi(:,nOnes);
+0073   close = close &amp; abs(subsi-subsi')&lt;=radii(i);
+0074 <span class="keyword">end</span>
+0075 <span class="keyword">if</span>(flag==2), bigger=triu(ones(nvals),1); <span class="keyword">else</span>
+0076   bigger=vals(:,nOnes); bigger=bigger'-bigger;
+0077   <span class="keyword">if</span>(flag), bigger=bigger&lt;=0 &amp; ~eye(nvals); <span class="keyword">else</span> bigger=bigger&lt;0; <span class="keyword">end</span>
+0078 <span class="keyword">end</span>
+0079 keep = ~any(close &amp; bigger)';
+0080 
+0081 <span class="comment">% suppress all but the first maxn elements</span>
+0082 <span class="keyword">if</span>(~isempty(maxn) &amp;&amp; maxn&gt;0), keep(cumsum(keep)&gt;maxn)=0; <span class="keyword">end</span>
+0083 
+0084 <span class="comment">% adjust to original order, then discard all vals/subs not in keep</span>
+0085 <span class="keyword">if</span>(~isempty(thresh)), keep=[keep; false(nvalsd,1)]; <span class="keyword">end</span>
+0086 vals=vals0; subs=subs0; keep=keep(unord);
+0087 vals = vals(keep); subs = subs(keep,:);</pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

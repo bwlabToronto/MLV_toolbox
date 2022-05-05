@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of distMatrixShow</title>
+  <meta name="keywords" content="distMatrixShow">
+  <meta name="description" content="Useful visualization of a distance matrix of clustered points.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">classify</a> &gt; distMatrixShow.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\classify&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>distMatrixShow
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Useful visualization of a distance matrix of clustered points.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [D, Dsm] = distMatrixShow( D, IDX, show ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Useful visualization of a distance matrix of clustered points.
+
+ D is sorted into k blocks, where the ith block contains all the points in
+ cluster i. When D is displayed the blocks are shown explicitly.  Hence
+ for a good clustering (under a spherical gaussian assumption) the
+ 'diagonal' blocks ought to be mostly dark, and all other block ought to be
+ relatively white.  One can thus quickly visualize the quality of the
+ clustering, or even how clusterable the points are.  Outliers (according
+ to IDX) are removed from D.
+
+ USAGE
+  [D, Dsm] = distMatrixShow( D, IDX, [show] )
+
+ INPUTS
+  D       - nxn distance matrix
+  IDX     - cluster membership [see kmeans2.m]
+  show    - [1] will display results in figure(show)
+
+ OUTPUTS
+  D       - sorted nxn distance matrix
+  Dsm     - sorted and smoothed nxn distance matrix
+
+ EXAMPLE
+  % not the best example since points are already ordered
+  [X,IDX] = demoGenData(100,0,5,2,10,2,0);
+  distMatrixShow( pdist2(X,X), IDX );
+
+ See also <a href="visualizeData.html" class="code" title="function visualizeData( X, k, IDX, types, C )">VISUALIZEDATA</a>, <a href="kmeans2.html" class="code" title="function [ IDX, C, d ] = kmeans2( X, k, varargin )">KMEANS2</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="demoCluster.html" class="code" title="">demoCluster</a>	Clustering demo.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [D, Dsm] = distMatrixShow( D, IDX, show )</a>
+0002 <span class="comment">% Useful visualization of a distance matrix of clustered points.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% D is sorted into k blocks, where the ith block contains all the points in</span>
+0005 <span class="comment">% cluster i. When D is displayed the blocks are shown explicitly.  Hence</span>
+0006 <span class="comment">% for a good clustering (under a spherical gaussian assumption) the</span>
+0007 <span class="comment">% 'diagonal' blocks ought to be mostly dark, and all other block ought to be</span>
+0008 <span class="comment">% relatively white.  One can thus quickly visualize the quality of the</span>
+0009 <span class="comment">% clustering, or even how clusterable the points are.  Outliers (according</span>
+0010 <span class="comment">% to IDX) are removed from D.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% USAGE</span>
+0013 <span class="comment">%  [D, Dsm] = distMatrixShow( D, IDX, [show] )</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% INPUTS</span>
+0016 <span class="comment">%  D       - nxn distance matrix</span>
+0017 <span class="comment">%  IDX     - cluster membership [see kmeans2.m]</span>
+0018 <span class="comment">%  show    - [1] will display results in figure(show)</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% OUTPUTS</span>
+0021 <span class="comment">%  D       - sorted nxn distance matrix</span>
+0022 <span class="comment">%  Dsm     - sorted and smoothed nxn distance matrix</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% EXAMPLE</span>
+0025 <span class="comment">%  % not the best example since points are already ordered</span>
+0026 <span class="comment">%  [X,IDX] = demoGenData(100,0,5,2,10,2,0);</span>
+0027 <span class="comment">%  distMatrixShow( pdist2(X,X), IDX );</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% See also VISUALIZEDATA, KMEANS2</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0032 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0033 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0034 
+0035 <span class="keyword">if</span>( nargin&lt;3 || isempty(show) ); show=1; <span class="keyword">end</span>
+0036 
+0037 k = max(IDX);
+0038 n = size(D,1);
+0039 
+0040 <span class="comment">%%% remove outliers from D and IDX</span>
+0041 inliers = IDX&gt;0;
+0042 D = D( inliers, inliers );
+0043 IDX = IDX( inliers );
+0044 
+0045 <span class="comment">%%% get order of points and rearrange D and IDX</span>
+0046 order = IDX2order( IDX );
+0047 IDX = IDX( order );
+0048 D = D( order, order );
+0049 
+0050 <span class="comment">%%% compute smoothed version of D</span>
+0051 cnts = zeros(1,k); <span class="keyword">for</span> i=1:k; cnts(i)=sum(IDX==i); <span class="keyword">end</span>
+0052 cumCnts = cumsum(cnts);  cumCnts2=[0 cumCnts];  Dsm = D;
+0053 inds = 1:k; inds = inds( cnts&gt;0 );
+0054 <span class="keyword">for</span> i=inds
+0055   rs = cumCnts2(i)+1:cumCnts2(i+1);
+0056   <span class="keyword">for</span> j=inds
+0057     cs = cumCnts2(j)+1:cumCnts2(j+1);
+0058     ds = D( rs, cs  );
+0059     Dsm( rs, cs ) = mean(ds(:));
+0060   <span class="keyword">end</span>;
+0061 <span class="keyword">end</span>;
+0062 
+0063 <span class="comment">%%% show D and lines seperating super clusters.</span>
+0064 <span class="keyword">if</span>(show)
+0065   figure(show); clf;
+0066   subplot(1,2,1); im(D); hold(<span class="string">'on'</span>)
+0067   <span class="keyword">for</span> i=1:k-1
+0068     line( [.5,n+.5], [cumCnts(i)+.5,cumCnts(i)+.5] );
+0069     line( [cumCnts(i)+.5,cumCnts(i)+.5], [.5,n+.5] );
+0070   <span class="keyword">end</span>;
+0071   hold(<span class="string">'off'</span>);
+0072   subplot(1,2,2); im( Dsm );
+0073 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

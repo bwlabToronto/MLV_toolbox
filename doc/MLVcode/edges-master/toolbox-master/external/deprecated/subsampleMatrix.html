@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of subsampleMatrix</title>
+  <meta name="keywords" content="subsampleMatrix">
+  <meta name="description" content="Samples elements of X so result uses at most maxMegs megabytes of memory.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; subsampleMatrix.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>subsampleMatrix
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Samples elements of X so result uses at most maxMegs megabytes of memory.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [X,keeplocs] = subsampleMatrix( X, maxMegs ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Samples elements of X so result uses at most maxMegs megabytes of memory.
+
+ If X is m+1 dimensional, say of size [d1 x d2 x...x dm x n], each [d1 x
+ d2 x...x dm] element is treated as one observation, and X is treated as
+ having n such observations.  The subsampling then occurs over the last
+ dimension n.  Different types of arrays require different amounts of
+ memory.  Each double requries 8 bytes of memory, hence an array with
+ 1.024 million elements of type double requires 8MB memory.  Each uint8
+ requires 1 byte, so the same size array would require 1MB.  Note that
+ when saved to .mat files arrays may take up more or less memory (due to
+ compression, etc.)
+ Different from Matlab randsample !
+
+ Note, to see how much memory a variable x is using in memory, use:
+  s=whos('x'); mb=s.bytes/2^20
+
+ USAGE
+  [X,keeplocs] = subsampleMatrix( X, maxMegs )
+
+ INPUTS
+  X         - [d1 x ... x dm x n], treated as n [d1 x ... x dm] elements
+  maxMegs   - maximum number of megs Xsam is allowed to take up
+
+ OUTPUTS
+  Xsam      - [d1 x ... x dm x n'] (n'&lt;=n) Xsam=X(:,..,:,keeplocs);
+  keeplocs  - vector of indicies kept from X;
+
+ EXAMPLE
+  % Xsam should have size: 1024xround(1024/10)
+  X = uint8(ones(2^10,2^10));
+  Xsam = subsampleMatrix( X, 1/10 );
+  % Xsam should have size: 100x10x~(1000/8)
+  X = rand(100,10,1000);
+  Xsam = subsampleMatrix( X, 1 );
+
+ See Also
+
+ Piotr's Image&amp;Video Toolbox      Version 2.0
+ Copyright 2012 Piotr Dollar.  [pdollar-at-caltech.edu]
+ Please email me if you find bugs, or have suggestions or questions!
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [X,keeplocs] = subsampleMatrix( X, maxMegs )</a>
+0002 <span class="comment">% Samples elements of X so result uses at most maxMegs megabytes of memory.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% If X is m+1 dimensional, say of size [d1 x d2 x...x dm x n], each [d1 x</span>
+0005 <span class="comment">% d2 x...x dm] element is treated as one observation, and X is treated as</span>
+0006 <span class="comment">% having n such observations.  The subsampling then occurs over the last</span>
+0007 <span class="comment">% dimension n.  Different types of arrays require different amounts of</span>
+0008 <span class="comment">% memory.  Each double requries 8 bytes of memory, hence an array with</span>
+0009 <span class="comment">% 1.024 million elements of type double requires 8MB memory.  Each uint8</span>
+0010 <span class="comment">% requires 1 byte, so the same size array would require 1MB.  Note that</span>
+0011 <span class="comment">% when saved to .mat files arrays may take up more or less memory (due to</span>
+0012 <span class="comment">% compression, etc.)</span>
+0013 <span class="comment">% Different from Matlab randsample !</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Note, to see how much memory a variable x is using in memory, use:</span>
+0016 <span class="comment">%  s=whos('x'); mb=s.bytes/2^20</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% USAGE</span>
+0019 <span class="comment">%  [X,keeplocs] = subsampleMatrix( X, maxMegs )</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% INPUTS</span>
+0022 <span class="comment">%  X         - [d1 x ... x dm x n], treated as n [d1 x ... x dm] elements</span>
+0023 <span class="comment">%  maxMegs   - maximum number of megs Xsam is allowed to take up</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% OUTPUTS</span>
+0026 <span class="comment">%  Xsam      - [d1 x ... x dm x n'] (n'&lt;=n) Xsam=X(:,..,:,keeplocs);</span>
+0027 <span class="comment">%  keeplocs  - vector of indicies kept from X;</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% EXAMPLE</span>
+0030 <span class="comment">%  % Xsam should have size: 1024xround(1024/10)</span>
+0031 <span class="comment">%  X = uint8(ones(2^10,2^10));</span>
+0032 <span class="comment">%  Xsam = subsampleMatrix( X, 1/10 );</span>
+0033 <span class="comment">%  % Xsam should have size: 100x10x~(1000/8)</span>
+0034 <span class="comment">%  X = rand(100,10,1000);</span>
+0035 <span class="comment">%  Xsam = subsampleMatrix( X, 1 );</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% See Also</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 2.0</span>
+0040 <span class="comment">% Copyright 2012 Piotr Dollar.  [pdollar-at-caltech.edu]</span>
+0041 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0042 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0043 
+0044 siz = size( X );  nd = ndims(X);
+0045 inds={<span class="string">':'</span>};  inds=inds(:,ones(1,nd-1));
+0046 n=siz(end);   m=prod(siz(1:end-1));
+0047 
+0048 <span class="comment">% get the number of elements of X that fit per meg</span>
+0049 s=whos(<span class="string">'X'</span>); nbytes=s.bytes/numel(X);
+0050 elsPerMeg = 2^20 / nbytes / m;
+0051 
+0052 <span class="comment">% sample if necessary</span>
+0053 memUsed = n / elsPerMeg;
+0054 <span class="keyword">if</span>( memUsed &gt; maxMegs )
+0055   nKeep = max(1,round(maxMegs*elsPerMeg));
+0056   keeplocs = randperm(n);
+0057   keeplocs = keeplocs(1:nKeep);
+0058   X = X( inds{:}, keeplocs );
+0059 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

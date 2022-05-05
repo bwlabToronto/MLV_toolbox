@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of fevalImages</title>
+  <meta name="keywords" content="fevalImages">
+  <meta name="description" content="Used to apply the same operation to all images in given directory.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; fevalImages.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>fevalImages
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Used to apply the same operation to all images in given directory.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function X = fevalImages( fHandle, prms, srcDir, name, ext,nStr, nEnd, nDigits ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Used to apply the same operation to all images in given directory.
+
+ For each image in  srcDir, loads the image, applies the function in
+ fHandle and stores the result.  The result x=fHandle(I,prms{:}) on the
+ ith image is stored in X(:,...:,i).  If the size of x depends on the size
+ of I, then all images in the directory must have the same size.  Also I
+ may have a different format depending on how it is stored on disk -
+ example: MxN for grayscale, MxNx3 for RGB, MxNx4 for CMYK. This function
+ is similar to fevalArrays, except instead of operating on images in
+ memory it operates on images on disk.  For long operations shows progress
+ info.
+
+ The srcDir must contain nothing but images.  Either the images follow no
+ naming convention, or they follow a very rigid naming convention that
+ consists of a string followed by an nDigits number specifying the image
+ number, followed by an extension.  The advantage of the more rigid naming
+ convention is that it allows a certain range of images to be operated on,
+ specified by [nStr,nEnd]. For example, to operate on images
+ &quot;rats0003.tif ... rats0113.tif&quot; in directory '../rats/' use:
+  fevalImages( fHandle, prms, '../rats/', 'rats' , 'tif', 3, 113, 4 );
+ If the parameter name is specified ('rats' in the example above), the
+ rigid naming convention is assumed.  All further input arguments are
+ optional. imwrite2 writes images in the format described above.
+
+ A limitation of fevalImages is that it does not pass state information
+ to fHandle.  For example, fHandle may want to know how many times it's
+ been  called. This can be overcome by saving state information inside
+ fHandle using 'persistent' variables.  For an example see imwrite2 (which
+ uses persistent variables with fevalArrays).
+
+ USAGE
+  X = fevalImages( fHandle, prms, srcDir, [name], [ext],
+                    [nStr], [nEnd], [nDigits] )
+
+ INPUTS
+  fHandle   - function to apply to each image [see above]
+  prms      - cell array of additional parameters to fHandle (may be {} )
+  srcDir    - directory containing images
+  name      - [] base name of images
+  ext       - [] extension of image
+  nStr      - [] image number on which to start
+  nEnd      - [] image number on which to end
+  nDigits   - [] number of digits for filename index
+
+ OUTPUTS
+  X        - output array [see above]
+
+ EXAMPLE
+  % reads in all images in directory (note that fHandle is identity):
+  X = fevalImages( @(x) x, {}, srcDir );
+  % reads in different sized images into cell array:
+  X = fevalImages( @(x) {x}, {}, srcDir );
+  % reads in all images converting to grayscale:
+  X = fevalImages( @(x) rgb2gray(x), {}, srcDir );
+
+ See also <a href="fevalArrays.html" class="code" title="function B = fevalArrays( A, fHandle, varargin )">FEVALARRAYS</a>, IMWRITE2, PERSISTENT, <a href="ticStatus.html" class="code" title="function id = ticStatus( msg, updateFreq, updateMinT, erasePrev )">TICSTATUS</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.40
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="int2str2.html" class="code" title="function nstr = int2str2( n, nDigits )">int2str2</a>	Convert integer to string of given length; improved version of int2str.</li><li><a href="ticStatus.html" class="code" title="function id = ticStatus( msg, updateFreq, updateMinT, erasePrev )">ticStatus</a>	Used to display the progress of a long process.</li><li><a href="tocStatus.html" class="code" title="function tocStatus( id, fracDone )">tocStatus</a>	Used to display the progress of a long process.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function X = fevalImages( fHandle, prms, srcDir, name, ext, </a><span class="keyword">...</span>
+0002   nStr, nEnd, nDigits )
+0003 <span class="comment">% Used to apply the same operation to all images in given directory.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% For each image in  srcDir, loads the image, applies the function in</span>
+0006 <span class="comment">% fHandle and stores the result.  The result x=fHandle(I,prms{:}) on the</span>
+0007 <span class="comment">% ith image is stored in X(:,...:,i).  If the size of x depends on the size</span>
+0008 <span class="comment">% of I, then all images in the directory must have the same size.  Also I</span>
+0009 <span class="comment">% may have a different format depending on how it is stored on disk -</span>
+0010 <span class="comment">% example: MxN for grayscale, MxNx3 for RGB, MxNx4 for CMYK. This function</span>
+0011 <span class="comment">% is similar to fevalArrays, except instead of operating on images in</span>
+0012 <span class="comment">% memory it operates on images on disk.  For long operations shows progress</span>
+0013 <span class="comment">% info.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% The srcDir must contain nothing but images.  Either the images follow no</span>
+0016 <span class="comment">% naming convention, or they follow a very rigid naming convention that</span>
+0017 <span class="comment">% consists of a string followed by an nDigits number specifying the image</span>
+0018 <span class="comment">% number, followed by an extension.  The advantage of the more rigid naming</span>
+0019 <span class="comment">% convention is that it allows a certain range of images to be operated on,</span>
+0020 <span class="comment">% specified by [nStr,nEnd]. For example, to operate on images</span>
+0021 <span class="comment">% &quot;rats0003.tif ... rats0113.tif&quot; in directory '../rats/' use:</span>
+0022 <span class="comment">%  fevalImages( fHandle, prms, '../rats/', 'rats' , 'tif', 3, 113, 4 );</span>
+0023 <span class="comment">% If the parameter name is specified ('rats' in the example above), the</span>
+0024 <span class="comment">% rigid naming convention is assumed.  All further input arguments are</span>
+0025 <span class="comment">% optional. imwrite2 writes images in the format described above.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% A limitation of fevalImages is that it does not pass state information</span>
+0028 <span class="comment">% to fHandle.  For example, fHandle may want to know how many times it's</span>
+0029 <span class="comment">% been  called. This can be overcome by saving state information inside</span>
+0030 <span class="comment">% fHandle using 'persistent' variables.  For an example see imwrite2 (which</span>
+0031 <span class="comment">% uses persistent variables with fevalArrays).</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% USAGE</span>
+0034 <span class="comment">%  X = fevalImages( fHandle, prms, srcDir, [name], [ext],</span>
+0035 <span class="comment">%                    [nStr], [nEnd], [nDigits] )</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% INPUTS</span>
+0038 <span class="comment">%  fHandle   - function to apply to each image [see above]</span>
+0039 <span class="comment">%  prms      - cell array of additional parameters to fHandle (may be {} )</span>
+0040 <span class="comment">%  srcDir    - directory containing images</span>
+0041 <span class="comment">%  name      - [] base name of images</span>
+0042 <span class="comment">%  ext       - [] extension of image</span>
+0043 <span class="comment">%  nStr      - [] image number on which to start</span>
+0044 <span class="comment">%  nEnd      - [] image number on which to end</span>
+0045 <span class="comment">%  nDigits   - [] number of digits for filename index</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% OUTPUTS</span>
+0048 <span class="comment">%  X        - output array [see above]</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">% EXAMPLE</span>
+0051 <span class="comment">%  % reads in all images in directory (note that fHandle is identity):</span>
+0052 <span class="comment">%  X = fevalImages( @(x) x, {}, srcDir );</span>
+0053 <span class="comment">%  % reads in different sized images into cell array:</span>
+0054 <span class="comment">%  X = fevalImages( @(x) {x}, {}, srcDir );</span>
+0055 <span class="comment">%  % reads in all images converting to grayscale:</span>
+0056 <span class="comment">%  X = fevalImages( @(x) rgb2gray(x), {}, srcDir );</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">% See also FEVALARRAYS, IMWRITE2, PERSISTENT, TICSTATUS</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.40</span>
+0061 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0062 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0063 
+0064 narginchk( 3, 8 );
+0065 
+0066 <span class="comment">%%% Check if srcDir is valid and add '/' at end if needed</span>
+0067 <span class="keyword">if</span>( ~isempty(srcDir) )
+0068   <span class="keyword">if</span>(~exist(srcDir,<span class="string">'dir'</span>))
+0069     error( [<span class="string">'fevalImages: directory '</span> srcDir <span class="string">' not found'</span> ] ); <span class="keyword">end</span>;
+0070   <span class="keyword">if</span>( srcDir(end)~=<span class="string">'\'</span> &amp;&amp; srcDir(end)~=<span class="string">'/'</span> ); srcDir(end+1) = <span class="string">'/'</span>; <span class="keyword">end</span>;
+0071 <span class="keyword">end</span>
+0072 
+0073 <span class="comment">%%% get appropriate filenames</span>
+0074 <span class="keyword">if</span>( nargin&lt;=3 ) <span class="comment">% no convention followed</span>
+0075   dirCont = dir(srcDir); dirCont = dirCont(3:end);
+0076   filenames = {dirCont.name}; n = length(dirCont);
+0077 <span class="keyword">else</span> <span class="comment">% strict convention followed</span>
+0078   <span class="keyword">if</span>( nargin&lt;8 || isempty(nDigits) || isunix )
+0079     dirCont = dir([srcDir name <span class="string">'*.'</span> ext]);
+0080   <span class="keyword">else</span>
+0081     dirCont = dir([srcDir name repmat(<span class="string">'?'</span>,[1 nDigits]) <span class="string">'.'</span> ext <span class="string">'*'</span> ]);
+0082   <span class="keyword">end</span>;
+0083   filenames = {dirCont.name};
+0084   n = length(dirCont);
+0085   <span class="keyword">if</span>( n==0 ); error( [<span class="string">'No images found in '</span> srcDir] ); <span class="keyword">end</span>;
+0086   <span class="keyword">if</span>( nargin&lt;5 || isempty(ext));
+0087     ext=dirCont(1).name; ext=ext(end-2:end);
+0088   <span class="keyword">end</span>;
+0089   <span class="keyword">if</span>( nargin&lt;6 || isempty(nStr)); nStr = 0; <span class="keyword">end</span>;
+0090   <span class="keyword">if</span>( nargin&lt;7 || isempty(nEnd)); nEnd = n-1+nStr; <span class="keyword">end</span>;
+0091   <span class="keyword">if</span>( nargin&lt;8 || isempty(nDigits))
+0092     nDigits = length(dirCont(1).name)-length(ext)-1-length(name); <span class="keyword">end</span>;
+0093   n = nEnd-nStr+1;
+0094 <span class="keyword">end</span>;
+0095 <span class="keyword">if</span>( n==0 ); X=[]; <span class="keyword">return</span>; <span class="keyword">end</span>;
+0096 
+0097 <span class="comment">%%% load each image and apply func</span>
+0098 ticId = <a href="ticStatus.html" class="code" title="function id = ticStatus( msg, updateFreq, updateMinT, erasePrev )">ticStatus</a>(<span class="string">'fevalImages'</span>,[],40);
+0099 <span class="keyword">for</span> i=1:n
+0100   <span class="comment">% load image</span>
+0101   <span class="keyword">if</span>( nargin==3 )
+0102     I = imread( [srcDir filenames{i}] );
+0103   <span class="keyword">else</span>
+0104     nstr = <a href="int2str2.html" class="code" title="function nstr = int2str2( n, nDigits )">int2str2</a>( i+nStr-1, nDigits );
+0105     <span class="keyword">try</span>
+0106       I = imread([srcDir name nstr <span class="string">'.'</span> ext ] );
+0107     <span class="keyword">catch</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+0108       error( [<span class="string">'Unable to read image: '</span> srcDir name nstr <span class="string">'.'</span> ext] );
+0109     <span class="keyword">end</span>;
+0110   <span class="keyword">end</span>
+0111   
+0112   <span class="comment">% apply fHandle to I</span>
+0113   x = feval( fHandle, I, prms{:} );
+0114   <span class="keyword">if</span> (i==1)
+0115     ndx = ndims(x);
+0116     <span class="keyword">if</span>(ndx==2 &amp;&amp; size(x,2)==1); ndx=1; <span class="keyword">end</span>;
+0117     onesNdx = ones(1,ndx);
+0118     X = repmat( x, [onesNdx,n] );
+0119     indsX = {<span class="string">':'</span>}; indsX = indsX(onesNdx);
+0120   <span class="keyword">else</span>
+0121     X(indsX{:},i) = x;
+0122   <span class="keyword">end</span>;
+0123   <a href="tocStatus.html" class="code" title="function tocStatus( id, fracDone )">tocStatus</a>( ticId, i/n );
+0124 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

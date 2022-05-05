@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of acfDetect</title>
+  <meta name="keywords" content="acfDetect">
+  <meta name="description" content="Run aggregate channel features object detector on given image(s).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">detector</a> &gt; acfDetect.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\detector&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>acfDetect
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Run aggregate channel features object detector on given image(s).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function bbs = acfDetect( I, detector, fileName ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Run aggregate channel features object detector on given image(s).
+
+ The input 'I' can either be a single image (or filename) or a cell array
+ of images (or filenames). In the first case, the return is a set of bbs
+ where each row has the format [x y w h score] and score is the confidence
+ of detection. If the input is a cell array, the output is a cell array
+ where each element is a set of bbs in the form above (in this case a
+ parfor loop is used to speed execution). If 'fileName' is specified, the
+ bbs are saved to a comma separated text file and the output is set to
+ bbs=1. If saving detections for multiple images the output is stored in
+ the format [imgId x y w h score] and imgId is a one-indexed image id.
+
+ A cell of detectors trained with the same channels can be specified,
+ detected bbs from each detector are concatenated. If using multiple
+ detectors and opts.pNms.separate=1 then each bb has a sixth element
+ bbType=j, where j is the j-th detector, see bbNms.m for details.
+
+ USAGE
+  bbs = acfDetect( I, detector, [fileName] )
+
+ INPUTS
+  I          - input image(s) of filename(s) of input image(s)
+  detector   - detector(s) trained via acfTrain
+  fileName   - [] target filename (if specified return is 1)
+
+ OUTPUTS
+  bbs        - [nx5] array of bounding boxes or cell array of bbs
+
+ EXAMPLE
+
+ See also <a href="acfTrain.html" class="code" title="function detector = acfTrain( varargin )">acfTrain</a>, <a href="acfModify.html" class="code" title="function detector = acfModify( detector, varargin )">acfModify</a>, bbGt&gt;loadAll, <a href="bbNms.html" class="code" title="function bbs = bbNms( bbs, varargin )">bbNms</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.40
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="bbNms.html" class="code" title="function bbs = bbNms( bbs, varargin )">bbNms</a>	Bounding box (bb) non-maximal suppression (nms).</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="acfDemoCal.html" class="code" title="">acfDemoCal</a>	Demo for aggregate channel features object detector on Caltech dataset.</li><li><a href="acfDemoInria.html" class="code" title="">acfDemoInria</a>	Demo for aggregate channel features object detector on Inria dataset.</li><li><a href="acfTest.html" class="code" title="function [miss,roc,gt,dt] = acfTest( varargin )">acfTest</a>	Test aggregate channel features object detector given ground truth.</li><li><a href="acfTrain.html" class="code" title="function detector = acfTrain( varargin )">acfTrain</a>	Train aggregate channel features object detector.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function bbs = acfDetectImg( I, detector )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function bbs = acfDetect( I, detector, fileName )</a>
+0002 <span class="comment">% Run aggregate channel features object detector on given image(s).</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% The input 'I' can either be a single image (or filename) or a cell array</span>
+0005 <span class="comment">% of images (or filenames). In the first case, the return is a set of bbs</span>
+0006 <span class="comment">% where each row has the format [x y w h score] and score is the confidence</span>
+0007 <span class="comment">% of detection. If the input is a cell array, the output is a cell array</span>
+0008 <span class="comment">% where each element is a set of bbs in the form above (in this case a</span>
+0009 <span class="comment">% parfor loop is used to speed execution). If 'fileName' is specified, the</span>
+0010 <span class="comment">% bbs are saved to a comma separated text file and the output is set to</span>
+0011 <span class="comment">% bbs=1. If saving detections for multiple images the output is stored in</span>
+0012 <span class="comment">% the format [imgId x y w h score] and imgId is a one-indexed image id.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% A cell of detectors trained with the same channels can be specified,</span>
+0015 <span class="comment">% detected bbs from each detector are concatenated. If using multiple</span>
+0016 <span class="comment">% detectors and opts.pNms.separate=1 then each bb has a sixth element</span>
+0017 <span class="comment">% bbType=j, where j is the j-th detector, see bbNms.m for details.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% USAGE</span>
+0020 <span class="comment">%  bbs = acfDetect( I, detector, [fileName] )</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% INPUTS</span>
+0023 <span class="comment">%  I          - input image(s) of filename(s) of input image(s)</span>
+0024 <span class="comment">%  detector   - detector(s) trained via acfTrain</span>
+0025 <span class="comment">%  fileName   - [] target filename (if specified return is 1)</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% OUTPUTS</span>
+0028 <span class="comment">%  bbs        - [nx5] array of bounding boxes or cell array of bbs</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% EXAMPLE</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% See also acfTrain, acfModify, bbGt&gt;loadAll, bbNms</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.40</span>
+0035 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0036 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0037 
+0038 <span class="comment">% run detector on every image</span>
+0039 <span class="keyword">if</span>(nargin&lt;3), fileName=<span class="string">''</span>; <span class="keyword">end</span>; multiple=iscell(I);
+0040 <span class="keyword">if</span>(~isempty(fileName) &amp;&amp; exist(fileName,<span class="string">'file'</span>)), bbs=1; <span class="keyword">return</span>; <span class="keyword">end</span>
+0041 <span class="keyword">if</span>(~multiple), bbs=<a href="#_sub1" class="code" title="subfunction bbs = acfDetectImg( I, detector )">acfDetectImg</a>(I,detector); <span class="keyword">else</span>
+0042   n=length(I); bbs=cell(n,1);
+0043   parfor i=1:n, bbs{i}=<a href="#_sub1" class="code" title="subfunction bbs = acfDetectImg( I, detector )">acfDetectImg</a>(I{i},detector); <span class="keyword">end</span>
+0044 <span class="keyword">end</span>
+0045 
+0046 <span class="comment">% write results to disk if fileName specified</span>
+0047 <span class="keyword">if</span>(isempty(fileName)), <span class="keyword">return</span>; <span class="keyword">end</span>
+0048 d=fileparts(fileName); <span class="keyword">if</span>(~isempty(d)&amp;&amp;~exist(d,<span class="string">'dir'</span>)), mkdir(d); <span class="keyword">end</span>
+0049 <span class="keyword">if</span>( multiple ) <span class="comment">% add image index to each bb and flatten result</span>
+0050   <span class="keyword">for</span> i=1:n, bbs{i}=[ones(size(bbs{i},1),1)*i bbs{i}]; <span class="keyword">end</span>
+0051   bbs=cell2mat(bbs);
+0052 <span class="keyword">end</span>
+0053 dlmwrite(fileName,bbs); bbs=1;
+0054 
+0055 <span class="keyword">end</span>
+0056 
+0057 <a name="_sub1" href="#_subfunctions" class="code">function bbs = acfDetectImg( I, detector )</a>
+0058 <span class="comment">% Run trained sliding-window object detector on given image.</span>
+0059 Ds=detector; <span class="keyword">if</span>(~iscell(Ds)), Ds={Ds}; <span class="keyword">end</span>; nDs=length(Ds);
+0060 opts=Ds{1}.opts; pPyramid=opts.pPyramid; pNms=opts.pNms;
+0061 imreadf=opts.imreadf; imreadp=opts.imreadp;
+0062 shrink=pPyramid.pChns.shrink; pad=pPyramid.pad;
+0063 separate=nDs&gt;1 &amp;&amp; isfield(pNms,<span class="string">'separate'</span>) &amp;&amp; pNms.separate;
+0064 <span class="comment">% read image and compute features (including optionally applying filters)</span>
+0065 <span class="keyword">if</span>(all(ischar(I))), I=feval(imreadf,I,imreadp{:}); <span class="keyword">end</span>
+0066 P=chnsPyramid(I,pPyramid); bbs=cell(P.nScales,nDs);
+0067 <span class="keyword">if</span>(isfield(opts,<span class="string">'filters'</span>) &amp;&amp; ~isempty(opts.filters)), shrink=shrink*2;
+0068   <span class="keyword">for</span> i=1:P.nScales, fs=opts.filters; C=repmat(P.data{i},[1 1 size(fs,4)]);
+0069     <span class="keyword">for</span> j=1:size(C,3), C(:,:,j)=conv2(C(:,:,j),fs(:,:,j),<span class="string">'same'</span>); <span class="keyword">end</span>
+0070     P.data{i}=imResample(C,.5);
+0071   <span class="keyword">end</span>
+0072 <span class="keyword">end</span>
+0073 <span class="comment">% apply sliding window classifiers</span>
+0074 <span class="keyword">for</span> i=1:P.nScales
+0075   <span class="keyword">for</span> j=1:nDs, opts=Ds{j}.opts;
+0076     modelDsPad=opts.modelDsPad; modelDs=opts.modelDs;
+0077     bb = acfDetect1(P.data{i},Ds{j}.clf,shrink,<span class="keyword">...</span>
+0078       modelDsPad(1),modelDsPad(2),opts.stride,opts.cascThr);
+0079     shift=(modelDsPad-modelDs)/2-pad;
+0080     bb(:,1)=(bb(:,1)+shift(2))/P.scaleshw(i,2);
+0081     bb(:,2)=(bb(:,2)+shift(1))/P.scaleshw(i,1);
+0082     bb(:,3)=modelDs(2)/P.scales(i);
+0083     bb(:,4)=modelDs(1)/P.scales(i);
+0084     <span class="keyword">if</span>(separate), bb(:,6)=j; <span class="keyword">end</span>; bbs{i,j}=bb;
+0085   <span class="keyword">end</span>
+0086 <span class="keyword">end</span>; bbs=cat(1,bbs{:});
+0087 <span class="keyword">if</span>(~isempty(pNms)), bbs=<a href="bbNms.html" class="code" title="function bbs = bbNms( bbs, varargin )">bbNms</a>(bbs,pNms); <span class="keyword">end</span>
+0088 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeJunctionAnglesTypes</title>
+  <meta name="keywords" content="computeJunctionAnglesTypes">
+  <meta name="description" content="Junctions = computeJunctionAnglesTypes(Junctions,vecLD)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; computeJunctionAnglesTypes.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>computeJunctionAnglesTypes
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Junctions = computeJunctionAnglesTypes(Junctions,vecLD)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function Junctions = computeJunctionAnglesTypes(Junctions,vecLD) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Junctions = computeJunctionAnglesTypes(Junctions,vecLD)
+       computes the types and angles for the Junctions and adds them
+       to the Junctions data structure.
+
+ Input:
+   Junctions - the detected and cleaned up junctions
+   vecLD - the line drawing image for looking up line orientations and
+   lengths.
+
+ Return:
+   Junctions - the same junctions with fields types, minAngle and maxAngle added
+                junction type based on maxAngle a, one of 
+                'T': T junction - three segments: 160 &lt; a &lt; 200
+                'Arrow': arrow juctions - three segments: a &gt; 200
+                'Y': Y junctions - three segments: a &lt; 160
+                'X': X junctions - four segments: 0 &lt; a &lt; 150
+                'L': L junctions - two segments
+                'Star': Star junctions - more than four segments</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>	vecLD = computeJunctions(vecLD)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)</a>
+0002 <span class="comment">% Junctions = computeJunctionAnglesTypes(Junctions,vecLD)</span>
+0003 <span class="comment">%       computes the types and angles for the Junctions and adds them</span>
+0004 <span class="comment">%       to the Junctions data structure.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input:</span>
+0007 <span class="comment">%   Junctions - the detected and cleaned up junctions</span>
+0008 <span class="comment">%   vecLD - the line drawing image for looking up line orientations and</span>
+0009 <span class="comment">%   lengths.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Return:</span>
+0012 <span class="comment">%   Junctions - the same junctions with fields types, minAngle and maxAngle added</span>
+0013 <span class="comment">%                junction type based on maxAngle a, one of</span>
+0014 <span class="comment">%                'T': T junction - three segments: 160 &lt; a &lt; 200</span>
+0015 <span class="comment">%                'Arrow': arrow juctions - three segments: a &gt; 200</span>
+0016 <span class="comment">%                'Y': Y junctions - three segments: a &lt; 160</span>
+0017 <span class="comment">%                'X': X junctions - four segments: 0 &lt; a &lt; 150</span>
+0018 <span class="comment">%                'L': L junctions - two segments</span>
+0019 <span class="comment">%                'Star': Star junctions - more than four segments</span>
+0020 
+0021 Thresh = 2; <span class="comment">% threshold (in pixels) for when to consider a point to be on the junction</span>
+0022 Thresh2 = Thresh * Thresh;
+0023 
+0024 removeJunctions = [];
+0025 
+0026 <span class="keyword">for</span> j = 1:length(Junctions)
+0027     junctionOris = []; <span class="comment">% collecting the orientations of all line segments involved in the junction</span>
+0028     p = Junctions(j).position;
+0029     <span class="keyword">for</span> s = 1:numel(Junctions(j).segmentIDs)
+0030         thisC = Junctions(j).contourIDs(s);
+0031         thisS = Junctions(j).segmentIDs(s);
+0032 
+0033         <span class="comment">% the coordinates of the segment we care about here.</span>
+0034         thisSeg = vecLD.contours{thisC}(thisS,:);
+0035         dist1 = sum((p - thisSeg(1:2)).^2);
+0036         dist2 = sum((p - thisSeg(3:4)).^2);
+0037 
+0038         <span class="keyword">if</span> dist1 &lt; Thresh2   <span class="comment">% the start point of this segment is near the junction point</span>
+0039             junctionOris(end+1) = mod(vecLD.orientations{thisC}(thisS),360);
+0040 
+0041             <span class="comment">% if there is a previous segment, it should be taken into account</span>
+0042             <span class="keyword">if</span> thisS &gt; 1
+0043                 <span class="comment">% make sure we don't already have this segment</span>
+0044                 <span class="keyword">if</span> ~any((Junctions(j).contourIDs == thisC) &amp; (Junctions(j).segmentIDs == thisS-1))
+0045                     Junctions(j).contourIDs(end+1) = thisC;
+0046                     Junctions(j).segmentIDs(end+1) = thisS-1;
+0047 
+0048                     <span class="comment">% add the engle of this segment - need to turn by 180</span>
+0049                     <span class="comment">% becasue the junciton psotion is now near the end point of the segment</span>
+0050                     junctionOris(end+1) = mod(vecLD.orientations{thisC}(thisS-1)+180,360);
+0051                 <span class="keyword">end</span>
+0052             <span class="keyword">end</span>
+0053 
+0054         <span class="keyword">elseif</span> dist2 &lt; Thresh2   <span class="comment">% the end point of this segment is near the junction point</span>
+0055             junctionOris(end+1) = mod(vecLD.orientations{thisC}(thisS)+180,360);  <span class="comment">% need to rotate by 180 degrees</span>
+0056 
+0057             <span class="comment">% if there is a subsequent segment, it should be taken into account</span>
+0058             <span class="keyword">if</span> thisS &lt; size(vecLD.contours{thisC},1)
+0059                 <span class="keyword">if</span> ~any((Junctions(j).contourIDs == thisC) &amp; (Junctions(j).segmentIDs == thisS+1))
+0060                     Junctions(j).contourIDs(end+1) = thisC;
+0061                     Junctions(j).segmentIDs(end+1) = thisS+1;
+0062                     junctionOris(end+1) = mod(vecLD.orientations{thisC}(thisS+1),360);
+0063                 <span class="keyword">end</span>
+0064             <span class="keyword">end</span>
+0065                 
+0066 
+0067         <span class="keyword">else</span>
+0068             <span class="comment">% both end points of the segment are far away from the junction point - need</span>
+0069             <span class="comment">% to split the segment and compute the orientations of both fractions</span>
+0070             junctionOris(end+1) = mod(atan2d((p(2)-thisSeg(2)),(p(1)-thisSeg(1))),360);
+0071             junctionOris(end+1) = mod(atan2d((p(2)-thisSeg(4)),(p(1)-thisSeg(3))),360);
+0072         <span class="keyword">end</span>
+0073     <span class="keyword">end</span>
+0074 
+0075     <span class="comment">% sorting orientations to identify neighboring segments</span>
+0076     junctionOris = sort(junctionOris,<span class="string">'ascend'</span>);
+0077 
+0078     <span class="comment">% compute the difference in orientation between neighboring segments</span>
+0079     Junctions(j).angles = mod((junctionOris([2:<span class="keyword">end</span>,1]) - junctionOris),360);
+0080     Junctions(j).minAngle = min(Junctions(j).angles);
+0081     Junctions(j).maxAngle = max(Junctions(j).angles);
+0082 
+0083     <span class="comment">% Now label the junction types</span>
+0084     <span class="keyword">switch</span> numel(Junctions(j).angles)
+0085         <span class="keyword">case</span> 2
+0086             <span class="comment">%Junctions(j).type = 'L';</span>
+0087             <span class="comment">% These would be L juntions, but we don't detect these because</span>
+0088             <span class="comment">% they would occur at each point where one line segment ends</span>
+0089             <span class="comment">% and the next segment starts.</span>
+0090             removeJunctions = [removeJunctions,j];
+0091 
+0092         <span class="keyword">case</span> 3
+0093             <span class="keyword">if</span> Junctions(j).maxAngle &lt; 160
+0094                 Junctions(j).type = <span class="string">'Y'</span>;
+0095             <span class="keyword">elseif</span> Junctions(j).maxAngle &lt;= 200
+0096                 Junctions(j).type = <span class="string">'T'</span>;
+0097             <span class="keyword">else</span>
+0098                 Junctions(j).type = <span class="string">'Arrow'</span>;
+0099             <span class="keyword">end</span>
+0100 
+0101         <span class="keyword">case</span> 4
+0102             Junctions(j).type = <span class="string">'X'</span>;
+0103             
+0104         <span class="keyword">otherwise</span>
+0105             Junctions(j).type = <span class="string">'Star'</span>;
+0106     <span class="keyword">end</span>
+0107 <span class="keyword">end</span>
+0108 Junctions = Junctions(setdiff([1:length(Junctions)],removeJunctions));</pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

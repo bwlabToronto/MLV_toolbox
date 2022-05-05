@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getDistanceFromLineSegment</title>
+  <meta name="keywords" content="getDistanceFromLineSegment">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; getDistanceFromLineSegment.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>getDistanceFromLineSegment
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function d = getDistanceFromLineSegment(XY) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="breakToLineSegments.html" class="code" title="function [lineSegs,dists,scores] = breakToLineSegments(XY)">breakToLineSegments</a>	</li><li><a href="mergeLineSegments.html" class="code" title="function vecLD = mergeLineSegments(vecLD,threshParam)">mergeLineSegments</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function d = getDistanceFromLineSegment(XY)</a>
+0002 <span class="keyword">if</span> size(XY,1) &lt;=2
+0003     d = 0;
+0004 <span class="keyword">else</span>
+0005     x1 = XY(1,1);
+0006     y1 = XY(1,2);
+0007     x2 = XY(<span class="keyword">end</span>,1);
+0008     y2 = XY(<span class="keyword">end</span>,2);
+0009     mx = x1-x2;
+0010     my = y1-y2;
+0011     a = 1;
+0012     n = size(XY,1);
+0013     total_d = 0;
+0014     <span class="keyword">if</span> my ~=0
+0015         b = -mx/my;
+0016         c = -(x1+b*y1);
+0017 
+0018         <span class="keyword">for</span> i = 2:n-1
+0019             x0 = XY(i,1);
+0020             y0 = XY(i,2);
+0021             d = abs(a*x0+b*y0+c)/sqrt(a*a+b*b);
+0022             total_d = total_d + d;
+0023         <span class="keyword">end</span>
+0024     <span class="keyword">else</span>
+0025         <span class="keyword">for</span> i = 2:n-1
+0026             y0 = XY(i,2);
+0027             total_d = total_d + abs(y0-y1);
+0028         <span class="keyword">end</span>
+0029     <span class="keyword">end</span>
+0030     d = total_d/(n-2);
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

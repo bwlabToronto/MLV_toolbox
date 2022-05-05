@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getargs</title>
+  <meta name="keywords" content="getargs">
+  <meta name="description" content="Utility to process parameter name/value pairs.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; getargs.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>getargs
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Utility to process parameter name/value pairs.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [emsg,varargout]=getargs(pnames,dflts,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Utility to process parameter name/value pairs.
+
+ DEPRECATED -- ONLY USED BY KMEANS2?  SHOULD BE REMOVED.
+ USE GETPARAMDEFAULTS INSTEAD.
+
+ Based on code fromt Matlab Statistics Toolobox's &quot;private/statgetargs.m&quot;
+
+ [EMSG,A,B,...]=GETARGS(PNAMES,DFLTS,'NAME1',VAL1,'NAME2',VAL2,...)
+ accepts a cell array PNAMES of valid parameter names, a cell array DFLTS
+ of default values for the parameters named in PNAMES, and additional
+ parameter name/value pairs.  Returns parameter values A,B,... in the same
+ order as the names in PNAMES.  Outputs corresponding to entries in PNAMES
+ that are not specified in the name/value pairs are set to the
+ corresponding value from DFLTS.  If nargout is equal to length(PNAMES)+1,
+ then unrecognized name/value pairs are an error.  If nargout is equal to
+ length(PNAMES)+2, then all unrecognized name/value pairs are returned in
+ a single cell array following any other outputs.
+
+ EMSG is empty if the arguments are valid, or the text of an error message
+ if an error occurs.  GETARGS does not actually throw any errors, but
+ rather returns an error message so that the caller may throw the error.
+ Outputs will be partially processed after an error occurs.
+
+ USAGE
+  [emsg,varargout]=getargs(pnames,dflts,varargin)
+
+ INPUTS
+  pnames     - cell of valid parameter names
+  dflts      - cell of default parameter values
+  varargin   - list of proposed name / value pairs
+
+ OUTPUTS
+  emsg       - error msg - '' if no error
+  varargout  - list of assigned name / value pairs
+
+ EXAMPLE
+  pnames = {'color' 'linestyle', 'linewidth'};  dflts  = { 'r','_','1'};
+  v = {'linew' 2 'nonesuch' [1 2 3] 'linestyle' ':'};
+  [emsg,color,linestyle,linewidth,unrec] = getargs(pnames,dflts,v{:}) % ok
+  [emsg,color,linestyle,linewidth] = getargs(pnames,dflts,v{:})    % err
+
+ See also GETPARAMDEFAULTS</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Utility to process parameter name/value pairs.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% DEPRECATED -- ONLY USED BY KMEANS2?  SHOULD BE REMOVED.</span>
+0004 <span class="comment">% USE GETPARAMDEFAULTS INSTEAD.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Based on code fromt Matlab Statistics Toolobox's &quot;private/statgetargs.m&quot;</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% [EMSG,A,B,...]=GETARGS(PNAMES,DFLTS,'NAME1',VAL1,'NAME2',VAL2,...)</span>
+0009 <span class="comment">% accepts a cell array PNAMES of valid parameter names, a cell array DFLTS</span>
+0010 <span class="comment">% of default values for the parameters named in PNAMES, and additional</span>
+0011 <span class="comment">% parameter name/value pairs.  Returns parameter values A,B,... in the same</span>
+0012 <span class="comment">% order as the names in PNAMES.  Outputs corresponding to entries in PNAMES</span>
+0013 <span class="comment">% that are not specified in the name/value pairs are set to the</span>
+0014 <span class="comment">% corresponding value from DFLTS.  If nargout is equal to length(PNAMES)+1,</span>
+0015 <span class="comment">% then unrecognized name/value pairs are an error.  If nargout is equal to</span>
+0016 <span class="comment">% length(PNAMES)+2, then all unrecognized name/value pairs are returned in</span>
+0017 <span class="comment">% a single cell array following any other outputs.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% EMSG is empty if the arguments are valid, or the text of an error message</span>
+0020 <span class="comment">% if an error occurs.  GETARGS does not actually throw any errors, but</span>
+0021 <span class="comment">% rather returns an error message so that the caller may throw the error.</span>
+0022 <span class="comment">% Outputs will be partially processed after an error occurs.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% USAGE</span>
+0025 <span class="comment">%  [emsg,varargout]=getargs(pnames,dflts,varargin)</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% INPUTS</span>
+0028 <span class="comment">%  pnames     - cell of valid parameter names</span>
+0029 <span class="comment">%  dflts      - cell of default parameter values</span>
+0030 <span class="comment">%  varargin   - list of proposed name / value pairs</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% OUTPUTS</span>
+0033 <span class="comment">%  emsg       - error msg - '' if no error</span>
+0034 <span class="comment">%  varargout  - list of assigned name / value pairs</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% EXAMPLE</span>
+0037 <span class="comment">%  pnames = {'color' 'linestyle', 'linewidth'};  dflts  = { 'r','_','1'};</span>
+0038 <span class="comment">%  v = {'linew' 2 'nonesuch' [1 2 3] 'linestyle' ':'};</span>
+0039 <span class="comment">%  [emsg,color,linestyle,linewidth,unrec] = getargs(pnames,dflts,v{:}) % ok</span>
+0040 <span class="comment">%  [emsg,color,linestyle,linewidth] = getargs(pnames,dflts,v{:})    % err</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% See also GETPARAMDEFAULTS</span>
+0043 
+0044 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 1.5</span>
+0045 <span class="comment">% Written and maintained by Piotr Dollar    pdollar-at-cs.ucsd.edu</span>
+0046 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0047 
+0048 <a name="_sub0" href="#_subfunctions" class="code">function [emsg,varargout]=getargs(pnames,dflts,varargin)</a>
+0049 
+0050 wid = sprintf(<span class="string">'Images:%s:obsoleteFunction'</span>,mfilename);
+0051 warning(wid,[ <span class="string">'%s is obsolete in Piotr''s toolbox.\n It will be '</span> <span class="keyword">...</span>
+0052   <span class="string">'removed in the next version of the toolbox.'</span>],upper(mfilename));
+0053 
+0054 <span class="comment">% We always create (nparams+1) outputs:</span>
+0055 <span class="comment">%    one for emsg</span>
+0056 <span class="comment">%    nparams varargs for values corresponding to names in pnames</span>
+0057 <span class="comment">% If they ask for one more (nargout == nparams+2), it's for unrecognized</span>
+0058 <span class="comment">% names/values</span>
+0059 emsg = <span class="string">''</span>;
+0060 nparams = length(pnames);
+0061 varargout = dflts;
+0062 unrecog = {};
+0063 nargs = length(varargin);
+0064 
+0065 <span class="comment">% Must have name/value pairs</span>
+0066 <span class="keyword">if</span> mod(nargs,2)~=0
+0067   emsg = sprintf(<span class="string">'Wrong number of arguments.'</span>);
+0068 <span class="keyword">else</span>
+0069   <span class="comment">% Process name/value pairs</span>
+0070   <span class="keyword">for</span> j=1:2:nargs
+0071     pname = varargin{j};
+0072     <span class="keyword">if</span> ~ischar(pname)
+0073       emsg = sprintf(<span class="string">'Parameter name must be text.'</span>);
+0074       <span class="keyword">break</span>;
+0075     <span class="keyword">end</span>
+0076     i = strmatch(lower(pname),lower(pnames));
+0077     <span class="keyword">if</span> isempty(i)
+0078       <span class="comment">% if they've asked to get back unrecognized names/values, add this</span>
+0079       <span class="comment">% one to the list</span>
+0080       <span class="keyword">if</span> nargout &gt; nparams+1
+0081         unrecog((end+1):(end+2)) = {varargin{j} varargin{j+1}};
+0082         <span class="comment">% otherwise, it's an error</span>
+0083       <span class="keyword">else</span>
+0084         emsg = sprintf(<span class="string">'Invalid parameter name:  %s.'</span>,pname);
+0085         <span class="keyword">break</span>;
+0086       <span class="keyword">end</span>
+0087     <span class="keyword">elseif</span> length(i)&gt;1
+0088       emsg = sprintf(<span class="string">'Ambiguous parameter name:  %s.'</span>,pname);
+0089       <span class="keyword">break</span>;
+0090     <span class="keyword">else</span>
+0091       varargout{i} = varargin{j+1};
+0092     <span class="keyword">end</span>
+0093   <span class="keyword">end</span>
+0094 <span class="keyword">end</span>
+0095 varargout{nparams+1} = unrecog;</pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

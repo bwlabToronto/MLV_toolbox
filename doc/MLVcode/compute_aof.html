@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of compute_aof</title>
+  <meta name="keywords" content="compute_aof">
+  <meta name="description" content="Copyright Morteza Rezanejad">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; compute_aof.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>compute_aof
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Copyright Morteza Rezanejad</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function fluxImage = compute_aof(D ,IDX,sphere_points,epsilon) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Copyright Morteza Rezanejad
+ McGill University, Montreal, QC 2019
+
+ Contact: morteza [at] cim [dot] mcgill [dot] ca 
+ -------------------------------------------------------------------------
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
+ -------------------------------------------------------------------------
+ Skeletonization package from earlier work of Morteza Rezanejad
+ Check the https://github.com/mrezanejad/AOFSkeletons</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="extract2DSkeletonFromBinaryImage.html" class="code" title="function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)">extract2DSkeletonFromBinaryImage</a>	Copyright Morteza Rezanejad</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Copyright Morteza Rezanejad</span>
+0002 <span class="comment">% McGill University, Montreal, QC 2019</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Contact: morteza [at] cim [dot] mcgill [dot] ca</span>
+0005 <span class="comment">% -------------------------------------------------------------------------</span>
+0006 <span class="comment">% This program is free software: you can redistribute it and/or modify</span>
+0007 <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0008 <span class="comment">% the Free Software Foundation, either version 3 of the License, or</span>
+0009 <span class="comment">% (at your option) any later version.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+0012 <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0013 <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0014 <span class="comment">% GNU General Public License for more details.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0017 <span class="comment">% along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+0018 <span class="comment">% -------------------------------------------------------------------------</span>
+0019 <span class="comment">% Skeletonization package from earlier work of Morteza Rezanejad</span>
+0020 <span class="comment">% Check the https://github.com/mrezanejad/AOFSkeletons</span>
+0021 
+0022 <a name="_sub0" href="#_subfunctions" class="code">function fluxImage = compute_aof(D ,IDX,sphere_points,epsilon)</a>
+0023 
+0024 
+0025 
+0026 <span class="comment">%initialize Q</span>
+0027 [m,n] = size(D);
+0028 nOfSamples = size(sphere_points,1);
+0029 
+0030 <span class="comment">%for each point on the sphere create the normal vector</span>
+0031 normals = zeros(size(sphere_points));
+0032 fluxImage = zeros(m,n);
+0033 
+0034 <span class="keyword">for</span> t = 1 : nOfSamples
+0035     normals(t,:) = sphere_points(t,:);
+0036 <span class="keyword">end</span>
+0037 
+0038 <span class="comment">%scale sphere_points by its radius (epsilon)</span>
+0039 sphere_points = sphere_points * epsilon;
+0040 
+0041 <span class="keyword">for</span> i = 1 : m
+0042     <span class="keyword">for</span> j = 1 : n       
+0043             flux_value = 0;
+0044             <span class="keyword">if</span>(D(i,j) &gt; -1.5)            
+0045                 <span class="keyword">if</span>( i &gt; epsilon &amp;&amp; j &gt; epsilon &amp;&amp; i &lt; m - epsilon &amp;&amp; j &lt; n - epsilon )
+0046                     <span class="comment">%sum over dot product of normal and the gradient vector field (q-dot)</span>
+0047                     <span class="keyword">for</span> ind = 1 : nOfSamples
+0048                                                 
+0049                         <span class="comment">% a point on the sphere</span>
+0050                         px = i+sphere_points(ind,1)+0.5;
+0051                         py = j+sphere_points(ind,2)+0.5;
+0052                         
+0053                         
+0054                         
+0055                         
+0056                         <span class="comment">%the indices of the grid cell that sphere points</span>
+0057                         <span class="comment">%fall into</span>
+0058                         cI = floor(i+sphere_points(ind,1)+0.5);
+0059                         cJ = floor(j+sphere_points(ind,2)+0.5);
+0060                                                
+0061                         
+0062                         <span class="comment">%closest point on the boundary to that sphere point</span>
+0063                         [bx,by] = ind2sub(size(D),IDX(cI,cJ));
+0064 
+0065                         <span class="comment">% the vector connect them</span>
+0066                         qq = [bx,by] - [px,py];
+0067                         d = norm(qq);
+0068                         <span class="keyword">if</span>(d~=0)
+0069                             qq = qq / d;
+0070                         <span class="keyword">else</span>
+0071                             qq = 0;
+0072                         <span class="keyword">end</span>
+0073                         flux_value = flux_value + dot(qq,normals(ind,:));
+0074                     <span class="keyword">end</span>
+0075                 <span class="keyword">end</span>
+0076                 
+0077             <span class="keyword">end</span>
+0078             fluxImage(i,j) = flux_value;
+0079         
+0080     <span class="keyword">end</span>
+0081     
+0082 <span class="keyword">end</span>
+0083 
+0084 
+0085 
+0086 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

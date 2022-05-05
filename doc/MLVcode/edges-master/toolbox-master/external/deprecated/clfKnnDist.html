@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of clfKnnDist</title>
+  <meta name="keywords" content="clfKnnDist">
+  <meta name="description" content="k-nearest neighbor classifier based on a distance matrix D.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; clfKnnDist.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>clfKnnDist
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>k-nearest neighbor classifier based on a distance matrix D.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function IDXpred = clfKnnDist( D, IDX, k ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> k-nearest neighbor classifier based on a distance matrix D.
+
+ k==1 is much faster than k&gt;1.  For k&gt;1, ties are broken randomly.
+
+ USAGE
+  IDXpred = clfKnnDist( D, IDX, k )
+
+ INPUTS
+  D       - MxN array of distances from M-TEST points to N-TRAIN points.
+  IDX     - nTrain length vector of class memberships
+  k       - [1] number of nearest neighbors to use
+
+ OUTPUTS
+  IDXpred - length M vector of classes for training data
+
+ EXAMPLE
+  % (given D and IDX)
+  for k=1:size(D,2) err(k)=sum(IDX==clfKnnDist(D,IDX,k)); end;
+  figure(1); plot(err)
+
+ See also <a href="clfKnn.html" class="code" title="function clf = clfKnn( p, k, metric )">CLFKNN</a>
+
+ Piotr's Image&amp;Video Toolbox      Version 2.0
+ Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]
+ Please email me if you find bugs, or have suggestions or questions!
+ Licensed under the Lesser GPL [see external/lgpl.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="clfKnnFwd.html" class="code" title="function Y = clfKnnFwd( clf, X )">clfKnnFwd</a>	Apply a k-nearest neighbor classifier to X.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function IDXpred = clfKnnDist( D, IDX, k )</a>
+0002 <span class="comment">% k-nearest neighbor classifier based on a distance matrix D.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% k==1 is much faster than k&gt;1.  For k&gt;1, ties are broken randomly.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% USAGE</span>
+0007 <span class="comment">%  IDXpred = clfKnnDist( D, IDX, k )</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% INPUTS</span>
+0010 <span class="comment">%  D       - MxN array of distances from M-TEST points to N-TRAIN points.</span>
+0011 <span class="comment">%  IDX     - nTrain length vector of class memberships</span>
+0012 <span class="comment">%  k       - [1] number of nearest neighbors to use</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% OUTPUTS</span>
+0015 <span class="comment">%  IDXpred - length M vector of classes for training data</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% EXAMPLE</span>
+0018 <span class="comment">%  % (given D and IDX)</span>
+0019 <span class="comment">%  for k=1:size(D,2) err(k)=sum(IDX==clfKnnDist(D,IDX,k)); end;</span>
+0020 <span class="comment">%  figure(1); plot(err)</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% See also CLFKNN</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 2.0</span>
+0025 <span class="comment">% Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]</span>
+0026 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0027 <span class="comment">% Licensed under the Lesser GPL [see external/lgpl.txt]</span>
+0028 
+0029 <span class="keyword">if</span>( nargin&lt;3 || isempty(k) );  k=1;  <span class="keyword">end</span>
+0030 
+0031 [n nTrain] = size(D);
+0032 <span class="keyword">if</span>( nTrain ~= length(IDX) );
+0033   error(<span class="string">'Distance matrix and IDX vector dimensions do not match.'</span>); <span class="keyword">end</span>
+0034 
+0035 <span class="comment">%%% 1NN [fast and easy]</span>
+0036 <span class="keyword">if</span>( k==1 )
+0037   [dis,Dind]=min(D,[],2);
+0038   IDXpred=IDX(Dind);
+0039 
+0040   <span class="comment">%%% kNN</span>
+0041 <span class="keyword">else</span>
+0042   [IDXnames,dis,IDX]=unique(IDX);
+0043 
+0044   <span class="comment">%%% get closests k prototypes [n x k  matrix]</span>
+0045   [D,knnsInds] = sort(D,2);
+0046   knnsInds = knnsInds(:,1:k);
+0047   knns = IDX(knnsInds);
+0048   <span class="keyword">if</span>( n==1 ); knns = knns'; <span class="keyword">end</span>
+0049 
+0050   <span class="comment">%%% get cnts of each of the prototypes</span>
+0051   nclasses = max(IDX);
+0052   cnts = zeros(n,nclasses);
+0053   <span class="keyword">for</span> i=1:nclasses;  cnts(:,i)=sum(knns==i,2);  <span class="keyword">end</span>
+0054   cnts = cnts + randn(size(cnts))/1000; <span class="comment">%break ties randomly</span>
+0055   [ cnts, classes ] = sort(cnts,2,<span class="string">'descend'</span>);
+0056 
+0057   <span class="comment">%%% get IDXpred</span>
+0058   IDXpred = IDXnames( classes(:,1) );
+0059 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

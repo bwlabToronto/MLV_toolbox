@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imPad</title>
+  <meta name="keywords" content="imPad">
+  <meta name="description" content="Pad an image along its four boundaries.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">channels</a> &gt; imPad.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\channels&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>imPad
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Pad an image along its four boundaries.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function J = imPad( I, pad, type ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Pad an image along its four boundaries.
+
+ Similar to Matlab's padarray, with the following differences:
+  (1) limited to padding along height and width
+  (2) input format allows for separate padding along each dimension
+  (3) padding values may be negative, in which case performs *cropping*
+  (4) optimized (speedup can be significant, esp. for small arrays)
+
+ The amount of padding along each of the four boundaries (referred to as
+ T/B/L/R) is determined by the parameter &quot;pad&quot; as follows:
+  if(numel(pad)==1): T=B=L=R=pad
+  if(numel(pad)==2): T=B=pad(1), L=R=pad(2)
+  if(numel(pad)==4): T=pad(1), B=pad(2), L=pad(3), R=pad(4)
+
+ USAGE
+  J = imPad( I, pad, type )
+
+ INPUTS
+  I      - [hxwxk] input image (single, double or uint8 array)
+  pad    - pad or crop amount: 1, 2, or 4 element vector (see above)
+  type   - pad value or 'replicate', 'symmetric', 'circular'
+
+ OUTPUTS
+  J      - [T+h+B x L+w+R x k] padded image
+
+ EXAMPLE
+  I=imread('peppers.png'); pad=[10 20]; type=50;
+  tic, J1=imPad(I,pad,type); toc
+  tic, J2=padarray(I,pad,type,'both'); toc
+  figure(1); im(J1); isequal(J1,J2)
+
+ See also padarray
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.00
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="chnsPyramid.html" class="code" title="function pyramid = chnsPyramid( I, varargin )">chnsPyramid</a>	Compute channel feature pyramid given an input image.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function J = imPad( I, pad, type )</a>
+0002 <span class="comment">% Pad an image along its four boundaries.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Similar to Matlab's padarray, with the following differences:</span>
+0005 <span class="comment">%  (1) limited to padding along height and width</span>
+0006 <span class="comment">%  (2) input format allows for separate padding along each dimension</span>
+0007 <span class="comment">%  (3) padding values may be negative, in which case performs *cropping*</span>
+0008 <span class="comment">%  (4) optimized (speedup can be significant, esp. for small arrays)</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% The amount of padding along each of the four boundaries (referred to as</span>
+0011 <span class="comment">% T/B/L/R) is determined by the parameter &quot;pad&quot; as follows:</span>
+0012 <span class="comment">%  if(numel(pad)==1): T=B=L=R=pad</span>
+0013 <span class="comment">%  if(numel(pad)==2): T=B=pad(1), L=R=pad(2)</span>
+0014 <span class="comment">%  if(numel(pad)==4): T=pad(1), B=pad(2), L=pad(3), R=pad(4)</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% USAGE</span>
+0017 <span class="comment">%  J = imPad( I, pad, type )</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% INPUTS</span>
+0020 <span class="comment">%  I      - [hxwxk] input image (single, double or uint8 array)</span>
+0021 <span class="comment">%  pad    - pad or crop amount: 1, 2, or 4 element vector (see above)</span>
+0022 <span class="comment">%  type   - pad value or 'replicate', 'symmetric', 'circular'</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% OUTPUTS</span>
+0025 <span class="comment">%  J      - [T+h+B x L+w+R x k] padded image</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% EXAMPLE</span>
+0028 <span class="comment">%  I=imread('peppers.png'); pad=[10 20]; type=50;</span>
+0029 <span class="comment">%  tic, J1=imPad(I,pad,type); toc</span>
+0030 <span class="comment">%  tic, J2=padarray(I,pad,type,'both'); toc</span>
+0031 <span class="comment">%  figure(1); im(J1); isequal(J1,J2)</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% See also padarray</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.00</span>
+0036 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0037 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0038 
+0039 J = imPadMex( I, pad, type );
+0040 
+0041 <span class="comment">%%% OLD Matlab code - slower (although still faster than padarray)</span>
+0042 <span class="comment">% [h,w,~]=size(I); p=pad; k=length(p);</span>
+0043 <span class="comment">% if(k==1), p=[p p p p]; elseif(k==2), p=[p(1) p(1) p(2) p(2)]; end</span>
+0044 <span class="comment">% if( length(type)==1 )</span>
+0045 <span class="comment">%   J=imPad(I,p,'replicate'); v=feval(class(I),type);</span>
+0046 <span class="comment">%   J(1:p(1),:,:)=v; J(end-p(2)+1:end,:,:)=v;</span>
+0047 <span class="comment">%   J(:,1:p(3),:)=v; J(:,end-p(4)+1:end,:)=v;</span>
+0048 <span class="comment">%   return;</span>
+0049 <span class="comment">% elseif( strcmp(type,'replicate') )</span>
+0050 <span class="comment">%   rs = [uint32(ones(1,p(1))) 1:h h*ones(1,p(2))];</span>
+0051 <span class="comment">%   cs = [uint32(ones(1,p(3))) 1:w w*ones(1,p(4))];</span>
+0052 <span class="comment">% elseif( strcmp(type,'symmetric') )</span>
+0053 <span class="comment">%   rs = uint32([1:h h:-1:1]); rs=rs(mod(-p(1):h+p(2)-1,2*h)+1);</span>
+0054 <span class="comment">%   cs = uint32([1:w w:-1:1]); cs=cs(mod(-p(3):w+p(4)-1,2*w)+1);</span>
+0055 <span class="comment">% elseif( strcmp(type,'circular') )</span>
+0056 <span class="comment">%   rs = uint32(1:h); rs=rs(mod(-p(1):h+p(2)-1,h)+1);</span>
+0057 <span class="comment">%   cs = uint32(1:w); cs=cs(mod(-p(3):w+p(4)-1,w)+1);</span>
+0058 <span class="comment">% end</span>
+0059 <span class="comment">% J = I(rs,cs,:);</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

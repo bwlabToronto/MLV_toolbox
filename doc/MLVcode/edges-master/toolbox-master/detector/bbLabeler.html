@@ -1,0 +1,508 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bbLabeler</title>
+  <meta name="keywords" content="bbLabeler">
+  <meta name="description" content="Bounding box or ellipse labeler for static images.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">detector</a> &gt; bbLabeler.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\detector&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>bbLabeler
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Bounding box or ellipse labeler for static images.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function bbLabeler( objTypes, imgDir, resDir ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Bounding box or ellipse labeler for static images.
+
+ Launch and click &quot;?&quot; icon for more info.
+
+ USAGE
+  bbLabeler( [objTypes], [imgDir], [resDir] )
+
+ INPUTS
+  objTypes - [{'object'}] list of object types to annotate
+  imgDir   - [pwd] directory with images
+  resDir   - [imgDir] directory with annotations
+
+ OUTPUTS
+
+ EXAMPLE
+  bbLabeler
+
+ See also <a href="bbGt.html" class="code" title="function varargout = bbGt( action, varargin )">bbGt</a>, imRectRot
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.66
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="bbGt.html" class="code" title="function varargout = bbGt( action, varargin )">bbGt</a>	Bounding box (bb) annotations struct, evaluation and sampling routines.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function makeLayout()</a></li><li><a href="#_sub2" class="code">function figResized()</a></li><li><a href="#_sub3" class="code">function helpWindow()</a></li><li><a href="#_sub4" class="code">function exitProg(), objApi.closeAnn(); end</a></li><li><a href="#_sub5" class="code">function keyPress( h, evnt )</a></li><li><a href="#_sub6" class="code">function mousePress()</a></li><li><a href="#_sub7" class="code">function mouseWheel( evnt )</a></li><li><a href="#_sub8" class="code">function mouseDrag()</a></li><li><a href="#_sub9" class="code">function api = objMakeApi()</a></li><li><a href="#_sub10" class="code">function closeAnn()</a></li><li><a href="#_sub11" class="code">function openAnn()</a></li><li><a href="#_sub12" class="code">function objsDraw()</a></li><li><a href="#_sub13" class="code">function objSetBb( bb, objId )</a></li><li><a href="#_sub14" class="code">function objSetBbv( bbv, objId )</a></li><li><a href="#_sub15" class="code">function objChnBb( bb, objId )</a></li><li><a href="#_sub16" class="code">function objNew()</a></li><li><a href="#_sub17" class="code">function objDel()</a></li><li><a href="#_sub18" class="code">function objToggle( del )</a></li><li><a href="#_sub19" class="code">function objSetType( del )</a></li><li><a href="#_sub20" class="code">function objSetVal( type, flag )</a></li><li><a href="#_sub21" class="code">function objShift( x, y )</a></li><li><a href="#_sub22" class="code">function api = imgMakeApi()</a></li><li><a href="#_sub23" class="code">function setImgDir( imgDir1 )</a></li><li><a href="#_sub24" class="code">function adjContrast( del )</a></li><li><a href="#_sub25" class="code">function setImg( imgInd1 )</a></li><li><a href="#_sub26" class="code">function setImgCb()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function bbLabeler( objTypes, imgDir, resDir )</a>
+0002 <span class="comment">% Bounding box or ellipse labeler for static images.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Launch and click &quot;?&quot; icon for more info.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% USAGE</span>
+0007 <span class="comment">%  bbLabeler( [objTypes], [imgDir], [resDir] )</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% INPUTS</span>
+0010 <span class="comment">%  objTypes - [{'object'}] list of object types to annotate</span>
+0011 <span class="comment">%  imgDir   - [pwd] directory with images</span>
+0012 <span class="comment">%  resDir   - [imgDir] directory with annotations</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% OUTPUTS</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% EXAMPLE</span>
+0017 <span class="comment">%  bbLabeler</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% See also bbGt, imRectRot</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.66</span>
+0022 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0023 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0024 
+0025 <span class="keyword">if</span>(nargin&lt;1 || isempty(objTypes)), objTypes={<span class="string">'object'</span>}; <span class="keyword">end</span>
+0026 <span class="keyword">if</span>(nargin&lt;2 || isempty(imgDir)), imgDir=pwd; <span class="keyword">end</span>
+0027 <span class="keyword">if</span>(nargin&lt;3 || isempty(resDir)), resDir=imgDir; <span class="keyword">end</span>
+0028 <span class="keyword">if</span>(~exist(resDir,<span class="string">'dir'</span>)), mkdir(resDir); <span class="keyword">end</span>
+0029 colors=<span class="string">'gcmrkgcmrkgcmrkgcmrkgcmrkgcmrkgcmrk'</span>; minSiz=[12 12];
+0030 [hFig,hPan,hAx,pTop,imgInd,imgFiles,usePnts] = deal([]);
+0031 <a href="#_sub1" class="code" title="subfunction makeLayout()">makeLayout</a>(); imgApi=<a href="#_sub22" class="code" title="subfunction api = imgMakeApi()">imgMakeApi</a>(); objApi=<a href="#_sub9" class="code" title="subfunction api = objMakeApi()">objMakeApi</a>();
+0032 usePnts=0; imgApi.setImgDir(imgDir);
+0033 
+0034   <a name="_sub1" href="#_subfunctions" class="code">function makeLayout()</a>
+0035     <span class="comment">% common properties</span>
+0036     name = <span class="string">'bounding box labeler'</span>;
+0037     bg=<span class="string">'BackgroundColor'</span>; fg=<span class="string">'ForegroundColor'</span>; ha=<span class="string">'HorizontalAlignment'</span>;
+0038     units = {<span class="string">'Units'</span>,<span class="string">'pixels'</span>}; st=<span class="string">'String'</span>; ps=<span class="string">'Position'</span>; fs=<span class="string">'FontSize'</span>;
+0039     
+0040     <span class="comment">% initial figures size / pos</span>
+0041     set(0,<span class="string">'Units'</span>,<span class="string">'pixels'</span>);  ss = get(0,<span class="string">'ScreenSize'</span>);
+0042     <span class="keyword">if</span>( ss(3)&lt;800 || ss(4)&lt;600 ); error(<span class="string">'screen too small'</span>); <span class="keyword">end</span>;
+0043     figPos = [(ss(3)-620)/2 (ss(4)-500)/2 620 500];
+0044     
+0045     <span class="comment">% create main figure</span>
+0046     hFig = figure(<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="string">'Toolbar'</span>,<span class="string">'none'</span>, <span class="string">'Color'</span>,<span class="string">'k'</span>, <span class="keyword">...</span>
+0047       <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="string">'Visible'</span>,<span class="string">'off'</span>, ps,figPos, <span class="string">'Name'</span>,[name resDir]);
+0048     set(hFig,<span class="string">'DeleteFcn'</span>,@(h,e) <a href="#_sub4" class="code" title="subfunction exitProg(), objApi.closeAnn(); end">exitProg</a>,<span class="string">'ResizeFcn'</span>,@(h,e) <a href="#_sub2" class="code" title="subfunction figResized()">figResized</a> );
+0049     
+0050     <span class="comment">% display axes</span>
+0051     hAx = axes(units{:},<span class="string">'Parent'</span>,hFig,<span class="string">'XTick'</span>,[],<span class="string">'YTick'</span>,[]); imshow(0);
+0052     
+0053     <span class="comment">% top panel</span>
+0054     pnlProp = [units {bg,[.1 .1 .1],<span class="string">'BorderType'</span>,<span class="string">'none'</span>}];
+0055     txtPrp = {<span class="string">'Style'</span>,<span class="string">'text'</span>,bg,[.1 .1 .1],fs,8,fg,<span class="string">'w'</span>,ha};
+0056     edtPrp = {<span class="string">'Style'</span>,<span class="string">'edit'</span>,bg,[.1 .1 .1],fs,8,fg,<span class="string">'w'</span>,ha};
+0057     btnPrp = [units,{<span class="string">'Style'</span>,<span class="string">'pushbutton'</span>,<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>,<span class="keyword">...</span>
+0058       bg,[.7 .7 .7],fs,10}];
+0059     chbPrp = {<span class="string">'Style'</span>,<span class="string">'checkbox'</span>,bg,[.1 .1 .1],fs,8,fg,<span class="string">'w'</span>};
+0060     pTop.h = uipanel(pnlProp{:},<span class="string">'Parent'</span>,hFig);
+0061     pTop.hImgInd=uicontrol(pTop.h,edtPrp{:},<span class="string">'Right'</span>,st,<span class="string">'0'</span>);
+0062     pTop.hImgNum=uicontrol(pTop.h,edtPrp{:},<span class="string">'Left'</span>,st,<span class="string">'/0'</span>,<span class="keyword">...</span>
+0063       <span class="string">'Enable'</span>,<span class="string">'inactive'</span>);
+0064     pTop.hLbl = uicontrol( pTop.h,<span class="string">'Style'</span>,<span class="string">'popupmenu'</span>,units{:},<span class="keyword">...</span>
+0065       st,objTypes,fs,8,<span class="string">'Value'</span>,1);
+0066     pTop.hDel=uicontrol(pTop.h,btnPrp{:},fs,11,fg,[.5 0 0],st,<span class="string">'X'</span>);
+0067     pTop.hPrv=uicontrol(pTop.h,btnPrp{:},st,<span class="string">'&lt;&lt;'</span>);
+0068     pTop.hNxt=uicontrol(pTop.h,btnPrp{:},st,<span class="string">'&gt;&gt;'</span>);
+0069     pTop.hOcc=uicontrol(pTop.h,chbPrp{:},st,<span class="string">'occ'</span>);
+0070     pTop.hIgn=uicontrol(pTop.h,chbPrp{:},st,<span class="string">'ign'</span>);
+0071     pTop.hEll=uicontrol(pTop.h,chbPrp{:},st,<span class="string">'ellipse'</span>);
+0072     pTop.hRot=uicontrol(pTop.h,chbPrp{:},st,<span class="string">'rotate'</span>);
+0073     pTop.hLim=uicontrol(pTop.h,chbPrp{:},st,<span class="string">'lims'</span>);
+0074     pTop.hPnt=uicontrol(pTop.h,chbPrp{:},st,<span class="string">'pnts'</span>);
+0075     pTop.hHid=uicontrol(pTop.h,chbPrp{:},st,<span class="string">'hide'</span>);
+0076     pTop.hPan=uicontrol(pTop.h,chbPrp{:},st,<span class="string">'pan'</span>);
+0077     pTop.hDims=uicontrol(pTop.h,txtPrp{:},<span class="string">'Center'</span>,st,<span class="string">''</span>);
+0078     pTop.hNum=uicontrol(pTop.h,txtPrp{:},<span class="string">'Center'</span>,st,<span class="string">'n=0'</span>);
+0079     pTop.hHelp=uicontrol(pTop.h,btnPrp{:},fs,12,st,<span class="string">'?'</span>);
+0080     
+0081     <span class="comment">% set the keyPressFcn for all focusable components (except popupmenus)</span>
+0082     set( hFig, <span class="string">'keyPressFcn'</span>,@<a href="#_sub5" class="code" title="subfunction keyPress( h, evnt ) ">keyPress</a> );
+0083     set( hFig, <span class="string">'WindowScrollWheelFcn'</span>,@(h,e) <a href="#_sub7" class="code" title="subfunction mouseWheel( evnt )">mouseWheel</a>(e));
+0084     set( hFig, <span class="string">'ButtonDownFcn'</span>,@(h,e) <a href="#_sub6" class="code" title="subfunction mousePress()">mousePress</a> );
+0085     set( pTop.hHelp,<span class="string">'CallBack'</span>,@(h,e) <a href="#_sub3" class="code" title="subfunction helpWindow()">helpWindow</a> );
+0086     
+0087     <span class="comment">% set hFig to visible upon completion</span>
+0088     set(hFig,<span class="string">'Visible'</span>,<span class="string">'on'</span>); drawnow;
+0089     
+0090     <span class="comment">% pan controls</span>
+0091     hPan = pan( hFig );
+0092     
+0093     <a name="_sub2" href="#_subfunctions" class="code">function figResized()</a>
+0094       <span class="comment">% overall layout</span>
+0095       pos=get(hFig,ps); pad=8; htTop=30; wdTop=620;
+0096       wd=pos(3)-2*pad; ht=pos(4)-2*pad-htTop;
+0097       x=(pos(3)-wd)/2; y=pad;
+0098       set(hAx,ps,[x y wd ht]); y=y+ht;
+0099       set(pTop.h,ps,[x y wd htTop]);
+0100       <span class="comment">% position stuff in top panel</span>
+0101       x=max(2,(wd-wdTop)/2);
+0102       set(pTop.hImgInd,ps,[x 4 40 22]); x=x+40;
+0103       set(pTop.hImgNum,ps,[x 4 40 22]); x=x+50;
+0104       set(pTop.hDel,ps,[x 5 20 20]); x=x+20+5;
+0105       set(pTop.hPrv,ps,[x 5 24 20]); x=x+25;
+0106       set(pTop.hLbl,ps,[x 5 80 21]); x=x+81;
+0107       set(pTop.hNxt,ps,[x 5 24 20]); x=x+25+5;
+0108       set(pTop.hDims,ps,[x 5 60 20]); x=x+62;
+0109       set(pTop.hOcc,ps,[x 15 45 13]);
+0110       set(pTop.hIgn,ps,[x 2 45 13]); x=x+50;
+0111       set(pTop.hEll,ps,[x 15 55 13]);
+0112       set(pTop.hRot,ps,[x 2 55 13]); x=x+60;
+0113       set(pTop.hLim,ps,[x 15 45 13]);
+0114       set(pTop.hPnt,ps,[x 2 45 13]); x=x+50;
+0115       set(pTop.hHid,ps,[x 15 55 13]);
+0116       set(pTop.hPan,ps,[x 2 55 13]); x=x+60;
+0117       set(pTop.hNum,ps,[x 5 30 20]); x=x+30+20;
+0118       set(pTop.hHelp,ps,[x 5 20 20]);
+0119     <span class="keyword">end</span>
+0120     
+0121     <a name="_sub3" href="#_subfunctions" class="code">function helpWindow()</a>
+0122       helpTxt = {
+0123         <span class="string">'Image Selection:'</span>
+0124         <span class="string">' * spacebar: advance one image'</span>
+0125         <span class="string">' * ctrl-spacebar: go back one image'</span>
+0126         <span class="string">' * double-click: advance one image'</span>
+0127         <span class="string">' * can also directly enter image index'</span>
+0128         <span class="string">''</span>
+0129         <span class="string">'Zoom and Pan controls:'</span>
+0130         <span class="string">' * mouse wheel or +/- keys: zoom in and out'</span>
+0131         <span class="string">' * q-key or pan-icon: toggle pan mode'</span>
+0132         <span class="string">' * click/drag: pans image (while in pan mode)'</span>
+0133         <span class="string">''</span>
+0134         <span class="string">'bb modification with mouse:'</span>
+0135         <span class="string">' * click/drag in blank region: create new bb'</span>
+0136         <span class="string">' * click on existing bb: select bb'</span>
+0137         <span class="string">' * click/drag center of existing bb: move bb'</span>
+0138         <span class="string">' * click/drag edge of existing bb: resize bb'</span>
+0139         <span class="string">' * clck/drag control points: rotate/resize bb'</span>
+0140         <span class="string">' * ctrl+arrow keys: shift selected bb'</span>
+0141         <span class="string">''</span>
+0142         <span class="string">'Other controls:'</span>
+0143         <span class="string">' * d-key or del-key or X-icon: delete selected bb'</span>
+0144         <span class="string">' * o-key or occ-icon: toggle occlusion for bb'</span>
+0145         <span class="string">' * i-key or ign-icon: toggle ignore for bb'</span>
+0146         <span class="string">' * e-key or ellipse-icon: toggle bb ellipse/rect display'</span>
+0147         <span class="string">' * r-key or rotation-icon: toggle bb rotation control'</span>
+0148         <span class="string">' * l-key or lims-icon: toggle bb limits on/off'</span>
+0149         <span class="string">' * p-key or pnts-icon: toggle pnt creation on/off'</span>
+0150         <span class="string">' * left-arrow or &lt;&lt;-icon: select previous bb'</span>
+0151         <span class="string">' * right-arrow or &gt;&gt;-icon: select next bb'</span>
+0152         <span class="string">' * up/down-arrow a-key/z-key or dropbox: select bb label'</span>
+0153         <span class="string">' * ctrl and +/- keys: increase/decrease contrast'</span> };
+0154       pos=get(0,<span class="string">'ScreenSize'</span>); pos=[(pos(3)-400)/2 (pos(4)-520)/2 400 520];
+0155       hHelp = figure(<span class="string">'NumberTitle'</span>,<span class="string">'off'</span>, <span class="string">'Toolbar'</span>,<span class="string">'auto'</span>, <span class="keyword">...</span>
+0156         <span class="string">'Color'</span>,<span class="string">'k'</span>, <span class="string">'MenuBar'</span>,<span class="string">'none'</span>, <span class="string">'Visible'</span>,<span class="string">'on'</span>, <span class="keyword">...</span>
+0157         <span class="string">'Name'</span>,[name <span class="string">' help'</span>], <span class="string">'Resize'</span>,<span class="string">'on'</span>, ps, pos ); pos(1:2)=0;
+0158       uicontrol( hHelp, <span class="string">'Style'</span>,<span class="string">'text'</span>, ha,<span class="string">'Left'</span>, fs,10, bg,<span class="string">'w'</span>, <span class="keyword">...</span>
+0159         ps,pos, st,helpTxt );
+0160     <span class="keyword">end</span>
+0161     
+0162     <a name="_sub4" href="#_subfunctions" class="code">function exitProg(), objApi.closeAnn(); end</a>
+0163   <span class="keyword">end</span>
+0164 
+0165   <a name="_sub5" href="#_subfunctions" class="code">function keyPress( h, evnt ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0166     c=int8(evnt.Character); <span class="keyword">if</span>(isempty(c)), c=0; <span class="keyword">end</span>;
+0167     ctrl=strcmp(evnt.Modifier,<span class="string">'control'</span>); <span class="keyword">if</span>(isempty(ctrl)),ctrl=0; <span class="keyword">end</span>
+0168     <span class="keyword">if</span>(c==127 || c==100), objApi.objDel(); <span class="keyword">end</span> <span class="comment">% 'del' or 'd'</span>
+0169     <span class="keyword">if</span>(c==32 &amp;&amp; ctrl ), imgApi.setImg(imgInd-1); <span class="keyword">end</span> <span class="comment">% ctrl-spacebar</span>
+0170     <span class="keyword">if</span>(c==32 &amp;&amp; ~ctrl), imgApi.setImg(imgInd+1); <span class="keyword">end</span> <span class="comment">% spacebar</span>
+0171     <span class="keyword">if</span>(c==28 &amp;&amp; ctrl), objApi.objShift(-1,0); <span class="keyword">end</span>   <span class="comment">% ctrl-lf</span>
+0172     <span class="keyword">if</span>(c==29 &amp;&amp; ctrl), objApi.objShift(+1,0); <span class="keyword">end</span>   <span class="comment">% ctrl-rt</span>
+0173     <span class="keyword">if</span>(c==30 &amp;&amp; ctrl), objApi.objShift(0,-1); <span class="keyword">end</span>   <span class="comment">% ctrl-up</span>
+0174     <span class="keyword">if</span>(c==31 &amp;&amp; ctrl), objApi.objShift(0,+1); <span class="keyword">end</span>   <span class="comment">% ctrl-dn</span>
+0175     <span class="keyword">if</span>(c==28 &amp;&amp; ~ctrl), objApi.objToggle(-1); <span class="keyword">end</span>  <span class="comment">% lf</span>
+0176     <span class="keyword">if</span>(c==29 &amp;&amp; ~ctrl), objApi.objToggle(+1); <span class="keyword">end</span>  <span class="comment">% rt</span>
+0177     <span class="keyword">if</span>((c==30 &amp;&amp; ~ctrl) || c==97),  objApi.objSetType(-1); <span class="keyword">end</span>  <span class="comment">% up or 'a'</span>
+0178     <span class="keyword">if</span>((c==31 &amp;&amp; ~ctrl) || c==122), objApi.objSetType(+1); <span class="keyword">end</span>  <span class="comment">% dn or 'z'</span>
+0179     <span class="keyword">if</span>(c==111), objApi.objSetVal(<span class="string">'occ'</span>,0); <span class="keyword">end</span>  <span class="comment">% 'o'</span>
+0180     <span class="keyword">if</span>(c==105), objApi.objSetVal(<span class="string">'ign'</span>,0); <span class="keyword">end</span>  <span class="comment">% 'i'</span>
+0181     <span class="keyword">if</span>(c==101), objApi.objSetVal(<span class="string">'ell'</span>,0); <span class="keyword">end</span>  <span class="comment">% 'e'</span>
+0182     <span class="keyword">if</span>(c==114), objApi.objSetVal(<span class="string">'rot'</span>,0); <span class="keyword">end</span>  <span class="comment">% 'r'</span>
+0183     <span class="keyword">if</span>(c==108), objApi.objSetVal(<span class="string">'lim'</span>,0); <span class="keyword">end</span>  <span class="comment">% 'l'</span>
+0184     <span class="keyword">if</span>(c==112), objApi.objSetVal(<span class="string">'pnt'</span>,0); <span class="keyword">end</span>  <span class="comment">% 'p'</span>
+0185     <span class="keyword">if</span>(c==104), objApi.objSetVal(<span class="string">'hid'</span>,0); <span class="keyword">end</span>  <span class="comment">% 'h'</span>
+0186     <span class="keyword">if</span>(c==113), objApi.objSetVal(<span class="string">'pan'</span>,0); <span class="keyword">end</span>  <span class="comment">% 'q'</span>
+0187     <span class="keyword">if</span>(c==43 &amp;&amp; ~ctrl), zoom(1.1);   <span class="keyword">end</span> <span class="comment">% '+' key, zoom in</span>
+0188     <span class="keyword">if</span>(c==45 &amp;&amp; ~ctrl), zoom(1/1.1); <span class="keyword">end</span> <span class="comment">% '-' key, zoom out</span>
+0189     <span class="keyword">if</span>(c==43 &amp;&amp; ctrl), imgApi.adjContrast(+1); <span class="keyword">end</span> <span class="comment">% ctrl-'+', inc contrast</span>
+0190     <span class="keyword">if</span>(c==45 &amp;&amp; ctrl), imgApi.adjContrast(-1); <span class="keyword">end</span> <span class="comment">% ctrl-'-', dec contrast</span>
+0191   <span class="keyword">end</span>
+0192 
+0193   <a name="_sub6" href="#_subfunctions" class="code">function mousePress()</a>
+0194     sType = get(hFig,<span class="string">'SelectionType'</span>);
+0195     <span class="comment">%disp(['mouse pressed: ' sType]);</span>
+0196     <span class="keyword">if</span>( strcmp(sType,<span class="string">'open'</span>) )
+0197       <span class="keyword">if</span>( usePnts ), <span class="keyword">return</span>; <span class="keyword">end</span>
+0198       imgApi.setImg(imgInd+1); <span class="comment">% double click</span>
+0199     <span class="keyword">elseif</span>( strcmp(sType,<span class="string">'normal'</span>) )
+0200       objApi.objNew(); <span class="comment">% single click</span>
+0201     <span class="keyword">end</span>
+0202   <span class="keyword">end</span>
+0203 
+0204   <a name="_sub7" href="#_subfunctions" class="code">function mouseWheel( evnt )</a>
+0205     <span class="keyword">if</span>( evnt.VerticalScrollCount&gt;0 ), zoom(1/1.1); <span class="keyword">else</span> zoom(1.1); <span class="keyword">end</span>
+0206   <span class="keyword">end</span>
+0207 
+0208   <a name="_sub8" href="#_subfunctions" class="code">function mouseDrag()</a>
+0209     <span class="keyword">if</span>(isempty(imgInd)), <span class="keyword">return</span>; <span class="keyword">end</span>
+0210     <span class="keyword">persistent</span> h; <span class="keyword">if</span>(~all(ishandle(h))), h=[]; <span class="keyword">end</span>
+0211     xs=get(gca,<span class="string">'xLim'</span>); ys=get(gca,<span class="string">'yLim'</span>);
+0212     p=get(hAx,<span class="string">'CurrentPoint'</span>); x=p(1); y=p(3);
+0213     <span class="keyword">if</span>( x&lt;xs(1)||x&gt;xs(2)||y&lt;ys(1)||y&gt;ys(2) ), delete(h); <span class="keyword">return</span>; <span class="keyword">end</span>
+0214     <span class="keyword">if</span>(isempty(h)), h=[line line];
+0215       set(h,<span class="string">'ButtonDownFcn'</span>,@(h,e) <a href="#_sub6" class="code" title="subfunction mousePress()">mousePress</a>,<span class="string">'Color'</span>,<span class="string">'k'</span>); <span class="keyword">end</span>
+0216     set(h,{<span class="string">'Xdata'</span>},{[x x];xs},{<span class="string">'YData'</span>},{ys,[y y]}');
+0217   <span class="keyword">end</span>
+0218 
+0219   <a name="_sub9" href="#_subfunctions" class="code">function api = objMakeApi()</a>
+0220     <span class="comment">% variables</span>
+0221     [resNm,objs,nObj,hsObj,curObj,lims] = deal([]);
+0222     ellipse=0; rotate=0; useLims=0; hide=0;
+0223     
+0224     <span class="comment">% callbacks</span>
+0225     set(pTop.hDel,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub17" class="code" title="subfunction objDel()">objDel</a>());
+0226     set(pTop.hPrv,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub18" class="code" title="subfunction objToggle( del )">objToggle</a>(-1));
+0227     set(pTop.hNxt,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub18" class="code" title="subfunction objToggle( del )">objToggle</a>(+1));
+0228     set(pTop.hLbl,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub19" class="code" title="subfunction objSetType( del )">objSetType</a>());
+0229     set(pTop.hOcc,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub20" class="code" title="subfunction objSetVal( type, flag )">objSetVal</a>(<span class="string">'occ'</span>,1));
+0230     set(pTop.hIgn,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub20" class="code" title="subfunction objSetVal( type, flag )">objSetVal</a>(<span class="string">'ign'</span>,1));
+0231     set(pTop.hEll,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub20" class="code" title="subfunction objSetVal( type, flag )">objSetVal</a>(<span class="string">'ell'</span>,1));
+0232     set(pTop.hRot,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub20" class="code" title="subfunction objSetVal( type, flag )">objSetVal</a>(<span class="string">'rot'</span>,1));
+0233     set(pTop.hLim,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub20" class="code" title="subfunction objSetVal( type, flag )">objSetVal</a>(<span class="string">'lim'</span>,1));
+0234     set(pTop.hPnt,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub20" class="code" title="subfunction objSetVal( type, flag )">objSetVal</a>(<span class="string">'pnt'</span>,1));
+0235     set(pTop.hHid,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub20" class="code" title="subfunction objSetVal( type, flag )">objSetVal</a>(<span class="string">'hid'</span>,1));
+0236     set(pTop.hPan,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub20" class="code" title="subfunction objSetVal( type, flag )">objSetVal</a>(<span class="string">'pan'</span>,1));
+0237     
+0238     <span class="comment">% create api</span>
+0239     api = struct( <span class="string">'closeAnn'</span>,@<a href="#_sub10" class="code" title="subfunction closeAnn()">closeAnn</a>, <span class="string">'openAnn'</span>,@<a href="#_sub11" class="code" title="subfunction openAnn()">openAnn</a>, <span class="keyword">...</span>
+0240       <span class="string">'objNew'</span>,@<a href="#_sub16" class="code" title="subfunction objNew()">objNew</a>, <span class="string">'objDel'</span>,@<a href="#_sub17" class="code" title="subfunction objDel()">objDel</a>, <span class="string">'objToggle'</span>,@<a href="#_sub18" class="code" title="subfunction objToggle( del )">objToggle</a>, <span class="keyword">...</span>
+0241       <span class="string">'objSetType'</span>,@<a href="#_sub19" class="code" title="subfunction objSetType( del )">objSetType</a>, <span class="string">'objSetVal'</span>,@<a href="#_sub20" class="code" title="subfunction objSetVal( type, flag )">objSetVal</a>, <span class="keyword">...</span>
+0242       <span class="string">'objShift'</span>,@<a href="#_sub21" class="code" title="subfunction objShift( x, y )">objShift</a> );
+0243     
+0244     <a name="_sub10" href="#_subfunctions" class="code">function closeAnn()</a>
+0245       <span class="comment">% save annotation and then clear (also use to init)</span>
+0246       <span class="keyword">if</span>(~isempty(nObj)&amp;&amp;~isempty(resNm)), <a href="bbGt.html" class="code" title="function varargout = bbGt( action, varargin )">bbGt</a>(<span class="string">'bbSave'</span>,objs,resNm); <span class="keyword">end</span>
+0247       delete(hsObj); hsObj=[]; nObj=0; resNm=<span class="string">''</span>; curObj=0; objs=[];
+0248       <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>();
+0249     <span class="keyword">end</span>
+0250     
+0251     <a name="_sub11" href="#_subfunctions" class="code">function openAnn()</a>
+0252       <span class="comment">% try to load annotation, prepare for new image</span>
+0253       assert(nObj==0); lims=[get(gca,<span class="string">'xLim'</span>); get(gca,<span class="string">'yLim'</span>)];
+0254       lims=[lims(:); 0]'; lims(3:4)=lims(3:4)-lims(1:2);
+0255       resNm=[resDir <span class="string">'/'</span> imgFiles{imgInd} <span class="string">'.txt'</span>];
+0256       <span class="keyword">if</span>(exist(resNm,<span class="string">'file'</span>)), objs=<a href="bbGt.html" class="code" title="function varargout = bbGt( action, varargin )">bbGt</a>(<span class="string">'bbLoad'</span>,resNm); <span class="keyword">end</span>
+0257       objTypes=unique([objTypes <a href="bbGt.html" class="code" title="function varargout = bbGt( action, varargin )">bbGt</a>(<span class="string">'get'</span>,objs,<span class="string">'lbl'</span>)']);
+0258       set(pTop.hLbl,<span class="string">'String'</span>,objTypes); nObj=length(objs); <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>();
+0259     <span class="keyword">end</span>
+0260     
+0261     <a name="_sub12" href="#_subfunctions" class="code">function objsDraw()</a>
+0262       delete(hsObj); <span class="keyword">if</span>(hide), hsObj=[]; <span class="keyword">return</span>; <span class="keyword">end</span>; hsObj=zeros(1,nObj);
+0263       <span class="comment">% display regular bbs</span>
+0264       <span class="keyword">for</span> id=1:nObj
+0265         o=objs(id); color=colors(strcmp(o.lbl,objTypes));
+0266         rp=struct(<span class="string">'ellipse'</span>,ellipse,<span class="string">'rotate'</span>,rotate,<span class="string">'hParent'</span>,hAx,<span class="keyword">...</span>
+0267           <span class="string">'lw'</span>,2,<span class="string">'ls'</span>,<span class="string">'-'</span>,<span class="string">'pos'</span>,[o.bb o.ang],<span class="string">'color'</span>,color);
+0268         <span class="keyword">if</span>(~useLims), rp.lims=[]; <span class="keyword">else</span> rp.lims=lims; <span class="keyword">end</span>
+0269         <span class="keyword">if</span>(o.ign), rp.cross=2; <span class="keyword">end</span>; <span class="keyword">if</span>(curObj==id), rp.ls=<span class="string">':'</span>; <span class="keyword">end</span>
+0270         [hsObj(id),rectApi]=imRectRot(rp);
+0271         rectApi.setPosSetCb(@(bb) <a href="#_sub13" class="code" title="subfunction objSetBb( bb, objId )">objSetBb</a>(bb,id));
+0272         rectApi.setPosChnCb(@(bb) <a href="#_sub15" class="code" title="subfunction objChnBb( bb, objId ) ">objChnBb</a>(bb,id));
+0273         <span class="keyword">if</span>(id==curObj), rectApiCur=rectApi; <span class="keyword">end</span>
+0274       <span class="keyword">end</span>
+0275       <span class="keyword">if</span>(curObj&gt;0), rectApiCur.uistack(<span class="string">'top'</span>); <span class="keyword">end</span>
+0276       <span class="comment">% display occluded bbs</span>
+0277       <span class="keyword">for</span> id=1:nObj
+0278         o=objs(id); ang=o.ang; <span class="keyword">if</span>(~o.occ), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0279         rp=struct(<span class="string">'ellipse'</span>,ellipse,<span class="string">'rotate'</span>,0,<span class="string">'hParent'</span>,hAx,<span class="string">'lw'</span>,1,<span class="keyword">...</span>
+0280           <span class="string">'ls'</span>,<span class="string">'-'</span>,<span class="string">'pos'</span>,[o.bbv ang],<span class="string">'lims'</span>,[o.bb ang],<span class="string">'color'</span>,<span class="string">'y'</span>);
+0281         [hObj,rectApi] = imRectRot( rp );
+0282         rectApi.setPosSetCb(@(bbv) <a href="#_sub14" class="code" title="subfunction objSetBbv( bbv, objId )">objSetBbv</a>(bbv,id));
+0283         hsObj=[hsObj hObj]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0284       <span class="keyword">end</span>
+0285       <span class="comment">% update gui info</span>
+0286       <span class="keyword">if</span>(curObj==0), dimsStr=<span class="string">''</span>; occ=0; ign=0; en=<span class="string">'off'</span>; <span class="keyword">else</span>
+0287         o=objs(curObj); occ=o.occ; ign=o.ign; en=<span class="string">'on'</span>;
+0288         set(pTop.hLbl,<span class="string">'Value'</span>,find(strcmp(o.lbl,objTypes)));
+0289         dimsStr=sprintf(<span class="string">'%i x %i'</span>,round(o.bb(3)),round(o.bb(4)));
+0290       <span class="keyword">end</span>
+0291       set([pTop.hIgn pTop.hOcc],<span class="string">'Enable'</span>,en); set(pTop.hOcc,<span class="string">'Value'</span>,occ);
+0292       set(pTop.hDims,<span class="string">'String'</span>,dimsStr); set(pTop.hIgn,<span class="string">'Value'</span>,ign);
+0293       set(pTop.hNum,<span class="string">'String'</span>, [<span class="string">'n='</span> int2str(nObj)] );
+0294       set(hFig,<span class="string">'WindowButtonMotionFcn'</span>,@(h,e) <a href="#_sub8" class="code" title="subfunction mouseDrag()">mouseDrag</a>); <a href="#_sub8" class="code" title="subfunction mouseDrag()">mouseDrag</a>();
+0295     <span class="keyword">end</span>
+0296     
+0297     <a name="_sub13" href="#_subfunctions" class="code">function objSetBb( bb, objId )</a>
+0298       curObj=objId; o=objs(objId); bb=round(bb); bbv=o.bbv;
+0299       <span class="keyword">if</span>(any(bb(3:4)&lt;minSiz)), <a href="#_sub17" class="code" title="subfunction objDel()">objDel</a>(); <span class="keyword">return</span>; <span class="keyword">end</span>;
+0300       objs(objId).bb=bb(1:4); objs(objId).ang=bb(5);
+0301       <span class="keyword">if</span>(~o.occ), <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>(); <span class="keyword">return</span>; <span class="keyword">end</span>
+0302       <span class="keyword">if</span>( objs(objId).ang~=o.ang ), bbv=[0 0 0 0]; <span class="keyword">else</span>
+0303         bbv=[(bbv(1:2)-o.bb(1:2))./o.bb(3:4) bbv(3:4)./o.bb(3:4)];
+0304         bbv=[(bbv(1:2).*bb(3:4))+bb(1:2) bbv(3:4).*bb(3:4)];
+0305       <span class="keyword">end</span>; <a href="#_sub14" class="code" title="subfunction objSetBbv( bbv, objId )">objSetBbv</a>(bbv,objId);
+0306     <span class="keyword">end</span>
+0307     
+0308     <a name="_sub14" href="#_subfunctions" class="code">function objSetBbv( bbv, objId )</a>
+0309       curObj=objId; o=objs(objId); bbv=round(bbv(1:4));
+0310       <span class="keyword">if</span>(~o.occ), objs(objId).bbv=[0 0 0 0]; <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>(); <span class="keyword">return</span>; <span class="keyword">end</span>
+0311       <span class="keyword">if</span>(any(bbv(3:4)&lt;minSiz)), bbv=o.bb; <span class="keyword">end</span>
+0312       objs(objId).bbv=bbv; <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>();
+0313     <span class="keyword">end</span>
+0314     
+0315     <a name="_sub15" href="#_subfunctions" class="code">function objChnBb( bb, objId ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0316       dimsStr=sprintf(<span class="string">'%i x %i'</span>,round(bb(3)),round(bb(4)));
+0317       set( pTop.hDims, <span class="string">'String'</span>, dimsStr );
+0318     <span class="keyword">end</span>
+0319     
+0320     <a name="_sub16" href="#_subfunctions" class="code">function objNew()</a>
+0321       <span class="keyword">if</span>(hide), <span class="keyword">return</span>; <span class="keyword">end</span>; curObj=0; <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>();
+0322       pnt=get(hAx,<span class="string">'CurrentPoint'</span>); pnt=pnt([1,3]);
+0323       <span class="keyword">if</span>( pnt(1)&lt;lims(1) || pnt(1)&gt;lims(3) || <span class="keyword">...</span>
+0324           pnt(2)&lt;lims(2) || pnt(2)&gt;lims(4)), <span class="keyword">return</span>; <span class="keyword">end</span>
+0325       lblId=get(pTop.hLbl,<span class="string">'Value'</span>); color=colors(lblId);
+0326       rp=struct(<span class="string">'ellipse'</span>,ellipse,<span class="string">'rotate'</span>,rotate/2,<span class="string">'hParent'</span>,hAx,<span class="keyword">...</span>
+0327         <span class="string">'lw'</span>,2,<span class="string">'ls'</span>,<span class="string">':'</span>,<span class="string">'pos'</span>,pnt,<span class="string">'color'</span>,color);
+0328       <span class="keyword">if</span>(~useLims), rp.lims=[]; <span class="keyword">else</span> rp.lims=lims; <span class="keyword">end</span>
+0329       [hObj,rectApi]=imRectRot(rp);
+0330       lbl=objTypes{lblId}; bb=round(rectApi.getPos());
+0331       <span class="keyword">if</span>( usePnts &amp;&amp; all(bb(3:4)&lt;minSiz) )
+0332         bb(1:2)=bb(:,1:2)+bb(:,3:4)/2-minSiz/2; bb(3:4)=minSiz;
+0333       <span class="keyword">end</span>
+0334       <span class="keyword">if</span>( usePnts || all(bb(3:4)&gt;=minSiz) )
+0335         obj=<a href="bbGt.html" class="code" title="function varargout = bbGt( action, varargin )">bbGt</a>(<span class="string">'create'</span>); obj.lbl=lbl; obj.bb=bb(1:4); obj.ang=bb(5);
+0336         objs=[objs; obj]; nObj=nObj+1; curObj=nObj;
+0337       <span class="keyword">end</span>; delete(hObj); <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>();
+0338     <span class="keyword">end</span>
+0339     
+0340     <a name="_sub17" href="#_subfunctions" class="code">function objDel()</a>
+0341       <span class="keyword">if</span>(curObj==0), <span class="keyword">return</span>; <span class="keyword">end</span>
+0342       objs(curObj)=[]; curObj=0; nObj=nObj-1; <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>();
+0343     <span class="keyword">end</span>
+0344     
+0345     <a name="_sub18" href="#_subfunctions" class="code">function objToggle( del )</a>
+0346       curObj=mod(curObj+del,nObj+1); <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>();
+0347     <span class="keyword">end</span>
+0348     
+0349     <a name="_sub19" href="#_subfunctions" class="code">function objSetType( del )</a>
+0350       val = get(pTop.hLbl,<span class="string">'Value'</span>);
+0351       <span class="keyword">if</span>( nargin&gt;0 &amp;&amp; del~=0 )
+0352         val = max(1,min(val+del,length(objTypes)));
+0353         set(pTop.hLbl,<span class="string">'Value'</span>,val);
+0354       <span class="keyword">end</span>
+0355       <span class="keyword">if</span>(curObj), objs(curObj).lbl=objTypes{val}; <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>(); <span class="keyword">end</span>
+0356     <span class="keyword">end</span>
+0357     
+0358     <a name="_sub20" href="#_subfunctions" class="code">function objSetVal( type, flag )</a>
+0359       <span class="keyword">if</span>(strcmp(type,<span class="string">'occ'</span>))
+0360         <span class="keyword">if</span>(curObj==0), <span class="keyword">return</span>; <span class="keyword">end</span>
+0361         occ = get(pTop.hOcc,<span class="string">'Value'</span>); <span class="keyword">if</span>(~flag), occ=1-occ; <span class="keyword">end</span>
+0362         objs(curObj).occ=occ; <a href="#_sub14" class="code" title="subfunction objSetBbv( bbv, objId )">objSetBbv</a>(objs(curObj).bb,curObj); <span class="keyword">return</span>;
+0363       <span class="keyword">elseif</span>(strcmp(type,<span class="string">'ign'</span>))
+0364         <span class="keyword">if</span>(curObj==0), <span class="keyword">return</span>; <span class="keyword">end</span>
+0365         ign = get(pTop.hIgn,<span class="string">'Value'</span>); <span class="keyword">if</span>(~flag), ign=1-ign; <span class="keyword">end</span>
+0366         objs(curObj).ign=ign;
+0367       <span class="keyword">elseif</span>(strcmp(type,<span class="string">'ell'</span>))
+0368         ellipse = get(pTop.hEll,<span class="string">'Value'</span>);
+0369         <span class="keyword">if</span>(~flag), ellipse=1-ellipse; set(pTop.hEll,<span class="string">'Value'</span>,ellipse); <span class="keyword">end</span>
+0370       <span class="keyword">elseif</span>(strcmp(type,<span class="string">'rot'</span>))
+0371         rotate = get(pTop.hRot,<span class="string">'Value'</span>);
+0372         <span class="keyword">if</span>(~flag), rotate=1-rotate; set(pTop.hRot,<span class="string">'Value'</span>,rotate); <span class="keyword">end</span>
+0373       <span class="keyword">elseif</span>(strcmp(type,<span class="string">'lim'</span>))
+0374         useLims = get(pTop.hLim,<span class="string">'Value'</span>);
+0375         <span class="keyword">if</span>(~flag), useLims=1-useLims; set(pTop.hLim,<span class="string">'Value'</span>,useLims); <span class="keyword">end</span>
+0376       <span class="keyword">elseif</span>(strcmp(type,<span class="string">'pnt'</span>))
+0377         usePnts = get(pTop.hPnt,<span class="string">'Value'</span>);
+0378         <span class="keyword">if</span>(~flag), usePnts=1-usePnts; set(pTop.hPnt,<span class="string">'Value'</span>,usePnts); <span class="keyword">end</span>
+0379       <span class="keyword">elseif</span>(strcmp(type,<span class="string">'hid'</span>))
+0380         hide = get(pTop.hHid,<span class="string">'Value'</span>);
+0381         <span class="keyword">if</span>(~flag), hide=1-hide; set(pTop.hHid,<span class="string">'Value'</span>,hide); <span class="keyword">end</span>
+0382         <span class="keyword">if</span>( hide ), curObj=0; <span class="keyword">end</span>
+0383       <span class="keyword">elseif</span>(strcmp(type,<span class="string">'pan'</span>))
+0384         enabled = get(pTop.hPan,<span class="string">'Value'</span>);
+0385         <span class="keyword">if</span>(~flag), enabled=1-enabled; set(pTop.hPan,<span class="string">'Value'</span>,enabled); <span class="keyword">end</span>
+0386         <span class="keyword">if</span>(~enabled), set(hPan,<span class="string">'Enable'</span>,<span class="string">'off'</span>); <span class="keyword">else</span>
+0387           set(hPan,<span class="string">'Enable'</span>,<span class="string">'on'</span>); hM=uigetmodemanager(hFig);
+0388           set(hM.WindowListenerHandles,<span class="string">'Enable'</span>,<span class="string">'off'</span>);
+0389           set( hFig, <span class="string">'keyPressFcn'</span>,@<a href="#_sub5" class="code" title="subfunction keyPress( h, evnt ) ">keyPress</a>);
+0390           set( hFig, <span class="string">'WindowScrollWheelFcn'</span>,@(h,e) <a href="#_sub7" class="code" title="subfunction mouseWheel( evnt )">mouseWheel</a>(e));
+0391           setptr(hFig,<span class="string">'hand'</span>); <span class="comment">%set(hFig,'Pointer','hand');</span>
+0392         <span class="keyword">end</span>
+0393       <span class="keyword">end</span>
+0394       <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>();
+0395     <span class="keyword">end</span>
+0396     
+0397     <a name="_sub21" href="#_subfunctions" class="code">function objShift( x, y )</a>
+0398       <span class="keyword">if</span>(curObj==0), <span class="keyword">return</span>; <span class="keyword">end</span>
+0399       objs(curObj).bb(1:2)=objs(curObj).bb(1:2)+[x y];
+0400       <a href="#_sub12" class="code" title="subfunction objsDraw()">objsDraw</a>();
+0401     <span class="keyword">end</span>
+0402   <span class="keyword">end</span>
+0403 
+0404   <a name="_sub22" href="#_subfunctions" class="code">function api = imgMakeApi()</a>
+0405     [nImg,hImg,contrast,I]=deal([]);
+0406     set(pTop.hImgInd,<span class="string">'Callback'</span>,@(h,evnt) <a href="#_sub26" class="code" title="subfunction setImgCb()">setImgCb</a>());
+0407     api = struct( <span class="string">'setImgDir'</span>,@<a href="#_sub23" class="code" title="subfunction setImgDir( imgDir1 )">setImgDir</a>, <span class="string">'setImg'</span>,@<a href="#_sub25" class="code" title="subfunction setImg( imgInd1 )">setImg</a>, <span class="keyword">...</span>
+0408       <span class="string">'adjContrast'</span>,@<a href="#_sub24" class="code" title="subfunction adjContrast( del )">adjContrast</a> );
+0409     
+0410     <a name="_sub23" href="#_subfunctions" class="code">function setImgDir( imgDir1 )</a>
+0411       objApi.closeAnn(); imgDir=imgDir1;
+0412       imgFiles=[dir([imgDir <span class="string">'/*.jpg'</span>]); dir([imgDir <span class="string">'/*.jpeg'</span>]); <span class="keyword">...</span>
+0413         dir([imgDir <span class="string">'/*.png'</span>]); dir([imgDir <span class="string">'/*.tif'</span>])];
+0414       imgFiles={imgFiles.name}; nImg=length(imgFiles); <a href="#_sub25" class="code" title="subfunction setImg( imgInd1 )">setImg</a>(1);
+0415       set(pTop.hImgNum,<span class="string">'String'</span>,[<span class="string">'/'</span> int2str(nImg)]);
+0416     <span class="keyword">end</span>
+0417     
+0418     <a name="_sub24" href="#_subfunctions" class="code">function adjContrast( del )</a>
+0419       <span class="keyword">if</span>(isempty(I)), <span class="keyword">return</span>; <span class="keyword">end</span>
+0420       contrast=max(.1,contrast+del/10);
+0421       set(hImg,<span class="string">'CData'</span>,I*contrast);
+0422     <span class="keyword">end</span>
+0423     
+0424     <a name="_sub25" href="#_subfunctions" class="code">function setImg( imgInd1 )</a>
+0425       <span class="keyword">if</span>(nImg==0), <span class="keyword">return</span>; <span class="keyword">end</span>; objApi.closeAnn(); imgInd=imgInd1;
+0426       <span class="keyword">if</span>(imgInd&lt;1), imgInd=1; <span class="keyword">end</span>; <span class="keyword">if</span>(imgInd&gt;nImg), imgInd=nImg; <span class="keyword">end</span>
+0427       I=imread([imgDir <span class="string">'/'</span> imgFiles{imgInd}]); hImg=imshow(I);
+0428       set(pTop.hImgInd,<span class="string">'String'</span>,int2str(imgInd)); contrast=1;
+0429       set(hImg,<span class="string">'ButtonDownFcn'</span>,@(h,e) <a href="#_sub6" class="code" title="subfunction mousePress()">mousePress</a>); objApi.openAnn();
+0430     <span class="keyword">end</span>
+0431     
+0432     <a name="_sub26" href="#_subfunctions" class="code">function setImgCb()</a>
+0433       imgInd1=str2double(get(pTop.hImgInd,<span class="string">'String'</span>));
+0434       <span class="keyword">if</span>(isnan(imgInd1)), <a href="#_sub25" class="code" title="subfunction setImg( imgInd1 )">setImg</a>(imgInd); <span class="keyword">else</span> <a href="#_sub25" class="code" title="subfunction setImg( imgInd1 )">setImg</a>(imgInd1); <span class="keyword">end</span>
+0435     <span class="keyword">end</span>
+0436   <span class="keyword">end</span>
+0437 
+0438 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of toolboxCompile</title>
+  <meta name="keywords" content="toolboxCompile">
+  <meta name="description" content="Compiles all mex routines that are part of toolbox.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">external</a> &gt; toolboxCompile.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>toolboxCompile
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Compiles all mex routines that are part of toolbox.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Compiles all mex routines that are part of toolbox.
+
+ If you get warnings about &quot;omp.h&quot;, your compiler may lack default OpenMp
+ support (for info about OpenMP see http://en.wikipedia.org/wiki/OpenMP).
+ To compile without OpenMP alter code below to 'useOmp(:)=0'; and re-run
+ toolboxCompile. Note that this will disable parallelization and make some
+ routines (in particular training certain classifier) much slower.
+
+ USAGE
+  toolboxCompile
+
+ INPUTS
+
+ OUTPUTS
+
+ EXAMPLE
+
+ See also
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.30
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Compiles all mex routines that are part of toolbox.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% If you get warnings about &quot;omp.h&quot;, your compiler may lack default OpenMp</span>
+0004 <span class="comment">% support (for info about OpenMP see http://en.wikipedia.org/wiki/OpenMP).</span>
+0005 <span class="comment">% To compile without OpenMP alter code below to 'useOmp(:)=0'; and re-run</span>
+0006 <span class="comment">% toolboxCompile. Note that this will disable parallelization and make some</span>
+0007 <span class="comment">% routines (in particular training certain classifier) much slower.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% USAGE</span>
+0010 <span class="comment">%  toolboxCompile</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% INPUTS</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% OUTPUTS</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% EXAMPLE</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% See also</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.30</span>
+0021 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0022 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0023 
+0024 <span class="comment">% compile options including openmp support for C++ files</span>
+0025 opts = {<span class="string">'-output'</span>};
+0026 <span class="keyword">if</span>(exist(<span class="string">'OCTAVE_VERSION'</span>,<span class="string">'builtin'</span>)), opts={<span class="string">'-o'</span>}; <span class="keyword">end</span>
+0027 <span class="keyword">if</span>( ispc ), optsOmp={<span class="string">'OPTIMFLAGS=&quot;$OPTIMFLAGS'</span>,<span class="string">'/openmp&quot;'</span>}; <span class="keyword">else</span>
+0028   optsOmp={<span class="string">'CXXFLAGS=&quot;\$CXXFLAGS'</span>,<span class="string">'-fopenmp&quot;'</span>};
+0029   optsOmp=[optsOmp,<span class="string">'LDFLAGS=&quot;\$LDFLAGS'</span>,<span class="string">'-fopenmp&quot;'</span>];
+0030 <span class="keyword">end</span>
+0031 optsOmp=[optsOmp <span class="string">'-DUSEOMP'</span>];
+0032 
+0033 <span class="comment">% list of files (missing /private/ part of directory)</span>
+0034 fs={<span class="string">'channels/convConst.cpp'</span>, <span class="string">'channels/gradientMex.cpp'</span>,<span class="keyword">...</span>
+0035   <span class="string">'channels/imPadMex.cpp'</span>, <span class="string">'channels/imResampleMex.cpp'</span>,<span class="keyword">...</span>
+0036   <span class="string">'channels/rgbConvertMex.cpp'</span>, <span class="string">'classify/binaryTreeTrain1.cpp'</span>, <span class="keyword">...</span>
+0037   <span class="string">'classify/fernsInds1.c'</span>, <span class="string">'classify/forestFindThr.cpp'</span>,<span class="keyword">...</span>
+0038   <span class="string">'classify/forestInds.cpp'</span>, <span class="string">'classify/meanShift1.c'</span>,<span class="keyword">...</span>
+0039   <span class="string">'detector/acfDetect1.cpp'</span>, <span class="string">'images/assignToBins1.c'</span>,<span class="keyword">...</span>
+0040   <span class="string">'images/histc2c.c'</span>, <span class="string">'images/imtransform2_c.c'</span>, <span class="keyword">...</span>
+0041   <span class="string">'images/nlfiltersep_max.c'</span>, <span class="string">'images/nlfiltersep_sum.c'</span>, <span class="keyword">...</span>
+0042   <span class="string">'videos/ktComputeW_c.c'</span>, <span class="string">'videos/ktHistcRgb_c.c'</span>, <span class="keyword">...</span>
+0043   <span class="string">'videos/opticalFlowHsMex.cpp'</span> };
+0044 n=length(fs); useOmp=zeros(1,n); <span class="keyword">if</span>(~ismac), useOmp([6 9])=1; <span class="keyword">end</span>
+0045 
+0046 <span class="comment">% compile every funciton in turn (special case for dijkstra)</span>
+0047 disp(<span class="string">'Compiling Piotr''s Toolbox.......................'</span>);
+0048 rd=fileparts(mfilename(<span class="string">'fullpath'</span>)); rd=rd(1:end-9); tic;
+0049 errmsg=<span class="string">' -&gt; COMPILE FAILURE: ''%s'' %s\n'</span>;
+0050 <span class="keyword">for</span> i=1:n
+0051   <span class="keyword">try</span> <span class="comment">%#ok&lt;ALIGN&gt;</span>
+0052     [d,f1,e]=fileparts(fs{i}); f=[rd <span class="string">'/'</span> d <span class="string">'/private/'</span> f1];
+0053     <span class="keyword">if</span>(useOmp(i)), optsi=[optsOmp opts]; <span class="keyword">else</span> optsi=opts; <span class="keyword">end</span>
+0054     fprintf(<span class="string">' -&gt; %s\n'</span>,[f e]); mex([f e],optsi{:},[f <span class="string">'.'</span> mexext]);
+0055   <span class="keyword">catch</span> err, fprintf(errmsg,[f1 e],err.message); <span class="keyword">end</span>
+0056 <span class="keyword">end</span>
+0057 <span class="keyword">try</span> <span class="comment">%#ok&lt;ALIGN&gt;</span>
+0058   d=[rd <span class="string">'/matlab/private/'</span>]; fprintf(<span class="string">' -&gt; %s\n'</span>,[d <span class="string">'dijkstra1.cpp'</span>]);
+0059   mex([d <span class="string">'fibheap.cpp'</span>], [d <span class="string">'dijkstra1.cpp'</span>], <span class="string">'-largeArrayDims'</span>, <span class="keyword">...</span>
+0060     opts{:}, [d <span class="string">'dijkstra1.'</span> mexext]);
+0061 <span class="keyword">catch</span> err, fprintf(errmsg,[f1 e],err.message); <span class="keyword">end</span>
+0062 disp(<span class="string">'..................................Done Compiling'</span>); toc;</pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

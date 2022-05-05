@@ -1,0 +1,432 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of savefig</title>
+  <meta name="keywords" content="savefig">
+  <meta name="description" content="Usage: savefig(filename, fighdl, options)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">other</a> &gt; savefig.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\other&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>savefig
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Usage: savefig(filename, fighdl, options)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function savefig(fname, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Usage: savefig(filename, fighdl, options)
+
+ Saves a pdf, eps, png, jpeg, and/or tiff of the contents of the fighandle's (or current) figure.
+ It saves an eps of the figure and the uses Ghostscript to convert to the other formats.
+ The result is a cropped, clean picture. There are options for using rgb or cmyk colours,
+ or grayscale. You can also choose the resolution.
+
+ The advantage of savefig is that there is very little empty space around the figure in the
+ resulting files, you can export to more than one format at once, and Ghostscript generates
+ trouble-free files.
+
+ If you find any errors, please let me know! (peder at axensten dot se)
+
+ filename: File name without suffix.
+
+ fighdl:  (default: gcf) Integer handle to figure.
+
+ options: (default: '-r300', '-lossless', '-rgb') You can define your own
+          defaults in a global variable savefig_defaults, if you want to, i.e.
+          savefig_defaults= {'-r200','-gray'};.
+ 'eps':   Output in Encapsulated Post Script (no preview yet).
+ 'pdf':   Output in (Adobe) Portable Document Format.
+ 'png':   Output in Portable Network Graphics.
+ 'jpeg':  Output in Joint Photographic Experts Group format.
+ 'tiff':  Output in Tagged Image File Format (no compression: huge files!).
+ '-rgb':  Output in rgb colours.
+ '-cmyk': Output in cmyk colours (not yet 'png' or 'jpeg' -- '-rgb' is used).
+ '-gray': Output in grayscale (not yet 'eps' -- '-rgb' is used).
+ '-fonts':  Include fonts in eps or pdf. Includes only the subset needed.
+ '-lossless':  Use lossless compression, works on most formats. same as '-c0', below.
+ '-c&lt;float&gt;':  Set compression for non-indexed bitmaps in PDFs -
+               0: lossless; 0.1: high quality; 0.5: medium; 1: high compression.
+ '-r&lt;integer&gt;':  Set resolution.
+ '-crop': Removes points and line segments outside the viewing area -- permanently.
+          Only use this on figures where many points and/or line segments are outside
+          the area zoomed in to. This option will result in smaller vector files (has no
+          effect on pixel files).
+ '-dbg':  Displays gs command line(s).
+
+ EXAMPLE:
+ savefig('nicefig', 'pdf', 'jpeg', '-cmyk', '-c0.1', '-r250');
+ Saves the current figure to nicefig.pdf and nicefig.png, both in cmyk and at 250 dpi,
+          with high quality lossy compression.
+
+ REQUIREMENT: Ghostscript. Version 8.57 works, probably older versions too, but '-dEPSCrop'
+          must be supported. I think version 7.32 or newer is ok.
+
+ HISTORY:
+ Version 1.0, 2006-04-20.
+ Version 1.1, 2006-04-27:
+ - No 'epstopdf' stuff anymore! Using '-dEPSCrop' option in gs instead!
+ Version 1.2, 2006-05-02:
+ - Added a '-dbg' option (see options, above).
+ - Now looks for a global variable 'savefig_defaults' (see options, above).
+ - More detailed Ghostscript options (user will not really notice).
+ - Warns when there is no device for a file-type/color-model combination.
+ Version 1.3, 2006-06-06:
+ - Added a check to see if there actually is a figure handle.
+ - Now works in Matlab 6.5.1 (R13SP1) (maybe in 6.5 too).
+ - Now compatible with Ghostscript 8.54, released 2006-06-01.
+ Version 1.4, 2006-07-20:
+ - Added an option '-soft' that enables anti-aliasing on pixel graphics (on by default).
+ - Added an option '-hard' that don't do anti-aliasing on pixel graphics.
+ Version 1.5, 2006-07-27:
+ - Fixed a bug when calling with a figure handle argument.
+ Version 1.6, 2006-07-28:
+ - Added a crop option, see above.
+ Version 1.7, 2007-03-31:
+ - Fixed bug: calling print with invalid renderer value '-none'.
+ - Removed GhostScript argument '-dUseCIEColor' as it sometimes discoloured things.
+ Version 1.8, 2008-01-03:
+ - Added MacIntel: 'MACI'.
+ - Added 64bit PC (I think, can't test it myself).
+ - Added option '-nointerpolate' (use it to prevent blurring of pixelated).
+ - Removed '-hard' and '-soft'. Use '-nointerpolate' for '-hard', default for '-soft'.
+ - Fixed the gs 8.57 warning on UseCIEColor (it's now set).
+ - Added '-gray' for pdf, but gs 8.56 or newer is needed.
+ - Added '-gray' and '-cmyk' for eps, but you a fairly recent gs might be needed.
+ Version 1.9, 2008-07-27:
+ - Added lossless compression, see option '-lossless', above. Works on most formats.
+ - Added lossy compression, see options '-c&lt;float&gt;...', above. Works on 'pdf'.
+   Thanks to Olly Woodford for idea and implementation!
+ - Removed option '-nointerpolate' -- now savefig never interpolates.
+ - Fixed a few small bugs and removed some mlint comments. 
+ Version 2.0, 2008-11-07:
+ - Added the possibility to include fonts into eps or pdf.
+
+ TO DO: (Need Ghostscript support for these, so don't expect anything soon...)
+ - svg output.
+ - '-cmyk' for 'jpeg' and 'png'.
+ - Preview in 'eps'.
+ - Embedded vector fonts, not bitmap, in 'eps'.
+
+ Copyright (C) Peder Axensten (peder at axensten dot se), 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function fig= do_crop(fig)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function savefig(fname, varargin)</a>
+0002     
+0003 <span class="comment">% Usage: savefig(filename, fighdl, options)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Saves a pdf, eps, png, jpeg, and/or tiff of the contents of the fighandle's (or current) figure.</span>
+0006 <span class="comment">% It saves an eps of the figure and the uses Ghostscript to convert to the other formats.</span>
+0007 <span class="comment">% The result is a cropped, clean picture. There are options for using rgb or cmyk colours,</span>
+0008 <span class="comment">% or grayscale. You can also choose the resolution.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% The advantage of savefig is that there is very little empty space around the figure in the</span>
+0011 <span class="comment">% resulting files, you can export to more than one format at once, and Ghostscript generates</span>
+0012 <span class="comment">% trouble-free files.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% If you find any errors, please let me know! (peder at axensten dot se)</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% filename: File name without suffix.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% fighdl:  (default: gcf) Integer handle to figure.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% options: (default: '-r300', '-lossless', '-rgb') You can define your own</span>
+0021 <span class="comment">%          defaults in a global variable savefig_defaults, if you want to, i.e.</span>
+0022 <span class="comment">%          savefig_defaults= {'-r200','-gray'};.</span>
+0023 <span class="comment">% 'eps':   Output in Encapsulated Post Script (no preview yet).</span>
+0024 <span class="comment">% 'pdf':   Output in (Adobe) Portable Document Format.</span>
+0025 <span class="comment">% 'png':   Output in Portable Network Graphics.</span>
+0026 <span class="comment">% 'jpeg':  Output in Joint Photographic Experts Group format.</span>
+0027 <span class="comment">% 'tiff':  Output in Tagged Image File Format (no compression: huge files!).</span>
+0028 <span class="comment">% '-rgb':  Output in rgb colours.</span>
+0029 <span class="comment">% '-cmyk': Output in cmyk colours (not yet 'png' or 'jpeg' -- '-rgb' is used).</span>
+0030 <span class="comment">% '-gray': Output in grayscale (not yet 'eps' -- '-rgb' is used).</span>
+0031 <span class="comment">% '-fonts':  Include fonts in eps or pdf. Includes only the subset needed.</span>
+0032 <span class="comment">% '-lossless':  Use lossless compression, works on most formats. same as '-c0', below.</span>
+0033 <span class="comment">% '-c&lt;float&gt;':  Set compression for non-indexed bitmaps in PDFs -</span>
+0034 <span class="comment">%               0: lossless; 0.1: high quality; 0.5: medium; 1: high compression.</span>
+0035 <span class="comment">% '-r&lt;integer&gt;':  Set resolution.</span>
+0036 <span class="comment">% '-crop': Removes points and line segments outside the viewing area -- permanently.</span>
+0037 <span class="comment">%          Only use this on figures where many points and/or line segments are outside</span>
+0038 <span class="comment">%          the area zoomed in to. This option will result in smaller vector files (has no</span>
+0039 <span class="comment">%          effect on pixel files).</span>
+0040 <span class="comment">% '-dbg':  Displays gs command line(s).</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% EXAMPLE:</span>
+0043 <span class="comment">% savefig('nicefig', 'pdf', 'jpeg', '-cmyk', '-c0.1', '-r250');</span>
+0044 <span class="comment">% Saves the current figure to nicefig.pdf and nicefig.png, both in cmyk and at 250 dpi,</span>
+0045 <span class="comment">%          with high quality lossy compression.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% REQUIREMENT: Ghostscript. Version 8.57 works, probably older versions too, but '-dEPSCrop'</span>
+0048 <span class="comment">%          must be supported. I think version 7.32 or newer is ok.</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">% HISTORY:</span>
+0051 <span class="comment">% Version 1.0, 2006-04-20.</span>
+0052 <span class="comment">% Version 1.1, 2006-04-27:</span>
+0053 <span class="comment">% - No 'epstopdf' stuff anymore! Using '-dEPSCrop' option in gs instead!</span>
+0054 <span class="comment">% Version 1.2, 2006-05-02:</span>
+0055 <span class="comment">% - Added a '-dbg' option (see options, above).</span>
+0056 <span class="comment">% - Now looks for a global variable 'savefig_defaults' (see options, above).</span>
+0057 <span class="comment">% - More detailed Ghostscript options (user will not really notice).</span>
+0058 <span class="comment">% - Warns when there is no device for a file-type/color-model combination.</span>
+0059 <span class="comment">% Version 1.3, 2006-06-06:</span>
+0060 <span class="comment">% - Added a check to see if there actually is a figure handle.</span>
+0061 <span class="comment">% - Now works in Matlab 6.5.1 (R13SP1) (maybe in 6.5 too).</span>
+0062 <span class="comment">% - Now compatible with Ghostscript 8.54, released 2006-06-01.</span>
+0063 <span class="comment">% Version 1.4, 2006-07-20:</span>
+0064 <span class="comment">% - Added an option '-soft' that enables anti-aliasing on pixel graphics (on by default).</span>
+0065 <span class="comment">% - Added an option '-hard' that don't do anti-aliasing on pixel graphics.</span>
+0066 <span class="comment">% Version 1.5, 2006-07-27:</span>
+0067 <span class="comment">% - Fixed a bug when calling with a figure handle argument.</span>
+0068 <span class="comment">% Version 1.6, 2006-07-28:</span>
+0069 <span class="comment">% - Added a crop option, see above.</span>
+0070 <span class="comment">% Version 1.7, 2007-03-31:</span>
+0071 <span class="comment">% - Fixed bug: calling print with invalid renderer value '-none'.</span>
+0072 <span class="comment">% - Removed GhostScript argument '-dUseCIEColor' as it sometimes discoloured things.</span>
+0073 <span class="comment">% Version 1.8, 2008-01-03:</span>
+0074 <span class="comment">% - Added MacIntel: 'MACI'.</span>
+0075 <span class="comment">% - Added 64bit PC (I think, can't test it myself).</span>
+0076 <span class="comment">% - Added option '-nointerpolate' (use it to prevent blurring of pixelated).</span>
+0077 <span class="comment">% - Removed '-hard' and '-soft'. Use '-nointerpolate' for '-hard', default for '-soft'.</span>
+0078 <span class="comment">% - Fixed the gs 8.57 warning on UseCIEColor (it's now set).</span>
+0079 <span class="comment">% - Added '-gray' for pdf, but gs 8.56 or newer is needed.</span>
+0080 <span class="comment">% - Added '-gray' and '-cmyk' for eps, but you a fairly recent gs might be needed.</span>
+0081 <span class="comment">% Version 1.9, 2008-07-27:</span>
+0082 <span class="comment">% - Added lossless compression, see option '-lossless', above. Works on most formats.</span>
+0083 <span class="comment">% - Added lossy compression, see options '-c&lt;float&gt;...', above. Works on 'pdf'.</span>
+0084 <span class="comment">%   Thanks to Olly Woodford for idea and implementation!</span>
+0085 <span class="comment">% - Removed option '-nointerpolate' -- now savefig never interpolates.</span>
+0086 <span class="comment">% - Fixed a few small bugs and removed some mlint comments.</span>
+0087 <span class="comment">% Version 2.0, 2008-11-07:</span>
+0088 <span class="comment">% - Added the possibility to include fonts into eps or pdf.</span>
+0089 <span class="comment">%</span>
+0090 <span class="comment">% TO DO: (Need Ghostscript support for these, so don't expect anything soon...)</span>
+0091 <span class="comment">% - svg output.</span>
+0092 <span class="comment">% - '-cmyk' for 'jpeg' and 'png'.</span>
+0093 <span class="comment">% - Preview in 'eps'.</span>
+0094 <span class="comment">% - Embedded vector fonts, not bitmap, in 'eps'.</span>
+0095 <span class="comment">%</span>
+0096 <span class="comment">% Copyright (C) Peder Axensten (peder at axensten dot se), 2006.</span>
+0097 
+0098 <span class="comment">% KEYWORDS:     eps, pdf, jpg, jpeg, png, tiff, eps2pdf, epstopdf, ghostscript</span>
+0099 <span class="comment">%</span>
+0100 <span class="comment">% INSPIRATION:  eps2pdf (5782), eps2xxx (6858)</span>
+0101 <span class="comment">%</span>
+0102 <span class="comment">% REQUIREMENTS: Works in Matlab 6.5.1 (R13SP1) (maybe in 6.5 too).</span>
+0103 
+0104 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0105     
+0106     op_dbg=        false;                                                <span class="comment">% Default value.</span>
+0107     
+0108     <span class="comment">% Compression</span>
+0109     compr=            [<span class="string">' -dUseFlateCompression=true -dLZWEncodePages=true -dCompatibilityLevel=1.6'</span> <span class="keyword">...</span>
+0110                      <span class="string">' -dAutoFilterColorImages=false -dAutoFilterGrayImages=false '</span> <span class="keyword">...</span>
+0111                      <span class="string">' -dColorImageFilter=%s -dGrayImageFilter=%s'</span>];    <span class="comment">% Compression.</span>
+0112     lossless=        sprintf (compr, <span class="string">'/FlateEncode'</span>, <span class="string">'/FlateEncode'</span>);
+0113     lossy=            sprintf (compr, <span class="string">'/DCTEncode'</span>,   <span class="string">'/DCTEncode'</span>  );
+0114     lossy=            [lossy <span class="string">' -c &quot;.setpdfwrite &lt;&lt; /ColorImageDict &lt;&lt; /QFactor %g '</span> <span class="keyword">...</span>
+0115                      <span class="string">'/Blend 1 /HSample [%s] /VSample [%s] &gt;&gt; &gt;&gt; setdistillerparams&quot;'</span>];
+0116     
+0117     <span class="comment">% Create gs command.</span>
+0118     cmdEnd=            <span class="string">' -sDEVICE=%s -sOutputFile=&quot;%s&quot;'</span>;                    <span class="comment">% Essential.</span>
+0119     epsCmd=            <span class="string">''</span>;
+0120     epsCmd=    [epsCmd <span class="string">' -dSubsetFonts=true -dNOPLATFONTS'</span>];                <span class="comment">% Future support?</span>
+0121     epsCmd=    [epsCmd <span class="string">' -dUseCIEColor=true -dColorConversionStrategy=/UseDeviceIndependentColor'</span>];
+0122     epsCmd=    [epsCmd <span class="string">' -dProcessColorModel=/%s'</span>];                        <span class="comment">% Color conversion.</span>
+0123     pdfCmd=    [epsCmd <span class="string">' -dAntiAliasColorImages=false'</span> cmdEnd];
+0124     epsCmd=    [epsCmd cmdEnd];
+0125     
+0126     <span class="comment">% Get file name.</span>
+0127     <span class="keyword">if</span>((nargin &lt; 1) || isempty(fname) || ~ischar(fname))                <span class="comment">% Check file name.</span>
+0128         error(<span class="string">'No file name specified.'</span>);
+0129     <span class="keyword">end</span>
+0130     [pathstr, namestr] = fileparts(fname);
+0131     <span class="keyword">if</span>(isempty(pathstr)), fname= fullfile(cd, namestr);    <span class="keyword">end</span>
+0132     
+0133     <span class="comment">% Get handle.</span>
+0134     fighdl=        get(0, <span class="string">'CurrentFigure'</span>); <span class="comment">% See gcf.                        % Get figure handle.</span>
+0135     <span class="keyword">if</span>((nargin &gt;= 2) &amp;&amp; (numel(varargin{1}) == 1) &amp;&amp; isnumeric(varargin{1}))
+0136         fighdl=        varargin{1};
+0137         varargin=    {varargin{2:end}};
+0138     <span class="keyword">end</span>
+0139     <span class="keyword">if</span>(isempty(fighdl)), error(<span class="string">'There is no figure to save!?'</span>);    <span class="keyword">end</span>
+0140     set(fighdl, <span class="string">'Units'</span>, <span class="string">'centimeters'</span>)                                    <span class="comment">% Set paper stuff.</span>
+0141     sz=            get(fighdl, <span class="string">'Position'</span>);
+0142     sz(1:2)=    0;
+0143     set(fighdl, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperSize'</span>, sz(3:4), <span class="string">'PaperPosition'</span>, sz);
+0144     
+0145     <span class="comment">% Set up the various devices.</span>
+0146     <span class="comment">% Those commented out are not yet supported by gs (nor by savefig).</span>
+0147     <span class="comment">% pdf-cmyk works due to the Matlab '-cmyk' export being carried over from eps to pdf.</span>
+0148     device.eps.rgb=        sprintf(epsCmd, <span class="string">'DeviceRGB'</span>,    <span class="string">'epswrite'</span>, [fname <span class="string">'.eps'</span>]);
+0149     device.jpeg.rgb=    sprintf(cmdEnd,    <span class="string">'jpeg'</span>,                     [fname <span class="string">'.jpeg'</span>]);
+0150 <span class="comment">%    device.jpeg.cmyk=    sprintf(cmdEnd,    'jpegcmyk',                 [fname '.jpeg']);</span>
+0151     device.jpeg.gray=    sprintf(cmdEnd,    <span class="string">'jpeggray'</span>,                    [fname <span class="string">'.jpeg'</span>]);
+0152     device.pdf.rgb=        sprintf(pdfCmd, <span class="string">'DeviceRGB'</span>,    <span class="string">'pdfwrite'</span>, [fname <span class="string">'.pdf'</span>]);
+0153     device.pdf.cmyk=    sprintf(pdfCmd, <span class="string">'DeviceCMYK'</span>,    <span class="string">'pdfwrite'</span>, [fname <span class="string">'.pdf'</span>]);
+0154     device.pdf.gray=    sprintf(pdfCmd, <span class="string">'DeviceGray'</span>,    <span class="string">'pdfwrite'</span>, [fname <span class="string">'.pdf'</span>]);
+0155     device.png.rgb=        sprintf(cmdEnd,    <span class="string">'png16m'</span>,                     [fname <span class="string">'.png'</span>]);
+0156 <span class="comment">%    device.png.cmyk=    sprintf(cmdEnd,    'png???',                     [fname '.png']);</span>
+0157     device.png.gray=    sprintf(cmdEnd,    <span class="string">'pnggray'</span>,                     [fname <span class="string">'.png'</span>]);
+0158     device.tiff.rgb=    sprintf(cmdEnd,    <span class="string">'tiff24nc'</span>,                    [fname <span class="string">'.tiff'</span>]);
+0159     device.tiff.cmyk=    sprintf(cmdEnd,    <span class="string">'tiff32nc'</span>,                 [fname <span class="string">'.tiff'</span>]);
+0160     device.tiff.gray=    sprintf(cmdEnd,    <span class="string">'tiffgray'</span>,                 [fname <span class="string">'.tiff'</span>]);
+0161     
+0162     <span class="comment">% Get options.</span>
+0163     <span class="keyword">global</span> savefig_defaults;                                            <span class="comment">% Add global defaults.</span>
+0164      <span class="keyword">if</span>( iscellstr(savefig_defaults)), varargin=    {savefig_defaults{:}, varargin{:}};
+0165     <span class="keyword">elseif</span>(ischar(savefig_defaults)), varargin=    {savefig_defaults, varargin{:}};
+0166     <span class="keyword">end</span>
+0167     varargin=    {<span class="string">'-r300'</span>, <span class="string">'-lossless'</span>, <span class="string">'-rgb'</span>, varargin{:}};            <span class="comment">% Add defaults.</span>
+0168     res=        <span class="string">''</span>;
+0169     types=        {};
+0170     fonts=        <span class="string">'false'</span>;
+0171     crop=        false;
+0172     <span class="keyword">for</span> n= 1:length(varargin)                                            <span class="comment">% Read options.</span>
+0173         <span class="keyword">if</span>(ischar(varargin{n}))
+0174             <span class="keyword">switch</span>(lower(varargin{n}))
+0175             <span class="keyword">case</span> {<span class="string">'eps'</span>,<span class="string">'jpeg'</span>,<span class="string">'pdf'</span>,<span class="string">'png'</span>,<span class="string">'tiff'</span>},        types{end+1}=    lower(varargin{n});
+0176             <span class="keyword">case</span> <span class="string">'-rgb'</span>,                color=    <span class="string">'rgb'</span>;    deps= {<span class="string">'-depsc2'</span>};
+0177             <span class="keyword">case</span> <span class="string">'-cmyk'</span>,                color=    <span class="string">'cmyk'</span>;    deps= {<span class="string">'-depsc2'</span>, <span class="string">'-cmyk'</span>};
+0178             <span class="keyword">case</span> <span class="string">'-gray'</span>,                color=    <span class="string">'gray'</span>;    deps= {<span class="string">'-deps2'</span>};
+0179             <span class="keyword">case</span> <span class="string">'-fonts'</span>,                fonts=            <span class="string">'true'</span>;
+0180             <span class="keyword">case</span> <span class="string">'-lossless'</span>,            comp=            0;
+0181             <span class="keyword">case</span> <span class="string">'-crop'</span>,                crop=            true;
+0182             <span class="keyword">case</span> <span class="string">'-dbg'</span>,                op_dbg=            true;
+0183             <span class="keyword">otherwise</span>
+0184                 <span class="keyword">if</span>(regexp(varargin{n}, <span class="string">'^\-r[0-9]+$'</span>)),      res=  varargin{n};
+0185                 <span class="keyword">elseif</span>(regexp(varargin{n}, <span class="string">'^\-c[0-9.]+$'</span>)), comp= str2double(varargin{n}(3:end));
+0186                 <span class="keyword">else</span>    warning(<span class="string">'pax:savefig:inputError'</span>, <span class="string">'Unknown option in argument: ''%s''.'</span>, varargin{n});
+0187                 <span class="keyword">end</span>
+0188             <span class="keyword">end</span>
+0189         <span class="keyword">else</span>
+0190             warning(<span class="string">'pax:savefig:inputError'</span>, <span class="string">'Wrong type of argument: ''%s''.'</span>, class(varargin{n}));
+0191         <span class="keyword">end</span>
+0192     <span class="keyword">end</span>
+0193     types=        unique(types);
+0194     <span class="keyword">if</span>(isempty(types)), error(<span class="string">'No output format given.'</span>);    <span class="keyword">end</span>
+0195     
+0196     <span class="keyword">if</span> (comp == 0)                                                        <span class="comment">% Lossless compression</span>
+0197         gsCompr=        lossless;
+0198     <span class="keyword">elseif</span> (comp &lt;= 0.1)                                                <span class="comment">% High quality lossy</span>
+0199         gsCompr=        sprintf(lossy, comp, <span class="string">'1 1 1 1'</span>, <span class="string">'1 1 1 1'</span>);
+0200     <span class="keyword">else</span>                                                                <span class="comment">% Normal lossy</span>
+0201         gsCompr=        sprintf(lossy, comp, <span class="string">'2 1 1 2'</span>, <span class="string">'2 1 1 2'</span>);
+0202     <span class="keyword">end</span>
+0203     
+0204     <span class="comment">% Generate the gs command.</span>
+0205     <span class="keyword">switch</span>(computer)                                                    <span class="comment">% Get gs command.</span>
+0206         <span class="keyword">case</span> {<span class="string">'MAC'</span>,<span class="string">'MACI'</span>},            gs= <span class="string">'/usr/local/bin/gs'</span>;
+0207         <span class="keyword">case</span> {<span class="string">'PCWIN'</span>},        gs= <span class="string">'gswin32c.exe'</span>;
+0208         <span class="keyword">case</span> {<span class="string">'PCWIN64'</span>},        gs= <span class="string">'gswin64c.exe'</span>;
+0209         <span class="keyword">otherwise</span>,                        gs= <span class="string">'gs'</span>;
+0210     <span class="keyword">end</span>
+0211     gs=        [gs        <span class="string">' -q -dNOPAUSE -dBATCH -dEPSCrop'</span>];                    <span class="comment">% Essential.</span>
+0212     gs=        [gs     <span class="string">' -dPDFSETTINGS=/prepress -dEmbedAllFonts='</span> fonts];    <span class="comment">% Must be first?</span>
+0213     gs=        [gs        <span class="string">' -dUseFlateCompression=true'</span>];                        <span class="comment">% Useful stuff.</span>
+0214     gs=        [gs        <span class="string">' -dAutoRotatePages=/None'</span>];                        <span class="comment">% Probably good.</span>
+0215     gs=        [gs        <span class="string">' -dHaveTrueTypes'</span>];                                <span class="comment">% Probably good.</span>
+0216     gs=        [gs        <span class="string">' '</span> res];                                            <span class="comment">% Add resolution to cmd.</span>
+0217     
+0218     <span class="keyword">if</span>(crop &amp;&amp; ismember(types, {<span class="string">'eps'</span>, <span class="string">'pdf'</span>}))                            <span class="comment">% Crop the figure.</span>
+0219         fighdl= <a href="#_sub1" class="code" title="subfunction fig= do_crop(fig)">do_crop</a>(fighdl);
+0220     <span class="keyword">end</span>
+0221     
+0222     <span class="comment">% Output eps from Matlab.</span>
+0223     renderer=    [<span class="string">'-'</span> lower(get(fighdl, <span class="string">'Renderer'</span>))];                    <span class="comment">% Use same as in figure.</span>
+0224     <span class="keyword">if</span>(strcmpi(renderer, <span class="string">'-none'</span>)), renderer=    <span class="string">'-painters'</span>;    <span class="keyword">end</span>        <span class="comment">% We need a valid renderer.</span>
+0225     deps = [deps <span class="string">'-loose'</span>];  <span class="comment">% added by PPD seems to help w cropping in matlab 2014b :(</span>
+0226     print(fighdl, deps{:}, <span class="string">'-noui'</span>, renderer, res, [fname <span class="string">'-temp'</span>]);    <span class="comment">% Output the eps.</span>
+0227     
+0228     <span class="comment">% Convert to other formats.</span>
+0229     <span class="keyword">for</span> n= 1:length(types)                                                <span class="comment">% Output them.</span>
+0230         <span class="keyword">if</span>(isfield(device.(types{n}), color))
+0231             cmd=        device.(types{n}).(color);                        <span class="comment">% Colour model exists.</span>
+0232         <span class="keyword">else</span>
+0233             cmd=        device.(types{n}).rgb;                            <span class="comment">% Use alternative.</span>
+0234             <span class="keyword">if</span>(~strcmp(types{n}, <span class="string">'eps'</span>))    <span class="comment">% It works anyways for eps (VERY SHAKY!).</span>
+0235                 warning(<span class="string">'pax:savefig:deviceError'</span>, <span class="keyword">...</span>
+0236                         <span class="string">'No device for %s using %s. Using rgb instead.'</span>, types{n}, color);
+0237             <span class="keyword">end</span>
+0238         <span class="keyword">end</span>
+0239         cmp=    lossless;
+0240         <span class="keyword">if</span> (strcmp(types{n}, <span class="string">'pdf'</span>)),    cmp= gsCompr;        <span class="keyword">end</span>            <span class="comment">% Lossy compr only for pdf.</span>
+0241         <span class="keyword">if</span> (strcmp(types{n}, <span class="string">'eps'</span>)),    cmp= <span class="string">''</span>;            <span class="keyword">end</span>            <span class="comment">% eps can't use lossless.</span>
+0242         cmd=    sprintf(<span class="string">'%s %s %s -f &quot;%s-temp.eps&quot;'</span>, gs, cmd, cmp, fname);<span class="comment">% Add up.</span>
+0243             status= system(cmd);                                        <span class="comment">% Run Ghostscript.</span>
+0244             <span class="keyword">if</span> (op_dbg || status),         display (cmd),        <span class="keyword">end</span>
+0245     <span class="keyword">end</span>
+0246     delete([fname <span class="string">'-temp.eps'</span>]);                                        <span class="comment">% Clean up.</span>
+0247 <span class="keyword">end</span>
+0248 
+0249 
+0250 <a name="_sub1" href="#_subfunctions" class="code">function fig= do_crop(fig)</a>
+0251 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0252 <span class="comment">%    Remove line segments that are outside the view.</span>
+0253 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0254     
+0255     haxes=    findobj(fig, <span class="string">'Type'</span>, <span class="string">'axes'</span>, <span class="string">'-and'</span>, <span class="string">'Tag'</span>, <span class="string">''</span>);
+0256     <span class="keyword">for</span> n=1:length(haxes)
+0257         xl=        get(haxes(n), <span class="string">'XLim'</span>);
+0258         yl=        get(haxes(n), <span class="string">'YLim'</span>);
+0259         lines=    findobj(haxes(n), <span class="string">'Type'</span>, <span class="string">'line'</span>);
+0260         <span class="keyword">for</span> m=1:length(lines)
+0261             x=                get(lines(m), <span class="string">'XData'</span>);
+0262             y=                get(lines(m), <span class="string">'YData'</span>);
+0263             
+0264             inx=            (xl(1) &lt;= x) &amp; (x &lt;= xl(2));    <span class="comment">% Within the x borders.</span>
+0265             iny=            (yl(1) &lt;= y) &amp; (y &lt;= yl(2));    <span class="comment">% Within the y borders.</span>
+0266             keep=            inx &amp; iny;                        <span class="comment">% Within the box.</span>
+0267             
+0268             <span class="keyword">if</span>(~strcmp(get(lines(m), <span class="string">'LineStyle'</span>), <span class="string">'none'</span>))
+0269                 crossx=        ((x(1:end-1) &lt; xl(1)) &amp; (xl(1) &lt; x(2:end))) <span class="keyword">...</span><span class="comment">    % Crossing border x1.</span>
+0270                         |    ((x(1:end-1) &lt; xl(2)) &amp; (xl(2) &lt; x(2:end))) <span class="keyword">...</span><span class="comment">    % Crossing border x2.</span>
+0271                         |    ((x(1:end-1) &gt; xl(1)) &amp; (xl(1) &gt; x(2:end))) <span class="keyword">...</span><span class="comment">    % Crossing border x1.</span>
+0272                         |    ((x(1:end-1) &gt; xl(2)) &amp; (xl(2) &gt; x(2:end)));    <span class="comment">% Crossing border x2.</span>
+0273                 crossy=        ((y(1:end-1) &lt; yl(1)) &amp; (yl(1) &lt; y(2:end))) <span class="keyword">...</span><span class="comment">    % Crossing border y1.</span>
+0274                         |    ((y(1:end-1) &lt; yl(2)) &amp; (yl(2) &lt; y(2:end))) <span class="keyword">...</span><span class="comment">    % Crossing border y2.</span>
+0275                         |    ((y(1:end-1) &gt; yl(1)) &amp; (yl(1) &gt; y(2:end))) <span class="keyword">...</span><span class="comment">    % Crossing border y1.</span>
+0276                         |    ((y(1:end-1) &gt; yl(2)) &amp; (yl(2) &gt; y(2:end)));    <span class="comment">% Crossing border y2.</span>
+0277                 crossp=    [(    (crossx &amp; iny(1:end-1) &amp; iny(2:end)) <span class="keyword">...</span><span class="comment">    % Crossing a x border within y limits.</span>
+0278                         |    (crossy &amp; inx(1:end-1) &amp; inx(2:end)) <span class="keyword">...</span><span class="comment">    % Crossing a y border within x limits.</span>
+0279                         |    crossx &amp; crossy <span class="keyword">...</span><span class="comment">                            % Crossing a x and a y border (corner).</span>
+0280                          ),    false <span class="keyword">...</span>
+0281                         ];
+0282                 crossp(2:end)=    crossp(2:end) | crossp(1:end-1);        <span class="comment">% Add line segment's secont end point.</span>
+0283             
+0284                 keep=            keep | crossp;
+0285             <span class="keyword">end</span>
+0286             set(lines(m), <span class="string">'XData'</span>, x(keep))
+0287             set(lines(m), <span class="string">'YData'</span>, y(keep))
+0288         <span class="keyword">end</span>
+0289     <span class="keyword">end</span>
+0290 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
