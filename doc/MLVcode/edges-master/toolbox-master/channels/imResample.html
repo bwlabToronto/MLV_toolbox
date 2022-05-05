@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imResample</title>
+  <meta name="keywords" content="imResample">
+  <meta name="description" content="Fast bilinear image downsampling/upsampling.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">channels</a> &gt; imResample.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\channels&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>imResample
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Fast bilinear image downsampling/upsampling.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function B = imResample( A, scale, method, norm ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Fast bilinear image downsampling/upsampling.
+
+ Gives similar results to imresize with the bilinear option and
+ antialiasing turned off if scale is near 1, except sometimes the final
+ dims are off by 1 pixel. For very small values of the scale imresize is
+ faster but only looks at subset of values of original image.
+
+ This code requires SSE2 to compile and run (most modern Intel and AMD
+ processors support SSE2). Please see: http://en.wikipedia.org/wiki/SSE2.
+
+ USAGE
+  B = imResample( A, scale, [method], [norm] )
+
+ INPUT
+  A        - input image (2D or 3D single, double or uint8 array)
+  scale    - scalar resize factor [s] of target height and width [h w]
+  method   - ['bilinear'] either 'bilinear' or 'nearest'
+  norm     - [1] optionally multiply every output pixel by norm
+
+ OUPUT
+   B       - resampled image
+
+ EXAMPLE
+  I=single(imread('cameraman.tif')); n=100; s=1/2; method='bilinear';
+  tic, for i=1:n, I1=imresize(I,s,method,'Antialiasing',0); end; toc
+  tic, for i=1:n, I2=imResample(I,s,method); end; toc
+  figure(1); im(I1); figure(2); im(I2);
+
+ See also imresize
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.24
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function B = imResample( A, scale, method, norm )</a>
+0002 <span class="comment">% Fast bilinear image downsampling/upsampling.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Gives similar results to imresize with the bilinear option and</span>
+0005 <span class="comment">% antialiasing turned off if scale is near 1, except sometimes the final</span>
+0006 <span class="comment">% dims are off by 1 pixel. For very small values of the scale imresize is</span>
+0007 <span class="comment">% faster but only looks at subset of values of original image.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% This code requires SSE2 to compile and run (most modern Intel and AMD</span>
+0010 <span class="comment">% processors support SSE2). Please see: http://en.wikipedia.org/wiki/SSE2.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% USAGE</span>
+0013 <span class="comment">%  B = imResample( A, scale, [method], [norm] )</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% INPUT</span>
+0016 <span class="comment">%  A        - input image (2D or 3D single, double or uint8 array)</span>
+0017 <span class="comment">%  scale    - scalar resize factor [s] of target height and width [h w]</span>
+0018 <span class="comment">%  method   - ['bilinear'] either 'bilinear' or 'nearest'</span>
+0019 <span class="comment">%  norm     - [1] optionally multiply every output pixel by norm</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% OUPUT</span>
+0022 <span class="comment">%   B       - resampled image</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% EXAMPLE</span>
+0025 <span class="comment">%  I=single(imread('cameraman.tif')); n=100; s=1/2; method='bilinear';</span>
+0026 <span class="comment">%  tic, for i=1:n, I1=imresize(I,s,method,'Antialiasing',0); end; toc</span>
+0027 <span class="comment">%  tic, for i=1:n, I2=imResample(I,s,method); end; toc</span>
+0028 <span class="comment">%  figure(1); im(I1); figure(2); im(I2);</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% See also imresize</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.24</span>
+0033 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0034 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0035 
+0036 <span class="comment">% figure out method and get target dimensions</span>
+0037 <span class="keyword">if</span>( nargin&lt;3 || isempty(method) ), bilinear=1; <span class="keyword">else</span>
+0038   <span class="keyword">if</span>(~all(ischar(method))), error(<span class="string">'method must be a string'</span>); <span class="keyword">end</span>
+0039   bilinear = ~strcmpi(method,<span class="string">'nearest'</span>);
+0040 <span class="keyword">end</span>
+0041 <span class="keyword">if</span>( nargin&lt;4 || isempty(norm) ), norm=1; <span class="keyword">end</span>
+0042 [m,n,~]=size(A); k=numel(scale);
+0043 same = (k==1 &amp;&amp; scale==1) | (k==2 &amp;&amp; m==scale(1) &amp;&amp; n==scale(2));
+0044 <span class="keyword">if</span>( same &amp;&amp; norm==1 ); B=A; <span class="keyword">return</span>; <span class="keyword">end</span>
+0045 
+0046 <span class="keyword">if</span>( bilinear )
+0047   <span class="comment">% use bilinear interpolation</span>
+0048   <span class="keyword">if</span>(k==1), m1=round(scale*m); n1=round(scale*n);
+0049   <span class="keyword">else</span> m1=scale(1); n1=scale(2); <span class="keyword">end</span>
+0050   B=imResampleMex(A,m1,n1,norm);
+0051 <span class="keyword">else</span>
+0052   <span class="comment">% use nearest neighbor interpolation</span>
+0053   <span class="keyword">if</span>(k==1), sy=scale; sx=sy; m1=ceil(m*sy); n1=ceil(n*sx);
+0054   <span class="keyword">else</span> m1=scale(1); n1=scale(2); sy=m1/m; sx=n1/n; <span class="keyword">end</span>
+0055   y=(1:m1)'; y=floor(y/sy-.5/sy+1); y=min(max(1,y),m);
+0056   x=(1:n1)'; x=floor(x/sx-.5/sx+1); x=min(max(1,x),n);
+0057   nd=ndims(A); <span class="keyword">if</span>(nd==2), B=A(y,x); <span class="keyword">elseif</span>(nd==3), B=A(y,x,:);
+0058   <span class="keyword">else</span> ids={y,x}; ids(3:nd)={<span class="string">':'</span>}; B=A(ids{:}); <span class="keyword">end</span>
+0059   <span class="keyword">if</span>(norm~=1), B=B*norm; <span class="keyword">end</span>
+0060 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

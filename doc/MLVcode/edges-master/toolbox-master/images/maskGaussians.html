@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of maskGaussians</title>
+  <meta name="keywords" content="maskGaussians">
+  <meta name="description" content="Divides a volume into softly overlapping gaussian windows.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; maskGaussians.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>maskGaussians
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Divides a volume into softly overlapping gaussian windows.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [masks,keepLocs] = maskGaussians( siz, M, width, offset, show ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Divides a volume into softly overlapping gaussian windows.
+
+ Return M^nd masks each of size siz.  Each mask represents a symmetric
+ gaussian window, the locations are evenly spaced throughout the array of
+ size siz.  For example, if M=2, then along each dimension d the location
+ of each mask is either 1/4 or 3/4 of siz(d) and likewise if M=3 that mask
+ is at 1/6,3/6, or 5/6 of siz(d). For higher M the locations are:
+ 1/2M,3/2M,...,M-1/2M. See examples below to visualize the masks.
+
+ The std of each gaussian is set to be equal to the spacing between two
+ adjacent masks multiplied by width.  Reducing the widths of the gaussians
+ causes there to be less overlap between masks, but if the width is
+ reduced too far certain pixels in between masks receive very little
+ weight.  A desired property of the masks is that their coverage (the
+ total weight placed on the pixel by all the masks) is approximately
+ constant.  Typically, we settle for having the coverage be monotonically
+ decreasing as we move away from the center.  (In reality the coverage
+ oscilates as we move past peaks, it's just that the oscillations tend to
+ be small).  The default value of the width is .6, which minimizes overlap
+ while still providing good overall coverage. Values lower tend to produce
+ noticeable oscillations in coverage.  offset in (-.5,1) controls the
+ spacing of the locations.  Essentially, a positive offset moves the
+ locations away from the center of the array and a negative offset moves
+ the windows away from the center.  Using a positive offset gives better
+ coverage to areas near the borders.
+
+ USAGE
+  [masks,keepLocs] = maskGaussians( siz, M, [width], [offset], [show] )
+ 
+ INPUTS
+  siz         - dimensions of each mask
+  M           - # mask locations along each dim [either scalar or vector]
+  width       - [.6] widths of the gaussians
+  offset      - [.1] spacing of mask centers; in (-.5,1)
+  [show]      - [0] figure to use for display (no display if==0) (nd&lt;=3)
+
+ OUTPUTS
+  masks       - [see above] array of size [siz x M^nd]
+  keepLocs    - logical array of all locs where masks is nonzero
+
+ EXAMPLE
+  masks = maskGaussians( 100, 10, .6, -.1, 1 );  %1D
+  masks = maskGaussians( [35 35], 3, .6, .1, 1 );  %2D
+  masks = maskGaussians( [35 35 35], [2 2 4], .6, .1, 1 ); %3D
+
+ See also <a href="histcImLoc.html" class="code" title="function h = histcImLoc( I, edges, parMask, wtMask, multCh )">HISTCIMLOC</a>, <a href="maskCircle.html" class="code" title="function mask = maskCircle( angleStart, angleSiz, r, nSamples )">MASKCIRCLE</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="im.html" class="code" title="function varargout = im( I, range, extraInf )">im</a>	Function for displaying grayscale images.</li><li><a href="montage2.html" class="code" title="function varargout = montage2( IS, prm )">montage2</a>	Used to display collections of images and videos.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="histcImLoc.html" class="code" title="function h = histcImLoc( I, edges, parMask, wtMask, multCh )">histcImLoc</a>	Creates a series of locally position dependent histograms.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [masks,keepLocs] = maskGaussians( siz, M, width, offset, show )</a>
+0002 <span class="comment">% Divides a volume into softly overlapping gaussian windows.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Return M^nd masks each of size siz.  Each mask represents a symmetric</span>
+0005 <span class="comment">% gaussian window, the locations are evenly spaced throughout the array of</span>
+0006 <span class="comment">% size siz.  For example, if M=2, then along each dimension d the location</span>
+0007 <span class="comment">% of each mask is either 1/4 or 3/4 of siz(d) and likewise if M=3 that mask</span>
+0008 <span class="comment">% is at 1/6,3/6, or 5/6 of siz(d). For higher M the locations are:</span>
+0009 <span class="comment">% 1/2M,3/2M,...,M-1/2M. See examples below to visualize the masks.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% The std of each gaussian is set to be equal to the spacing between two</span>
+0012 <span class="comment">% adjacent masks multiplied by width.  Reducing the widths of the gaussians</span>
+0013 <span class="comment">% causes there to be less overlap between masks, but if the width is</span>
+0014 <span class="comment">% reduced too far certain pixels in between masks receive very little</span>
+0015 <span class="comment">% weight.  A desired property of the masks is that their coverage (the</span>
+0016 <span class="comment">% total weight placed on the pixel by all the masks) is approximately</span>
+0017 <span class="comment">% constant.  Typically, we settle for having the coverage be monotonically</span>
+0018 <span class="comment">% decreasing as we move away from the center.  (In reality the coverage</span>
+0019 <span class="comment">% oscilates as we move past peaks, it's just that the oscillations tend to</span>
+0020 <span class="comment">% be small).  The default value of the width is .6, which minimizes overlap</span>
+0021 <span class="comment">% while still providing good overall coverage. Values lower tend to produce</span>
+0022 <span class="comment">% noticeable oscillations in coverage.  offset in (-.5,1) controls the</span>
+0023 <span class="comment">% spacing of the locations.  Essentially, a positive offset moves the</span>
+0024 <span class="comment">% locations away from the center of the array and a negative offset moves</span>
+0025 <span class="comment">% the windows away from the center.  Using a positive offset gives better</span>
+0026 <span class="comment">% coverage to areas near the borders.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% USAGE</span>
+0029 <span class="comment">%  [masks,keepLocs] = maskGaussians( siz, M, [width], [offset], [show] )</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% INPUTS</span>
+0032 <span class="comment">%  siz         - dimensions of each mask</span>
+0033 <span class="comment">%  M           - # mask locations along each dim [either scalar or vector]</span>
+0034 <span class="comment">%  width       - [.6] widths of the gaussians</span>
+0035 <span class="comment">%  offset      - [.1] spacing of mask centers; in (-.5,1)</span>
+0036 <span class="comment">%  [show]      - [0] figure to use for display (no display if==0) (nd&lt;=3)</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% OUTPUTS</span>
+0039 <span class="comment">%  masks       - [see above] array of size [siz x M^nd]</span>
+0040 <span class="comment">%  keepLocs    - logical array of all locs where masks is nonzero</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% EXAMPLE</span>
+0043 <span class="comment">%  masks = maskGaussians( 100, 10, .6, -.1, 1 );  %1D</span>
+0044 <span class="comment">%  masks = maskGaussians( [35 35], 3, .6, .1, 1 );  %2D</span>
+0045 <span class="comment">%  masks = maskGaussians( [35 35 35], [2 2 4], .6, .1, 1 ); %3D</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% See also HISTCIMLOC, MASKCIRCLE</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0050 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0051 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0052 
+0053 nd = length(siz);
+0054 <span class="keyword">if</span>( nargin&lt;3 || isempty(width)); width = .6; <span class="keyword">end</span>;    
+0055 <span class="keyword">if</span>( nargin&lt;4 || isempty(offset)); offset = .1; <span class="keyword">end</span>;
+0056 <span class="keyword">if</span>( nargin&lt;5 || isempty(show) || nd&gt;3 ); show = 0; <span class="keyword">end</span>;
+0057 
+0058 <span class="comment">%%% uses a cache since this is slow but often called with same inputs.</span>
+0059 <span class="keyword">persistent</span> cache; <span class="keyword">if</span>( isempty(cache) ); cache=simpleCache(<span class="string">'init'</span>); <span class="keyword">end</span>;
+0060 key = [nd siz M width offset];
+0061 [found,val] = simpleCache( <span class="string">'get'</span>, cache, key ); 
+0062 <span class="keyword">if</span>( found ) <span class="comment">%%% get masks and keepLocs from cache</span>
+0063   [masks,keepLocs] = deal(val{:});
+0064 <span class="keyword">else</span> <span class="comment">%%% create masks and keepLocs</span>
+0065   [M,er] = checkNumArgs( M, [1 nd], 0, 2 ); error(er);
+0066   inds = {<span class="string">':'</span>}; inds = inds(:,ones(1,nd));  
+0067   <span class="keyword">if</span>( offset&lt;=-.5 || offset&gt;=1 ); error(<span class="string">'offset must be in (-.5,1)'</span>); <span class="keyword">end</span>;
+0068 
+0069   <span class="comment">%%% the covariance of each window</span>
+0070   spacing = (siz*(1+2*offset))./M;
+0071   sigmas = spacing * width;
+0072   C = diag(sigmas.^2);
+0073   
+0074   <span class="comment">%%% create each mask</span>
+0075   masks = zeros( [siz,prod(M)] );
+0076   <span class="keyword">for</span> c=1:prod(M) 
+0077     sub = ind2sub2( M, c );
+0078     mus = (sub-.5).* spacing + .5-offset*siz;
+0079     masks(inds{:},c) = filterGauss( siz, mus, C );
+0080   <span class="keyword">end</span>
+0081   keepLocs = masks&gt;1e-7;
+0082 
+0083   <span class="comment">%%% place into cache</span>
+0084   cache = simpleCache( <span class="string">'put'</span>, cache, key, {masks,keepLocs} );
+0085 <span class="keyword">end</span>;
+0086 
+0087 <span class="comment">%%% optionally display</span>
+0088 <span class="keyword">if</span>( show )
+0089   <span class="keyword">if</span>( nd==1 )
+0090     figure(show); clf; plot( masks );
+0091     figure(show+1); clf; plot(sum( masks,nd+1 ));
+0092     a=axis; a(3)=0; axis(a);
+0093     title(<span class="string">'coverage'</span>);
+0094  <span class="keyword">elseif</span>( nd==2)
+0095     figure(show); clf; <a href="montage2.html" class="code" title="function varargout = montage2( IS, prm )">montage2</a>( masks );        
+0096     figure(show+1); clf; <a href="im.html" class="code" title="function varargout = im( I, range, extraInf )">im</a>(sum( masks,nd+1));
+0097     title(<span class="string">'coverage'</span>);
+0098   <span class="keyword">elseif</span>( nd==3)
+0099     figure(show); clf; <a href="montage2.html" class="code" title="function varargout = montage2( IS, prm )">montage2</a>( masks );        
+0100     figure(show+1); clf; <a href="montage2.html" class="code" title="function varargout = montage2( IS, prm )">montage2</a>(sum( masks,nd+1) );
+0101     title(<span class="string">'coverage'</span>);
+0102   <span class="keyword">end</span>
+0103 <span class="keyword">end</span>;
+0104</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

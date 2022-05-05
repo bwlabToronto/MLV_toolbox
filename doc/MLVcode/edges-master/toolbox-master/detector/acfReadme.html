@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of acfReadme</title>
+  <meta name="keywords" content="acfReadme">
+  <meta name="description" content="Aggregate Channel Features Detector Overview.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">detector</a> &gt; acfReadme.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\detector&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>acfReadme
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Aggregate Channel Features Detector Overview.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Aggregate Channel Features Detector Overview.
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.40
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%% 1. Introduction. %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ The detector portion of this toolbox implements the Aggregate Channel
+ Features (ACF) object detection code. The ACF detector is a fast and
+ effective sliding window detector (30 fps on a single core). It is an
+ evolution of the Viola &amp; Jones (VJ) detector but with an ~1000 fold
+ decrease in false positives (at the same detection rate). ACF is best
+ suited for quasi-rigid object detection (e.g. faces, pedestrians, cars).
+
+ The detection code was written by Piotr Dollár with contributions by Ron
+ Appel and Woonhyun Nam (with bug reports/suggestions from many others).
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%% 2. Papers. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ The detector was introduced and described through the following papers:
+  [1] P. Dollár, Z. Tu, P. Perona and S. Belongie
+   &quot;Integral Channel Features&quot;, BMVC 2009.
+  [2] P. Dollár, S. Belongie and P. Perona
+   &quot;The Fastest Pedestrian Detector in the West,&quot; BMVC 2010.
+  [3] P. Dollár, R. Appel and W. Kienzle
+   &quot;Crosstalk Cascades for Frame-Rate Pedestrian Detection,&quot; ECCV 2012.
+  [4] P. Dollár, R. Appel, S. Belongie and P. Perona
+   &quot;Fast Feature Pyramids for Object Detection,&quot; PAMI 2014.
+  [5] W. Nam, P. Dollár, and J.H. Han
+   &quot;Local Decorrelation For Improved Pedestrian Detection,&quot; NIPS 2014.
+ Please see: http://vision.ucsd.edu/~pdollar/research.html#ObjectDetection
+
+ A short summary of the papers, organized by detector name:
+
+ [1] &quot;Integral Channel Features&quot; [ICF] - Introduced channel features and
+ modified the VJ framework to compute integral images (and Haar wavelets)
+ over the channels. Substantially outperformed HOG and at faster speeds.
+
+ [2] &quot;Fastest Pedestrian Detector in the West&quot; [FPDW] - We observed that
+ features computed at one scale can be used to approximate features at
+ nearby scales, increasing detector speed with little loss in accuracy.
+
+ [3] &quot;Crosstalk Cascades&quot; - This work coupled cascade evaluation at nearby
+ positions and scales to exploit correlations in detector responses at
+ neighboring locations. Further increased speed of the ICF detector.
+
+ [4] &quot;Aggregate Channel Features&quot; [ACF] - We found that single-scale
+ square Haar wavelets were sufficient in the ICF framework. Thus instead
+ of computing integral images and Haar wavelets, we simply smooth and
+ downsample the channels and the features are now single pixel lookups in
+ the &quot;aggregated&quot; channels.
+
+ [5] &quot;Locally Decorralated Channel Features&quot; [LDCF] - Filtering the
+ channel features with appropriate data-derived filters can remove local
+ correlations from the channels. Given decorrelated features, boosted
+ decision trees generalize much better giving a nice boost in accuracy.
+
+ This code implements ACF [4] and LDCF [5]. It does not implement ICF [1]
+ or FPDW [2] which are now obsolete and supplemented by ACF. Crosstalk
+ cascades [3] are also not used as classifier evalution in ACF is very
+ fast (no need to compute Haar wavelets). However, ACF does use the simple
+ but highly effective &quot;constant soft cascades&quot; from [3].
+
+ Please cite a subset of the above papers as appropriate if you end up
+ using this code to support a publication. Thanks!
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%% 3. Setup. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ (A) Please install and setup the toolbox as described online:
+  http://vision.ucsd.edu/~pdollar/toolbox/doc/index.html
+ You may need to recompile for your system, see toolboxCompile. Note:
+ enabling OpenMP during compile will significantly speed training.
+
+ (B) Important: to train the detectors and run the detection demos you
+ need to install the Caltech Pedestrian Detection Benchmark available at:
+  http://www.vision.caltech.edu/Image_Datasets/CaltechPedestrians/
+ In particular, make sure to download and install:
+  (B1) Matlab evaluation/labeling code version 3.2.1 or later
+  (B2) INRIA data (necessary for the INRIA demo)
+  (B3) Caltech-USA data (necessary for the Caltech demo)
+ Please follow the instruction in the readme of the Caltech code. You only
+ need to download the data and code and place appropriately, there is no
+ need to look closely at the evaluation code. Initially running the demos
+ (acfDemoInria and acfDemoCal) will convert the data from the Caltech data
+ format to a format useable by ACF. If this step fails it means the
+ Caltech code or data is not properly setup.
+
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%% 4. Getting Started. %%%%%%%%%%%%%%%%%%%%%%%%
+
+ After performing the setup, see acfDemoInria.m and acfDemoCal.m for demos
+ and visualizations.
+
+ For an overview of available functionality please see detector/Contents.m
+ and channels/Contents.m. The various detector/acf*.m and channels/chns*.m
+ functions are well documented and worth checking for additional details.
+
+ Finally, a note about pre-trained models. The detector/models/ directory
+ contains four pre-trained pedestrian models (ACF/LDCF on INRIA/Caltech).
+ Running acfDemoInria/Cal.m with the ACF/LDCF flag toggled gives rise to
+ these models (just delete the existing models to retrain from scratch).
+ Note, however, that results will differ by up to +/-2% MR depending on
+ operating system and random seed (see opts.seed), and the models here are
+ not exactly equivalent to the models in the papers (due to evolution of
+ the code). Small changes in MR should not be considered significant (nor
+ should they be used as a basis for publishing). Whenever making a change
+ I suggest training/testing the same model with multiple random seeds.
+
+ Enjoy and I hope you find the detectors useful :)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Aggregate Channel Features Detector Overview.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.40</span>
+0004 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0005 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% %%%%%%%%%%%%%%%%%%%%%%%%%%%% 1. Introduction. %%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% The detector portion of this toolbox implements the Aggregate Channel</span>
+0010 <span class="comment">% Features (ACF) object detection code. The ACF detector is a fast and</span>
+0011 <span class="comment">% effective sliding window detector (30 fps on a single core). It is an</span>
+0012 <span class="comment">% evolution of the Viola &amp; Jones (VJ) detector but with an ~1000 fold</span>
+0013 <span class="comment">% decrease in false positives (at the same detection rate). ACF is best</span>
+0014 <span class="comment">% suited for quasi-rigid object detection (e.g. faces, pedestrians, cars).</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% The detection code was written by Piotr Dollár with contributions by Ron</span>
+0017 <span class="comment">% Appel and Woonhyun Nam (with bug reports/suggestions from many others).</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% %%%%%%%%%%%%%%%%%%%%%%%%%%%% 2. Papers. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% The detector was introduced and described through the following papers:</span>
+0022 <span class="comment">%  [1] P. Dollár, Z. Tu, P. Perona and S. Belongie</span>
+0023 <span class="comment">%   &quot;Integral Channel Features&quot;, BMVC 2009.</span>
+0024 <span class="comment">%  [2] P. Dollár, S. Belongie and P. Perona</span>
+0025 <span class="comment">%   &quot;The Fastest Pedestrian Detector in the West,&quot; BMVC 2010.</span>
+0026 <span class="comment">%  [3] P. Dollár, R. Appel and W. Kienzle</span>
+0027 <span class="comment">%   &quot;Crosstalk Cascades for Frame-Rate Pedestrian Detection,&quot; ECCV 2012.</span>
+0028 <span class="comment">%  [4] P. Dollár, R. Appel, S. Belongie and P. Perona</span>
+0029 <span class="comment">%   &quot;Fast Feature Pyramids for Object Detection,&quot; PAMI 2014.</span>
+0030 <span class="comment">%  [5] W. Nam, P. Dollár, and J.H. Han</span>
+0031 <span class="comment">%   &quot;Local Decorrelation For Improved Pedestrian Detection,&quot; NIPS 2014.</span>
+0032 <span class="comment">% Please see: http://vision.ucsd.edu/~pdollar/research.html#ObjectDetection</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% A short summary of the papers, organized by detector name:</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% [1] &quot;Integral Channel Features&quot; [ICF] - Introduced channel features and</span>
+0037 <span class="comment">% modified the VJ framework to compute integral images (and Haar wavelets)</span>
+0038 <span class="comment">% over the channels. Substantially outperformed HOG and at faster speeds.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% [2] &quot;Fastest Pedestrian Detector in the West&quot; [FPDW] - We observed that</span>
+0041 <span class="comment">% features computed at one scale can be used to approximate features at</span>
+0042 <span class="comment">% nearby scales, increasing detector speed with little loss in accuracy.</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% [3] &quot;Crosstalk Cascades&quot; - This work coupled cascade evaluation at nearby</span>
+0045 <span class="comment">% positions and scales to exploit correlations in detector responses at</span>
+0046 <span class="comment">% neighboring locations. Further increased speed of the ICF detector.</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">% [4] &quot;Aggregate Channel Features&quot; [ACF] - We found that single-scale</span>
+0049 <span class="comment">% square Haar wavelets were sufficient in the ICF framework. Thus instead</span>
+0050 <span class="comment">% of computing integral images and Haar wavelets, we simply smooth and</span>
+0051 <span class="comment">% downsample the channels and the features are now single pixel lookups in</span>
+0052 <span class="comment">% the &quot;aggregated&quot; channels.</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">% [5] &quot;Locally Decorralated Channel Features&quot; [LDCF] - Filtering the</span>
+0055 <span class="comment">% channel features with appropriate data-derived filters can remove local</span>
+0056 <span class="comment">% correlations from the channels. Given decorrelated features, boosted</span>
+0057 <span class="comment">% decision trees generalize much better giving a nice boost in accuracy.</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">% This code implements ACF [4] and LDCF [5]. It does not implement ICF [1]</span>
+0060 <span class="comment">% or FPDW [2] which are now obsolete and supplemented by ACF. Crosstalk</span>
+0061 <span class="comment">% cascades [3] are also not used as classifier evalution in ACF is very</span>
+0062 <span class="comment">% fast (no need to compute Haar wavelets). However, ACF does use the simple</span>
+0063 <span class="comment">% but highly effective &quot;constant soft cascades&quot; from [3].</span>
+0064 <span class="comment">%</span>
+0065 <span class="comment">% Please cite a subset of the above papers as appropriate if you end up</span>
+0066 <span class="comment">% using this code to support a publication. Thanks!</span>
+0067 <span class="comment">%</span>
+0068 <span class="comment">% %%%%%%%%%%%%%%%%%%%%%%%%%%%% 3. Setup. %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0069 <span class="comment">%</span>
+0070 <span class="comment">% (A) Please install and setup the toolbox as described online:</span>
+0071 <span class="comment">%  http://vision.ucsd.edu/~pdollar/toolbox/doc/index.html</span>
+0072 <span class="comment">% You may need to recompile for your system, see toolboxCompile. Note:</span>
+0073 <span class="comment">% enabling OpenMP during compile will significantly speed training.</span>
+0074 <span class="comment">%</span>
+0075 <span class="comment">% (B) Important: to train the detectors and run the detection demos you</span>
+0076 <span class="comment">% need to install the Caltech Pedestrian Detection Benchmark available at:</span>
+0077 <span class="comment">%  http://www.vision.caltech.edu/Image_Datasets/CaltechPedestrians/</span>
+0078 <span class="comment">% In particular, make sure to download and install:</span>
+0079 <span class="comment">%  (B1) Matlab evaluation/labeling code version 3.2.1 or later</span>
+0080 <span class="comment">%  (B2) INRIA data (necessary for the INRIA demo)</span>
+0081 <span class="comment">%  (B3) Caltech-USA data (necessary for the Caltech demo)</span>
+0082 <span class="comment">% Please follow the instruction in the readme of the Caltech code. You only</span>
+0083 <span class="comment">% need to download the data and code and place appropriately, there is no</span>
+0084 <span class="comment">% need to look closely at the evaluation code. Initially running the demos</span>
+0085 <span class="comment">% (acfDemoInria and acfDemoCal) will convert the data from the Caltech data</span>
+0086 <span class="comment">% format to a format useable by ACF. If this step fails it means the</span>
+0087 <span class="comment">% Caltech code or data is not properly setup.</span>
+0088 <span class="comment">%</span>
+0089 <span class="comment">% %%%%%%%%%%%%%%%%%%%%%%%%%%%% 4. Getting Started. %%%%%%%%%%%%%%%%%%%%%%%%</span>
+0090 <span class="comment">%</span>
+0091 <span class="comment">% After performing the setup, see acfDemoInria.m and acfDemoCal.m for demos</span>
+0092 <span class="comment">% and visualizations.</span>
+0093 <span class="comment">%</span>
+0094 <span class="comment">% For an overview of available functionality please see detector/Contents.m</span>
+0095 <span class="comment">% and channels/Contents.m. The various detector/acf*.m and channels/chns*.m</span>
+0096 <span class="comment">% functions are well documented and worth checking for additional details.</span>
+0097 <span class="comment">%</span>
+0098 <span class="comment">% Finally, a note about pre-trained models. The detector/models/ directory</span>
+0099 <span class="comment">% contains four pre-trained pedestrian models (ACF/LDCF on INRIA/Caltech).</span>
+0100 <span class="comment">% Running acfDemoInria/Cal.m with the ACF/LDCF flag toggled gives rise to</span>
+0101 <span class="comment">% these models (just delete the existing models to retrain from scratch).</span>
+0102 <span class="comment">% Note, however, that results will differ by up to +/-2% MR depending on</span>
+0103 <span class="comment">% operating system and random seed (see opts.seed), and the models here are</span>
+0104 <span class="comment">% not exactly equivalent to the models in the papers (due to evolution of</span>
+0105 <span class="comment">% the code). Small changes in MR should not be considered significant (nor</span>
+0106 <span class="comment">% should they be used as a basis for publishing). Whenever making a change</span>
+0107 <span class="comment">% I suggest training/testing the same model with multiple random seeds.</span>
+0108 <span class="comment">%</span>
+0109 <span class="comment">% Enjoy and I hope you find the detectors useful :)</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

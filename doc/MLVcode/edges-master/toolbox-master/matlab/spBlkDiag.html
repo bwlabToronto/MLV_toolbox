@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of spBlkDiag</title>
+  <meta name="keywords" content="spBlkDiag">
+  <meta name="description" content="Creates a sparse block diagonal matrix from a 3D array.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; spBlkDiag.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>spBlkDiag
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Creates a sparse block diagonal matrix from a 3D array.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [B,inds] = spBlkDiag( A, inds ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Creates a sparse block diagonal matrix from a 3D array.
+
+ Given an [mxnxk] matrix A, construct a sparse block diagonal matrix B of
+ dims [m*k x n*k], containing k blocks of size mxn each, where each block
+ i is taken from A(:,:,i).
+
+ When computing B, a time consuming step is to compute a series of
+ indices. These indices are fixed for given dims of A and can be re-used.
+ spBlkDiag's additional input/output can be used to cache these indices.
+
+ USAGE
+  [B, inds] = spBlkDiag( A, [inds] )
+
+ INPUTS
+  A       - [m x n x k] input matrix of k mxn blocks
+  inds    - cached indices for faster computation
+
+ OUTPUT
+  B       - [m*k x n*k] sparse block diagonal matrix with k mxn blocks
+  inds    - cached indices for faster computation
+
+ EXAMPLE
+  A=rand(3,4,2); B=spBlkDiag(A); full(B)
+
+ See also SPARSE, BLKDIAG
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.35
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="multiDiv.html" class="code" title="function C = multiDiv( A, B, type )">multiDiv</a>	Matrix divide each submatrix of two 3D arrays without looping.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [B,inds] = spBlkDiag( A, inds )</a>
+0002 <span class="comment">% Creates a sparse block diagonal matrix from a 3D array.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Given an [mxnxk] matrix A, construct a sparse block diagonal matrix B of</span>
+0005 <span class="comment">% dims [m*k x n*k], containing k blocks of size mxn each, where each block</span>
+0006 <span class="comment">% i is taken from A(:,:,i).</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% When computing B, a time consuming step is to compute a series of</span>
+0009 <span class="comment">% indices. These indices are fixed for given dims of A and can be re-used.</span>
+0010 <span class="comment">% spBlkDiag's additional input/output can be used to cache these indices.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% USAGE</span>
+0013 <span class="comment">%  [B, inds] = spBlkDiag( A, [inds] )</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% INPUTS</span>
+0016 <span class="comment">%  A       - [m x n x k] input matrix of k mxn blocks</span>
+0017 <span class="comment">%  inds    - cached indices for faster computation</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% OUTPUT</span>
+0020 <span class="comment">%  B       - [m*k x n*k] sparse block diagonal matrix with k mxn blocks</span>
+0021 <span class="comment">%  inds    - cached indices for faster computation</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% EXAMPLE</span>
+0024 <span class="comment">%  A=rand(3,4,2); B=spBlkDiag(A); full(B)</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% See also SPARSE, BLKDIAG</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.35</span>
+0029 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0030 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0031 
+0032 [m,n,k]=size(A);
+0033 
+0034 <span class="comment">% compute the indices of the elements in the sparse matrix</span>
+0035 <span class="keyword">if</span>( nargin&lt;2 || isempty(inds) || m~=inds.m || n~=inds.n || k~=inds.k )
+0036   ds=(1:m)'; rs=reshape(1:m*k,m,k); rs=rs(ds(:,ones(1,n)),:); rs=rs(:);
+0037   cs=1:n*k; cs=cs(ones(m,1),:); cs=cs(:);
+0038   inds=struct(<span class="string">'m'</span>,m,<span class="string">'n'</span>,n,<span class="string">'k'</span>,k,<span class="string">'rs'</span>,rs,<span class="string">'cs'</span>,cs);
+0039 <span class="keyword">else</span>
+0040   rs=inds.rs; cs=inds.cs;
+0041 <span class="keyword">end</span>
+0042 
+0043 <span class="comment">% finally generate the sparse matrix</span>
+0044 B=sparse(rs,cs,A(:),m*k,n*k);</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

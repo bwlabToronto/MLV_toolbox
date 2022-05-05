@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hogDraw</title>
+  <meta name="keywords" content="hogDraw">
+  <meta name="description" content="Create visualization of hog descriptor.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">channels</a> &gt; hogDraw.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\channels&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>hogDraw
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Create visualization of hog descriptor.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function V = hogDraw( H, w, fhog ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Create visualization of hog descriptor.
+
+ USAGE
+  V = hogDraw( H, [w], [fhog] )
+
+ INPUTS
+  H          - [m n oBin*4] computed hog features
+  w          - [15] width for each glyph
+  fhog       - [0] if true draw features returned by fhog
+
+ OUTPUTS
+  V          - [m*w n*w] visualization of hog features
+
+ EXAMPLE
+
+ See also <a href="hog.html" class="code" title="function H = hog( I, binSize, nOrients, clip, crop )">hog</a>, <a href="fhog.html" class="code" title="function H = fhog( I, binSize, nOrients, clip, crop )">fhog</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.23
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="fhog.html" class="code" title="function H = fhog( I, binSize, nOrients, clip, crop )">fhog</a>	Efficiently compute Felzenszwalb's HOG (FHOG) features.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function V = hogDraw( H, w, fhog )</a>
+0002 <span class="comment">% Create visualization of hog descriptor.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% USAGE</span>
+0005 <span class="comment">%  V = hogDraw( H, [w], [fhog] )</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% INPUTS</span>
+0008 <span class="comment">%  H          - [m n oBin*4] computed hog features</span>
+0009 <span class="comment">%  w          - [15] width for each glyph</span>
+0010 <span class="comment">%  fhog       - [0] if true draw features returned by fhog</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% OUTPUTS</span>
+0013 <span class="comment">%  V          - [m*w n*w] visualization of hog features</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% EXAMPLE</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% See also hog, fhog</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.23</span>
+0020 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0021 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0022 
+0023 <span class="comment">% fold normalizations</span>
+0024 <span class="keyword">if</span>(nargin&lt;3 || isempty(<a href="fhog.html" class="code" title="function H = fhog( I, binSize, nOrients, clip, crop )">fhog</a>)), <a href="fhog.html" class="code" title="function H = fhog( I, binSize, nOrients, clip, crop )">fhog</a>=0; <span class="keyword">end</span>
+0025 m=size(H,3); <span class="keyword">if</span>(<a href="fhog.html" class="code" title="function H = fhog( I, binSize, nOrients, clip, crop )">fhog</a>), m=(m-5)/3; H=H(:,:,1:m*3); m=3; <span class="keyword">else</span> m=4; <span class="keyword">end</span>
+0026 s=size(H); s(3)=s(3)/m; w0=H; H=zeros(s);
+0027 <span class="keyword">for</span> o=0:m-1, H=H+w0(:,:,(1:s(3))+o*s(3)); <span class="keyword">end</span>;
+0028 
+0029 <span class="comment">% construct a &quot;glyph&quot; for each orientaion</span>
+0030 <span class="keyword">if</span>(nargin&lt;2 || isempty(w)), w=15; <span class="keyword">end</span>
+0031 bar=zeros(w,w); bar(:,round(.45*w):round(.55*w))=1;
+0032 bars=zeros([size(bar) s(3)]);
+0033 <span class="keyword">for</span> o=1:s(3), bars(:,:,o)=imrotate(bar,-(o-1)*180/s(3),<span class="string">'crop'</span>); <span class="keyword">end</span>
+0034 
+0035 <span class="comment">% make pictures of positive weights by adding up weighted glyphs</span>
+0036 H(H&lt;0)=0; V=zeros(w*s(1:2));
+0037 <span class="keyword">for</span> r=1:s(1), rs=(1:w)+(r-1)*w;
+0038   <span class="keyword">for</span> c=1:s(2), cs=(1:w)+(c-1)*w;
+0039     <span class="keyword">for</span> o=1:s(3), V(rs,cs)=V(rs,cs)+bars(:,:,o)*H(r,c,o); <span class="keyword">end</span>
+0040   <span class="keyword">end</span>
+0041 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

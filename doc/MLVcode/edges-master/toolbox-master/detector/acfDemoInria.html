@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of acfDemoInria</title>
+  <meta name="keywords" content="acfDemoInria">
+  <meta name="description" content="Demo for aggregate channel features object detector on Inria dataset.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">detector</a> &gt; acfDemoInria.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\detector&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>acfDemoInria
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Demo for aggregate channel features object detector on Inria dataset.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Demo for aggregate channel features object detector on Inria dataset.
+
+ See also <a href="acfReadme.html" class="code" title="">acfReadme</a>.m
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.40
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="acfDetect.html" class="code" title="function bbs = acfDetect( I, detector, fileName )">acfDetect</a>	Run aggregate channel features object detector on given image(s).</li><li><a href="acfModify.html" class="code" title="function detector = acfModify( detector, varargin )">acfModify</a>	Modify aggregate channel features object detector.</li><li><a href="acfTest.html" class="code" title="function [miss,roc,gt,dt] = acfTest( varargin )">acfTest</a>	Test aggregate channel features object detector given ground truth.</li><li><a href="acfTrain.html" class="code" title="function detector = acfTrain( varargin )">acfTrain</a>	Train aggregate channel features object detector.</li><li><a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>	Functions for manipulating bounding boxes (bb).</li><li><a href="bbGt.html" class="code" title="function varargout = bbGt( action, varargin )">bbGt</a>	Bounding box (bb) annotations struct, evaluation and sampling routines.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Demo for aggregate channel features object detector on Inria dataset.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% See also acfReadme.m</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.40</span>
+0006 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0007 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0008 
+0009 <span class="comment">%% extract training and testing images and ground truth</span>
+0010 cd(fileparts(which(<span class="string">'acfDemoInria.m'</span>))); dataDir=<span class="string">'../../data/Inria/'</span>;
+0011 <span class="keyword">for</span> s=1:2, pth=dbInfo(<span class="string">'InriaTest'</span>);
+0012   <span class="keyword">if</span>(s==1), set=<span class="string">'00'</span>; type=<span class="string">'train'</span>; <span class="keyword">else</span> set=<span class="string">'01'</span>; type=<span class="string">'test'</span>; <span class="keyword">end</span>
+0013   <span class="keyword">if</span>(exist([dataDir type <span class="string">'/posGt'</span>],<span class="string">'dir'</span>)), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0014   seqIo([pth <span class="string">'/videos/set'</span> set <span class="string">'/V000'</span>],<span class="string">'toImgs'</span>,[dataDir type <span class="string">'/pos'</span>]);
+0015   seqIo([pth <span class="string">'/videos/set'</span> set <span class="string">'/V001'</span>],<span class="string">'toImgs'</span>,[dataDir type <span class="string">'/neg'</span>]);
+0016   V=vbb(<span class="string">'vbbLoad'</span>,[pth <span class="string">'/annotations/set'</span> set <span class="string">'/V000'</span>]);
+0017   vbb(<span class="string">'vbbToFiles'</span>,V,[dataDir type <span class="string">'/posGt'</span>]);
+0018 <span class="keyword">end</span>
+0019 
+0020 <span class="comment">%% set up opts for training detector (see acfTrain)</span>
+0021 opts=<a href="acfTrain.html" class="code" title="function detector = acfTrain( varargin )">acfTrain</a>(); opts.modelDs=[100 41]; opts.modelDsPad=[128 64];
+0022 opts.posGtDir=[dataDir <span class="string">'train/posGt'</span>]; opts.nWeak=[32 128 512 2048];
+0023 opts.posImgDir=[dataDir <span class="string">'train/pos'</span>]; opts.pJitter=struct(<span class="string">'flip'</span>,1);
+0024 opts.negImgDir=[dataDir <span class="string">'train/neg'</span>]; opts.pBoost.pTree.fracFtrs=1/16;
+0025 opts.pLoad={<span class="string">'squarify'</span>,{3,.41}}; opts.name=<span class="string">'models/AcfInria'</span>;
+0026 
+0027 <span class="comment">%% optionally switch to LDCF version of detector (see acfTrain)</span>
+0028 <span class="keyword">if</span>( 0 )
+0029   opts.filters=[5 4]; opts.pJitter=struct(<span class="string">'flip'</span>,1,<span class="string">'nTrn'</span>,3,<span class="string">'mTrn'</span>,1);
+0030   opts.pBoost.pTree.maxDepth=3; opts.pBoost.discrete=0; opts.seed=2;
+0031   opts.pPyramid.pChns.shrink=2; opts.name=<span class="string">'models/LdcfInria'</span>;
+0032 <span class="keyword">end</span>
+0033 
+0034 <span class="comment">%% train detector (see acfTrain)</span>
+0035 detector = <a href="acfTrain.html" class="code" title="function detector = acfTrain( varargin )">acfTrain</a>( opts );
+0036 
+0037 <span class="comment">%% modify detector (see acfModify)</span>
+0038 pModify=struct(<span class="string">'cascThr'</span>,-1,<span class="string">'cascCal'</span>,.01);
+0039 detector=<a href="acfModify.html" class="code" title="function detector = acfModify( detector, varargin )">acfModify</a>(detector,pModify);
+0040 
+0041 <span class="comment">%% run detector on a sample image (see acfDetect)</span>
+0042 imgNms=<a href="bbGt.html" class="code" title="function varargout = bbGt( action, varargin )">bbGt</a>(<span class="string">'getFiles'</span>,{[dataDir <span class="string">'test/pos'</span>]});
+0043 I=imread(imgNms{1}); tic, bbs=<a href="acfDetect.html" class="code" title="function bbs = acfDetect( I, detector, fileName )">acfDetect</a>(I,detector); toc
+0044 figure(1); im(I); <a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'draw'</span>,bbs); pause(.1);
+0045 
+0046 <span class="comment">%% test detector and plot roc (see acfTest)</span>
+0047 [miss,~,gt,dt]=<a href="acfTest.html" class="code" title="function [miss,roc,gt,dt] = acfTest( varargin )">acfTest</a>(<span class="string">'name'</span>,opts.name,<span class="string">'imgDir'</span>,[dataDir <span class="string">'test/pos'</span>],<span class="keyword">...</span>
+0048   <span class="string">'gtDir'</span>,[dataDir <span class="string">'test/posGt'</span>],<span class="string">'pLoad'</span>,opts.pLoad,<span class="keyword">...</span>
+0049   <span class="string">'pModify'</span>,pModify,<span class="string">'reapply'</span>,0,<span class="string">'show'</span>,2);
+0050 
+0051 <span class="comment">%% optional timing test for detector (should be ~30 fps)</span>
+0052 <span class="keyword">if</span>( 0 )
+0053   detector1=<a href="acfModify.html" class="code" title="function detector = acfModify( detector, varargin )">acfModify</a>(detector,<span class="string">'pad'</span>,[0 0]); n=60; Is=cell(1,n);
+0054   <span class="keyword">for</span> i=1:n, Is{i}=imResample(imread(imgNms{i}),[480 640]); <span class="keyword">end</span>
+0055   tic, <span class="keyword">for</span> i=1:n, <a href="acfDetect.html" class="code" title="function bbs = acfDetect( I, detector, fileName )">acfDetect</a>(Is{i},detector1); <span class="keyword">end</span>;
+0056   fprintf(<span class="string">'Detector runs at %.2f fps on 640x480 images.\n'</span>,n/toc);
+0057 <span class="keyword">end</span>
+0058 
+0059 <span class="comment">%% optionally show top false positives ('type' can be 'fp','fn','tp','dt')</span>
+0060 <span class="keyword">if</span>( 0 ), <a href="bbGt.html" class="code" title="function varargout = bbGt( action, varargin )">bbGt</a>(<span class="string">'cropRes'</span>,gt,dt,imgNms,<span class="string">'type'</span>,<span class="string">'fp'</span>,<span class="string">'n'</span>,50,<span class="keyword">...</span>
+0061     <span class="string">'show'</span>,3,<span class="string">'dims'</span>,opts.modelDs([2 1])); <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

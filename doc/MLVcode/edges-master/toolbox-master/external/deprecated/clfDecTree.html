@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of clfDecTree</title>
+  <meta name="keywords" content="clfDecTree">
+  <meta name="description" content="Wrapper for treefit that makes decision trees compatible with nfoldxval.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; clfDecTree.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>clfDecTree
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Wrapper for treefit that makes decision trees compatible with nfoldxval.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function clf = clfDecTree( p, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Wrapper for treefit that makes decision trees compatible with nfoldxval.
+
+ USAGE
+  clf = clfDecTree( p, varargin )
+
+ INPUTS
+  p       - data dimension
+  varargin- params for treefit, ex: 'splitmin'',2,'priorprob',ones(1,n)/n
+
+ OUTPUTS
+  clf     - model ready to be trained
+
+ EXAMPLE
+
+ See also <a href="nfoldxval.html" class="code" title="function CM=nfoldxval( data, IDX, clfInit, clfparams,types, ignoreT, fname, show )">NFOLDXVAL</a>, TREEFIT, <a href="clfDecTreeFwd.html" class="code" title="function Y = clfDecTreeFwd( clf, X )">CLFDECTREEFWD</a>, <a href="clfDecTreeTrain.html" class="code" title="function clf = clfDecTreeTrain( clf, X, Y )">CLFDECTREETRAIN</a>
+
+ Piotr's Image&amp;Video Toolbox      Version 2.0
+ Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]
+ Please email me if you find bugs, or have suggestions or questions!
+ Licensed under the Lesser GPL [see external/lgpl.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="clfDecTreeFwd.html" class="code" title="function Y = clfDecTreeFwd( clf, X )">clfDecTreeFwd</a>	Apply the decision tree to data X.</li><li><a href="clfDecTreeTrain.html" class="code" title="function clf = clfDecTreeTrain( clf, X, Y )">clfDecTreeTrain</a>	Train a decision tree classifier.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function clf = clfDecTree( p, varargin )</a>
+0002 <span class="comment">% Wrapper for treefit that makes decision trees compatible with nfoldxval.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% USAGE</span>
+0005 <span class="comment">%  clf = clfDecTree( p, varargin )</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% INPUTS</span>
+0008 <span class="comment">%  p       - data dimension</span>
+0009 <span class="comment">%  varargin- params for treefit, ex: 'splitmin'',2,'priorprob',ones(1,n)/n</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% OUTPUTS</span>
+0012 <span class="comment">%  clf     - model ready to be trained</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% EXAMPLE</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% See also NFOLDXVAL, TREEFIT, CLFDECTREEFWD, CLFDECTREETRAIN</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 2.0</span>
+0019 <span class="comment">% Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]</span>
+0020 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0021 <span class="comment">% Licensed under the Lesser GPL [see external/lgpl.txt]</span>
+0022 
+0023 clf.p = p;
+0024 clf.type = <span class="string">'dectree'</span>;
+0025 clf.params = varargin;
+0026 
+0027 clf.funTrain = @<a href="clfDecTreeTrain.html" class="code" title="function clf = clfDecTreeTrain( clf, X, Y )">clfDecTreeTrain</a>;
+0028 clf.funFwd = @<a href="clfDecTreeFwd.html" class="code" title="function Y = clfDecTreeFwd( clf, X )">clfDecTreeFwd</a>;</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

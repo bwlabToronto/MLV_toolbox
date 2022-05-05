@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of toolboxUpdateHeader</title>
+  <meta name="keywords" content="toolboxUpdateHeader">
+  <meta name="description" content="Update the headers of all the files.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">external</a> &gt; toolboxUpdateHeader.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>toolboxUpdateHeader
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Update the headers of all the files.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function toolboxUpdateHeader </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Update the headers of all the files.
+
+ USAGE
+  toolboxUpdateHeader
+
+ INPUTS
+
+ OUTPUTS
+
+ EXAMPLE
+
+ See also
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.50
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function toolboxUpdateHeader1( fName, header, comment )</a></li><li><a href="#_sub2" class="code">function lines = readFile( fName )</a></li><li><a href="#_sub3" class="code">function writeFile( fName, lines )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function toolboxUpdateHeader</a>
+0002 <span class="comment">% Update the headers of all the files.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% USAGE</span>
+0005 <span class="comment">%  toolboxUpdateHeader</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% INPUTS</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% OUTPUTS</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% EXAMPLE</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% See also</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.50</span>
+0016 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0017 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0018 
+0019 header={
+0020   <span class="string">'Piotr''s Computer Vision Matlab Toolbox      Version 3.50'</span>; <span class="keyword">...</span>
+0021   <span class="string">'Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]'</span>; <span class="keyword">...</span>
+0022   <span class="string">'Licensed under the Simplified BSD License [see external/bsd.txt]'</span>};
+0023 
+0024 root=fileparts(fileparts(mfilename(<span class="string">'fullpath'</span>)));
+0025 ds=dir(root); ds=ds([ds.isdir]); ds={ds.name};
+0026 ds=ds(3:end); ds=setdiff(ds,{<span class="string">'.git'</span>,<span class="string">'doc'</span>});
+0027 subds = { <span class="string">'/'</span>, <span class="string">'/private/'</span> };
+0028 exts = {<span class="string">'m'</span>,<span class="string">'c'</span>,<span class="string">'cpp'</span>,<span class="string">'h'</span>,<span class="string">'hpp'</span>};
+0029 omit = {<span class="string">'Contents.m'</span>,<span class="string">'fibheap.h'</span>,<span class="string">'fibheap.cpp'</span>};
+0030 
+0031 <span class="keyword">for</span> i=1:length(ds)
+0032   <span class="keyword">for</span> j=1:length(subds)
+0033     <span class="keyword">for</span> k=1:length(exts)
+0034       d=[root <span class="string">'/'</span> ds{i} subds{j}];
+0035       <span class="keyword">if</span>(k==1), comment=<span class="string">'%'</span>; <span class="keyword">else</span> comment=<span class="string">'*'</span>; <span class="keyword">end</span>
+0036       fs=dir([d <span class="string">'*.'</span> exts{k}]); fs={fs.name}; fs=setdiff(fs,omit);
+0037       n=length(fs); <span class="keyword">for</span> f=1:n, fs{f}=[d fs{f}]; <span class="keyword">end</span>
+0038       <span class="keyword">for</span> f=1:n, <a href="#_sub1" class="code" title="subfunction toolboxUpdateHeader1( fName, header, comment )">toolboxUpdateHeader1</a>(fs{f},header,comment); <span class="keyword">end</span>
+0039     <span class="keyword">end</span>
+0040   <span class="keyword">end</span>
+0041 <span class="keyword">end</span>
+0042 
+0043 <span class="keyword">end</span>
+0044 
+0045 <a name="_sub1" href="#_subfunctions" class="code">function toolboxUpdateHeader1( fName, header, comment )</a>
+0046 
+0047 <span class="comment">% set appropriate comment symbol in header</span>
+0048 m=length(header); <span class="keyword">for</span> i=1:m, header{i}=[comment <span class="string">' '</span> header{i}]; <span class="keyword">end</span>
+0049 
+0050 <span class="comment">% read in file and find header</span>
+0051 disp(fName); lines=<a href="#_sub2" class="code" title="subfunction lines = readFile( fName )">readFile</a>(fName);
+0052 loc = find(not(cellfun(<span class="string">'isempty'</span>,strfind(lines,header{1}(1:40)))));
+0053 <span class="keyword">if</span>(isempty(loc)), error(<span class="string">'NO HEADER: %s\n'</span>,fName); <span class="keyword">end</span>; loc=loc(1);
+0054 
+0055 <span class="comment">% check that header is properly formed, return if up to date</span>
+0056 <span class="keyword">for</span> i=1:m; assert(isequal(lines{loc+i-1}(1:10),header{i}(1:10))); <span class="keyword">end</span>
+0057 <span class="keyword">if</span>(~any(strfind(lines{loc},<span class="string">'NEW'</span>))); <span class="keyword">return</span>; <span class="keyword">end</span>
+0058 
+0059 <span class="comment">% update copyright year and overwrite rest of header</span>
+0060 lines{loc+1}(13:16)=header{2}(13:16);
+0061 <span class="keyword">for</span> i=[1 3:m]; lines{loc+i-1}=header{i}; <span class="keyword">end</span>
+0062 <a href="#_sub3" class="code" title="subfunction writeFile( fName, lines )">writeFile</a>( fName, lines );
+0063 
+0064 <span class="keyword">end</span>
+0065 
+0066 <a name="_sub2" href="#_subfunctions" class="code">function lines = readFile( fName )</a>
+0067 fid = fopen( fName, <span class="string">'rt'</span> ); assert(fid~=-1);
+0068 lines=cell(10000,1); n=0;
+0069 <span class="keyword">while</span>( 1 )
+0070   n=n+1; lines{n}=fgetl(fid);
+0071   <span class="keyword">if</span>( ~ischar(lines{n}) ), <span class="keyword">break</span>; <span class="keyword">end</span>
+0072 <span class="keyword">end</span>
+0073 fclose(fid); n=n-1; lines=lines(1:n);
+0074 <span class="keyword">end</span>
+0075 
+0076 <a name="_sub3" href="#_subfunctions" class="code">function writeFile( fName, lines )</a>
+0077 fid = fopen( fName, <span class="string">'w'</span> );
+0078 <span class="keyword">for</span> i=1:length(lines); fprintf( fid, <span class="string">'%s\n'</span>, lines{i} ); <span class="keyword">end</span>
+0079 fclose(fid);
+0080 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

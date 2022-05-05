@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of edgesChns</title>
+  <meta name="keywords" content="edgesChns">
+  <meta name="description" content="Compute features for structured edge detection.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">edges-master</a> &gt; edgesChns.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>edgesChns
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Compute features for structured edge detection.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [chnsReg,chnsSim] = edgesChns( I, opts ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Compute features for structured edge detection.
+
+ For an introductory tutorial please see edgesDemo.m.
+
+ USAGE
+  [chnsReg,chnsSim] = edgesChns( I, opts )
+
+ INPUTS
+  I          - [h x w x 3] color input image
+  opts       - structured edge model options
+
+ OUTPUTS
+  chnsReg    - [h x w x nChannel] regular output channels
+  chnsSim    - [h x w x nChannel] self-similarity output channels
+
+ EXAMPLE
+
+ See also <a href="edgesDemo.html" class="code" title="">edgesDemo</a>, <a href="edgesTrain.html" class="code" title="function model = edgesTrain( varargin )">edgesTrain</a>, <a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>, gradientMag
+
+ Structured Edge Detection Toolbox      Version 3.01
+ Code written by Piotr Dollar, 2014.
+ Licensed under the MSR-LA Full Rights License [see license.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>	Detect edges in image.</li><li><a href="edgesTrain.html" class="code" title="function model = edgesTrain( varargin )">edgesTrain</a>	Train structured edge detector.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [chnsReg,chnsSim] = edgesChns( I, opts )</a>
+0002 <span class="comment">% Compute features for structured edge detection.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% For an introductory tutorial please see edgesDemo.m.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% USAGE</span>
+0007 <span class="comment">%  [chnsReg,chnsSim] = edgesChns( I, opts )</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% INPUTS</span>
+0010 <span class="comment">%  I          - [h x w x 3] color input image</span>
+0011 <span class="comment">%  opts       - structured edge model options</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% OUTPUTS</span>
+0014 <span class="comment">%  chnsReg    - [h x w x nChannel] regular output channels</span>
+0015 <span class="comment">%  chnsSim    - [h x w x nChannel] self-similarity output channels</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% EXAMPLE</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% See also edgesDemo, edgesTrain, edgesDetect, gradientMag</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Structured Edge Detection Toolbox      Version 3.01</span>
+0022 <span class="comment">% Code written by Piotr Dollar, 2014.</span>
+0023 <span class="comment">% Licensed under the MSR-LA Full Rights License [see license.txt]</span>
+0024 
+0025 shrink=opts.shrink; nTypes=1; chns=cell(1,opts.nChns); k=0;
+0026 <span class="keyword">if</span>(size(I,3)&gt;3), nTypes=2; Is={I(:,:,1:3),I(:,:,4:end)}; <span class="keyword">end</span>
+0027 <span class="keyword">for</span> t=1:nTypes
+0028   <span class="keyword">if</span>(nTypes&gt;1), I=Is{t}; <span class="keyword">end</span>
+0029   <span class="keyword">if</span>(size(I,3)==1), cs=<span class="string">'gray'</span>; <span class="keyword">else</span> cs=<span class="string">'luv'</span>; <span class="keyword">end</span>; I=rgbConvert(I,cs);
+0030   Ishrink=imResample(I,1/shrink); k=k+1; chns{k}=Ishrink;
+0031   <span class="keyword">for</span> i = 1:2, s=2^(i-1);
+0032     <span class="keyword">if</span>(s==shrink), I1=Ishrink; <span class="keyword">else</span> I1=imResample(I,1/s); <span class="keyword">end</span>
+0033     I1 = convTri( I1, opts.grdSmooth );
+0034     [M,O] = gradientMag( I1, 0, opts.normRad, .01 );
+0035     H = gradientHist( M, O, max(1,shrink/s), opts.nOrients, 0 );
+0036     k=k+1; chns{k}=imResample(M,s/shrink);
+0037     k=k+1; chns{k}=imResample(H,max(1,s/shrink));
+0038   <span class="keyword">end</span>
+0039 <span class="keyword">end</span>
+0040 chns=cat(3,chns{1:k}); assert(size(chns,3)==opts.nChns);
+0041 chnSm=opts.chnSmooth/shrink; <span class="keyword">if</span>(chnSm&gt;1), chnSm=round(chnSm); <span class="keyword">end</span>
+0042 simSm=opts.simSmooth/shrink; <span class="keyword">if</span>(simSm&gt;1), simSm=round(simSm); <span class="keyword">end</span>
+0043 chnsReg=convTri(chns,chnSm); chnsSim=convTri(chns,simSm);
+0044 
+0045 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

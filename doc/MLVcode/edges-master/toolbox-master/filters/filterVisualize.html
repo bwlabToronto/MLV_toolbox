@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of filterVisualize</title>
+  <meta name="keywords" content="filterVisualize">
+  <meta name="description" content="Used to visualize a 1D/2D/3D filter.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">filters</a> &gt; filterVisualize.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\filters&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>filterVisualize
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Used to visualize a 1D/2D/3D filter.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function filterVisualize( f, show, arg ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Used to visualize a 1D/2D/3D filter.
+
+ For 1d filters:
+  Marks local filter maxima with a green '+' and minima with a red '+'.
+  Also shows the fft response of the filter.
+
+ For 2d filters:
+  Marks local filter maxima with a green '+' and minima with a red '+'.
+  Also shows the fft response of the filter.  Can optionally also plot a
+  scanline through either center row/column.
+
+ For 3d filters:
+  Dark lobes correspond to negative areas.  Surfaces shown are drawn at a
+  percentage of the peak filter response detemined by frac.
+
+ USAGE
+  filterVisualize( f, [show], [arg] )
+
+ INPUTS
+  f         - filter to visualize
+  show      - [1] figure to use for display (0-&gt;uses current)
+  arg       - different meanding depending on dimension
+              d=1: [] not used
+              d=2: [''] 'row' OR 'col': display centeral row OR col line
+              d=3: [.1] frac of max value of f at which to draw surfaces
+
+ OUTPUTS
+
+ EXAMPLE
+  f=filterBinomial1d( 10, 0 ); filterVisualize( f, 1 ); %1d
+  f=filterDog2d( 15, 10, 1 ); filterVisualize( f, 2, 'row' ); %2d
+  f=filterDoog([51 51 99],[3 3 5],[1 2 3],0); filterVisualize(f,4,.1); %3d
+
+ See also <a href="filterGauss.html" class="code" title="function G = filterGauss( dims, mu, C, show )">FILTERGAUSS</a>, <a href="FbVisualize.html" class="code" title="function FbVisualize( FB, show )">FBVISUALIZE</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="FbVisualize.html" class="code" title="function FbVisualize( FB, show )">FbVisualize</a>	Used to visualize a series of 1D/2D/3D filters.</li><li><a href="filterBinomial1d.html" class="code" title="function f = filterBinomial1d( r, show )">filterBinomial1d</a>	1D binomial filter (approximation to Gaussian filter)</li><li><a href="filterDog2d.html" class="code" title="function G = filterDog2d( r, var, order, show )">filterDog2d</a>	Difference of Gaussian (Dog) Filter.</li><li><a href="filterDoog.html" class="code" title="function dG = filterDoog( dims, sigmas, nderivs, show )">filterDoog</a>	n-dim difference of offset Gaussian DooG filter (Gaussian derivative).</li><li><a href="filterGabor1d.html" class="code" title="function [feven,fodd] = filterGabor1d( r, sig, omega, show )">filterGabor1d</a>	Creates an even/odd pair of 1D Gabor filters.</li><li><a href="filterGabor2d.html" class="code" title="function [Feven,Fodd] = filterGabor2d( r, sig, lam, theta, omega, show )">filterGabor2d</a>	Creates an even/odd pair of 2D Gabor filters.</li><li><a href="filterGauss.html" class="code" title="function G = filterGauss( dims, mu, C, show )">filterGauss</a>	n-dimensional Gaussian filter.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function filterVisualize( f, show, arg )</a>
+0002 <span class="comment">% Used to visualize a 1D/2D/3D filter.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% For 1d filters:</span>
+0005 <span class="comment">%  Marks local filter maxima with a green '+' and minima with a red '+'.</span>
+0006 <span class="comment">%  Also shows the fft response of the filter.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% For 2d filters:</span>
+0009 <span class="comment">%  Marks local filter maxima with a green '+' and minima with a red '+'.</span>
+0010 <span class="comment">%  Also shows the fft response of the filter.  Can optionally also plot a</span>
+0011 <span class="comment">%  scanline through either center row/column.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% For 3d filters:</span>
+0014 <span class="comment">%  Dark lobes correspond to negative areas.  Surfaces shown are drawn at a</span>
+0015 <span class="comment">%  percentage of the peak filter response detemined by frac.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% USAGE</span>
+0018 <span class="comment">%  filterVisualize( f, [show], [arg] )</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% INPUTS</span>
+0021 <span class="comment">%  f         - filter to visualize</span>
+0022 <span class="comment">%  show      - [1] figure to use for display (0-&gt;uses current)</span>
+0023 <span class="comment">%  arg       - different meanding depending on dimension</span>
+0024 <span class="comment">%              d=1: [] not used</span>
+0025 <span class="comment">%              d=2: [''] 'row' OR 'col': display centeral row OR col line</span>
+0026 <span class="comment">%              d=3: [.1] frac of max value of f at which to draw surfaces</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% OUTPUTS</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% EXAMPLE</span>
+0031 <span class="comment">%  f=filterBinomial1d( 10, 0 ); filterVisualize( f, 1 ); %1d</span>
+0032 <span class="comment">%  f=filterDog2d( 15, 10, 1 ); filterVisualize( f, 2, 'row' ); %2d</span>
+0033 <span class="comment">%  f=filterDoog([51 51 99],[3 3 5],[1 2 3],0); filterVisualize(f,4,.1); %3d</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% See also FILTERGAUSS, FBVISUALIZE</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0038 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0039 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0040 
+0041 <span class="keyword">if</span>( nargin&lt;2 || isempty(show) ); show=1; <span class="keyword">end</span>;
+0042 <span class="keyword">if</span>( nargin&lt;3 || isempty(arg) ); arg=[]; <span class="keyword">end</span>;
+0043 nd = ndims(f); <span class="keyword">if</span>(isvector(f)); nd=1; <span class="keyword">end</span>;
+0044 <span class="keyword">if</span>( show&gt;0); figure( show ); clf; <span class="keyword">end</span>;
+0045 
+0046 <span class="keyword">switch</span> nd
+0047   <span class="keyword">case</span> 1 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0048     r = (length(f)-1)/2;
+0049     f( abs(f)&lt;1e-10 ) = 0;
+0050 
+0051     <span class="comment">% show original filter</span>
+0052     subplot(2,1,1); plot(-r:r, f);
+0053     hold(<span class="string">'on'</span>); plot(0,0,<span class="string">'m+'</span>);
+0054     h = line([-r,r],[0,0]); set(h,<span class="string">'color'</span>,<span class="string">'green'</span>)
+0055     xlim( [-r, r] );
+0056     title(inputname(1));
+0057 
+0058     <span class="comment">% plot local mins/maxs in f</span>
+0059     locMaxs = find(imregionalmax(f));
+0060     locMins = find(imregionalmin(f));
+0061     plot( locMaxs-r-1, f(locMaxs), <span class="string">'g+'</span>);
+0062     plot( locMins-r-1, f(locMins), <span class="string">'r+'</span>);
+0063     hold(<span class="string">'off'</span>);
+0064 
+0065     <span class="comment">% plot fft magnitude of f</span>
+0066     subplot(2,1,2);
+0067     stem( (-r:r) / (2*r+1), abs( fftshift( fft( f ) )) );
+0068     title(<span class="string">'Fourier spectra'</span>);
+0069 
+0070 
+0071   <span class="keyword">case</span> 2 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0072 
+0073     scanline=arg; <span class="keyword">if</span>( isempty(scanline) ); scanline=<span class="string">''</span>; <span class="keyword">end</span>
+0074 
+0075     f( abs(f)&lt;1e-10 ) = 0;
+0076 
+0077     <span class="comment">% image of filter</span>
+0078     subplot(2,1,1); im(f);
+0079     title(inputname(1));
+0080     hold(<span class="string">'on'</span>);
+0081 
+0082     <span class="comment">% plot maxes and mins in f</span>
+0083     locMaxs = imregionalmax(f); locMaxs([1 end],[1 end])=0;
+0084     [locMaxs1,locMaxs2] = find(locMaxs);
+0085     plot( locMaxs2, locMaxs1, <span class="string">'g+'</span>);
+0086     locMins = imregionalmin(f); locMins([1 end],[1 end])=0;
+0087     [locMins1,locMins2] = find(locMins);
+0088     plot( locMins2, locMins1, <span class="string">'r+'</span>);
+0089 
+0090     <span class="comment">% show fft response</span>
+0091     subplot(2,1,2);
+0092     FF = abs(fftshift(fft2(f)));
+0093     im(FF); title(<span class="string">'Fourier spectra'</span>);
+0094 
+0095     <span class="comment">% optionally plot central row/col scanline</span>
+0096     <span class="keyword">if</span>(strcmp(scanline,<span class="string">'row'</span>) || strcmp(scanline,<span class="string">'col'</span>))
+0097       <span class="keyword">if</span>( strcmp(scanline,<span class="string">'row'</span>) )
+0098         sc = f( round((size(f,1)-1)/2+1), : );
+0099       <span class="keyword">else</span>
+0100         sc = f( :, round((size(f,2)-1)/2+1) );
+0101       <span class="keyword">end</span>
+0102       figure(show+1);  plot( sc ); hold(<span class="string">'on'</span>);  title(scanline);
+0103       locMaxs = find(imregionalmax(sc));
+0104       locMins = find(imregionalmin(sc));
+0105       plot( locMaxs, sc(locMaxs), <span class="string">'g+'</span>);
+0106       plot( locMins, sc(locMins), <span class="string">'r+'</span>);
+0107       hold(<span class="string">'off'</span>);
+0108     <span class="keyword">end</span>
+0109 
+0110   <span class="keyword">case</span> 3 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0111 
+0112     frac=arg; <span class="keyword">if</span>( isempty(frac) ); frac = .1; <span class="keyword">end</span>
+0113 
+0114     <span class="comment">% better visualization this way, t left to right</span>
+0115     f = flipdim( permute( f, [3, 1, 2] ), 1 );
+0116 
+0117     <span class="comment">% approximate display as surface (may miss lots of lobes!!!)</span>
+0118     maxval = max(abs(f(:)));
+0119     washeld = ishold;  <span class="keyword">if</span>(~washeld); hold(<span class="string">'on'</span>); <span class="keyword">end</span>
+0120     p = patch(isosurface( f&gt;frac*maxval, 0 ));
+0121     set(p,<span class="string">'FaceColor'</span>,[.9 .9 .9],<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>); <span class="comment">% light gray lobes</span>
+0122     p2 = patch(isosurface( f&lt;-frac*maxval, 0 ));
+0123     set(p2,<span class="string">'FaceColor'</span>,[.4 .4 .4],<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>); <span class="comment">% dark gray lobes</span>
+0124 
+0125     <span class="comment">% set view</span>
+0126     daspect([1 1 1]); view(3); axis tight;
+0127     camlight; lighting gouraud; set(gca,<span class="string">'Box'</span>,<span class="string">'on'</span>);
+0128     set(gca,<span class="string">'YTick'</span>,[]); set(gca,<span class="string">'XTick'</span>,[]); set(gca,<span class="string">'ZTick'</span>,[]);
+0129     xlabel(<span class="string">'y'</span>); ylabel(<span class="string">'t'</span>); zlabel(<span class="string">'x'</span>);
+0130     <span class="keyword">if</span>(~washeld); hold(<span class="string">'off'</span>); <span class="keyword">end</span>
+0131 
+0132   <span class="keyword">otherwise</span> <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0133     error(<span class="string">'f must be 1 2 or 3 dimensional'</span>);
+0134 
+0135 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

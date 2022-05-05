@@ -1,0 +1,339 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of montage2</title>
+  <meta name="keywords" content="montage2">
+  <meta name="description" content="Used to display collections of images and videos.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; montage2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>montage2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Used to display collections of images and videos.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = montage2( IS, prm ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Used to display collections of images and videos.
+
+ Improved version of montage, with more control over display.
+ NOTE: Can convert between MxNxT and MxNx3xT image stack via:
+   I = repmat( I, [1,1,1,3] ); I = permute(I, [1,2,4,3] );
+
+ USAGE
+  varargout = montage2( IS, [prm] )
+
+ INPUTS
+  IS           - MxNxTxR or MxNxCxTxR, where C==1 or C==3, and R may be 1
+                 or cell vector of MxNxT or MxNxCxT matrices
+  prm
+   .showLines  - [1] whether to show lines separating the various frames
+   .extraInfo  - [0] if 1 then a colorbar is shown as well as impixelinfo
+   .cLim       - [] cLim = [clow chigh] optional scaling of data
+   .mm         - [] #images/col per montage
+   .nn         - [] #images/row per montage
+   .labels     - [] cell array of labels (strings) (T if R==1 else R)
+   .perRow     - [0] only if R&gt;1 and not cell, alternative displays method
+   .hasChn     - [0] if true assumes IS is MxNxCxTxR else MxNxTxR
+   .padAmt     - [0] only if perRow, amount to pad when in row mode
+   .padEl      - [] pad element, defaults to min value in IS
+
+ OUTPUTS
+  h           - image handle
+  m           - #images/col
+  nn          - #images/row
+
+ EXAMPLE - [3D] show a montage of images
+  load( 'images.mat' ); clf; montage2( images );
+
+ EXAMPLE - [3D] show a montage of images with labels
+  load( 'images.mat' );
+  for i=1:50; labels{i}=['I-' int2str2(i,2)]; end
+  prm = struct('extraInfo',1,'perRow',0,'labels',{labels});
+  clf; montage2( images(:,:,1:50), prm );
+
+ EXAMPLE - [3D] show a montage of images with color boundaries
+  load( 'images.mat' );
+  I3 = repmat(permute(images,[1 2 4 3]),[1,1,3,1]); % add color chnls
+  prm = struct('padAmt',4,'padEl',[50 180 50],'hasChn',1,'showLines',0);
+  clf; montage2( I3(:,:,:,1:48), prm )
+
+ EXAMPLE - [4D] show a montage of several groups of images
+  for i=1:25; labels{i}=['V-' int2str2(i,2)]; end
+  prm = struct('labels',{labels});
+  load( 'images.mat' ); clf; montage2( videos(:,:,:,1:25), prm );
+
+ EXAMPLE - [4D] show using 'row' format
+  load( 'images.mat' );
+  prm = struct('perRow',1, 'padAmt',6, 'padEl',255 );
+  figure(1); clf; montage2( videos(:,:,:,1:10), prm );
+
+ See also MONTAGE, <a href="playMovie.html" class="code" title="function M = playMovie( I, fps, loop, prm )">PLAYMOVIE</a>, <a href="filmStrip.html" class="code" title="function F = filmStrip( I, overlap, delta, border )">FILMSTRIP</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="imMlGauss.html" class="code" title="function varargout = imMlGauss( G, symmFlag, show )">imMlGauss</a>	Calculates max likelihood params of Gaussian that gave rise to image G.</li><li><a href="maskGaussians.html" class="code" title="function [masks,keepLocs] = maskGaussians( siz, M, width, offset, show )">maskGaussians</a>	Divides a volume into softly overlapping gaussian windows.</li><li><a href="maskSphere.html" class="code" title="function mask = maskSphere( d, r, show )">maskSphere</a>	Creates an 'image' of a n-dimensional hypersphere.</li><li><a href="playMovie.html" class="code" title="function M = playMovie( I, fps, loop, prm )">playMovie</a>	Shows/makes an/several movie(s) from an image sequence.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function varargout = subMontage( IS, prm )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = montage2( IS, prm )</a>
+0002 <span class="comment">% Used to display collections of images and videos.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Improved version of montage, with more control over display.</span>
+0005 <span class="comment">% NOTE: Can convert between MxNxT and MxNx3xT image stack via:</span>
+0006 <span class="comment">%   I = repmat( I, [1,1,1,3] ); I = permute(I, [1,2,4,3] );</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% USAGE</span>
+0009 <span class="comment">%  varargout = montage2( IS, [prm] )</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% INPUTS</span>
+0012 <span class="comment">%  IS           - MxNxTxR or MxNxCxTxR, where C==1 or C==3, and R may be 1</span>
+0013 <span class="comment">%                 or cell vector of MxNxT or MxNxCxT matrices</span>
+0014 <span class="comment">%  prm</span>
+0015 <span class="comment">%   .showLines  - [1] whether to show lines separating the various frames</span>
+0016 <span class="comment">%   .extraInfo  - [0] if 1 then a colorbar is shown as well as impixelinfo</span>
+0017 <span class="comment">%   .cLim       - [] cLim = [clow chigh] optional scaling of data</span>
+0018 <span class="comment">%   .mm         - [] #images/col per montage</span>
+0019 <span class="comment">%   .nn         - [] #images/row per montage</span>
+0020 <span class="comment">%   .labels     - [] cell array of labels (strings) (T if R==1 else R)</span>
+0021 <span class="comment">%   .perRow     - [0] only if R&gt;1 and not cell, alternative displays method</span>
+0022 <span class="comment">%   .hasChn     - [0] if true assumes IS is MxNxCxTxR else MxNxTxR</span>
+0023 <span class="comment">%   .padAmt     - [0] only if perRow, amount to pad when in row mode</span>
+0024 <span class="comment">%   .padEl      - [] pad element, defaults to min value in IS</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% OUTPUTS</span>
+0027 <span class="comment">%  h           - image handle</span>
+0028 <span class="comment">%  m           - #images/col</span>
+0029 <span class="comment">%  nn          - #images/row</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% EXAMPLE - [3D] show a montage of images</span>
+0032 <span class="comment">%  load( 'images.mat' ); clf; montage2( images );</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% EXAMPLE - [3D] show a montage of images with labels</span>
+0035 <span class="comment">%  load( 'images.mat' );</span>
+0036 <span class="comment">%  for i=1:50; labels{i}=['I-' int2str2(i,2)]; end</span>
+0037 <span class="comment">%  prm = struct('extraInfo',1,'perRow',0,'labels',{labels});</span>
+0038 <span class="comment">%  clf; montage2( images(:,:,1:50), prm );</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% EXAMPLE - [3D] show a montage of images with color boundaries</span>
+0041 <span class="comment">%  load( 'images.mat' );</span>
+0042 <span class="comment">%  I3 = repmat(permute(images,[1 2 4 3]),[1,1,3,1]); % add color chnls</span>
+0043 <span class="comment">%  prm = struct('padAmt',4,'padEl',[50 180 50],'hasChn',1,'showLines',0);</span>
+0044 <span class="comment">%  clf; montage2( I3(:,:,:,1:48), prm )</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">% EXAMPLE - [4D] show a montage of several groups of images</span>
+0047 <span class="comment">%  for i=1:25; labels{i}=['V-' int2str2(i,2)]; end</span>
+0048 <span class="comment">%  prm = struct('labels',{labels});</span>
+0049 <span class="comment">%  load( 'images.mat' ); clf; montage2( videos(:,:,:,1:25), prm );</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">% EXAMPLE - [4D] show using 'row' format</span>
+0052 <span class="comment">%  load( 'images.mat' );</span>
+0053 <span class="comment">%  prm = struct('perRow',1, 'padAmt',6, 'padEl',255 );</span>
+0054 <span class="comment">%  figure(1); clf; montage2( videos(:,:,:,1:10), prm );</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">% See also MONTAGE, PLAYMOVIE, FILMSTRIP</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0059 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0060 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0061 
+0062 <span class="keyword">if</span>( nargin&lt;2 ); prm=struct(); <span class="keyword">end</span>
+0063 varargout = cell(1,nargout);
+0064 
+0065 <span class="comment">%%% get parameters (set defaults)</span>
+0066 dfs = {<span class="string">'showLines'</span>,1, <span class="string">'extraInfo'</span>,0, <span class="string">'cLim'</span>,[], <span class="string">'mm'</span>,[], <span class="string">'nn'</span>,[],<span class="keyword">...</span>
+0067   <span class="string">'labels'</span>,[], <span class="string">'perRow'</span>,false, <span class="string">'padAmt'</span>,0, <span class="string">'padEl'</span>,[], <span class="string">'hasChn'</span>,false };
+0068 prm = getPrmDflt( prm, dfs );
+0069 extraInfo=prm.extraInfo; labels=prm.labels;  perRow=prm.perRow;
+0070 hasChn=prm.hasChn;
+0071 
+0072 <span class="comment">%%% If IS is not a cell convert to MxNxCxTxR array</span>
+0073 <span class="keyword">if</span>( iscell(IS) &amp;&amp; numel(IS)==1 ); IS=IS{1}; <span class="keyword">end</span>;
+0074 <span class="keyword">if</span>( ~iscell(IS) &amp;&amp; ~ismatrix(IS) )
+0075   siz=size(IS);
+0076   <span class="keyword">if</span>( ~hasChn );
+0077     IS=reshape(IS,[siz(1:2),1,siz(3:end)]);
+0078     prm.hasChn = true;
+0079   <span class="keyword">end</span>;
+0080   <span class="keyword">if</span>(ndims(IS)&gt;5); error(<span class="string">'montage2: input too large'</span>); <span class="keyword">end</span>;
+0081 <span class="keyword">end</span>
+0082 
+0083 
+0084 <span class="keyword">if</span>( ~iscell(IS) &amp;&amp; size(IS,5)==1 ) <span class="comment">%%% special case call subMontage once</span>
+0085   [varargout{:}] = <a href="#_sub1" class="code" title="subfunction varargout = subMontage( IS, prm )">subMontage</a>(IS,prm);
+0086   title(inputname(1));
+0087 
+0088 <span class="keyword">elseif</span>( perRow ) <span class="comment">%%% display each montage in row format</span>
+0089   <span class="keyword">if</span>(iscell(IS)); error(<span class="string">'montage2: IS cannot be a cell if perRow'</span>); <span class="keyword">end</span>;
+0090   siz = size(IS);
+0091   IS=reshape(permute(IS,[1 2 4 3 5]),siz(1),[],siz(3),siz(5));
+0092   <span class="keyword">if</span>( nargout ); varargout{1}=IS; <span class="keyword">end</span>
+0093   prm.perRow = false;  prm.hasChn=true;
+0094   [varargout{2:end}] = <a href="#_sub1" class="code" title="subfunction varargout = subMontage( IS, prm )">subMontage</a>( IS, prm );
+0095   title(inputname(1));
+0096 
+0097 <span class="keyword">else</span> <span class="comment">%%% display each montage using subMontage</span>
+0098 
+0099   <span class="comment">% convert to cell array</span>
+0100   <span class="keyword">if</span>( iscell(IS) )
+0101     nMontages = numel(IS);
+0102   <span class="keyword">else</span>
+0103     nMontages = size(IS,5);
+0104     IS = squeeze(mat2cell2( IS, [1 1 1 1 nMontages] ));
+0105   <span class="keyword">end</span>
+0106 
+0107   <span class="comment">% draw each montage</span>
+0108   clf;
+0109   nn = ceil( sqrt(nMontages) ); mm = ceil(nMontages/nn);
+0110   <span class="keyword">for</span> i=1:nMontages
+0111     subplot(mm,nn,i);
+0112     prmSub=prm;  prmSub.extraInfo=0;  prmSub.labels=[];
+0113     <span class="keyword">if</span>( ~isempty(IS{i}) )
+0114       <a href="#_sub1" class="code" title="subfunction varargout = subMontage( IS, prm )">subMontage</a>( IS{i}, prmSub );
+0115     <span class="keyword">else</span>
+0116       set(gca,<span class="string">'XTick'</span>,[]); set(gca,<span class="string">'YTick'</span>,[]);
+0117     <span class="keyword">end</span>
+0118     <span class="keyword">if</span>(~isempty(labels)); title(labels{i}); <span class="keyword">end</span>
+0119   <span class="keyword">end</span>
+0120   <span class="keyword">if</span>( extraInfo ); impixelinfo; <span class="keyword">end</span>;
+0121 <span class="keyword">end</span>
+0122 
+0123 <a name="_sub1" href="#_subfunctions" class="code">function varargout = subMontage( IS, prm )</a>
+0124 <span class="comment">% this function is a generalized version of Matlab's montage.m</span>
+0125 
+0126 <span class="comment">% get parameters (set defaults)</span>
+0127 dfs = {<span class="string">'showLines'</span>,1, <span class="string">'extraInfo'</span>,0, <span class="string">'cLim'</span>,[], <span class="string">'mm'</span>,[], <span class="string">'nn'</span>,[], <span class="keyword">...</span>
+0128   <span class="string">'labels'</span>,[], <span class="string">'perRow'</span>,false, <span class="string">'hasChn'</span>,false, <span class="string">'padAmt'</span>,0, <span class="string">'padEl'</span>,[] };
+0129 prm = getPrmDflt( prm, dfs );
+0130 showLines=prm.showLines;   extraInfo=prm.extraInfo;  cLim=prm.cLim;
+0131 mm=prm.mm; nn=prm.nn;  labels=prm.labels;  hasChn=prm.hasChn;
+0132 padAmt=prm.padAmt;  padEl=prm.padEl;
+0133 <span class="keyword">if</span>( prm.perRow ); mm=1; <span class="keyword">end</span>;
+0134 
+0135 <span class="comment">% get/test image format info and parameters</span>
+0136 <span class="keyword">if</span>( hasChn )
+0137   <span class="keyword">if</span>( ndims(IS)&gt;4 || ~any(size(IS,3)==[1 3]) )
+0138     error(<span class="string">'montage2: unsupported dimension of IS'</span>); <span class="keyword">end</span>
+0139 <span class="keyword">else</span>
+0140   <span class="keyword">if</span>( ndims(IS)&gt;3 );
+0141     error(<span class="string">'montage2: unsupported dimension of IS'</span>); <span class="keyword">end</span>
+0142   IS = permute(IS, [1 2 4 3] );
+0143 <span class="keyword">end</span>
+0144 siz = size(IS);  nCh=size(IS,3);  nIm = size(IS,4);  sizPad=siz+padAmt;
+0145 <span class="keyword">if</span>( ~isempty(labels) &amp;&amp; nIm~=length(labels) )
+0146   error(<span class="string">'montage2: incorrect number of labels'</span>);
+0147 <span class="keyword">end</span>
+0148 
+0149 <span class="comment">% set up the padEl correctly (must have same type / nCh as IS)</span>
+0150 <span class="keyword">if</span>(isempty(padEl))
+0151   <span class="keyword">if</span>(isempty(cLim)); padEl=min(IS(:)); <span class="keyword">else</span> padEl=cLim(1); <span class="keyword">end</span>; <span class="keyword">end</span>
+0152 <span class="keyword">if</span>(length(padEl)==1); padEl=repmat(padEl,[1 nCh]); <span class="keyword">end</span>;
+0153 <span class="keyword">if</span>(length(padEl)~=nCh); error( <span class="string">'invalid padEl'</span> ); <span class="keyword">end</span>;
+0154 padEl = feval( class(IS), padEl );
+0155 padEl = reshape( padEl, 1, 1, [] );
+0156 padAmt = floor(padAmt/2 + .5)*2;
+0157 
+0158 <span class="comment">% get layout of images (mm=#images/row, nn=#images/col)</span>
+0159 <span class="keyword">if</span>( isempty(mm) || isempty(nn))
+0160   <span class="keyword">if</span>( isempty(mm) &amp;&amp; isempty(nn))
+0161     nn = min( ceil(sqrt(sizPad(1)*nIm/sizPad(2))), nIm );
+0162     mm = ceil( nIm/nn );
+0163   <span class="keyword">elseif</span>( isempty(mm) )
+0164     nn = min( nn, nIm );
+0165     mm = ceil(nIm/nn);
+0166   <span class="keyword">else</span>
+0167     mm = min( mm, nIm );
+0168     nn = ceil(nIm/mm);
+0169   <span class="keyword">end</span>
+0170   <span class="comment">% often can shrink dimension further</span>
+0171   <span class="keyword">while</span>((mm-1)*nn&gt;=nIm); mm=mm-1; <span class="keyword">end</span>;
+0172   <span class="keyword">while</span>((nn-1)*mm&gt;=nIm); nn=nn-1; <span class="keyword">end</span>;
+0173 <span class="keyword">end</span>
+0174 
+0175 <span class="comment">% Calculate I (M*mm x N*nn size image)</span>
+0176 I = repmat(padEl, [mm*sizPad(1), nn*sizPad(2), 1]);
+0177 rows = 1:siz(1); cols = 1:siz(2);
+0178 <span class="keyword">for</span> k=1:nIm
+0179   rowsK = rows + floor((k-1)/nn)*sizPad(1)+padAmt/2;
+0180   colsK = cols + mod(k-1,nn)*sizPad(2)+padAmt/2;
+0181   I(rowsK,colsK,:) = IS(:,:,:,k);
+0182 <span class="keyword">end</span>
+0183 
+0184 <span class="comment">% display I</span>
+0185 <span class="keyword">if</span>( ~isempty(cLim)); h=imagesc(I,cLim);  <span class="keyword">else</span>  h=imagesc(I);  <span class="keyword">end</span>
+0186 colormap(gray);  axis(<span class="string">'image'</span>);
+0187 <span class="keyword">if</span>( extraInfo )
+0188   colorbar; impixelinfo;
+0189 <span class="keyword">else</span>
+0190   set(gca,<span class="string">'Visible'</span>,<span class="string">'off'</span>)
+0191 <span class="keyword">end</span>
+0192 
+0193 <span class="comment">% draw lines separating frames</span>
+0194 <span class="keyword">if</span>( showLines )
+0195   montageWd = nn * sizPad(2) + .5;
+0196   montageHt = mm * sizPad(1) + .5;
+0197   <span class="keyword">for</span> i=1:mm-1
+0198     ht = i*sizPad(1) +.5; line([.5,montageWd],[ht,ht]);
+0199   <span class="keyword">end</span>
+0200   <span class="keyword">for</span> i=1:nn-1
+0201     wd = i*sizPad(2) +.5; line([wd,wd],[.5,montageHt]);
+0202   <span class="keyword">end</span>
+0203 <span class="keyword">end</span>
+0204 
+0205 <span class="comment">% plot text labels</span>
+0206 textalign = { <span class="string">'VerticalAlignment'</span>,<span class="string">'bottom'</span>,<span class="string">'HorizontalAlignment'</span>,<span class="string">'left'</span>};
+0207 <span class="keyword">if</span>( ~isempty(labels) )
+0208   count=1;
+0209   <span class="keyword">for</span> i=1:mm;
+0210     <span class="keyword">for</span> j=1:nn
+0211       <span class="keyword">if</span>( count&lt;=nIm )
+0212         rStr = i*sizPad(1)-padAmt/2;
+0213         cStr =(j-1+.1)*sizPad(2)+padAmt/2;
+0214         text(cStr,rStr,labels{count},<span class="string">'color'</span>,<span class="string">'r'</span>,textalign{:});
+0215         count = count+1;
+0216       <span class="keyword">end</span>
+0217     <span class="keyword">end</span>
+0218   <span class="keyword">end</span>
+0219 <span class="keyword">end</span>
+0220 
+0221 <span class="comment">% cross out unused frames</span>
+0222 [nns,mms] = ind2sub( [nn,mm], nIm+1 );
+0223 <span class="keyword">for</span> i=mms-1:mm-1
+0224   <span class="keyword">for</span> j=nns-1:nn-1,
+0225     rStr = i*sizPad(1)+.5+padAmt/2; rs = [rStr,rStr+siz(1)];
+0226     cStr = j*sizPad(2)+.5+padAmt/2; cs = [cStr,cStr+siz(2)];
+0227     line( cs, rs );  line( fliplr(cs), rs );
+0228   <span class="keyword">end</span>
+0229 <span class="keyword">end</span>
+0230 
+0231 <span class="comment">% optional output</span>
+0232 <span class="keyword">if</span>( nargout&gt;0 ); varargout={h,mm,nn}; <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

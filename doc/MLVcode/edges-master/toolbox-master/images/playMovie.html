@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of playMovie</title>
+  <meta name="keywords" content="playMovie">
+  <meta name="description" content="Shows/makes an/several movie(s) from an image sequence.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; playMovie.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>playMovie
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Shows/makes an/several movie(s) from an image sequence.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function M = playMovie( I, fps, loop, prm ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Shows/makes an/several movie(s) from an image sequence.
+
+ To play a matlab movie file, as an alternative to movie, use:
+  playMovie(movieToImages(M));
+ The images to display are stacked in a higher dimensional array.
+ MxNxCxTxRxS, where:
+  M - height
+  N - width
+  C - number of channels, nothing, 1 or 3
+  T - number of videos
+  R - number of cases
+  S - number of sets
+
+ USAGE
+  playMovie( I, [fps], [loop], [prm] )
+
+ INPUTS
+  I       - MxNxTxRxS or MxNx1xTxRxS or MxNx3xTxRxS or cell
+            array where each element is a MxNxTxR or MxNx1xTxR or
+            MxNx3xTxR (R ans S can equal 1)
+  fps     - [100] maximum number of frames to display per second
+            use fps==0 to introduce no pause and have the movie play as
+            fast as possible
+  loop    - [0] number of time to loop video (may be inf),
+            if neg plays video forward then backward then forward etc.
+  prm     - [] parameters to use calling montage2
+
+ OUTPUTS
+
+ EXAMPLE - [MxNxT] 1 video
+  load( 'images.mat' );
+  playMovie( video, [], -50 );
+
+ EXAMPLE - [MxNx3xT] 1 video
+  load( 'images.mat' );
+  video3=repmat(permute(video,[1 2 4 3]),[1 1 3 1]);
+  playMovie( video3, [], -50, struct('hasChn',true));
+
+ EXAMPLE - [MxNxTxR] many videos at same time
+  load( 'images.mat' );
+  playMovie( videos, [], 5 );
+
+ EXAMPLE - [MxNxTxRxS] show groups of videos in 2 ways
+  load( 'images.mat' );
+  IC = clusterMontage( videos, IDXv, 9, 1 );
+  clf; M = playMovie( IC );
+  prm = struct('perRow',1,'padAmt',4,'showLines',0,'nn',1);
+  clf; M = playMovie( IC, [], 5, prm );
+
+ EXAMPLE - {S}[MxNxTxR] show groups of videos given in a cell
+  load( 'images.mat' );
+  IC = clusterMontage( videos, IDXv, 9, 1 );
+  ICcell = squeeze(mat2cell2( IC, [1 1 1 1 9] ));
+  clf; M = playMovie( ICcell, [], 5, struct('showLines',0) );
+
+ See also <a href="montage2.html" class="code" title="function varargout = montage2( IS, prm )">MONTAGE2</a>, <a href="movieToImages.html" class="code" title="function I = movieToImages( M )">MOVIETOIMAGES</a>, MOVIE
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="montage2.html" class="code" title="function varargout = montage2( IS, prm )">montage2</a>	Used to display collections of images and videos.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function siz=sizeWithouti(I)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function M = playMovie( I, fps, loop, prm )</a>
+0002 <span class="comment">% Shows/makes an/several movie(s) from an image sequence.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% To play a matlab movie file, as an alternative to movie, use:</span>
+0005 <span class="comment">%  playMovie(movieToImages(M));</span>
+0006 <span class="comment">% The images to display are stacked in a higher dimensional array.</span>
+0007 <span class="comment">% MxNxCxTxRxS, where:</span>
+0008 <span class="comment">%  M - height</span>
+0009 <span class="comment">%  N - width</span>
+0010 <span class="comment">%  C - number of channels, nothing, 1 or 3</span>
+0011 <span class="comment">%  T - number of videos</span>
+0012 <span class="comment">%  R - number of cases</span>
+0013 <span class="comment">%  S - number of sets</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% USAGE</span>
+0016 <span class="comment">%  playMovie( I, [fps], [loop], [prm] )</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% INPUTS</span>
+0019 <span class="comment">%  I       - MxNxTxRxS or MxNx1xTxRxS or MxNx3xTxRxS or cell</span>
+0020 <span class="comment">%            array where each element is a MxNxTxR or MxNx1xTxR or</span>
+0021 <span class="comment">%            MxNx3xTxR (R ans S can equal 1)</span>
+0022 <span class="comment">%  fps     - [100] maximum number of frames to display per second</span>
+0023 <span class="comment">%            use fps==0 to introduce no pause and have the movie play as</span>
+0024 <span class="comment">%            fast as possible</span>
+0025 <span class="comment">%  loop    - [0] number of time to loop video (may be inf),</span>
+0026 <span class="comment">%            if neg plays video forward then backward then forward etc.</span>
+0027 <span class="comment">%  prm     - [] parameters to use calling montage2</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% OUTPUTS</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% EXAMPLE - [MxNxT] 1 video</span>
+0032 <span class="comment">%  load( 'images.mat' );</span>
+0033 <span class="comment">%  playMovie( video, [], -50 );</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% EXAMPLE - [MxNx3xT] 1 video</span>
+0036 <span class="comment">%  load( 'images.mat' );</span>
+0037 <span class="comment">%  video3=repmat(permute(video,[1 2 4 3]),[1 1 3 1]);</span>
+0038 <span class="comment">%  playMovie( video3, [], -50, struct('hasChn',true));</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% EXAMPLE - [MxNxTxR] many videos at same time</span>
+0041 <span class="comment">%  load( 'images.mat' );</span>
+0042 <span class="comment">%  playMovie( videos, [], 5 );</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% EXAMPLE - [MxNxTxRxS] show groups of videos in 2 ways</span>
+0045 <span class="comment">%  load( 'images.mat' );</span>
+0046 <span class="comment">%  IC = clusterMontage( videos, IDXv, 9, 1 );</span>
+0047 <span class="comment">%  clf; M = playMovie( IC );</span>
+0048 <span class="comment">%  prm = struct('perRow',1,'padAmt',4,'showLines',0,'nn',1);</span>
+0049 <span class="comment">%  clf; M = playMovie( IC, [], 5, prm );</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">% EXAMPLE - {S}[MxNxTxR] show groups of videos given in a cell</span>
+0052 <span class="comment">%  load( 'images.mat' );</span>
+0053 <span class="comment">%  IC = clusterMontage( videos, IDXv, 9, 1 );</span>
+0054 <span class="comment">%  ICcell = squeeze(mat2cell2( IC, [1 1 1 1 9] ));</span>
+0055 <span class="comment">%  clf; M = playMovie( ICcell, [], 5, struct('showLines',0) );</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">% See also MONTAGE2, MOVIETOIMAGES, MOVIE</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0060 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0061 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0062 
+0063 <span class="keyword">if</span>( nargin&lt;2 || isempty(fps)); fps = 100; <span class="keyword">end</span>
+0064 <span class="keyword">if</span>( nargin&lt;3 || isempty(loop)); loop = 1; <span class="keyword">end</span>
+0065 <span class="keyword">if</span>( nargin&lt;4 || isempty(prm)); prm=struct(); <span class="keyword">end</span>
+0066 dfs = {<span class="string">'hasChn'</span>,false }; prm = getPrmDflt( prm, dfs );
+0067 
+0068 nd=ndims(I);
+0069 <span class="keyword">if</span> ~iscell(I);
+0070   <span class="keyword">if</span>( ~any(ismember(nd, 3:6))); error(<span class="string">'unsupported dimension of I'</span>); <span class="keyword">end</span>
+0071   <span class="keyword">if</span>( prm.hasChn ); nframes=size(I,4); <span class="keyword">else</span> nframes=size(I,3); <span class="keyword">end</span>
+0072   nd=ndims(I);
+0073   <span class="keyword">if</span>( nd&lt;3 || nd&gt;6 )
+0074     error([<span class="string">'Invalid input, I has to be MxNxTxRxS or MxNx1xTxRxS or '</span> <span class="keyword">...</span>
+0075       <span class="string">'or MxNx3xTxRxS, with R and S possibly equal to 1'</span>]);
+0076   <span class="keyword">end</span>
+0077   cLim = [min(I(:)) max(I(:))];
+0078 <span class="keyword">else</span>
+0079   cLim=[Inf -Inf]; nframes=0;
+0080   <span class="keyword">for</span> i=1:length(I)
+0081     Ii = I{i};
+0082     <span class="keyword">if</span>( prm.hasChn ); nframesi=size(Ii,4); <span class="keyword">else</span> nframesi=size(Ii,3); <span class="keyword">end</span>
+0083     nframes=max(nframes,nframesi);
+0084     cLim = [min(min(Ii(:)),cLim(1)) max(max(Ii(:)),cLim(2))];
+0085   <span class="keyword">end</span>
+0086 <span class="keyword">end</span>
+0087 prm.cLim=cLim;
+0088 
+0089 inds={<span class="string">':'</span> <span class="string">':'</span>}; <span class="keyword">if</span>( prm.hasChn ); inds{3}=inds{1}; <span class="keyword">end</span>
+0090 
+0091 h=gcf; colormap gray; figure(h); <span class="comment">% bring to focus</span>
+0092 <span class="keyword">if</span> nargout&gt;0; M=repmat(getframe,[1 nframes]); <span class="keyword">end</span>
+0093 order = 1:nframes;  j=1;
+0094 <span class="keyword">for</span> nplayed = 1 : abs(loop)
+0095   <span class="keyword">for</span> i=order
+0096     tic; <span class="keyword">try</span> disc=get(h); <span class="keyword">catch</span>, <span class="keyword">return</span>; <span class="keyword">end</span> <span class="comment">%#ok&lt;*CTCH,NASGU&gt;</span>
+0097     <span class="keyword">if</span> ~iscell(I)
+0098       <a href="montage2.html" class="code" title="function varargout = montage2( IS, prm )">montage2</a>(reshape(I(inds{:},i,:,:),<a href="#_sub1" class="code" title="subfunction siz=sizeWithouti(I)">sizeWithouti</a>(I)),prm);
+0099     <span class="keyword">else</span>
+0100       I2=cell(1,length(I));
+0101       <span class="keyword">for</span> k=1:length(I)
+0102         <span class="keyword">try</span> I2{k}=reshape(I{k}(inds{:},i,:),<a href="#_sub1" class="code" title="subfunction siz=sizeWithouti(I)">sizeWithouti</a>(I{k})); <span class="keyword">catch</span>, <span class="keyword">end</span>
+0103       <span class="keyword">end</span>
+0104       <a href="montage2.html" class="code" title="function varargout = montage2( IS, prm )">montage2</a>(I2,prm);
+0105     <span class="keyword">end</span>
+0106     title(sprintf(<span class="string">'frame %d of %d'</span>,i,nframes));
+0107     <span class="keyword">if</span> fps&gt;0; pause(1/fps - toc); <span class="keyword">end</span>
+0108     <span class="keyword">if</span> nargout&gt;0; <span class="keyword">try</span> M(j)=getframe; <span class="keyword">catch</span>, <span class="keyword">end</span>; j=j+1; <span class="keyword">else</span> drawnow; <span class="keyword">end</span>
+0109   <span class="keyword">end</span>
+0110   <span class="keyword">if</span> loop&lt;0; order = order(end:-1:1); <span class="keyword">end</span>
+0111 <span class="keyword">end</span>
+0112 <span class="keyword">if</span> nargout&gt;0; close(h); <span class="keyword">end</span>
+0113 
+0114   <a name="_sub1" href="#_subfunctions" class="code">function siz=sizeWithouti(I)</a>
+0115     siz=size(I); <span class="keyword">if</span>( prm.hasChn ); siz(4)=[]; <span class="keyword">else</span> siz(3)=[];<span class="keyword">end</span>
+0116   <span class="keyword">end</span>
+0117 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

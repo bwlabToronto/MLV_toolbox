@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of clusterMontage</title>
+  <meta name="keywords" content="clusterMontage">
+  <meta name="description" content="Used for visualization of clusters of images and videos.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; clusterMontage.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>clusterMontage
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Used for visualization of clusters of images and videos.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function IC = clusterMontage( I, IDX, nElem, pad ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Used for visualization of clusters of images and videos.
+
+ Organizes the matrix I, which is either MxNxR for images or MxNxTxR for
+ videos, into a [M x N x T x nElem x nCluster] array IC, where each
+ element IC(:,:,:,:,i) is the set of objects belonging to cluster i.
+ If not all clusters have the same size, if pad==1 blank elements are
+ added to pad the clusters so they do in fact have the same size, and if
+ pad is 0 then IC is a cell vector where IC{i} is the set of objects
+ belonging to cluster i.
+
+ To display only a subset of clusters, given in a vector cs, use IDXb:
+  IDXb = zeros(size(IDX)); for i=1:length(cs) IDXb(IDX==cs(i))=i; end;
+
+ USAGE
+  IC = clusterMontage( I, IDX, nElem, [pad] )
+
+ INPUTS
+  I       - MxNxR array of images or MxNxTxR array of videos
+  IDX     - cluster membership (Rx1 integer vector) [see kmeans2.m]
+  nElem   - max number of instances to show of each cluster
+  pad     - [1] pads each cluster w blanks so it has exactly nElem
+
+ OUTPUTS
+  IC      - if pad==1  [M x N x T x nElem x nCluster] array
+          - if pad==0  nCluster cell of [M x N x T x nElem_i] arrays
+
+ EXAMPLE - images
+  load( 'images.mat' );
+  keep=randSample(144,80); IDXi=IDXi(keep); images=images(:,:,keep);
+  IC = clusterMontage( images, IDXi, 9, 0 );
+  figure(1); montage2( IC )
+
+ EXAMPLE - videos
+  load( 'images.mat' );
+  IC = clusterMontage( videos, IDXv, 9, 0 );
+  figure(1); playMovie( IC )
+
+ See also KMEANS2, <a href="montage2.html" class="code" title="function varargout = montage2( IS, prm )">MONTAGE2</a>, <a href="playMovie.html" class="code" title="function M = playMovie( I, fps, loop, prm )">PLAYMOVIE</a>, CELL2ARRAY
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function IC = clusterMontage( I, IDX, nElem, pad )</a>
+0002 <span class="comment">% Used for visualization of clusters of images and videos.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Organizes the matrix I, which is either MxNxR for images or MxNxTxR for</span>
+0005 <span class="comment">% videos, into a [M x N x T x nElem x nCluster] array IC, where each</span>
+0006 <span class="comment">% element IC(:,:,:,:,i) is the set of objects belonging to cluster i.</span>
+0007 <span class="comment">% If not all clusters have the same size, if pad==1 blank elements are</span>
+0008 <span class="comment">% added to pad the clusters so they do in fact have the same size, and if</span>
+0009 <span class="comment">% pad is 0 then IC is a cell vector where IC{i} is the set of objects</span>
+0010 <span class="comment">% belonging to cluster i.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% To display only a subset of clusters, given in a vector cs, use IDXb:</span>
+0013 <span class="comment">%  IDXb = zeros(size(IDX)); for i=1:length(cs) IDXb(IDX==cs(i))=i; end;</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% USAGE</span>
+0016 <span class="comment">%  IC = clusterMontage( I, IDX, nElem, [pad] )</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% INPUTS</span>
+0019 <span class="comment">%  I       - MxNxR array of images or MxNxTxR array of videos</span>
+0020 <span class="comment">%  IDX     - cluster membership (Rx1 integer vector) [see kmeans2.m]</span>
+0021 <span class="comment">%  nElem   - max number of instances to show of each cluster</span>
+0022 <span class="comment">%  pad     - [1] pads each cluster w blanks so it has exactly nElem</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% OUTPUTS</span>
+0025 <span class="comment">%  IC      - if pad==1  [M x N x T x nElem x nCluster] array</span>
+0026 <span class="comment">%          - if pad==0  nCluster cell of [M x N x T x nElem_i] arrays</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% EXAMPLE - images</span>
+0029 <span class="comment">%  load( 'images.mat' );</span>
+0030 <span class="comment">%  keep=randSample(144,80); IDXi=IDXi(keep); images=images(:,:,keep);</span>
+0031 <span class="comment">%  IC = clusterMontage( images, IDXi, 9, 0 );</span>
+0032 <span class="comment">%  figure(1); montage2( IC )</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% EXAMPLE - videos</span>
+0035 <span class="comment">%  load( 'images.mat' );</span>
+0036 <span class="comment">%  IC = clusterMontage( videos, IDXv, 9, 0 );</span>
+0037 <span class="comment">%  figure(1); playMovie( IC )</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% See also KMEANS2, MONTAGE2, PLAYMOVIE, CELL2ARRAY</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0042 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0043 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0044 
+0045 <span class="keyword">if</span>( nargin&lt;4 || isempty(pad) ); pad=1; <span class="keyword">end</span>
+0046 
+0047 <span class="comment">% error check</span>
+0048 siz = size(I); nd = ndims(I);
+0049 <span class="keyword">if</span>(nd~=3 &amp;&amp; nd~=4); error(<span class="string">'I must be 3 or 4 dimensional array'</span>); <span class="keyword">end</span>;
+0050 inds = {<span class="string">':'</span>}; inds = inds(:,ones(1,nd-1));
+0051 
+0052 <span class="comment">% discard outliers</span>
+0053 keepLocs = find( IDX&gt;0 ); IDX = IDX(keepLocs); I=I(inds{:},keepLocs);
+0054 
+0055 <span class="comment">% sample both I and IDX so have nElem per cluster</span>
+0056 uIDX=unique(IDX)';
+0057 <span class="keyword">for</span> i=uIDX
+0058   locs = find(IDX==i);  nLocs = length(locs);
+0059   <span class="keyword">if</span>( nLocs&gt;nElem )
+0060     keepLocs = [find(IDX~=i); locs(randSample(nLocs,nElem))];
+0061     IDX = IDX(keepLocs); I=I(inds{:},keepLocs);
+0062   <span class="keyword">elseif</span>( nLocs&lt;nElem &amp;&amp; pad )
+0063     nAdd = nElem-nLocs;
+0064     IDX = [IDX; repmat(i,[nAdd,1])]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0065     I = cat( nd, I, repmat(uint8(0),[siz(1:nd-1) nAdd]));
+0066   <span class="keyword">end</span>;
+0067 <span class="keyword">end</span>;
+0068 
+0069 <span class="comment">% string out I</span>
+0070 <span class="keyword">if</span>( pad )
+0071   IC = repmat( uint8(0), [siz(1:nd-1), nElem, length(uIDX)] );
+0072   <span class="keyword">for</span> i=uIDX; IC(inds{:},:,i) = I(inds{:},IDX==i); <span class="keyword">end</span>
+0073 <span class="keyword">else</span>
+0074   IC = cell(1,max(IDX));
+0075   <span class="keyword">for</span> i=uIDX; IC{i} = I(inds{:},IDX==i); <span class="keyword">end</span>
+0076 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

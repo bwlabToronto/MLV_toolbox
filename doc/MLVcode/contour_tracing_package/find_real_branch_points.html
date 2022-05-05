@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of find_real_branch_points</title>
+  <meta name="keywords" content="find_real_branch_points">
+  <meta name="description" content="branchpointImage = bwmorph(I,'branchpoints');">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">contour_tracing_package</a> &gt; find_real_branch_points.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\contour_tracing_package&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>find_real_branch_points
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>branchpointImage = bwmorph(I,'branchpoints');</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [nbx,nby] = find_real_branch_points(I,contour_intensity) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">branchpointImage = bwmorph(I,'branchpoints');</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="extractContoursLD.html" class="code" title="function [all_X,all_Y]=extractContoursLD(I)">extractContoursLD</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [nbx,nby] = find_real_branch_points(I,contour_intensity)</a>
+0002 
+0003 
+0004 <span class="comment">%branchpointImage = bwmorph(I,'branchpoints');</span>
+0005 
+0006 [bx,by]=ind2sub(size(I),find(I==0));
+0007 [mI,nI] = size(I);
+0008 
+0009 nbx = [];
+0010 nby = [];
+0011 
+0012 N = size(bx,1);
+0013 neighbors4_1 = [-1,-1;-1,1;1,-1;1,1];
+0014 neighbors4_2 = [-1,0;0,-1;0,1;1,0];
+0015 neighbors4 = [neighbors4_1;neighbors4_2];
+0016 <span class="keyword">for</span> i = 1 : N
+0017     x_pos = bx(i);
+0018     y_pos = by(i);
+0019     
+0020     <span class="keyword">if</span>(I(x_pos,y_pos)==0)
+0021         
+0022         numberOfBranches1 = 0;
+0023         numberOfBranches2 = 0;
+0024         
+0025         <span class="keyword">for</span> itr = 1 : 8
+0026             
+0027             neigh_x =  x_pos+neighbors4(itr,1);
+0028             neigh_y =  y_pos+neighbors4(itr,2);
+0029             
+0030             <span class="keyword">if</span>( neigh_x &gt;=1 &amp;&amp; neigh_x&lt;=mI &amp;&amp; neigh_y &gt;=1 &amp;&amp; neigh_y&lt;=nI )
+0031                 <span class="keyword">if</span>(I(neigh_x,neigh_y) == contour_intensity)
+0032                     <span class="keyword">if</span>(itr&lt;=4)
+0033                         numberOfBranches1 = numberOfBranches1 + 1;
+0034                     <span class="keyword">else</span>
+0035                         numberOfBranches2 = numberOfBranches2 + 1;
+0036                     <span class="keyword">end</span>
+0037                 <span class="keyword">end</span>
+0038             <span class="keyword">end</span>
+0039             
+0040         <span class="keyword">end</span>
+0041         
+0042             <span class="keyword">if</span>(numberOfBranches1 &gt;=4 &amp;&amp; numberOfBranches2 &lt;=1)
+0043         
+0044                 new_nbx = [nbx;x_pos];
+0045                 new_nby = [nby;y_pos];
+0046                 nbx = new_nbx;
+0047                 nby = new_nby;
+0048         
+0049             <span class="keyword">end</span>
+0050         
+0051         
+0052         <span class="keyword">if</span>(numberOfBranches2 &gt;=3 )
+0053             
+0054             new_nbx = [nbx;x_pos];
+0055             new_nby = [nby;y_pos];
+0056             nbx = new_nbx;
+0057             nby = new_nby;
+0058         <span class="keyword">end</span>
+0059     <span class="keyword">else</span>
+0060         x_pos
+0061         y_pos
+0062     <span class="keyword">end</span>
+0063 <span class="keyword">end</span>
+0064 
+0065 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of isfield2</title>
+  <meta name="keywords" content="isfield2">
+  <meta name="description" content="Similar to isfield but also test whether fields are initialized.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; isfield2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>isfield2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Similar to isfield but also test whether fields are initialized.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function tf = isfield2( S, fs, isinit ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Similar to isfield but also test whether fields are initialized.
+
+ A more comprehensive test of what fields are present [and optionally
+ initialized] in a stuct S.  fs is either a single field name or a cell
+ array of field names.  The presence of all fields in fs are tested for in
+ S, tf is true iif all fs are present. Additionally, if isinit==1, then tf
+ is true iff every field fs of every element of S is nonempty (test done
+ using isempty).
+
+ USAGE
+  tf = isfield2( S, fs, [isinit] )
+
+ INPUTS
+  S        - struct array
+  fs       - cell of string name or string
+  isinit   - [0] if true additionally test if all fields are initialized
+
+ OUTPUTS
+  tf      - true or false, depending on results of above tests
+
+ EXAMPLE
+  isfield2( struct('a',1,'b',2), {'a','b'}, 1 )
+
+ See also ISFIELD
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.10
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function tf = isfield2( S, fs, isinit )</a>
+0002 <span class="comment">% Similar to isfield but also test whether fields are initialized.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% A more comprehensive test of what fields are present [and optionally</span>
+0005 <span class="comment">% initialized] in a stuct S.  fs is either a single field name or a cell</span>
+0006 <span class="comment">% array of field names.  The presence of all fields in fs are tested for in</span>
+0007 <span class="comment">% S, tf is true iif all fs are present. Additionally, if isinit==1, then tf</span>
+0008 <span class="comment">% is true iff every field fs of every element of S is nonempty (test done</span>
+0009 <span class="comment">% using isempty).</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% USAGE</span>
+0012 <span class="comment">%  tf = isfield2( S, fs, [isinit] )</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% INPUTS</span>
+0015 <span class="comment">%  S        - struct array</span>
+0016 <span class="comment">%  fs       - cell of string name or string</span>
+0017 <span class="comment">%  isinit   - [0] if true additionally test if all fields are initialized</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% OUTPUTS</span>
+0020 <span class="comment">%  tf      - true or false, depending on results of above tests</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% EXAMPLE</span>
+0023 <span class="comment">%  isfield2( struct('a',1,'b',2), {'a','b'}, 1 )</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% See also ISFIELD</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.10</span>
+0028 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0029 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0030 
+0031 tf = all( isfield(S,fs) );
+0032 <span class="keyword">if</span>( ~tf || nargin&lt;3 || ~isinit ); <span class="keyword">return</span>; <span class="keyword">end</span>
+0033 
+0034 <span class="comment">% now optionally check if fields are initialized</span>
+0035 <span class="keyword">if</span>( iscell(fs) )
+0036   <span class="keyword">for</span> i=1:length(fs)
+0037     <span class="keyword">for</span> j=1:numel(S)
+0038       <span class="keyword">if</span>( isempty(S(j).(fs{i})) ); tf=false; <span class="keyword">return</span>; <span class="keyword">end</span>;
+0039     <span class="keyword">end</span>;
+0040   <span class="keyword">end</span>;
+0041 <span class="keyword">else</span>
+0042   <span class="keyword">for</span> j=1:numel(S)
+0043     <span class="keyword">if</span>( isempty(S(j).(fs)) ); tf=false; <span class="keyword">return</span>; <span class="keyword">end</span>;
+0044   <span class="keyword">end</span>;
+0045 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of edgeBoxesSweeps</title>
+  <meta name="keywords" content="edgeBoxesSweeps">
+  <meta name="description" content="Parameter sweeps for Edges Boxes object proposals.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">edges-master</a> &gt; edgeBoxesSweeps.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>edgeBoxesSweeps
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Parameter sweeps for Edges Boxes object proposals.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function edgeBoxesSweeps() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Parameter sweeps for Edges Boxes object proposals.
+
+ Running the parameter sweeps requires altering internal flags.
+ The sweeps are not well documented, use at your own discretion.
+
+ Structured Edge Detection Toolbox      Version 3.01
+ Code written by Piotr Dollar and Larry Zitnick, 2014.
+ Licensed under the MSR-LA Full Rights License [see license.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="boxesData.html" class="code" title="function data = boxesData( varargin )">boxesData</a>	Get ground truth data for object proposal bounding box evaluation.</li><li><a href="boxesEval.html" class="code" title="function recall = boxesEval( varargin )">boxesEval</a>	Perform object proposal bounding box evaluation and plot results.</li><li><a href="edgeBoxes.html" class="code" title="function bbs = edgeBoxes( I, model, varargin )">edgeBoxes</a>	Generate Edge Boxes object proposals in given image(s).</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function jobs = createJobs( rt, opts, maxn )</a></li><li><a href="#_sub2" class="code">function opts = createExp( rt, expNm )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function edgeBoxesSweeps()</a>
+0002 <span class="comment">% Parameter sweeps for Edges Boxes object proposals.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Running the parameter sweeps requires altering internal flags.</span>
+0005 <span class="comment">% The sweeps are not well documented, use at your own discretion.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Structured Edge Detection Toolbox      Version 3.01</span>
+0008 <span class="comment">% Code written by Piotr Dollar and Larry Zitnick, 2014.</span>
+0009 <span class="comment">% Licensed under the MSR-LA Full Rights License [see license.txt]</span>
+0010 
+0011 <span class="comment">% define parameter sweeps</span>
+0012 rt = [fileparts(mfilename(<span class="string">'fullpath'</span>)) filesep];
+0013 expNms = {<span class="string">'alpha'</span>,<span class="string">'beta'</span>,<span class="string">'eta'</span>,<span class="string">'minScore'</span>,<span class="string">'edgeMinMag'</span>,<span class="string">'edgeMergeThr'</span>,<span class="keyword">...</span>
+0014   <span class="string">'clusterMinMag'</span>,<span class="string">'maxAspectRatio'</span>,<span class="string">'minBoxArea'</span>,<span class="string">'gamma'</span>,<span class="string">'kappa'</span>};
+0015 expNms=expNms(1:end); opts=<a href="#_sub2" class="code" title="subfunction opts = createExp( rt, expNm )">createExp</a>(rt,expNms); maxn=inf;
+0016 
+0017 <span class="comment">% run training and testing jobs</span>
+0018 jobs = <a href="#_sub1" class="code" title="subfunction jobs = createJobs( rt, opts, maxn )">createJobs</a>(rt,opts,maxn);
+0019 tic, <span class="keyword">for</span> i=1:length(jobs), <a href="edgeBoxes.html" class="code" title="function bbs = edgeBoxes( I, model, varargin )">edgeBoxes</a>(jobs{i}{:}); <span class="keyword">end</span>; toc
+0020 
+0021 <span class="comment">% plot all results</span>
+0022 <span class="keyword">for</span> e=1:length(expNms)
+0023   eval={<span class="string">'data'</span>,<a href="boxesData.html" class="code" title="function data = boxesData( varargin )">boxesData</a>(<span class="string">'split'</span>,<span class="string">'val'</span>),<span class="string">'names'</span>,{opts{e}.name},<span class="keyword">...</span>
+0024     <span class="string">'resDir'</span>,[rt <span class="string">'boxes/sweeps/'</span>],<span class="string">'maxn'</span>,maxn,<span class="string">'fName'</span>,expNms{e}};
+0025   <a href="boxesEval.html" class="code" title="function recall = boxesEval( varargin )">boxesEval</a>(eval{:},<span class="string">'thrs'</span>,.7);
+0026   ar=<a href="boxesEval.html" class="code" title="function recall = boxesEval( varargin )">boxesEval</a>(eval{:},<span class="string">'thrs'</span>,.5:.05:1,<span class="string">'cnts'</span>,1000);
+0027   ar=squeeze(mean(ar,2)); [~,i]=max(ar); disp(opts{e}(i))
+0028 <span class="keyword">end</span>
+0029 
+0030 <span class="keyword">end</span>
+0031 
+0032 <a name="_sub1" href="#_subfunctions" class="code">function jobs = createJobs( rt, opts, maxn )</a>
+0033 <span class="comment">% create jobs</span>
+0034 M=<span class="string">'models/forest/modelBsds'</span>; M=load(M); M=M.model; M.opts.nThreads=1;
+0035 data=<a href="boxesData.html" class="code" title="function data = boxesData( varargin )">boxesData</a>(<span class="string">'split'</span>,<span class="string">'val'</span>); fs=data.imgs(1:min(<span class="keyword">end</span>,maxn));
+0036 opts=[opts{:}]; N=length(opts); jobs=cell(1,N); D=zeros(1,N);
+0037 <span class="keyword">for</span> e=1:N, opts(e).name=[rt <span class="string">'boxes/sweeps/'</span> opts(e).name <span class="string">'-val.mat'</span>]; <span class="keyword">end</span>
+0038 <span class="keyword">for</span> e=1:N, D(e)=exist(opts(e).name,<span class="string">'file'</span>)==2; jobs{e}={fs,M,opts(e)}; <span class="keyword">end</span>
+0039 [~,K]=unique({opts.name},<span class="string">'stable'</span>); D=D(K); jobs=jobs(K); jobs=jobs(~D);
+0040 fprintf(<span class="string">'nJobs = %i\n'</span>,length(jobs));
+0041 <span class="keyword">end</span>
+0042 
+0043 <a name="_sub2" href="#_subfunctions" class="code">function opts = createExp( rt, expNm )</a>
+0044 
+0045 <span class="comment">% if expNm is a cell, call recursively and return</span>
+0046 <span class="keyword">if</span>( iscell(expNm) )
+0047   N=length(expNm); opts=cell(1,N);
+0048   <span class="keyword">for</span> e=1:N, opts{e}=<a href="#_sub2" class="code" title="subfunction opts = createExp( rt, expNm )">createExp</a>(rt,expNm{e}); <span class="keyword">end</span>; <span class="keyword">return</span>;
+0049 <span class="keyword">end</span>
+0050 
+0051 <span class="comment">% setup opts</span>
+0052 opts=<a href="edgeBoxes.html" class="code" title="function bbs = edgeBoxes( I, model, varargin )">edgeBoxes</a>(); opts.minScore=0;
+0053 N=100; optsDefault=opts; opts=opts(ones(1,N));
+0054 <span class="keyword">switch</span> expNm
+0055   <span class="keyword">case</span> <span class="string">'alpha'</span>
+0056     vs=45:5:75; N=length(vs);
+0057     <span class="keyword">for</span> e=1:N, opts(e).alpha=vs(e)/100; <span class="keyword">end</span>
+0058   <span class="keyword">case</span> <span class="string">'beta'</span>
+0059     vs=60:5:90; N=length(vs);
+0060     <span class="keyword">for</span> e=1:N, opts(e).beta=vs(e)/100; <span class="keyword">end</span>
+0061   <span class="keyword">case</span> <span class="string">'eta'</span>
+0062     vs=0:5; N=length(vs);
+0063     <span class="keyword">for</span> e=1:N, opts(e).eta=1-vs(e)/10000; <span class="keyword">end</span>
+0064   <span class="keyword">case</span> <span class="string">'minScore'</span>
+0065     vs=[0 5 10 25 50 100]; N=length(vs);
+0066     <span class="keyword">for</span> e=1:N, opts(e).minScore=vs(e)/1000; <span class="keyword">end</span>
+0067   <span class="keyword">case</span> <span class="string">'edgeMinMag'</span>
+0068     vs=[0 50 100 200 400]; N=length(vs);
+0069     <span class="keyword">for</span> e=1:N, opts(e).edgeMinMag=vs(e)/1000; <span class="keyword">end</span>
+0070   <span class="keyword">case</span> <span class="string">'edgeMergeThr'</span>
+0071     vs=[25 50 100 200 400]; N=length(vs);
+0072     <span class="keyword">for</span> e=1:N, opts(e).edgeMergeThr=vs(e)/100; <span class="keyword">end</span>
+0073   <span class="keyword">case</span> <span class="string">'clusterMinMag'</span>
+0074     vs=[0 50 100 200 400]; N=length(vs);
+0075     <span class="keyword">for</span> e=1:N, opts(e).clusterMinMag=vs(e)/100; <span class="keyword">end</span>
+0076   <span class="keyword">case</span> <span class="string">'maxAspectRatio'</span>
+0077     vs=1:5; N=length(vs);
+0078     <span class="keyword">for</span> e=1:N, opts(e).maxAspectRatio=vs(e); <span class="keyword">end</span>
+0079   <span class="keyword">case</span> <span class="string">'minBoxArea'</span>
+0080     vs=[100 250 500 1000 2500 5000]; N=length(vs);
+0081     <span class="keyword">for</span> e=1:N, opts(e).minBoxArea=vs(e); <span class="keyword">end</span>
+0082   <span class="keyword">case</span> <span class="string">'gamma'</span>
+0083     vs=[25 50 100 200 400 10000]; N=length(vs);
+0084     <span class="keyword">for</span> e=1:N, opts(e).gamma=vs(e)/100; <span class="keyword">end</span>
+0085   <span class="keyword">case</span> <span class="string">'kappa'</span>
+0086     vs=50:25:200; N=length(vs);
+0087     <span class="keyword">for</span> e=1:N, opts(e).kappa=vs(e)/100; <span class="keyword">end</span>
+0088   <span class="keyword">otherwise</span>, error(<span class="string">'invalid exp: %s'</span>,expNm);
+0089 <span class="keyword">end</span>
+0090 
+0091 <span class="comment">% produce final set of opts and find default opts</span>
+0092 O=1:N; opts=opts(O); d=0;
+0093 <span class="keyword">for</span> e=1:N, <span class="keyword">if</span>(isequal(optsDefault,opts(e))), d=e; <span class="keyword">break</span>; <span class="keyword">end</span>; <span class="keyword">end</span>
+0094 <span class="keyword">if</span>(d==0), disp(expNm); assert(false); <span class="keyword">end</span>; opts(d).name=<span class="string">'Default'</span>;
+0095 <span class="keyword">for</span> e=1:N, <span class="keyword">if</span>(e~=d), opts(e).name=[expNm int2str2(vs(e),5)]; <span class="keyword">end</span>; <span class="keyword">end</span>
+0096 
+0097 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

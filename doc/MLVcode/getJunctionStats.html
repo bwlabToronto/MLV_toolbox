@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getJunctionStats</title>
+  <meta name="keywords" content="getJunctionStats">
+  <meta name="description" content="vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; getJunctionStats.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>getJunctionStats
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)
+       computes the histograms for junction types and junction angles.
+
+ Input:
+   vecLD - vectorized line drawing
+   numAngleBins - the number of bins for the junction angle histogram
+                  default: 8
+   junctionTypes - which types of jucntions to include
+                   default: {'T','Y','X','Arrow','Star'}
+
+ Return:
+   vecLD: vectorized line drawing with the junction histograms added
+   histograms: the histograms of junction types and junction angles, 
+                    weighted by their lengths
+   bins: a vector with the bin centers
+   shortNames: {'juncType','juncAngle'}</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>	vecLD = computeJunctions(vecLD)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)">getContourPropertiesStats</a>	[vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, minmaxLen, minmaxCurv, whichStats)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)</a>
+0002 <span class="comment">% vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</span>
+0003 <span class="comment">%       computes the histograms for junction types and junction angles.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   vecLD - vectorized line drawing</span>
+0007 <span class="comment">%   numAngleBins - the number of bins for the junction angle histogram</span>
+0008 <span class="comment">%                  default: 8</span>
+0009 <span class="comment">%   junctionTypes - which types of jucntions to include</span>
+0010 <span class="comment">%                   default: {'T','Y','X','Arrow','Star'}</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Return:</span>
+0013 <span class="comment">%   vecLD: vectorized line drawing with the junction histograms added</span>
+0014 <span class="comment">%   histograms: the histograms of junction types and junction angles,</span>
+0015 <span class="comment">%                    weighted by their lengths</span>
+0016 <span class="comment">%   bins: a vector with the bin centers</span>
+0017 <span class="comment">%   shortNames: {'juncType','juncAngle'}</span>
+0018 
+0019 <span class="keyword">if</span> nargin &lt; 3
+0020     junctionTypes = {<span class="string">'T'</span>,<span class="string">'Y'</span>,<span class="string">'X'</span>,<span class="string">'Arrow'</span>,<span class="string">'Star'</span>};
+0021 <span class="keyword">end</span>
+0022 
+0023 <span class="keyword">if</span> nargin &lt; 2
+0024     numAngleBins = 8;
+0025 <span class="keyword">end</span>
+0026 
+0027 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'junctions'</span>)
+0028     vecLD = <a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>(vecLD);
+0029 <span class="keyword">end</span>
+0030 
+0031 <span class="comment">% no junctions? return empty arrays for everything</span>
+0032 <span class="keyword">if</span> isempty(vecLD.junctions)
+0033     vecLD.junctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
+0034     vecLD.normJunctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
+0035     vecLD.junctionTypeHistogram = zeros(1,length(junctionTypes));
+0036     vecLD.normJunctionTypeHistogram = zeros(1,length(junctionTypes));
+0037 <span class="keyword">else</span>
+0038 
+0039     <span class="comment">% junction types</span>
+0040     theseTypes = {vecLD.junctions(:).type};
+0041     typeHist = zeros(1,numel(junctionTypes));
+0042     
+0043     <span class="comment">% prepare the counts of junctions that each contour participates in</span>
+0044     vecLD.junctionContourHistograms = zeros(vecLD.numContours,numel(junctionTypes));
+0045     
+0046     <span class="comment">% count it all up</span>
+0047     <span class="keyword">for</span> t = 1:numel(junctionTypes)
+0048         thisJ = strcmp(junctionTypes{t},theseTypes);
+0049         typeHist(t) = sum(thisJ);
+0050         contours = [vecLD.junctions(thisJ).contourIDs];
+0051         <span class="keyword">for</span> c = unique(contours)
+0052             vecLD.junctionContourHistograms(c,t) = sum(contours == c);
+0053         <span class="keyword">end</span>
+0054     <span class="keyword">end</span>
+0055     vecLD.normJunctionContourHistograms = vecLD.junctionContourHistograms ./ repmat(vecLD.contourLengths,1,numel(junctionTypes)) * 10000;
+0056     vecLD.junctionTypeHistogram = typeHist;
+0057     vecLD.normJunctionTypeHistogram = typeHist / sum(vecLD.contourLengths) * 10000;
+0058 <span class="keyword">end</span>
+0059 vecLD.junctionTypeBins = junctionTypes;
+0060 
+0061 <span class="comment">% junctionAngles</span>
+0062 maxAngle = 120;
+0063 binStep = maxAngle/numAngleBins;
+0064 angleBins = [binStep/2:binStep:maxAngle-binStep/2];
+0065 <span class="keyword">if</span> isempty(vecLD.junctions)
+0066     vecLD.junctionAngleHistogram = zeros(1,length(junctionTypes));
+0067     vecLD.normJunctionAngleHistogram = zeros(1,length(junctionTypes));
+0068     histograms = {[],[]};
+0069 <span class="keyword">else</span>
+0070     angles = [vecLD.junctions(:).minAngle];
+0071     angleHist = hist(angles,angleBins);
+0072     vecLD.junctionAngleHistogram = angleHist;
+0073     vecLD.normJunctionAngleHistogram = angleHist / sum(vecLD.contourLengths) * 10000;
+0074     histograms = {typeHist,angleHist};
+0075 <span class="keyword">end</span>
+0076 vecLD.junctionAngleBins = angleBins;
+0077 
+0078 bins = {junctionTypes,angleBins};
+0079 shortNames = {<span class="string">'juncType'</span>,<span class="string">'juncAngle'</span>};</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

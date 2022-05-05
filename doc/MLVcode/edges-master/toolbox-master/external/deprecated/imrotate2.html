@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imrotate2</title>
+  <meta name="keywords" content="imrotate2">
+  <meta name="description" content="Custom version of imrotate that demonstrates use of apply_homography.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; imrotate2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>imrotate2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Custom version of imrotate that demonstrates use of apply_homography.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function IR = imrotate2( I, angle, method, bbox ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Custom version of imrotate that demonstrates use of apply_homography.
+
+ Works exactly the same as imrotate.  For usage see imrotate.
+
+ USAGE
+  IR = imrotate2( I, angle, [method], [bbox] )
+
+ INPUTS
+  I       - 2D image [converted to double]
+  angle   - angle to rotate in degrees
+  method  - ['linear'] 'nearest', 'linear', 'spline', 'cubic'
+  bbox    - ['loose'] 'loose' or 'crop'
+
+ OUTPUTS
+  IR      - rotated image
+
+ EXAMPLE
+  load trees;
+  tic; X1 = imrotate( X, 55, 'bicubic' ); toc,
+  tic; X2 = imrotate2( X, 55, 'bicubic' ); toc
+  clf;  subplot(2,2,1); im(X); subplot(2,2,2); im(X1-X2);
+  subplot(2,2,3); im(X1); subplot(2,2,4); im(X2);
+
+ See also IMROTATE</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="apply_homography.html" class="code" title="function IR = apply_homography( I, H, method, bbox, show )">apply_homography</a>	Applies the homography defined by H on the image I.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Custom version of imrotate that demonstrates use of apply_homography.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Works exactly the same as imrotate.  For usage see imrotate.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% USAGE</span>
+0006 <span class="comment">%  IR = imrotate2( I, angle, [method], [bbox] )</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% INPUTS</span>
+0009 <span class="comment">%  I       - 2D image [converted to double]</span>
+0010 <span class="comment">%  angle   - angle to rotate in degrees</span>
+0011 <span class="comment">%  method  - ['linear'] 'nearest', 'linear', 'spline', 'cubic'</span>
+0012 <span class="comment">%  bbox    - ['loose'] 'loose' or 'crop'</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% OUTPUTS</span>
+0015 <span class="comment">%  IR      - rotated image</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% EXAMPLE</span>
+0018 <span class="comment">%  load trees;</span>
+0019 <span class="comment">%  tic; X1 = imrotate( X, 55, 'bicubic' ); toc,</span>
+0020 <span class="comment">%  tic; X2 = imrotate2( X, 55, 'bicubic' ); toc</span>
+0021 <span class="comment">%  clf;  subplot(2,2,1); im(X); subplot(2,2,2); im(X1-X2);</span>
+0022 <span class="comment">%  subplot(2,2,3); im(X1); subplot(2,2,4); im(X2);</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% See also IMROTATE</span>
+0025 
+0026 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 1.5</span>
+0027 <span class="comment">% Written and maintained by Piotr Dollar    pdollar-at-cs.ucsd.edu</span>
+0028 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0029 
+0030 <a name="_sub0" href="#_subfunctions" class="code">function IR = imrotate2( I, angle, method, bbox )</a>
+0031 
+0032 <span class="keyword">if</span>( ~isa( I, <span class="string">'double'</span> ) ); I = double(I); <span class="keyword">end</span>
+0033 <span class="keyword">if</span>( nargin&lt;3 || isempty(method)); method=<span class="string">'linear'</span>; <span class="keyword">end</span>
+0034 <span class="keyword">if</span>( nargin&lt;4 || isempty(bbox) ); bbox=<span class="string">'loose'</span>; <span class="keyword">end</span>
+0035 <span class="keyword">if</span>( strcmp(method,<span class="string">'bilinear'</span>) || strcmp(method,<span class="string">'lin'</span>)); method=<span class="string">'linear'</span>;<span class="keyword">end</span>
+0036 
+0037 <span class="comment">% convert arguments for apply_homography</span>
+0038 angle_rads = angle /180 * pi;
+0039 R = rotationMatrix( angle_rads );
+0040 H = [R [0;0]; 0 0 1];
+0041 IR = <a href="apply_homography.html" class="code" title="function IR = apply_homography( I, H, method, bbox, show )">apply_homography</a>( I, H, method, bbox );</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

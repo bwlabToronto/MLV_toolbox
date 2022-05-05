@@ -1,0 +1,471 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imRectRot</title>
+  <meta name="keywords" content="imRectRot">
+  <meta name="description" content="Create a draggable, resizable, rotatable rectangle or ellipse.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; imRectRot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>imRectRot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Create a draggable, resizable, rotatable rectangle or ellipse.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [hPatch,api] = imRectRot( varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Create a draggable, resizable, rotatable rectangle or ellipse.
+
+ The 'ellipse' param determines if the displayed object is a rectangle or
+ ellipse. The object is identical in both cases, only the display changes.
+ The created object may be queried or controlled programatically by using
+ the returned api.
+
+ The 'rotate' param determines overall behavior of the created object. If
+ rotate=0, the resulting object (rect or ellipse) is axis aligned. In
+ terms of the graphical interface it is identical to Matlab's imrect (can
+ drag by clicking in interior or resize by clicking on edges), although it
+ is much less cpu intensive. If rotate&gt;0, the resulting object is
+ rotatable. In addition to the interface for a non-rotatable object, four
+ control points are present, one at the center of each edge. Three of
+ these have color given by the 'color' flag, the last has color 'colorc'.
+ The odd colored control point is used to display orientation. Dragging
+ this control point or the one opposite changes orientation, dragging the
+ remaining two resizes the object symmetrically. Finally, when creating a
+ rotatable object, the first drag determines the major axes (height) of
+ the object, with the width set to height*rotate (hence the rotate param
+ also determines aspect ratio of newly created objects). Using this
+ control scheme, an object can be naturally specified with two drags: the
+ first is used to draw the major axes, the second to adjust the width.
+
+ Position is represented by [x y w h theta], where [x,y] give the top/left
+ corner of the rect PRIOR to rotation, [w,h] are the width and height, and
+ theta is the angle in degrees. The final rect is given by first placing
+ the rect at [x,y], then rotating it by theta around it's center. The
+ advantage of this is that if theta=0, the first four elements are
+ identical to the standard rect representation. The disadvantage is that
+ [x,y] need not lie in the interior of the rect after rotation.
+
+ USAGE
+  [h,api] = imRectRot( varargin )
+
+ INPUTS
+  varargin   - parameters (struct or name/value pairs)
+   .hParent    - [gca] object parent, typically an axes object
+   .ellipse    - [0] if true display ellipse otherwise display rectangle
+   .rotate     - [1] determines if object is axis aligned
+   .pos        - [] initial pos vector [x y w h theta] or [] or [x y]
+   .lims       - [] rectangle defining valid region for object placement
+   .showLims   - [0] draw rectangle representing lims
+   .color      - ['g'] color for the displayed object
+   .colorc     - ['b'] color for the control point displaying orientation
+   .lw         - [2] 'LineWidth' property for the displayed object
+   .ls         - ['-'] 'LineStyle' property for the displayed object
+   .cross      - [0] if 1 show diagonal, if 2 show cross
+
+ OUTPUTS
+  h          - handle used to delete object
+  api        - interface allowing access to created object
+  .getPos()       - get position - returns 5 elt pos
+  .setPos(pos)    - set position (while respecting constraints)
+  .setPosLock(b)  - if lock set (b==true), object cannot change
+  .setSizLock(b)  - if lock set (b==true), object cannot change size
+  .setDrgLock(b)  - if lock set (b==true), object cannot be dragged
+  .setSidLock(lk) - [4x1] set locks for each side (tp/rt/bt/lf)
+  .setPosChnCb(f) - whenever pos changes (even slightly), calls f(pos)
+  .setPosSetCb(f) - whenever pos finished changing, calls f(pos)
+  .uistack(...)   - calls 'uistack( [objectHandles], ... )', see uistack
+  .setStyle(...)  - set line style (ls), width (lw), color and colorc
+
+ EXAMPLE - interactively place simple axis aligned rectangle
+  figure(1), imshow peppers.png;
+  [h,api]=imRectRot('rotate',0);
+  api.setPosChnCb( @(pos) disp(num2str(pos)) );
+
+ EXAMPLE - create rotatable ellpise that falls inside image
+  figure(1); I=imread('cameraman.tif'); imshow(I); siz=size(I);
+  [h,api]=imRectRot('pos',[60 60 40 40 45],'lims',[1 1 siz(1:2)-2 0],...
+    'showLims',1,'ellipse',1,'rotate',1,'color','w','colorc','y'  );
+  api.setPosSetCb( @(pos) disp(num2str(pos)) );
+
+ See also IMRECT, RECTANGLE, PATCH
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.51
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function intitialize( varargin )</a></li><li><a href="#_sub2" class="code">function [pc,rs,R] = rectInfo( pos0 )</a></li><li><a href="#_sub3" class="code">function [pts,xs,ys,pc] = rectToCorners( pos0 )</a></li><li><a href="#_sub4" class="code">function pos1 = cornersToRect( pos0, x0, y0, x1, y1 )</a></li><li><a href="#_sub5" class="code">function setPos( posNew, ignoreLims )</a></li><li><a href="#_sub6" class="code">function pnt = getCurPnt()</a></li><li><a href="#_sub7" class="code">function d = axisUnitsPerCentimeter()</a></li><li><a href="#_sub8" class="code">function [side,cursor,flag] = getSide( pnt0 )</a></li><li><a href="#_sub9" class="code">function btnDwn( h, evnt, flag )</a></li><li><a href="#_sub10" class="code">function drag( h, evnt, flag, anchor, pos0 )</a></li><li><a href="#_sub11" class="code">function stopDrag( h, evnt )</a></li><li><a href="#_sub12" class="code">function deleteFcn( h, evnt )</a></li><li><a href="#_sub13" class="code">function pos0 = getPos(), pos0=pos; end</a></li><li><a href="#_sub14" class="code">function setPosChnCb( f ), posChnCb=f; end</a></li><li><a href="#_sub15" class="code">function setPosSetCb( f ), posSetCb=f; end</a></li><li><a href="#_sub16" class="code">function setPosLock( b ), posLock=b; end</a></li><li><a href="#_sub17" class="code">function setSizLock( b ), sizLock=b; end</a></li><li><a href="#_sub18" class="code">function setDrgLock( b ), dgrLock=b; end</a></li><li><a href="#_sub19" class="code">function setSidLock( lk )</a></li><li><a href="#_sub20" class="code">function uistack1( varargin )</a></li><li><a href="#_sub21" class="code">function setStyle( ls, lw, color, colorc )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [hPatch,api] = imRectRot( varargin )</a>
+0002 <span class="comment">% Create a draggable, resizable, rotatable rectangle or ellipse.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% The 'ellipse' param determines if the displayed object is a rectangle or</span>
+0005 <span class="comment">% ellipse. The object is identical in both cases, only the display changes.</span>
+0006 <span class="comment">% The created object may be queried or controlled programatically by using</span>
+0007 <span class="comment">% the returned api.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% The 'rotate' param determines overall behavior of the created object. If</span>
+0010 <span class="comment">% rotate=0, the resulting object (rect or ellipse) is axis aligned. In</span>
+0011 <span class="comment">% terms of the graphical interface it is identical to Matlab's imrect (can</span>
+0012 <span class="comment">% drag by clicking in interior or resize by clicking on edges), although it</span>
+0013 <span class="comment">% is much less cpu intensive. If rotate&gt;0, the resulting object is</span>
+0014 <span class="comment">% rotatable. In addition to the interface for a non-rotatable object, four</span>
+0015 <span class="comment">% control points are present, one at the center of each edge. Three of</span>
+0016 <span class="comment">% these have color given by the 'color' flag, the last has color 'colorc'.</span>
+0017 <span class="comment">% The odd colored control point is used to display orientation. Dragging</span>
+0018 <span class="comment">% this control point or the one opposite changes orientation, dragging the</span>
+0019 <span class="comment">% remaining two resizes the object symmetrically. Finally, when creating a</span>
+0020 <span class="comment">% rotatable object, the first drag determines the major axes (height) of</span>
+0021 <span class="comment">% the object, with the width set to height*rotate (hence the rotate param</span>
+0022 <span class="comment">% also determines aspect ratio of newly created objects). Using this</span>
+0023 <span class="comment">% control scheme, an object can be naturally specified with two drags: the</span>
+0024 <span class="comment">% first is used to draw the major axes, the second to adjust the width.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Position is represented by [x y w h theta], where [x,y] give the top/left</span>
+0027 <span class="comment">% corner of the rect PRIOR to rotation, [w,h] are the width and height, and</span>
+0028 <span class="comment">% theta is the angle in degrees. The final rect is given by first placing</span>
+0029 <span class="comment">% the rect at [x,y], then rotating it by theta around it's center. The</span>
+0030 <span class="comment">% advantage of this is that if theta=0, the first four elements are</span>
+0031 <span class="comment">% identical to the standard rect representation. The disadvantage is that</span>
+0032 <span class="comment">% [x,y] need not lie in the interior of the rect after rotation.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% USAGE</span>
+0035 <span class="comment">%  [h,api] = imRectRot( varargin )</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% INPUTS</span>
+0038 <span class="comment">%  varargin   - parameters (struct or name/value pairs)</span>
+0039 <span class="comment">%   .hParent    - [gca] object parent, typically an axes object</span>
+0040 <span class="comment">%   .ellipse    - [0] if true display ellipse otherwise display rectangle</span>
+0041 <span class="comment">%   .rotate     - [1] determines if object is axis aligned</span>
+0042 <span class="comment">%   .pos        - [] initial pos vector [x y w h theta] or [] or [x y]</span>
+0043 <span class="comment">%   .lims       - [] rectangle defining valid region for object placement</span>
+0044 <span class="comment">%   .showLims   - [0] draw rectangle representing lims</span>
+0045 <span class="comment">%   .color      - ['g'] color for the displayed object</span>
+0046 <span class="comment">%   .colorc     - ['b'] color for the control point displaying orientation</span>
+0047 <span class="comment">%   .lw         - [2] 'LineWidth' property for the displayed object</span>
+0048 <span class="comment">%   .ls         - ['-'] 'LineStyle' property for the displayed object</span>
+0049 <span class="comment">%   .cross      - [0] if 1 show diagonal, if 2 show cross</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">% OUTPUTS</span>
+0052 <span class="comment">%  h          - handle used to delete object</span>
+0053 <span class="comment">%  api        - interface allowing access to created object</span>
+0054 <span class="comment">%  .getPos()       - get position - returns 5 elt pos</span>
+0055 <span class="comment">%  .setPos(pos)    - set position (while respecting constraints)</span>
+0056 <span class="comment">%  .setPosLock(b)  - if lock set (b==true), object cannot change</span>
+0057 <span class="comment">%  .setSizLock(b)  - if lock set (b==true), object cannot change size</span>
+0058 <span class="comment">%  .setDrgLock(b)  - if lock set (b==true), object cannot be dragged</span>
+0059 <span class="comment">%  .setSidLock(lk) - [4x1] set locks for each side (tp/rt/bt/lf)</span>
+0060 <span class="comment">%  .setPosChnCb(f) - whenever pos changes (even slightly), calls f(pos)</span>
+0061 <span class="comment">%  .setPosSetCb(f) - whenever pos finished changing, calls f(pos)</span>
+0062 <span class="comment">%  .uistack(...)   - calls 'uistack( [objectHandles], ... )', see uistack</span>
+0063 <span class="comment">%  .setStyle(...)  - set line style (ls), width (lw), color and colorc</span>
+0064 <span class="comment">%</span>
+0065 <span class="comment">% EXAMPLE - interactively place simple axis aligned rectangle</span>
+0066 <span class="comment">%  figure(1), imshow peppers.png;</span>
+0067 <span class="comment">%  [h,api]=imRectRot('rotate',0);</span>
+0068 <span class="comment">%  api.setPosChnCb( @(pos) disp(num2str(pos)) );</span>
+0069 <span class="comment">%</span>
+0070 <span class="comment">% EXAMPLE - create rotatable ellpise that falls inside image</span>
+0071 <span class="comment">%  figure(1); I=imread('cameraman.tif'); imshow(I); siz=size(I);</span>
+0072 <span class="comment">%  [h,api]=imRectRot('pos',[60 60 40 40 45],'lims',[1 1 siz(1:2)-2 0],...</span>
+0073 <span class="comment">%    'showLims',1,'ellipse',1,'rotate',1,'color','w','colorc','y'  );</span>
+0074 <span class="comment">%  api.setPosSetCb( @(pos) disp(num2str(pos)) );</span>
+0075 <span class="comment">%</span>
+0076 <span class="comment">% See also IMRECT, RECTANGLE, PATCH</span>
+0077 <span class="comment">%</span>
+0078 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.51</span>
+0079 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0080 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0081 
+0082 <span class="comment">% global variables (shared by all functions below)</span>
+0083 [hParent,pos,lims,rotate,crXs,crYs,posChnCb,posSetCb,posLock,sizLock,<span class="keyword">...</span>
+0084   dgrLock,sidLock,hAx,hFig,hPatch,hBnds,hCntr,hEll] = deal([]);
+0085 
+0086 <span class="comment">% intitialize</span>
+0087 <a href="#_sub1" class="code" title="subfunction intitialize( varargin )">intitialize</a>( varargin{:} );
+0088 
+0089 <span class="comment">% create api</span>
+0090 api = struct(<span class="string">'getPos'</span>,@<a href="#_sub13" class="code" title="subfunction pos0 = getPos(), pos0=pos; end">getPos</a>, <span class="string">'setPos'</span>,@<a href="#_sub5" class="code" title="subfunction setPos( posNew, ignoreLims )">setPos</a>, <span class="string">'uistack'</span>,@<a href="#_sub20" class="code" title="subfunction uistack1( varargin )">uistack1</a>, <span class="keyword">...</span>
+0091   <span class="string">'setPosChnCb'</span>,@setPosChnCb, <span class="string">'setPosSetCb'</span>,@setPosSetCb, <span class="keyword">...</span>
+0092   <span class="string">'setPosLock'</span>,@setPosLock, <span class="string">'setSizLock'</span>,@setSizLock, <span class="keyword">...</span>
+0093   <span class="string">'setDrgLock'</span>,@setDrgLock, <span class="string">'setSidLock'</span>,@<a href="#_sub19" class="code" title="subfunction setSidLock( lk )">setSidLock</a>, <span class="keyword">...</span>
+0094   <span class="string">'setStyle'</span>,@<a href="#_sub21" class="code" title="subfunction setStyle( ls, lw, color, colorc )">setStyle</a> );
+0095 
+0096 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0097 
+0098   <a name="_sub1" href="#_subfunctions" class="code">function intitialize( varargin )</a>
+0099     <span class="comment">% get default arguments</span>
+0100     dfs={<span class="string">'hParent'</span>,gca, <span class="string">'ellipse'</span>,0, <span class="string">'rotate'</span>,1, <span class="string">'pos'</span>,[], <span class="string">'lims'</span>,[], <span class="keyword">...</span>
+0101       <span class="string">'showLims'</span>,0,<span class="string">'color'</span>,<span class="string">'g'</span>,<span class="string">'colorc'</span>,<span class="string">'b'</span>,<span class="string">'lw'</span>,2,<span class="string">'ls'</span>,<span class="string">'-'</span>,<span class="string">'cross'</span>,0};
+0102     [hParent,ellipse,rotate,pos,lims,showLims,color,colorc,lw,ls,cross]=<span class="keyword">...</span>
+0103       getPrmDflt(varargin,dfs,1);
+0104     <span class="keyword">if</span>(numel(pos)==4), pos=[pos(:)' 0]; <span class="keyword">end</span>
+0105     <span class="keyword">if</span>(numel(lims)==4), lims=[lims(:)' 0]; <span class="keyword">end</span>
+0106     
+0107     <span class="comment">% get figure and axes handles</span>
+0108     hAx = ancestor(hParent,<span class="string">'axes'</span>); assert(~isempty(hAx));
+0109     hFig = ancestor(hAx,<span class="string">'figure'</span>); assert(~isempty(hFig));
+0110     set( hFig, <span class="string">'CurrentAxes'</span>, hAx );
+0111     
+0112     <span class="comment">% optionally display limits</span>
+0113     <span class="keyword">if</span>(showLims &amp;&amp; ~isempty(lims)), [~,xs,ys]=<a href="#_sub3" class="code" title="subfunction [pts,xs,ys,pc] = rectToCorners( pos0 )">rectToCorners</a>(lims);
+0114       <span class="keyword">for</span> j=1:4, ids=mod([j-1 j],4)+1; line(xs(ids),ys(ids)); <span class="keyword">end</span>
+0115     <span class="keyword">end</span>
+0116     
+0117     <span class="comment">% create objects for rectangle display/interface</span>
+0118     <span class="keyword">if</span>( ellipse ), linePrp={<span class="string">'color'</span>,[.7 .7 .7],<span class="string">'LineWidth'</span>,1};
+0119     <span class="keyword">else</span> linePrp={<span class="string">'color'</span>,color,<span class="string">'LineWidth'</span>,lw,<span class="string">'LineStyle'</span>,ls}; <span class="keyword">end</span>
+0120     <span class="keyword">if</span>(isempty(pos)); vis=<span class="string">'off'</span>; <span class="keyword">else</span> vis=<span class="string">'on'</span>; <span class="keyword">end</span>;
+0121     assert(cross==0 || cross==1 || cross==2);
+0122     <span class="keyword">for</span> i=1:4+cross, hBnds(i)=line(linePrp{:},<span class="string">'Visible'</span>,vis); <span class="keyword">end</span>
+0123     
+0124     <span class="comment">% create transparent patch to capture clicks in object interior</span>
+0125     hPatch=patch(<span class="string">'FaceColor'</span>,<span class="string">'none'</span>,<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>);
+0126     
+0127     <span class="comment">% create objects for ellipse display/interface</span>
+0128     <span class="keyword">if</span>( ellipse )
+0129       ellPrp={<span class="string">'color'</span>,color,<span class="string">'LineWidth'</span>,lw,<span class="string">'LineStyle'</span>,ls};
+0130       ts=linspace(-180,180,50); crXs=cosd(ts); crYs=sind(ts);
+0131       hold on; hEll=plot(crXs,crYs,ellPrp{:},<span class="string">'Visible'</span>,vis); hold off;
+0132     <span class="keyword">end</span>
+0133     
+0134     <span class="comment">% create objects for rotation display/interface</span>
+0135     <span class="keyword">if</span>( rotate )
+0136       circPrp={<span class="string">'Curvature'</span>,[1 1],<span class="string">'FaceColor'</span>,color,<span class="string">'EdgeColor'</span>,color};
+0137       <span class="keyword">for</span> i=1:4, hCntr(i)=rectangle(circPrp{:},<span class="string">'Visible'</span>,vis); <span class="keyword">end</span>
+0138       set(hCntr(1),<span class="string">'LineWidth'</span>,lw,<span class="string">'FaceColor'</span>,colorc);
+0139     <span class="keyword">end</span>
+0140     
+0141     <span class="comment">% set callbacks on all objects</span>
+0142     hs=[hPatch hBnds hCntr hEll];
+0143     set(hs,<span class="string">'ButtonDownFcn'</span>,{@<a href="#_sub9" class="code" title="subfunction btnDwn( h, evnt, flag ) ">btnDwn</a>,0},<span class="string">'DeleteFcn'</span>,@<a href="#_sub12" class="code" title="subfunction deleteFcn( h, evnt ) ">deleteFcn</a>);
+0144     
+0145     <span class="comment">% set or query initial position</span>
+0146     posLock=0; sizLock=0; dgrLock=0; sidLock=[0 0 0 0];
+0147     <span class="keyword">if</span>(length(pos)==5), <a href="#_sub5" class="code" title="subfunction setPos( posNew, ignoreLims )">setPos</a>(pos,1); <span class="keyword">else</span>
+0148       <a href="#_sub9" class="code" title="subfunction btnDwn( h, evnt, flag ) ">btnDwn</a>([],[],-1); waitfor(hFig,<span class="string">'WindowButtonUpFcn'</span>,<span class="string">''</span>);
+0149     <span class="keyword">end</span>
+0150   <span class="keyword">end</span>
+0151 
+0152   <a name="_sub2" href="#_subfunctions" class="code">function [pc,rs,R] = rectInfo( pos0 )</a>
+0153     <span class="comment">% return rectangle center, radii, and rotation matrix</span>
+0154     t=pos0(5); c=cosd(t); s=sind(t); R=[c -s; s c];
+0155     rs=pos0(3:4)/2; pc=pos0(1:2)+rs;
+0156   <span class="keyword">end</span>
+0157 
+0158   <a name="_sub3" href="#_subfunctions" class="code">function [pts,xs,ys,pc] = rectToCorners( pos0 )</a>
+0159     <span class="comment">% return 4 rect corners in real world coords</span>
+0160     [pc,rs,R]=<a href="#_sub2" class="code" title="subfunction [pc,rs,R] = rectInfo( pos0 )">rectInfo</a>( pos0 );
+0161     x0=-rs(1); x1=rs(1); y0=-rs(2); y1=rs(2);
+0162     pts=[x0 y0; x1 y0; x1 y1; x0 y1]*R'+pc(ones(4,1),:);
+0163     xs=pts(:,1); ys=pts(:,2);
+0164   <span class="keyword">end</span>
+0165 
+0166   <a name="_sub4" href="#_subfunctions" class="code">function pos1 = cornersToRect( pos0, x0, y0, x1, y1 )</a>
+0167     <span class="comment">% compute pos from 4 corners given in rect coords</span>
+0168     [pc,~,R] = <a href="#_sub2" class="code" title="subfunction [pc,rs,R] = rectInfo( pos0 )">rectInfo</a>( pos0 );
+0169     p0=[x0 y0]*R'+pc; p1=[x1 y1]*R'+pc;
+0170     pc=(p1+p0)/2; p0=(p0-pc)*R; p1=(p1-pc)*R;
+0171     pos1 = [pc+p0 p1-p0 pos0(5)];
+0172   <span class="keyword">end</span>
+0173 
+0174   <a name="_sub5" href="#_subfunctions" class="code">function setPos( posNew, ignoreLims )</a>
+0175     <span class="keyword">if</span>(isempty(hBnds) || isempty(hPatch)); <span class="keyword">return</span>; <span class="keyword">end</span>; L=lims;
+0176     <span class="comment">% if corners fall outside lims don't use posNew</span>
+0177     <span class="keyword">if</span>( ~isempty(L) &amp;&amp; (nargin&lt;2 || ~ignoreLims) )
+0178       <span class="keyword">if</span>( posNew(5)==lims(5) )
+0179         <span class="comment">% lims and posNew at same orient (do everything in rect coords)</span>
+0180         [pc,rs,R]=<a href="#_sub2" class="code" title="subfunction [pc,rs,R] = rectInfo( pos0 )">rectInfo</a>(posNew); p0=-rs; p1=rs;
+0181         pts=(<a href="#_sub3" class="code" title="subfunction [pts,xs,ys,pc] = rectToCorners( pos0 )">rectToCorners</a>(L)-pc(ones(4,1),:))*R;
+0182         L0=[pts(1,1) pts(1,2)]; L1=[pts(2,1) pts(3,2)];
+0183         p0=min(max(p0,L0),L1); p1=max(min(p1,L1),p0);
+0184         posNew=<a href="#_sub4" class="code" title="subfunction pos1 = cornersToRect( pos0, x0, y0, x1, y1 )">cornersToRect</a>(posNew,p0(1),p0(2),p1(1),p1(2));
+0185       <span class="keyword">else</span>
+0186         <span class="comment">% lims and posNew at diff orient (do everything in lims coords)</span>
+0187         [pc,rs,R]=<a href="#_sub2" class="code" title="subfunction [pc,rs,R] = rectInfo( pos0 )">rectInfo</a>(L); p0=-rs; p1=rs;
+0188         p=(<a href="#_sub3" class="code" title="subfunction [pts,xs,ys,pc] = rectToCorners( pos0 )">rectToCorners</a>(posNew)-pc(ones(4,1),:))*R; xs=p(:,1); ys=p(:,2);
+0189         valid=[xs&gt;=p0(1) xs&lt;=p1(1) ys&gt;=p0(2) ys&lt;=p1(2)];
+0190         <span class="keyword">if</span>(~all(valid(:))), <span class="keyword">return</span>; <span class="keyword">end</span>
+0191       <span class="keyword">end</span>
+0192     <span class="keyword">end</span>
+0193     <span class="comment">% create invisible patch to captures key presses</span>
+0194     pos=posNew; [~,xs,ys]=<a href="#_sub3" class="code" title="subfunction [pts,xs,ys,pc] = rectToCorners( pos0 )">rectToCorners</a>(pos);
+0195     vert=[xs ys ones(4,1)]; face=1:4;
+0196     set(hPatch,<span class="string">'Faces'</span>,face,<span class="string">'Vertices'</span>,vert);
+0197     <span class="comment">% draw ellipse</span>
+0198     <span class="keyword">if</span>(~isempty(hEll)), [pc,rs]=<a href="#_sub2" class="code" title="subfunction [pc,rs,R] = rectInfo( pos0 )">rectInfo</a>(posNew); th=pos(5);
+0199       xsEll = rs(1)*crXs*cosd(-th)+rs(2)*crYs*sind(-th)+pc(1);
+0200       ysEll = rs(2)*crYs*cosd(-th)-rs(1)*crXs*sind(-th)+pc(2);
+0201       set(hEll,<span class="string">'XData'</span>,xsEll,<span class="string">'YData'</span>,ysEll);
+0202     <span class="keyword">end</span>
+0203     <span class="comment">% draw rectangle boundaries and control circles</span>
+0204     r=<a href="#_sub7" class="code" title="subfunction d = axisUnitsPerCentimeter()">axisUnitsPerCentimeter</a>();
+0205     r=max( r*.1, min(mean(pos(3:4))/10,r) );
+0206     <span class="keyword">for</span> i=1:length(hBnds), ids=mod([i-1 i],4)+1;
+0207       <span class="keyword">if</span>(i==5), ids=[1 3]; <span class="keyword">elseif</span>(i==6), ids=[2 4]; <span class="keyword">end</span>
+0208       set(hBnds(i),<span class="string">'Xdata'</span>,xs(ids),<span class="string">'Ydata'</span>,ys(ids));
+0209       <span class="keyword">if</span>(rotate &amp;&amp; i&lt;=4), x=mean(xs(ids)); y=mean(ys(ids));
+0210         set(hCntr(i),<span class="string">'Position'</span>,[x-r y-r 2*r 2*r]);
+0211       <span class="keyword">end</span>
+0212     <span class="keyword">end</span>
+0213   <span class="keyword">end</span>
+0214 
+0215   <a name="_sub6" href="#_subfunctions" class="code">function pnt = getCurPnt()</a>
+0216     pnt=get(hAx,<span class="string">'CurrentPoint'</span>); pnt=pnt([1 3]);
+0217   <span class="keyword">end</span>
+0218 
+0219   <a name="_sub7" href="#_subfunctions" class="code">function d = axisUnitsPerCentimeter()</a>
+0220     <span class="comment">% approximage absolute axes size</span>
+0221     units=get(hAx,<span class="string">'units'</span>); set(hAx,<span class="string">'units'</span>,<span class="string">'centimeters'</span>);
+0222     cm=get(hAx,<span class="string">'Position'</span>); cm=max(cm(3:4));
+0223     set(hAx,<span class="string">'units'</span>,units);
+0224     <span class="comment">% axes size in axes units</span>
+0225     xLim=get(gca,<span class="string">'xLim'</span>); yLim=get(gca,<span class="string">'yLim'</span>);
+0226     sizInner = max([xLim(2)-xLim(1),yLim(2)-yLim(1)]);
+0227     <span class="comment">% units per centimeter</span>
+0228     d = sizInner/cm;
+0229   <span class="keyword">end</span>
+0230 
+0231   <a name="_sub8" href="#_subfunctions" class="code">function [side,cursor,flag] = getSide( pnt0 )</a>
+0232     <span class="comment">% get pnt in coordintates of center of rectangle</span>
+0233     [pc,rs,R]=<a href="#_sub2" class="code" title="subfunction [pc,rs,R] = rectInfo( pos0 )">rectInfo</a>(pos); pnt=(pnt0-pc)*R; th=pos(5);
+0234     <span class="comment">% side(i) -1=lf/tp bnd; 0=interior; +1:rt/bt bnd; 2=center</span>
+0235     t = <a href="#_sub7" class="code" title="subfunction d = axisUnitsPerCentimeter()">axisUnitsPerCentimeter</a>(); side=[0 0]; flag=0;
+0236     t = max( t*.1, min(mean(pos(3:4))/5,t) );
+0237     <span class="keyword">for</span> i=1:2
+0238       ti = min(t,rs(i)/3);
+0239       <span class="keyword">if</span>( abs(pnt(i))&lt;ti &amp;&amp; rotate ), side(i)=2; <span class="comment">% near center</span>
+0240       <span class="keyword">elseif</span>( pnt(i)&lt;-rs(i)+ti ), side(i)=-1; <span class="comment">% near lf/tp boundary</span>
+0241       <span class="keyword">elseif</span>( pnt(i)&gt;rs(i)-ti), side(i)=1; <span class="comment">% near rt/bt boundary</span>
+0242       <span class="keyword">end</span>
+0243     <span class="keyword">end</span>
+0244     <span class="comment">% flag: -1: none, 0=resize; 1=drag; 2=rotate; 3=symmetric-resize</span>
+0245     <span class="keyword">if</span>((sidLock(4)&amp;&amp;side(1)==-1)||(sidLock(2)&amp;&amp;side(1)==1)), side(1)=0; <span class="keyword">end</span>
+0246     <span class="keyword">if</span>((sidLock(1)&amp;&amp;side(2)==-1)||(sidLock(3)&amp;&amp;side(2)==1)), side(2)=0; <span class="keyword">end</span>
+0247     <span class="keyword">if</span>(any(side==0) || all(side==2)), side(side==2)=0; <span class="keyword">end</span>
+0248     <span class="keyword">if</span>(side(1)==2), flag=2; cursor=<span class="string">'crosshair'</span>; <span class="keyword">return</span>; <span class="keyword">end</span>
+0249     <span class="keyword">if</span>(sizLock), side=[0 0]; <span class="keyword">end</span>
+0250     <span class="keyword">if</span>(all(side==0) &amp;&amp; dgrLock), cursor=<span class="string">''</span>; flag=-1; <span class="keyword">return</span>; <span class="keyword">end</span>
+0251     <span class="keyword">if</span>(all(side==0)), flag=1; side=pnt0; cursor=<span class="string">'fleur'</span>; <span class="keyword">return</span>; <span class="keyword">end</span>
+0252     <span class="keyword">if</span>(side(2)==2), flag=3; side(2)=0; <span class="keyword">end</span>
+0253     <span class="comment">% select cursor based on position</span>
+0254     cs={<span class="string">'bottom'</span>,<span class="string">'botr'</span>,<span class="string">'right'</span>,<span class="string">'topr'</span>,<span class="string">'top'</span>,<span class="string">'topl'</span>,<span class="string">'left'</span>,<span class="string">'botl'</span>};
+0255     a=mod(round((atan2(side(1),side(2))/pi-th/180)*4),8)+1; cursor=cs{a};
+0256   <span class="keyword">end</span>
+0257 
+0258   <a name="_sub9" href="#_subfunctions" class="code">function btnDwn( h, evnt, flag ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0259     <span class="keyword">if</span>(isempty(hBnds) || isempty(hPatch) || posLock), <span class="keyword">return</span>; <span class="keyword">end</span>
+0260     <span class="keyword">if</span>( flag==-1 ) <span class="comment">% create new rectangle</span>
+0261       <span class="keyword">if</span>(isempty(pos)), anchor=ginput(1); <span class="keyword">else</span> anchor=pos(1:2); <span class="keyword">end</span>
+0262       pos=[anchor 1 1 0]; <a href="#_sub5" class="code" title="subfunction setPos( posNew, ignoreLims )">setPos</a>(pos);
+0263       set([hBnds hCntr hEll],<span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0264       <span class="keyword">if</span>(rotate), cursor=<span class="string">'crosshair'</span>; flag=4;
+0265       <span class="keyword">else</span> cursor=<span class="string">'botr'</span>; flag=0; <span class="keyword">end</span>
+0266     <span class="keyword">else</span> <span class="comment">% resize, rotate or drag rectangle</span>
+0267       pnt=<a href="#_sub6" class="code" title="subfunction pnt = getCurPnt()">getCurPnt</a>(); [anchor,cursor,flag]=<a href="#_sub8" class="code" title="subfunction [side,cursor,flag] = getSide( pnt0 )">getSide</a>( pnt );
+0268       <span class="keyword">if</span>(flag==-1), <span class="keyword">return</span>; <span class="keyword">end</span>
+0269     <span class="keyword">end</span>
+0270     set( hFig, <span class="string">'Pointer'</span>, cursor );
+0271     set( hFig, <span class="string">'WindowButtonMotionFcn'</span>,{@<a href="#_sub10" class="code" title="subfunction drag( h, evnt, flag, anchor, pos0 ) ">drag</a>,flag,anchor,pos} );
+0272     set( hFig, <span class="string">'WindowButtonUpFcn'</span>, @<a href="#_sub11" class="code" title="subfunction stopDrag( h, evnt ) ">stopDrag</a> );
+0273   <span class="keyword">end</span>
+0274 
+0275   <a name="_sub10" href="#_subfunctions" class="code">function drag( h, evnt, flag, anchor, pos0 ) </a><span class="comment">%#ok&lt;INUSL&gt;</span>
+0276     <span class="keyword">if</span>(isempty(hBnds) || isempty(hPatch)); <span class="keyword">return</span>; <span class="keyword">end</span>;
+0277     pnt = <a href="#_sub6" class="code" title="subfunction pnt = getCurPnt()">getCurPnt</a>();
+0278     <span class="keyword">if</span>( flag==1 ) <span class="comment">% shift rectangle by del=pnt-anchor</span>
+0279       <a href="#_sub5" class="code" title="subfunction setPos( posNew, ignoreLims )">setPos</a>( [pos0(1:2)+(pnt-anchor) pos0(3:5)] );
+0280     <span class="keyword">elseif</span>( flag==0 || flag==3 ) <span class="comment">% resize in rectangle coordinate frame</span>
+0281       [pc,rs,R]=<a href="#_sub2" class="code" title="subfunction [pc,rs,R] = rectInfo( pos0 )">rectInfo</a>(pos0); p0=-rs; p1=rs; pnt=(pnt-pc)*R;
+0282       <span class="keyword">if</span>( flag==3 ), p0(1)=-pnt(1); p1(1)=pnt(1); <span class="keyword">else</span>
+0283         <span class="keyword">for</span> i=1:2, <span class="keyword">if</span>(anchor(i)&gt;0), p1(i)=pnt(i); <span class="keyword">end</span>; <span class="keyword">end</span>
+0284         <span class="keyword">for</span> i=1:2, <span class="keyword">if</span>(anchor(i)&lt;0), p0(i)=pnt(i); <span class="keyword">end</span>; <span class="keyword">end</span>
+0285       <span class="keyword">end</span>; p0a=min(p0,p1); p1=max(p0,p1); p0=p0a;
+0286       <a href="#_sub5" class="code" title="subfunction setPos( posNew, ignoreLims )">setPos</a>(<a href="#_sub4" class="code" title="subfunction pos1 = cornersToRect( pos0, x0, y0, x1, y1 )">cornersToRect</a>(pos0,p0(1),p0(2),p1(1),p1(2)));
+0287     <span class="keyword">elseif</span>( flag==2 || flag==4 ) <span class="comment">% rotate rectangle</span>
+0288       [~,xs,ys]=<a href="#_sub3" class="code" title="subfunction [pts,xs,ys,pc] = rectToCorners( pos0 )">rectToCorners</a>(pos0);
+0289       <span class="keyword">if</span>(anchor(2)==-1), ids=[3 4]; <span class="keyword">else</span> ids=[1 2]; <span class="keyword">end</span>
+0290       p0=mean([xs(ids) ys(ids)]); pc=(p0+pnt)/2;
+0291       <span class="keyword">if</span>(anchor(2)==-1), d=pnt-p0; <span class="keyword">else</span> d=p0-pnt; <span class="keyword">end</span>
+0292       h=sqrt(sum(d.^2)); th=atan2(d(1),-d(2))/pi*180;
+0293       <span class="keyword">if</span>(flag==2), w=pos(3); <span class="keyword">else</span> w=h*rotate; <span class="keyword">end</span>
+0294       <a href="#_sub5" class="code" title="subfunction setPos( posNew, ignoreLims )">setPos</a>([pc(1)-w/2 pc(2)-h/2 w h th]);
+0295     <span class="keyword">end</span>
+0296     <span class="keyword">if</span>(~isempty(posChnCb)); posChnCb(pos); <span class="keyword">end</span>;
+0297     drawnow; <span class="comment">% update display</span>
+0298   <span class="keyword">end</span>
+0299 
+0300   <a name="_sub11" href="#_subfunctions" class="code">function stopDrag( h, evnt ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0301     set( hFig, <span class="string">'WindowButtonMotionFcn'</span>,<span class="string">''</span>);
+0302     set( hFig, <span class="string">'WindowButtonUpFcn'</span>,<span class="string">''</span>);
+0303     set( hFig, <span class="string">'Pointer'</span>, <span class="string">'arrow'</span> );
+0304     <span class="keyword">if</span>(~isempty(posSetCb)); posSetCb(pos); <span class="keyword">end</span>;
+0305   <span class="keyword">end</span>
+0306 
+0307   <a name="_sub12" href="#_subfunctions" class="code">function deleteFcn( h, evnt ) </a><span class="comment">%#ok&lt;INUSD&gt;</span>
+0308     [posChnCb,posSetCb]=deal([]); hs=[hPatch hBnds hCntr hEll];
+0309     <span class="keyword">for</span> i=1:length(hs), <span class="keyword">if</span>(ishandle(hs(i))); delete(hs(i)); <span class="keyword">end</span>; <span class="keyword">end</span>
+0310     [hBnds,hPatch,hCntr,hEll]=deal([]);
+0311   <span class="keyword">end</span>
+0312 
+0313 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0314 
+0315   <a name="_sub13" href="#_subfunctions" class="code">function pos0 = getPos(), pos0=pos; end</a>
+0316 
+0317   <a name="_sub14" href="#_subfunctions" class="code">function setPosChnCb( f ), posChnCb=f; end</a>
+0318 
+0319   <a name="_sub15" href="#_subfunctions" class="code">function setPosSetCb( f ), posSetCb=f; end</a>
+0320 
+0321   <a name="_sub16" href="#_subfunctions" class="code">function setPosLock( b ), posLock=b; end</a>
+0322 
+0323   <a name="_sub17" href="#_subfunctions" class="code">function setSizLock( b ), sizLock=b; end</a>
+0324 
+0325   <a name="_sub18" href="#_subfunctions" class="code">function setDrgLock( b ), dgrLock=b; end</a>
+0326 
+0327   <a name="_sub19" href="#_subfunctions" class="code">function setSidLock( lk )</a>
+0328     sidLock=lk; vis={<span class="string">'off'</span>,<span class="string">'on'</span>};
+0329     <span class="keyword">for</span> i=1:4, set(hCntr(i),<span class="string">'Visible'</span>,vis{2-lk(i)}); <span class="keyword">end</span>
+0330   <span class="keyword">end</span>
+0331 
+0332   <a name="_sub20" href="#_subfunctions" class="code">function uistack1( varargin )</a>
+0333     <span class="keyword">if</span>(isempty(hBnds) || isempty(hPatch)); <span class="keyword">return</span>; <span class="keyword">end</span>;
+0334     uistack( [hBnds hPatch hCntr hEll], varargin{:} );
+0335   <span class="keyword">end</span>
+0336 
+0337   <a name="_sub21" href="#_subfunctions" class="code">function setStyle( ls, lw, color, colorc )</a>
+0338     <span class="keyword">if</span>(isempty(hEll)), h=hBnds; <span class="keyword">else</span> h=hEll; <span class="keyword">end</span>
+0339     set(h,<span class="string">'LineStyle'</span>,ls,<span class="string">'LineWidth'</span>,lw,<span class="string">'color'</span>,color);
+0340     <span class="keyword">if</span>(~rotate), <span class="keyword">return</span>; <span class="keyword">end</span>; <span class="keyword">if</span>(nargin&lt;4), colorc=<span class="string">'b'</span>; <span class="keyword">end</span>
+0341     set(hCntr,<span class="string">'FaceColor'</span>,color,<span class="string">'EdgeColor'</span>,color);
+0342     set(hCntr(1),<span class="string">'LineWidth'</span>,lw,<span class="string">'FaceColor'</span>,colorc);
+0343   <span class="keyword">end</span>
+0344 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

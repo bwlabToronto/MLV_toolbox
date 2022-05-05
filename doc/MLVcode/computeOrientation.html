@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of computeOrientation</title>
+  <meta name="keywords" content="computeOrientation">
+  <meta name="description" content="vecLD = computeOrientation(vecLD)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; computeOrientation.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>computeOrientation
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>vecLD = computeOrientation(vecLD)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function vecLD = computeOrientation(vecLD) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> vecLD = computeOrientation(vecLD)
+         computes orientations for the contours in the vectorized line
+         drawing vecLD
+         Note that this computes orientations from 0 to 360 degrees.
+         To obtain orientaiton from 0 to 180, use mod(ori,180).
+ Input:
+   vecLD - vectorized line drawing data structure
+ Output:
+   vecLD- a vector LD of structs with orientation information added</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>	vecLD = computeCurvature(vecLD)</li><li><a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>	vecLD = computeJunctions(vecLD)</li><li><a href="getHorizontalVerticalStats.html" class="code" title="function [vecLD,HorVerHistogram,bins,shortName] = getHorizontalVerticalStats(vecLD,numBins)">getHorizontalVerticalStats</a>	[vecLD,HorVerHistogram,bins] = getOrientationStats(vecLD,numBins)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = computeOrientation(vecLD)</a>
+0002 <span class="comment">% vecLD = computeOrientation(vecLD)</span>
+0003 <span class="comment">%         computes orientations for the contours in the vectorized line</span>
+0004 <span class="comment">%         drawing vecLD</span>
+0005 <span class="comment">%         Note that this computes orientations from 0 to 360 degrees.</span>
+0006 <span class="comment">%         To obtain orientaiton from 0 to 180, use mod(ori,180).</span>
+0007 <span class="comment">% Input:</span>
+0008 <span class="comment">%   vecLD - vectorized line drawing data structure</span>
+0009 <span class="comment">% Output:</span>
+0010 <span class="comment">%   vecLD- a vector LD of structs with orientation information added</span>
+0011 
+0012 vecLD.orientations = {};
+0013 
+0014 <span class="keyword">for</span> c = 1:vecLD.numContours
+0015     thisCon = vecLD.contours{c};  
+0016     vecLD.orientations{c} = mod(atan2d((thisCon(:,4)-thisCon(:,2)),(thisCon(:,3)-thisCon(:,1))),360)';    
+0017     vecLD.contours{c} = thisCon;
+0018 <span class="keyword">end</span>
+0019 
+0020 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

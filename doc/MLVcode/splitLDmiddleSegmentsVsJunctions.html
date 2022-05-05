@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of splitLDmiddleSegmentsVsJunctions</title>
+  <meta name="keywords" content="splitLDmiddleSegmentsVsJunctions">
+  <meta name="description" content="[middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; splitLDmiddleSegmentsVsJunctions.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>splitLDmiddleSegmentsVsJunctions
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)
+
+   Divides the contours into middle segments between junctions and the end
+   quarters of the segmetns around junctions.
+
+ Input:
+   vecLD - the vectorized line drawing to be split
+ 
+ Output:
+   middleLD - vectorized line drawing with the middle segments
+   junctionLD - vectorized line drawing with segmetns at the junctions
+
+ This functionality was used in:
+ John Wilder, Sven Dickinson, Allan Jepson, Dirk B. Walther
+ Spatial relationships between contours impact rapid scene classification. 
+ Journal of Vision 2018;18(8):1. doi: https://doi.org/10.1167/18.8.1.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>	vecLD = computeLength(vecLD)</li><li><a href="segmentContoursAtJunctions.html" class="code" title="function newLD = segmentContoursAtJunctions(vecLD)">segmentContoursAtJunctions</a>	newLD = segmentContoursAtJunctions(vecLD)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)</a>
+0002 <span class="comment">% [middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Divides the contours into middle segments between junctions and the end</span>
+0005 <span class="comment">%   quarters of the segmetns around junctions.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Input:</span>
+0008 <span class="comment">%   vecLD - the vectorized line drawing to be split</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% Output:</span>
+0011 <span class="comment">%   middleLD - vectorized line drawing with the middle segments</span>
+0012 <span class="comment">%   junctionLD - vectorized line drawing with segmetns at the junctions</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% This functionality was used in:</span>
+0015 <span class="comment">% John Wilder, Sven Dickinson, Allan Jepson, Dirk B. Walther</span>
+0016 <span class="comment">% Spatial relationships between contours impact rapid scene classification.</span>
+0017 <span class="comment">% Journal of Vision 2018;18(8):1. doi: https://doi.org/10.1167/18.8.1.</span>
+0018 
+0019 
+0020 <span class="comment">% first, segment the LD at the junctions</span>
+0021 vecLD = <a href="segmentContoursAtJunctions.html" class="code" title="function newLD = segmentContoursAtJunctions(vecLD)">segmentContoursAtJunctions</a>(vecLD);
+0022 
+0023 <span class="comment">% compute lengths for dividing the contours</span>
+0024 vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
+0025 
+0026 <span class="comment">% set up the new data structures</span>
+0027 middleLD.originalImage = vecLD.originalImage;
+0028 middleLD.imsize = vecLD.imsize;
+0029 middleLD.lineMethod = vecLD.lineMethod;
+0030 middleLD.numContours = 0;
+0031 middleLD.contours = {};
+0032 junctionLD = middleLD;
+0033 
+0034 <span class="comment">% loop over the contours and split them up</span>
+0035 <span class="keyword">for</span> c = 1:vecLD.numContours
+0036 
+0037     <span class="comment">% skip contours with zero length</span>
+0038     <span class="keyword">if</span> vecLD.contourLengths(c) == 0
+0039         <span class="keyword">continue</span>;
+0040     <span class="keyword">end</span>
+0041 
+0042     ll = vecLD.lengths{c};
+0043     cs = cumsum(ll) / sum(ll);
+0044     thisC = vecLD.contours{c};
+0045 
+0046     <span class="comment">% first quarter</span>
+0047     seg = find(cs &gt;= 0.25,1);
+0048     <span class="keyword">if</span> seg &gt; 1
+0049         q1 = thisC(1:seg-1,:);
+0050         prevCS = cs(seg-1);
+0051     <span class="keyword">else</span>
+0052         q1 = [];
+0053         prevCS = 0;
+0054     <span class="keyword">end</span>
+0055 
+0056     <span class="comment">% did we happen to get exactly the whole segment?</span>
+0057     <span class="keyword">if</span> cs(seg) == 0.25
+0058         q1 = [q1;thisC(seg,:)];
+0059         prevPoint = thisC(seg+1,1:2);
+0060         prevSeg = seg + 1;
+0061     <span class="keyword">else</span>
+0062         proportion = (0.25 - prevCS) / (cs(seg) - prevCS);
+0063         thisPoint = (1 - proportion) * thisC(seg,1:2) + proportion * thisC(seg,3:4);
+0064         q1 = [q1;[thisC(seg,1:2),thisPoint]];
+0065         prevPoint = thisPoint;
+0066         prevSeg = seg;
+0067     <span class="keyword">end</span>
+0068 
+0069     <span class="comment">% save the first quarter</span>
+0070     junctionLD.numContours = junctionLD.numContours + 1;
+0071     junctionLD.contours{junctionLD.numContours} = q1;
+0072 
+0073 
+0074     <span class="comment">% middle half</span>
+0075     seg = find(cs &gt;= 0.75,1);
+0076 
+0077     <span class="keyword">if</span> seg == prevSeg
+0078         <span class="comment">% We are still in the same segment</span>
+0079         proportion = (0.75 - prevCS) / (cs(seg) - prevCS);
+0080         currPoint = (1 - proportion) * thisC(seg,1:2) + proportion * thisC(seg,3:4);
+0081         q23 = [prevPoint,currPoint];
+0082         prevPoint = currPoint;
+0083     <span class="keyword">else</span>
+0084         <span class="comment">% first save the remainder of the previous segment</span>
+0085         q23 = [prevPoint,thisC(prevSeg,3:4)];
+0086 
+0087         <span class="comment">% add any whole segments</span>
+0088         <span class="keyword">if</span> (seg - prevSeg &gt;= 2)
+0089             q23 = [q23;thisC(prevSeg+1:seg-1,:)];
+0090         <span class="keyword">end</span>
+0091 
+0092         <span class="comment">% now deal with the portion of the partial segment</span>
+0093         prevCS = cs(seg-1);
+0094         
+0095         <span class="comment">% did we happen to get exactly the whole segment?</span>
+0096         <span class="keyword">if</span> cs(seg) == 0.75
+0097             q23 = [q23;thisC(seg,:)];
+0098             prevPoint = thisC(seg+1,1:2);
+0099             prevSeg = seg + 1;
+0100         <span class="keyword">else</span>
+0101             proportion = (0.75 - prevCS) / (cs(seg) - prevCS);
+0102             thisPoint = (1 - proportion) * thisC(seg,1:2) + proportion * thisC(seg,3:4);
+0103             q23 = [q23;[thisC(seg,1:2),thisPoint]];
+0104             prevPoint = thisPoint;
+0105             prevSeg = seg;
+0106         <span class="keyword">end</span>
+0107     <span class="keyword">end</span>
+0108 
+0109     <span class="comment">% save the middle half</span>
+0110     middleLD.numContours = middleLD.numContours + 1;
+0111     middleLD.contours{middleLD.numContours} = q23;
+0112 
+0113     <span class="comment">% Now the last quarter</span>
+0114     q4 = [prevPoint,thisC(prevSeg,3:4)];
+0115 
+0116     <span class="comment">% add any full segments that may be left</span>
+0117     <span class="keyword">if</span> seg &lt; size(thisC,1)
+0118         q4 = [q4;thisC(prevSeg+1:<span class="keyword">end</span>,:)];
+0119     <span class="keyword">end</span>
+0120 
+0121     <span class="comment">% store the last quarter</span>
+0122     junctionLD.numContours = junctionLD.numContours + 1;
+0123     junctionLD.contours{junctionLD.numContours} = q4;
+0124 
+0125     <span class="comment">% done with this contour</span>
+0126 <span class="keyword">end</span>
+0127 
+0128 junctionLD.numContours = length(junctionLD.contours);
+0129 middleLD.numContours = length(middleLD.contours);
+0130 
+0131 
+0132     
+0133 
+0134 
+0135</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

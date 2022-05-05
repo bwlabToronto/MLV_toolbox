@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imtransform2</title>
+  <meta name="keywords" content="imtransform2">
+  <meta name="description" content="Applies a linear or nonlinear transformation to an image I.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; imtransform2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>imtransform2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Applies a linear or nonlinear transformation to an image I.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function J = imtransform2( I, H, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Applies a linear or nonlinear transformation to an image I.
+
+ Takes the center of the image as the origin, not the top left corner.
+ Also, the coordinate system is row/column format, so H must be also.
+
+ The bounding box of the image is set by the BBOX argument, a string that
+ can be 'loose' (default) or 'crop'. When BBOX is 'loose', J includes the
+ whole transformed image, which generally is larger than I. When BBOX is
+ 'crop' J is cropped to include only the central portion of the
+ transformed image and is the same size as I. The 'loose' flag is
+ currently inexact (because of some padding/cropping). Preserves I's type.
+
+ USAGE
+  J = imtransform2( I, H, varargin )
+
+ INPUTS - common
+  I          - input image [converted to double]
+  H          - 3x3 nonsingular homography matrix
+  varargin   - additional params (struct or name/value pairs)
+    .method    - ['linear'] 'nearest', 'spline', 'cubic' (for interp2)
+    .bbox      - ['crop'] or 'loose'
+    .show      - [0] figure to use for optional display
+    .pad       - [0] padding value (scalar, 'replicate' or 'none')
+    .useCache  - [0] optionally cache precomp. for given transform/dims.
+    .us        - [] can specify source r/c for each target (instead of H)
+    .vs        - [] can specify source r/c for each target (instead of H)
+
+ OUTPUTS
+  J       - transformed image
+
+ EXAMPLE - rigid transformation (rotation + translation)
+  I=imread('peppers.png');
+  R = rotationMatrix(pi/4); T=[1; 3]; H=[R T; 0 0 1];
+  J = imtransform2(I,H,'show',1,'pad','replicate');
+
+ EXAMPLE - general homography (out of plane rotation)
+  load trees; I=X;
+  S=eye(3); S([1 5])=1/500; % zoom out 500 pixels
+  H=S^-1*rotationMatrix([0 1 0],pi/4)*S;
+  J = imtransform2(I,H,'bbox','loose','show',1);
+
+ EXAMPLE - rotation using three approaches (and timing)
+  load trees; I=imResample(X,4); angle=35; method='bilinear';
+  % (1) rotate using imrotate (slow)
+  tic; J1 = imrotate(I,angle,method,'crop'); toc
+  % (2) rotate using a homography matrix
+  R=rotationMatrix(angle/180*pi); H=[R [0; 0]; 0 0 1];
+  tic; J2 = imtransform2(I,H,'bbox','crop','method',method); toc
+  % (3) rotate by explicitly specifying target rs/cs
+  m=size(I,1)+4; n=size(I,2)+4; m2=(m-1)/2; n2=(n-1)/2;
+  [cs,rs]=meshgrid(-n2:n2,-m2:m2); vs=R*[cs(:) rs(:)]';
+  us=reshape(vs(2,:),m,n)-rs; vs=reshape(vs(1,:),m,n)-cs;
+  tic, J3=imtransform2(I,[],'us',us,'vs',vs,'method',method); toc
+  % compare all results
+  figure(1); clf; subplot(3,2,1); im(I); subplot(3,2,2); im(J1);
+  subplot(3,2,3); im(J2); subplot(3,2,4); im(abs(J1-J2)); title('J1-J2')
+  subplot(3,2,5); im(J3); subplot(3,2,6); im(abs(J2-J3)); title('J2-J3')
+
+ See also <a href="textureMap.html" class="code" title="function [J,boundX,boundY] = textureMap( I, rsDst, csDst, bbox, fillVal )">TEXTUREMAP</a>, INTERP2
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.01
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="im.html" class="code" title="function varargout = im( I, range, extraInf )">im</a>	Function for displaying grayscale images.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="jitterImage.html" class="code" title="function IJ = jitterImage( I, varargin )">jitterImage</a>	Creates multiple, slightly jittered versions of an image.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function J = imtransform2( I, H, varargin )</a>
+0002 <span class="comment">% Applies a linear or nonlinear transformation to an image I.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Takes the center of the image as the origin, not the top left corner.</span>
+0005 <span class="comment">% Also, the coordinate system is row/column format, so H must be also.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% The bounding box of the image is set by the BBOX argument, a string that</span>
+0008 <span class="comment">% can be 'loose' (default) or 'crop'. When BBOX is 'loose', J includes the</span>
+0009 <span class="comment">% whole transformed image, which generally is larger than I. When BBOX is</span>
+0010 <span class="comment">% 'crop' J is cropped to include only the central portion of the</span>
+0011 <span class="comment">% transformed image and is the same size as I. The 'loose' flag is</span>
+0012 <span class="comment">% currently inexact (because of some padding/cropping). Preserves I's type.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% USAGE</span>
+0015 <span class="comment">%  J = imtransform2( I, H, varargin )</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% INPUTS - common</span>
+0018 <span class="comment">%  I          - input image [converted to double]</span>
+0019 <span class="comment">%  H          - 3x3 nonsingular homography matrix</span>
+0020 <span class="comment">%  varargin   - additional params (struct or name/value pairs)</span>
+0021 <span class="comment">%    .method    - ['linear'] 'nearest', 'spline', 'cubic' (for interp2)</span>
+0022 <span class="comment">%    .bbox      - ['crop'] or 'loose'</span>
+0023 <span class="comment">%    .show      - [0] figure to use for optional display</span>
+0024 <span class="comment">%    .pad       - [0] padding value (scalar, 'replicate' or 'none')</span>
+0025 <span class="comment">%    .useCache  - [0] optionally cache precomp. for given transform/dims.</span>
+0026 <span class="comment">%    .us        - [] can specify source r/c for each target (instead of H)</span>
+0027 <span class="comment">%    .vs        - [] can specify source r/c for each target (instead of H)</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% OUTPUTS</span>
+0030 <span class="comment">%  J       - transformed image</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% EXAMPLE - rigid transformation (rotation + translation)</span>
+0033 <span class="comment">%  I=imread('peppers.png');</span>
+0034 <span class="comment">%  R = rotationMatrix(pi/4); T=[1; 3]; H=[R T; 0 0 1];</span>
+0035 <span class="comment">%  J = imtransform2(I,H,'show',1,'pad','replicate');</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% EXAMPLE - general homography (out of plane rotation)</span>
+0038 <span class="comment">%  load trees; I=X;</span>
+0039 <span class="comment">%  S=eye(3); S([1 5])=1/500; % zoom out 500 pixels</span>
+0040 <span class="comment">%  H=S^-1*rotationMatrix([0 1 0],pi/4)*S;</span>
+0041 <span class="comment">%  J = imtransform2(I,H,'bbox','loose','show',1);</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">% EXAMPLE - rotation using three approaches (and timing)</span>
+0044 <span class="comment">%  load trees; I=imResample(X,4); angle=35; method='bilinear';</span>
+0045 <span class="comment">%  % (1) rotate using imrotate (slow)</span>
+0046 <span class="comment">%  tic; J1 = imrotate(I,angle,method,'crop'); toc</span>
+0047 <span class="comment">%  % (2) rotate using a homography matrix</span>
+0048 <span class="comment">%  R=rotationMatrix(angle/180*pi); H=[R [0; 0]; 0 0 1];</span>
+0049 <span class="comment">%  tic; J2 = imtransform2(I,H,'bbox','crop','method',method); toc</span>
+0050 <span class="comment">%  % (3) rotate by explicitly specifying target rs/cs</span>
+0051 <span class="comment">%  m=size(I,1)+4; n=size(I,2)+4; m2=(m-1)/2; n2=(n-1)/2;</span>
+0052 <span class="comment">%  [cs,rs]=meshgrid(-n2:n2,-m2:m2); vs=R*[cs(:) rs(:)]';</span>
+0053 <span class="comment">%  us=reshape(vs(2,:),m,n)-rs; vs=reshape(vs(1,:),m,n)-cs;</span>
+0054 <span class="comment">%  tic, J3=imtransform2(I,[],'us',us,'vs',vs,'method',method); toc</span>
+0055 <span class="comment">%  % compare all results</span>
+0056 <span class="comment">%  figure(1); clf; subplot(3,2,1); im(I); subplot(3,2,2); im(J1);</span>
+0057 <span class="comment">%  subplot(3,2,3); im(J2); subplot(3,2,4); im(abs(J1-J2)); title('J1-J2')</span>
+0058 <span class="comment">%  subplot(3,2,5); im(J3); subplot(3,2,6); im(abs(J2-J3)); title('J2-J3')</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">% See also TEXTUREMAP, INTERP2</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.01</span>
+0063 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0064 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0065 
+0066 <span class="comment">% check and parse inputs</span>
+0067 dfs={<span class="string">'method'</span>,<span class="string">'linear'</span>,<span class="string">'bbox'</span>,<span class="string">'crop'</span>,<span class="string">'show'</span>,0,<span class="string">'pad'</span>,0,<span class="string">'useCache'</span>,0,<span class="keyword">...</span>
+0068   <span class="string">'us'</span>,[],<span class="string">'vs'</span>,[]};
+0069 [method,bbox,show,pad,useCache,us,vs] = getPrmDflt(varargin,dfs,1);
+0070 looseFlag = strcmp(bbox,<span class="string">'loose'</span>); <span class="keyword">if</span>(show), Iorig=I; <span class="keyword">end</span>; useH=1;
+0071 <span class="keyword">if</span>(~isempty(us) &amp;&amp; ~isempty(vs)), useH=0; assert(numel(us)==numel(vs)); <span class="keyword">end</span>
+0072 <span class="keyword">if</span>(~isa(us,<span class="string">'double'</span>)||~isa(vs,<span class="string">'double'</span>)), us=double(us); vs=double(vs); <span class="keyword">end</span>
+0073 <span class="keyword">if</span>( useH &amp;&amp; any(size(H)~=[3 3])), error(<span class="string">'H must be 3x3'</span>); <span class="keyword">end</span>
+0074 <span class="keyword">if</span>( useH &amp;&amp; all(all(H==eye(3))) ), J=I; <span class="keyword">return</span>; <span class="keyword">end</span>
+0075 <span class="keyword">if</span>( ~ismatrix(I) &amp;&amp; ndims(I)~=3 ), error(<span class="string">'I must a MxNXK array'</span>); <span class="keyword">end</span>
+0076 <span class="keyword">if</span>(~any(strcmp(bbox,{<span class="string">'loose'</span>,<span class="string">'crop'</span>}))), error([<span class="string">'invalid bbox: '</span> bbox]);<span class="keyword">end</span>
+0077 <span class="keyword">if</span>(strncmpi(method,<span class="string">'lin'</span>,3) || strncmpi(method,<span class="string">'bil'</span>,3)), mflag=2;
+0078 <span class="keyword">elseif</span>(strcmp(method,<span class="string">'nearest'</span>) ), mflag=1; <span class="keyword">else</span> mflag=0; <span class="keyword">end</span>
+0079 
+0080 <span class="comment">% pad I and convert to double, makes interpolation simpler</span>
+0081 isDouble=isa(I,<span class="string">'double'</span>); <span class="keyword">if</span>(~isDouble), classI=class(I); I=double(I); <span class="keyword">end</span>
+0082 <span class="keyword">if</span>(~strcmp(pad,<span class="string">'none'</span>))
+0083   m=size(I,1); n=size(I,2); ms=[1 1 1:m m m]; ns=[1 1 1:n n n];
+0084   I=I(ms,ns,:); <span class="keyword">if</span>(~useH), us=us(ms,ns); vs=vs(ms,ns); <span class="keyword">end</span>
+0085   <span class="keyword">if</span>(~ischar(pad)), I([1:2 m+3:m+4],:,:)=pad; I(:,[1:2 n+3:n+4],:)=pad; <span class="keyword">end</span>
+0086 <span class="keyword">end</span>; m=size(I,1); n=size(I,2);
+0087 
+0088 <span class="comment">% optionally cache precomputed transformations</span>
+0089 <span class="keyword">persistent</span> cVals cKeys cCnt; <span class="keyword">if</span>(isempty(cCnt)), cCnt=0; <span class="keyword">end</span>; cached=0;
+0090 <span class="keyword">if</span>(useH &amp;&amp; useCache), cKey=[m n H(:)' mflag looseFlag];
+0091   <span class="keyword">if</span>(cCnt&gt;0), id=find(all(cKey(ones(1,cCnt),:)==cKeys(1:cCnt,:),2));
+0092     <span class="keyword">if</span>(~isempty(id)), [rs,cs,is]=deal(cVals{id}{:}); cached=1; <span class="keyword">end</span>; <span class="keyword">end</span>
+0093 <span class="keyword">end</span>
+0094 
+0095 <span class="comment">% perform transform precomputations</span>
+0096 <span class="keyword">if</span>( ~useH )
+0097   <span class="comment">% compute inds from row/col flow</span>
+0098   [rs,cs,is]=imtransform2_c(<span class="string">'flowToInds'</span>,us,vs,m,n,mflag);
+0099 <span class="keyword">elseif</span>( useH &amp;&amp; (~useCache || ~cached) )
+0100   <span class="comment">% set origin to be center of image</span>
+0101   r0 = (-m+1)/2; r1 = (m-1)/2;
+0102   c0 = (-n+1)/2; c1 = (n-1)/2;
+0103   
+0104   <span class="comment">% If 'loose' then get bounds of resulting image. To do this project the</span>
+0105   <span class="comment">% original points accoring to the homography and see the bounds. Note</span>
+0106   <span class="comment">% that since a homography maps a quadrilateral to a quadrilateral only</span>
+0107   <span class="comment">% need to look at where the bounds of the quadrilateral are mapped to.</span>
+0108   <span class="keyword">if</span>( looseFlag )
+0109     P = H * [r0 r1 r0 r1; c0 c0 c1 c1; 1 1 1 1];
+0110     rs=P(1,:)./P(3,:); r0=min(rs(:)); r1=max(rs(:));
+0111     cs=P(2,:)./P(3,:); c0=min(cs(:)); c1=max(cs(:));
+0112   <span class="keyword">end</span>
+0113   
+0114   <span class="comment">% apply inverse homography on meshgrid in destination image</span>
+0115   s=svd(H); <span class="keyword">if</span>(s(3)&lt;=1e-6*s(1)), error(<span class="string">'H is ill conditioned'</span>); <span class="keyword">end</span>
+0116   H=H^-1; H=H/H(9);
+0117   [rs,cs,is]=imtransform2_c(<span class="string">'homogToInds'</span>,H,m,n,r0,r1,c0,c1,mflag);
+0118   
+0119   <span class="comment">% if using cache, put value into cache</span>
+0120   <span class="keyword">if</span>(useCache), <span class="keyword">if</span>(cCnt==length(cVals)), cCnt1=max(16,cCnt);
+0121       cVals=[cVals; cell(cCnt1,1)]; cKeys=[cKeys; zeros(cCnt1,13)]; <span class="keyword">end</span>
+0122     cCnt=cCnt+1; cVals{cCnt}={rs,cs,is}; cKeys(cCnt,:)=cKey;
+0123   <span class="keyword">end</span>
+0124 <span class="keyword">end</span>
+0125 
+0126 <span class="comment">% now texture map results ('nearest', 'linear' mexed for speed)</span>
+0127 <span class="keyword">if</span>( mflag )
+0128   J = imtransform2_c(<span class="string">'applyTransform'</span>,I,rs,cs,is,mflag);
+0129 <span class="keyword">else</span>
+0130   J=interp2(I(:,:,1),cs,rs,method,0);
+0131   k=size(I,3); <span class="keyword">if</span>(k&gt;1), J=J(:,:,ones(1,k)); <span class="keyword">end</span>
+0132   <span class="keyword">for</span> i=2:k, J(:,:,i)=interp2(I(:,:,i),cs,rs,method,0); <span class="keyword">end</span>
+0133 <span class="keyword">end</span>
+0134 <span class="keyword">if</span>(~strcmp(pad,<span class="string">'none'</span>)), J=J(3:end-2,3:end-2,:); <span class="keyword">end</span>
+0135 <span class="keyword">if</span>(~isDouble), J=feval(classI,J); <span class="keyword">end</span>
+0136 
+0137 <span class="comment">% optionally show</span>
+0138 <span class="keyword">if</span>(show), figure(show); clf; <a href="im.html" class="code" title="function varargout = im( I, range, extraInf )">im</a>(Iorig); figure(show+1); clf; <a href="im.html" class="code" title="function varargout = im( I, range, extraInf )">im</a>(J); <span class="keyword">end</span>
+0139 
+0140 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

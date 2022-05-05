@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of jitterImage</title>
+  <meta name="keywords" content="jitterImage">
+  <meta name="description" content="Creates multiple, slightly jittered versions of an image.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">images</a> &gt; jitterImage.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\images&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>jitterImage
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Creates multiple, slightly jittered versions of an image.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function IJ = jitterImage( I, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Creates multiple, slightly jittered versions of an image.
+
+ Takes an image I, and generates a number of images that are copies of the
+ original image with slight translation, rotation and scaling applied. If
+ the input image is actually an MxNxK stack of images then applies op to
+ each image. Rotations and translations are specified by giving a range
+ and a max value for each. For example, if mPhi=10 and nPhi=5, then the
+ actual rotations applied are linspace(-mPhi,mPhi,nPhi)=[-10 -5 0 5 10].
+ Likewise if mTrn=3 and nTrn=3 then the translations are [-3 0 3]. Each
+ tran is applied in the x direction as well as the y direction. Each
+ combination of rotation, tran in x, tran in y and scale is used (for
+ example phi=5, transx=-3, transy=0), so the total number of images
+ generated is R=nTrn*nTrn*nPhi*nScl. Finally, jsiz controls the size of
+ the cropped images. If jsiz gives a size that's sufficiently smaller than
+ I then all data in the the final set will come from I. Otherwise, I must
+ be padded first (by calling padarray with the 'replicate' option).
+
+ USAGE
+  function IJ = jitterImage( I, varargin )
+
+ INPUTS
+  I          - image (MxN) or set of K images (MxNxK)
+  varargin   - additional params (struct or name/value pairs)
+   .maxn        - [inf] maximum jitters to generate (prior to flip)
+   .nPhi        - [0] number of rotations
+   .mPhi        - [0] max value for rotation
+   .nTrn        - [0] number of translations
+   .mTrn        - [0] max value for translation
+   .flip        - [0] if true then also adds reflection of each image
+   .jsiz        - [] Final size of each image in IJ
+   .scls        - [1 1] nScl x 2 array of vert/horiz scalings
+   .method      - ['linear'] interpolation method for imtransform2
+   .hasChn      - [0] if true I is MxNxC or MxNxCxK
+
+ OUTPUTS
+  IJ          - MxNxKxR or MxNxCxKxR set of images, R=(nTrn^2*nPhi*nScl)
+
+ EXAMPLE
+  load trees; I=imresize(ind2gray(X,map),[41 41]); clear X caption map
+  % creates 10 (of 7^2*2) images of slight trans
+  IJ = jitterImage(I,'nTrn',7,'mTrn',3,'maxn',10); montage2(IJ)
+  % creates 5 images of slight rotations w reflection
+  IJ = jitterImage(I,'nPhi',5,'mPhi',25,'flip',1); montage2(IJ)
+  % creates 45 images of both rot and slight trans
+  IJ = jitterImage(I,'nPhi',5,'mPhi',10,'nTrn',3,'mTrn',2); montage2(IJ)
+  % additionally create multiple scaled versions
+  IJ = jitterImage(I,'scls',[1 1; 2 1; 1 2; 2 2]); montage2(IJ)
+  % example on color image (5 images of slight rotations)
+  I=imResample(imread('peppers.png'),[100,100]);
+  IJ=jitterImage(I,'nPhi',5,'mPhi',25,'hasChn',1);
+  montage2(uint8(IJ),{'hasChn',1})
+
+ See also <a href="imtransform2.html" class="code" title="function J = imtransform2( I, H, varargin )">imtransform2</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.65
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="imtransform2.html" class="code" title="function J = imtransform2( I, H, varargin )">imtransform2</a>	Applies a linear or nonlinear transformation to an image I.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function IJ = jitterImage1( I,method,maxn,jsiz,phis,dX,dY,scls,flip )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function IJ = jitterImage( I, varargin )</a>
+0002 <span class="comment">% Creates multiple, slightly jittered versions of an image.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Takes an image I, and generates a number of images that are copies of the</span>
+0005 <span class="comment">% original image with slight translation, rotation and scaling applied. If</span>
+0006 <span class="comment">% the input image is actually an MxNxK stack of images then applies op to</span>
+0007 <span class="comment">% each image. Rotations and translations are specified by giving a range</span>
+0008 <span class="comment">% and a max value for each. For example, if mPhi=10 and nPhi=5, then the</span>
+0009 <span class="comment">% actual rotations applied are linspace(-mPhi,mPhi,nPhi)=[-10 -5 0 5 10].</span>
+0010 <span class="comment">% Likewise if mTrn=3 and nTrn=3 then the translations are [-3 0 3]. Each</span>
+0011 <span class="comment">% tran is applied in the x direction as well as the y direction. Each</span>
+0012 <span class="comment">% combination of rotation, tran in x, tran in y and scale is used (for</span>
+0013 <span class="comment">% example phi=5, transx=-3, transy=0), so the total number of images</span>
+0014 <span class="comment">% generated is R=nTrn*nTrn*nPhi*nScl. Finally, jsiz controls the size of</span>
+0015 <span class="comment">% the cropped images. If jsiz gives a size that's sufficiently smaller than</span>
+0016 <span class="comment">% I then all data in the the final set will come from I. Otherwise, I must</span>
+0017 <span class="comment">% be padded first (by calling padarray with the 'replicate' option).</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% USAGE</span>
+0020 <span class="comment">%  function IJ = jitterImage( I, varargin )</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% INPUTS</span>
+0023 <span class="comment">%  I          - image (MxN) or set of K images (MxNxK)</span>
+0024 <span class="comment">%  varargin   - additional params (struct or name/value pairs)</span>
+0025 <span class="comment">%   .maxn        - [inf] maximum jitters to generate (prior to flip)</span>
+0026 <span class="comment">%   .nPhi        - [0] number of rotations</span>
+0027 <span class="comment">%   .mPhi        - [0] max value for rotation</span>
+0028 <span class="comment">%   .nTrn        - [0] number of translations</span>
+0029 <span class="comment">%   .mTrn        - [0] max value for translation</span>
+0030 <span class="comment">%   .flip        - [0] if true then also adds reflection of each image</span>
+0031 <span class="comment">%   .jsiz        - [] Final size of each image in IJ</span>
+0032 <span class="comment">%   .scls        - [1 1] nScl x 2 array of vert/horiz scalings</span>
+0033 <span class="comment">%   .method      - ['linear'] interpolation method for imtransform2</span>
+0034 <span class="comment">%   .hasChn      - [0] if true I is MxNxC or MxNxCxK</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% OUTPUTS</span>
+0037 <span class="comment">%  IJ          - MxNxKxR or MxNxCxKxR set of images, R=(nTrn^2*nPhi*nScl)</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% EXAMPLE</span>
+0040 <span class="comment">%  load trees; I=imresize(ind2gray(X,map),[41 41]); clear X caption map</span>
+0041 <span class="comment">%  % creates 10 (of 7^2*2) images of slight trans</span>
+0042 <span class="comment">%  IJ = jitterImage(I,'nTrn',7,'mTrn',3,'maxn',10); montage2(IJ)</span>
+0043 <span class="comment">%  % creates 5 images of slight rotations w reflection</span>
+0044 <span class="comment">%  IJ = jitterImage(I,'nPhi',5,'mPhi',25,'flip',1); montage2(IJ)</span>
+0045 <span class="comment">%  % creates 45 images of both rot and slight trans</span>
+0046 <span class="comment">%  IJ = jitterImage(I,'nPhi',5,'mPhi',10,'nTrn',3,'mTrn',2); montage2(IJ)</span>
+0047 <span class="comment">%  % additionally create multiple scaled versions</span>
+0048 <span class="comment">%  IJ = jitterImage(I,'scls',[1 1; 2 1; 1 2; 2 2]); montage2(IJ)</span>
+0049 <span class="comment">%  % example on color image (5 images of slight rotations)</span>
+0050 <span class="comment">%  I=imResample(imread('peppers.png'),[100,100]);</span>
+0051 <span class="comment">%  IJ=jitterImage(I,'nPhi',5,'mPhi',25,'hasChn',1);</span>
+0052 <span class="comment">%  montage2(uint8(IJ),{'hasChn',1})</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">% See also imtransform2</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.65</span>
+0057 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0058 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0059 
+0060 <span class="comment">% get additional parameters</span>
+0061 siz=size(I);
+0062 dfs={<span class="string">'maxn'</span>,inf, <span class="string">'nPhi'</span>,0, <span class="string">'mPhi'</span>,0, <span class="string">'nTrn'</span>,0, <span class="string">'mTrn'</span>,0, <span class="string">'flip'</span>,0, <span class="keyword">...</span>
+0063   <span class="string">'jsiz'</span>,siz(1:2), <span class="string">'scls'</span>,[1 1], <span class="string">'method'</span>,<span class="string">'linear'</span>, <span class="string">'hasChn'</span>,0};
+0064 [maxn,nPhi,mPhi,nTrn,mTrn,flip,jsiz,scls,method,hasChn] = <span class="keyword">...</span>
+0065   getPrmDflt(varargin,dfs,1);
+0066 <span class="keyword">if</span>(nPhi&lt;1), mPhi=0; nPhi=1; <span class="keyword">end</span>; <span class="keyword">if</span>(nTrn&lt;1), mTrn=0; nTrn=1; <span class="keyword">end</span>
+0067 
+0068 <span class="comment">% I must be big enough to support given ops so grow I if necessary</span>
+0069 trn=linspace(-mTrn,mTrn,nTrn); [dX,dY]=meshgrid(trn,trn);
+0070 dY=dY(:)'; dX=dX(:)'; phis=linspace(-mPhi,mPhi,nPhi)/180*pi;
+0071 siz1=jsiz+2*max(dX); <span class="keyword">if</span>(nPhi&gt;1), siz1=sqrt(2)*siz1+1; <span class="keyword">end</span>
+0072 siz1=[siz1(1)*max(scls(:,1)) siz1(2)*max(scls(:,2))];
+0073 pad=(siz1-siz(1:2))/2; pad=max([ceil(pad) 0],0);
+0074 <span class="keyword">if</span>(any(pad&gt;0)), I=padarray(I,pad,<span class="string">'replicate'</span>,<span class="string">'both'</span>); <span class="keyword">end</span>
+0075 
+0076 <span class="comment">% jitter each image</span>
+0077 nScl=size(scls,1); nTrn=length(dX); nPhi=length(phis);
+0078 nOps=min(maxn,nTrn*nPhi*nScl); <span class="keyword">if</span>(flip), nOps=nOps*2; <span class="keyword">end</span>
+0079 <span class="keyword">if</span>(hasChn), nd=3; jsiz=[jsiz siz(3)]; <span class="keyword">else</span> nd=2; <span class="keyword">end</span>
+0080 n=size(I,nd+1); IJ=zeros([jsiz nOps n],class(I));
+0081 is=repmat({<span class="string">':'</span>},1,nd); prm={method,maxn,jsiz,phis,dX,dY,scls,flip};
+0082 <span class="keyword">for</span> i=1:n, IJ(is{:},:,i)=<a href="#_sub1" class="code" title="subfunction IJ = jitterImage1( I,method,maxn,jsiz,phis,dX,dY,scls,flip )">jitterImage1</a>(I(is{:},i),prm{:}); <span class="keyword">end</span>
+0083 
+0084 <span class="keyword">end</span>
+0085 
+0086 <a name="_sub1" href="#_subfunctions" class="code">function IJ = jitterImage1( I,method,maxn,jsiz,phis,dX,dY,scls,flip )</a>
+0087 <span class="comment">% generate list of transformations (HS)</span>
+0088 nScl=size(scls,1); nTrn=length(dX); nPhi=length(phis);
+0089 nOps=nTrn*nPhi*nScl; HS=zeros(3,3,nOps); k=0;
+0090 <span class="keyword">for</span> s=1:nScl, S=[scls(s,1) 0; 0 scls(s,2)];
+0091   <span class="keyword">for</span> p=1:nPhi, R=rotationMatrix(phis(p));
+0092     <span class="keyword">for</span> t=1:nTrn, k=k+1; HS(:,:,k)=[S*R [dX(t); dY(t)]; 0 0 1]; <span class="keyword">end</span>
+0093   <span class="keyword">end</span>
+0094 <span class="keyword">end</span>
+0095 <span class="comment">% apply each transformation HS(:,:,i) to image I</span>
+0096 <span class="keyword">if</span>(nOps&gt;maxn), HS=HS(:,:,randSample(nOps,maxn)); nOps=maxn; <span class="keyword">end</span>
+0097 siz=size(I); nd=ndims(I); nCh=size(I,3);
+0098 I1=I; p=(siz-jsiz)/2; IJ=zeros([jsiz nOps],class(I));
+0099 <span class="keyword">for</span> i=1:nOps, H=HS(:,:,i); d=H(1:2,3)';
+0100   <span class="keyword">if</span>( all(all(H(1:2,1:2)==eye(2))) &amp;&amp; all(mod(d,1)==0) )
+0101     <span class="comment">% handle transformation that's just an integer translation</span>
+0102     s=max(1-d,1); e=min(siz(1:2)-d,siz(1:2)); s1=2-min(1-d,1); e1=e-s+s1;
+0103     I1(s1(1):e1(1),s1(2):e1(2),:) = I(s(1):e(1),s(2):e(2),:);
+0104   <span class="keyword">else</span> <span class="comment">% handle general transformations</span>
+0105     <span class="keyword">for</span> j=1:nCh, I1(:,:,j)=<a href="imtransform2.html" class="code" title="function J = imtransform2( I, H, varargin )">imtransform2</a>(I(:,:,j),H,<span class="string">'method'</span>,method); <span class="keyword">end</span>
+0106   <span class="keyword">end</span>
+0107   <span class="comment">% crop and store result</span>
+0108   I2 = I1(p(1)+1:end-p(1),p(2)+1:end-p(2),:);
+0109   <span class="keyword">if</span>(nd==2), IJ(:,:,i)=I2; <span class="keyword">else</span> IJ(:,:,:,i)=I2;  <span class="keyword">end</span>
+0110 <span class="keyword">end</span>
+0111 <span class="comment">% finally flip each resulting image</span>
+0112 <span class="keyword">if</span>(flip), IJ=cat(nd+1,IJ,IJ(:,end:-1:1,:,:)); <span class="keyword">end</span>
+0113 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

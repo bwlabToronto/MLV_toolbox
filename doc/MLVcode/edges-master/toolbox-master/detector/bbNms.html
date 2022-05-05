@@ -1,0 +1,294 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bbNms</title>
+  <meta name="keywords" content="bbNms">
+  <meta name="description" content="Bounding box (bb) non-maximal suppression (nms).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">detector</a> &gt; bbNms.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\detector&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>bbNms
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Bounding box (bb) non-maximal suppression (nms).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function bbs = bbNms( bbs, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Bounding box (bb) non-maximal suppression (nms).
+
+ type=='max': nms of bbs using area of overlap criteria. For each pair of
+ bbs, if their overlap, defined by:
+  overlap(bb1,bb2) = area(intersect(bb1,bb2))/area(union(bb1,bb2))
+ is greater than overlap, then the bb with the lower score is suppressed.
+ In the Pascal critieria two bbs are considered a match if overlap&gt;=.5. If
+ ovrDnm='min', the 'union' in the above formula is replaced with 'min'.
+
+ type=='maxg': Similar to 'max', except performs the nms in a greedy
+ fashion. Bbs are processed in order of decreasing score, and, unlike in
+ 'max' nms, once a bb is suppressed it can no longer suppress other bbs.
+
+ type='cover': Perform nms by attempting to choose the smallest subset of
+ the bbs such that each remaining bb is within overlap of one of the
+ chosen bbs. The above reduces to the weighted set cover problem which is
+ NP but greedy optimization yields provably good solutions. The score of
+ each bb is set to the sum of the scores of the bbs it covers (the max can
+ also be used). In practice similar to 'maxg'.
+
+ type=='ms': Mean shift nms of bbs with a variable width kernel. radii is
+ a 4 element vector (x,y,w,h) that controls the amount of suppression
+ along each dim. Typically the first two elements should be the same, as
+ should the last two. Distance between w/h are computed in log2 space (ie
+ w and w*2 are 1 unit apart), and the radii should be set accordingly.
+ radii may need to change depending on spatial and scale stride of bbs.
+
+ Although efficient, nms is O(n^2). To speed things up for large n, can
+ divide data into two parts (according to x or y coordinate), run nms on
+ each part, combine and run nms on the result. If maxn is specified, will
+ split the data in half if n&gt;maxn. Note that this is a heuristic and can
+ change the results of nms. Moreover, setting maxn too small will cause an
+ increase in overall performance time.
+
+ Finally, the bbs are optionally resized before performing nms. The
+ resizing is important as some detectors return bbs that are padded. For
+ example, if a detector returns a bounding box of size 128x64 around
+ objects of size 100x43 (as is typical for some pedestrian detectors on
+ the INRIA pedestrian database), the resize parameters should be {100/128,
+ 43/64, 0}, see bbApply&gt;resize() for more info.
+
+ USAGE
+  bbs = bbNms( bbs, [varargin] )
+
+ INPUTS
+  bbs        - original bbs (must be of form [x y w h wt bbType])
+  varargin   - additional params (struct or name/value pairs)
+   .type       - ['max'] 'max', 'maxg', 'ms', 'cover', or 'none'
+   .thr        - [-inf] threshold below which to discard (0 for 'ms')
+   .maxn       - [inf] if n&gt;maxn split and run recursively (see above)
+   .radii      - [.15 .15 1 1] supression radii ('ms' only, see above)
+   .overlap    - [.5] area of overlap for bbs
+   .ovrDnm     - ['union'] area of overlap denominator ('union' or 'min')
+   .resize     - {} parameters for bbApply('resize')
+   .separate   - [0] run nms separately on each bb type (bbType)
+
+ OUTPUTS
+  bbs      - suppressed bbs
+
+ EXAMPLE
+  bbs=[0 0 1 1 1; .1 .1 1 1 1.1; 2 2 1 1 1];
+  bbs1 = bbNms(bbs, 'type','max' )
+  bbs2 = bbNms(bbs, 'thr',.5, 'type','ms')
+
+ See also <a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>, nonMaxSuprList
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.60
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>	Functions for manipulating bounding boxes (bb).</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="acfDetect.html" class="code" title="function bbs = acfDetect( I, detector, fileName )">acfDetect</a>	Run aggregate channel features object detector on given image(s).</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function bbs = nms1( bbs, type, thr, maxn, radii, overlap, isy )</a></li><li><a href="#_sub2" class="code">function bbs = nmsMax( bbs, overlap, greedy, ovrDnm )</a></li><li><a href="#_sub3" class="code">function bbs = nmsMs( bbs, thr, radii )</a></li><li><a href="#_sub4" class="code">function [p,w]=nmsMs1(ind)</a></li><li><a href="#_sub5" class="code">function bbs = nmsCover( bbs, overlap, ovrDnm )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function bbs = bbNms( bbs, varargin )</a>
+0002 <span class="comment">% Bounding box (bb) non-maximal suppression (nms).</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% type=='max': nms of bbs using area of overlap criteria. For each pair of</span>
+0005 <span class="comment">% bbs, if their overlap, defined by:</span>
+0006 <span class="comment">%  overlap(bb1,bb2) = area(intersect(bb1,bb2))/area(union(bb1,bb2))</span>
+0007 <span class="comment">% is greater than overlap, then the bb with the lower score is suppressed.</span>
+0008 <span class="comment">% In the Pascal critieria two bbs are considered a match if overlap&gt;=.5. If</span>
+0009 <span class="comment">% ovrDnm='min', the 'union' in the above formula is replaced with 'min'.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% type=='maxg': Similar to 'max', except performs the nms in a greedy</span>
+0012 <span class="comment">% fashion. Bbs are processed in order of decreasing score, and, unlike in</span>
+0013 <span class="comment">% 'max' nms, once a bb is suppressed it can no longer suppress other bbs.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% type='cover': Perform nms by attempting to choose the smallest subset of</span>
+0016 <span class="comment">% the bbs such that each remaining bb is within overlap of one of the</span>
+0017 <span class="comment">% chosen bbs. The above reduces to the weighted set cover problem which is</span>
+0018 <span class="comment">% NP but greedy optimization yields provably good solutions. The score of</span>
+0019 <span class="comment">% each bb is set to the sum of the scores of the bbs it covers (the max can</span>
+0020 <span class="comment">% also be used). In practice similar to 'maxg'.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% type=='ms': Mean shift nms of bbs with a variable width kernel. radii is</span>
+0023 <span class="comment">% a 4 element vector (x,y,w,h) that controls the amount of suppression</span>
+0024 <span class="comment">% along each dim. Typically the first two elements should be the same, as</span>
+0025 <span class="comment">% should the last two. Distance between w/h are computed in log2 space (ie</span>
+0026 <span class="comment">% w and w*2 are 1 unit apart), and the radii should be set accordingly.</span>
+0027 <span class="comment">% radii may need to change depending on spatial and scale stride of bbs.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Although efficient, nms is O(n^2). To speed things up for large n, can</span>
+0030 <span class="comment">% divide data into two parts (according to x or y coordinate), run nms on</span>
+0031 <span class="comment">% each part, combine and run nms on the result. If maxn is specified, will</span>
+0032 <span class="comment">% split the data in half if n&gt;maxn. Note that this is a heuristic and can</span>
+0033 <span class="comment">% change the results of nms. Moreover, setting maxn too small will cause an</span>
+0034 <span class="comment">% increase in overall performance time.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% Finally, the bbs are optionally resized before performing nms. The</span>
+0037 <span class="comment">% resizing is important as some detectors return bbs that are padded. For</span>
+0038 <span class="comment">% example, if a detector returns a bounding box of size 128x64 around</span>
+0039 <span class="comment">% objects of size 100x43 (as is typical for some pedestrian detectors on</span>
+0040 <span class="comment">% the INRIA pedestrian database), the resize parameters should be {100/128,</span>
+0041 <span class="comment">% 43/64, 0}, see bbApply&gt;resize() for more info.</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">% USAGE</span>
+0044 <span class="comment">%  bbs = bbNms( bbs, [varargin] )</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">% INPUTS</span>
+0047 <span class="comment">%  bbs        - original bbs (must be of form [x y w h wt bbType])</span>
+0048 <span class="comment">%  varargin   - additional params (struct or name/value pairs)</span>
+0049 <span class="comment">%   .type       - ['max'] 'max', 'maxg', 'ms', 'cover', or 'none'</span>
+0050 <span class="comment">%   .thr        - [-inf] threshold below which to discard (0 for 'ms')</span>
+0051 <span class="comment">%   .maxn       - [inf] if n&gt;maxn split and run recursively (see above)</span>
+0052 <span class="comment">%   .radii      - [.15 .15 1 1] supression radii ('ms' only, see above)</span>
+0053 <span class="comment">%   .overlap    - [.5] area of overlap for bbs</span>
+0054 <span class="comment">%   .ovrDnm     - ['union'] area of overlap denominator ('union' or 'min')</span>
+0055 <span class="comment">%   .resize     - {} parameters for bbApply('resize')</span>
+0056 <span class="comment">%   .separate   - [0] run nms separately on each bb type (bbType)</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">% OUTPUTS</span>
+0059 <span class="comment">%  bbs      - suppressed bbs</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">% EXAMPLE</span>
+0062 <span class="comment">%  bbs=[0 0 1 1 1; .1 .1 1 1 1.1; 2 2 1 1 1];</span>
+0063 <span class="comment">%  bbs1 = bbNms(bbs, 'type','max' )</span>
+0064 <span class="comment">%  bbs2 = bbNms(bbs, 'thr',.5, 'type','ms')</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">% See also bbApply, nonMaxSuprList</span>
+0067 <span class="comment">%</span>
+0068 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.60</span>
+0069 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0070 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0071 
+0072 <span class="comment">% get parameters</span>
+0073 dfs={<span class="string">'type'</span>,<span class="string">'max'</span>,<span class="string">'thr'</span>,[],<span class="string">'maxn'</span>,inf,<span class="string">'radii'</span>,[.15 .15 1 1],<span class="keyword">...</span>
+0074   <span class="string">'overlap'</span>,.5,<span class="string">'ovrDnm'</span>,<span class="string">'union'</span>,<span class="string">'resize'</span>,{},<span class="string">'separate'</span>,0};
+0075 [type,thr,maxn,radii,overlap,ovrDnm,resize,separate] = <span class="keyword">...</span>
+0076   getPrmDflt(varargin,dfs,1);
+0077 <span class="keyword">if</span>(isempty(thr)), <span class="keyword">if</span>(strcmp(type,<span class="string">'ms'</span>)), thr=0; <span class="keyword">else</span> thr=-inf; <span class="keyword">end</span>; <span class="keyword">end</span>
+0078 <span class="keyword">if</span>(strcmp(ovrDnm,<span class="string">'union'</span>)), ovrDnm=1; <span class="keyword">elseif</span>(strcmp(ovrDnm,<span class="string">'min'</span>)),
+0079   ovrDnm=0; <span class="keyword">else</span> assert(false); <span class="keyword">end</span>
+0080 assert(maxn&gt;=2); assert(numel(overlap)==1);
+0081 
+0082 <span class="comment">% discard bbs below threshold and run nms1</span>
+0083 <span class="keyword">if</span>(isempty(bbs)), bbs=zeros(0,5); <span class="keyword">end</span>; <span class="keyword">if</span>(strcmp(type,<span class="string">'none'</span>)), <span class="keyword">return</span>; <span class="keyword">end</span>
+0084 kp=bbs(:,5)&gt;thr; bbs=bbs(kp,:); <span class="keyword">if</span>(isempty(bbs)), <span class="keyword">return</span>; <span class="keyword">end</span>
+0085 <span class="keyword">if</span>(~isempty(resize)), bbs=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'resize'</span>,bbs,resize{:}); <span class="keyword">end</span>
+0086 pNms1={type,thr,maxn,radii,overlap,0};
+0087 <span class="keyword">if</span>(~separate || size(bbs,2)&lt;6), bbs=<a href="#_sub1" class="code" title="subfunction bbs = nms1( bbs, type, thr, maxn, radii, overlap, isy )">nms1</a>(bbs,pNms1{:}); <span class="keyword">else</span>
+0088   ts=unique(bbs(:,6)); m=length(ts); bbs1=cell(1,m);
+0089   <span class="keyword">for</span> t=1:m, bbs1{t}=<a href="#_sub1" class="code" title="subfunction bbs = nms1( bbs, type, thr, maxn, radii, overlap, isy )">nms1</a>(bbs(bbs(:,6)==ts(t),:),pNms1{:}); <span class="keyword">end</span>
+0090   bbs=cat(1,bbs1{:});
+0091 <span class="keyword">end</span>
+0092 
+0093   <a name="_sub1" href="#_subfunctions" class="code">function bbs = nms1( bbs, type, thr, maxn, radii, overlap, isy )</a>
+0094     <span class="comment">% if big split in two, recurse, merge, then run on merged</span>
+0095     <span class="keyword">if</span>( size(bbs,1)&gt;maxn )
+0096       n2=floor(size(bbs,1)/2); [~,ord]=sort(bbs(:,1+isy)+bbs(:,3+isy)/2);
+0097       bbs0=<a href="#_sub1" class="code" title="subfunction bbs = nms1( bbs, type, thr, maxn, radii, overlap, isy )">nms1</a>(bbs(ord(1:n2),:),type,thr,maxn,radii,overlap,~isy);
+0098       bbs1=<a href="#_sub1" class="code" title="subfunction bbs = nms1( bbs, type, thr, maxn, radii, overlap, isy )">nms1</a>(bbs(ord(n2+1:end),:),type,thr,maxn,radii,overlap,~isy);
+0099       bbs=[bbs0; bbs1];
+0100     <span class="keyword">end</span>
+0101     <span class="comment">% run actual nms on given bbs</span>
+0102     <span class="keyword">switch</span> type
+0103       <span class="keyword">case</span> <span class="string">'max'</span>, bbs = <a href="#_sub2" class="code" title="subfunction bbs = nmsMax( bbs, overlap, greedy, ovrDnm )">nmsMax</a>(bbs,overlap,0,ovrDnm);
+0104       <span class="keyword">case</span> <span class="string">'maxg'</span>, bbs = <a href="#_sub2" class="code" title="subfunction bbs = nmsMax( bbs, overlap, greedy, ovrDnm )">nmsMax</a>(bbs,overlap,1,ovrDnm);
+0105       <span class="keyword">case</span> <span class="string">'ms'</span>, bbs = <a href="#_sub3" class="code" title="subfunction bbs = nmsMs( bbs, thr, radii )">nmsMs</a>(bbs,thr,radii);
+0106       <span class="keyword">case</span> <span class="string">'cover'</span>, bbs = <a href="#_sub5" class="code" title="subfunction bbs = nmsCover( bbs, overlap, ovrDnm )">nmsCover</a>(bbs,overlap,ovrDnm);
+0107       <span class="keyword">otherwise</span>, error(<span class="string">'unknown type: %s'</span>,type);
+0108     <span class="keyword">end</span>
+0109   <span class="keyword">end</span>
+0110 
+0111   <a name="_sub2" href="#_subfunctions" class="code">function bbs = nmsMax( bbs, overlap, greedy, ovrDnm )</a>
+0112     <span class="comment">% for each i suppress all j st j&gt;i and area-overlap&gt;overlap</span>
+0113     [~,ord]=sort(bbs(:,5),<span class="string">'descend'</span>); bbs=bbs(ord,:);
+0114     n=size(bbs,1); kp=true(1,n); as=bbs(:,3).*bbs(:,4);
+0115     xs=bbs(:,1); xe=bbs(:,1)+bbs(:,3); ys=bbs(:,2); ye=bbs(:,2)+bbs(:,4);
+0116     <span class="keyword">for</span> i=1:n, <span class="keyword">if</span>(greedy &amp;&amp; ~kp(i)), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0117       <span class="keyword">for</span> j=(i+1):n, <span class="keyword">if</span>(kp(j)==0), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0118         iw=min(xe(i),xe(j))-max(xs(i),xs(j)); <span class="keyword">if</span>(iw&lt;=0), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0119         ih=min(ye(i),ye(j))-max(ys(i),ys(j)); <span class="keyword">if</span>(ih&lt;=0), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0120         o=iw*ih; <span class="keyword">if</span>(ovrDnm), u=as(i)+as(j)-o; <span class="keyword">else</span> u=min(as(i),as(j)); <span class="keyword">end</span>
+0121         o=o/u; <span class="keyword">if</span>(o&gt;overlap), kp(j)=0; <span class="keyword">end</span>
+0122       <span class="keyword">end</span>
+0123     <span class="keyword">end</span>
+0124     bbs=bbs(kp&gt;0,:);
+0125   <span class="keyword">end</span>
+0126 
+0127   <a name="_sub3" href="#_subfunctions" class="code">function bbs = nmsMs( bbs, thr, radii )</a>
+0128     <span class="comment">% position = [x+w/2,y+h/2,log2(w),log2(h)], ws=weights-thr</span>
+0129     ws=bbs(:,5)-thr; w=bbs(:,3); h=bbs(:,4); n=length(w);
+0130     ps=[bbs(:,1)+w/2 bbs(:,2)+h/2 log2(w) log2(h)];
+0131     <span class="comment">% find modes starting from each elt, then merge nodes that are same</span>
+0132     ps1=zeros(n,4); ws1=zeros(n,1); stopThr=1e-2;
+0133     <span class="keyword">for</span> i=1:n, [ps1(i,:), ws1(i,:)]=<a href="#_sub4" class="code" title="subfunction [p,w]=nmsMs1(ind)">nmsMs1</a>(i); <span class="keyword">end</span>
+0134     [ps,ws] = nonMaxSuprList(ps1,ws1,stopThr*100,[],[],2);
+0135     <span class="comment">% convert back to bbs format and sort by weight</span>
+0136     w=pow2(ps(:,3)); h=pow2(ps(:,4));
+0137     bbs=[ps(:,1)-w/2 ps(:,2)-h/2 w h ws+thr];
+0138     [ws,ord]=sort(ws,<span class="string">'descend'</span>); bbs=bbs(ord,:);
+0139     
+0140     <a name="_sub4" href="#_subfunctions" class="code">function [p,w]=nmsMs1(ind)</a>
+0141       <span class="comment">% variable bandwith kernel (analytically defined)</span>
+0142       p=ps(ind,:); [n,m]=size(ps); onesN=ones(n,1);
+0143       h = [pow2(ps(:,3)) pow2(ps(:,4)) onesN onesN];
+0144       h = h .* radii(onesN,:); hInv=1./h;
+0145       <span class="keyword">while</span>(1)
+0146         <span class="comment">% compute (weighted) squared Euclidean distance to each neighbor</span>
+0147         d=(ps-p(onesN,:)).*hInv; d=d.*d; d=sum(d,2);
+0148         <span class="comment">% compute new mode</span>
+0149         wMask=ws.*exp(-d); wMask=wMask/sum(wMask); p1=wMask'*ps;
+0150         <span class="comment">% stopping criteria</span>
+0151         diff=sum(abs(p1-p))/m; p=p1; <span class="keyword">if</span>(diff&lt;stopThr), <span class="keyword">break</span>; <span class="keyword">end</span>
+0152       <span class="keyword">end</span>
+0153       w = sum(ws.*wMask);
+0154     <span class="keyword">end</span>
+0155   <span class="keyword">end</span>
+0156 
+0157   <a name="_sub5" href="#_subfunctions" class="code">function bbs = nmsCover( bbs, overlap, ovrDnm )</a>
+0158     <span class="comment">% construct n^2 neighbor matrix</span>
+0159     n=size(bbs,1); N=eye(n)*.5; as=bbs(:,3).*bbs(:,4);
+0160     xs=bbs(:,1); xe=bbs(:,1)+bbs(:,3); ys=bbs(:,2); ye=bbs(:,2)+bbs(:,4);
+0161     <span class="keyword">for</span> i=1:n
+0162       <span class="keyword">for</span> j=i+1:n
+0163         iw=min(xe(i),xe(j))-max(xs(i),xs(j)); <span class="keyword">if</span>(iw&lt;=0), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0164         ih=min(ye(i),ye(j))-max(ys(i),ys(j)); <span class="keyword">if</span>(ih&lt;=0), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0165         o=iw*ih; <span class="keyword">if</span>(ovrDnm), u=as(i)+as(j)-o; <span class="keyword">else</span> u=min(as(i),as(j)); <span class="keyword">end</span>
+0166         o=o/u; <span class="keyword">if</span>(o&gt;overlap), N(i,j)=1; <span class="keyword">end</span>
+0167       <span class="keyword">end</span>
+0168     <span class="keyword">end</span>
+0169     <span class="comment">% perform set cover operation (greedily choose next best)</span>
+0170     N=N+N'; bbs1=zeros(n,5); n1=n; c=0;
+0171     <span class="keyword">while</span>( n1&gt;0 ), [~,i0]=max(N*bbs(:,5));
+0172       N0=N(:,i0)==1; n1=n1-sum(N0); N(N0,:)=0; N(:,N0)=0;
+0173       c=c+1; bbs1(c,1:4)=bbs(i0,1:4); bbs1(c,5)=sum(bbs(N0,5));
+0174     <span class="keyword">end</span>
+0175     bbs=bbs1(1:c,:);
+0176   <span class="keyword">end</span>
+0177 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of splitLDbyStatsModel</title>
+  <meta name="keywords" content="splitLDbyStatsModel">
+  <meta name="description" content="[topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; splitLDbyStatsModel.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>splitLDbyStatsModel
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction)
+ Splits up the contours in the line drawing vecLD according to feature
+ properties, weighted by the histogramWeights.
+
+ Input:
+   vecLD - vectorized line drawing to be split. The structure should
+           already contain all relevant feature histograms. 
+           See also: <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)">getContourPropertiesStats</a>
+
+   properties - the property or properties to be considered.
+                These properties are implemented:
+                'Length','Orientation','Curvature','Junctions'
+                properties can either be one of these strings
+                or a cell array of more than one. If more than one
+                property is included, the rankings according to the
+                properties are linearly combined using weights.
+
+   fraction - the fraction of pixels to preserve.
+              Only whole contours will be assigned. The splitting is
+              conservative such that *at most* fraction pixels are
+              preserved. This means that it could happen that one contour
+              in the middle of the distribution does not get assigned to
+              either topLD or bottomLD.
+
+ Return:
+   topLD - line drawing strcture with the top-ranked contours
+   bottomLD - line drawing structure with the bottom-ranked contours</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>	histTable = histogramToTable(histogram,bins,shortName)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)</a>
+0002 <span class="comment">% [topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction)</span>
+0003 <span class="comment">% Splits up the contours in the line drawing vecLD according to feature</span>
+0004 <span class="comment">% properties, weighted by the histogramWeights.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input:</span>
+0007 <span class="comment">%   vecLD - vectorized line drawing to be split. The structure should</span>
+0008 <span class="comment">%           already contain all relevant feature histograms.</span>
+0009 <span class="comment">%           See also: getContourPropertiesStats</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   properties - the property or properties to be considered.</span>
+0012 <span class="comment">%                These properties are implemented:</span>
+0013 <span class="comment">%                'Length','Orientation','Curvature','Junctions'</span>
+0014 <span class="comment">%                properties can either be one of these strings</span>
+0015 <span class="comment">%                or a cell array of more than one. If more than one</span>
+0016 <span class="comment">%                property is included, the rankings according to the</span>
+0017 <span class="comment">%                properties are linearly combined using weights.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   fraction - the fraction of pixels to preserve.</span>
+0020 <span class="comment">%              Only whole contours will be assigned. The splitting is</span>
+0021 <span class="comment">%              conservative such that *at most* fraction pixels are</span>
+0022 <span class="comment">%              preserved. This means that it could happen that one contour</span>
+0023 <span class="comment">%              in the middle of the distribution does not get assigned to</span>
+0024 <span class="comment">%              either topLD or bottomLD.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Return:</span>
+0027 <span class="comment">%   topLD - line drawing strcture with the top-ranked contours</span>
+0028 <span class="comment">%   bottomLD - line drawing structure with the bottom-ranked contours</span>
+0029 
+0030 <span class="comment">% construct properties table</span>
+0031 numVar = length(Mdl.PredictorNames);
+0032 propTable = table(<span class="string">'Size'</span>,[vecLD.numContours,numVar],<span class="string">'VariableTypes'</span>,repmat({<span class="string">'double'</span>},1,numVar),<span class="string">'VariableNames'</span>,Mdl.PredictorNames);
+0033 
+0034 <span class="comment">% Now fill the table with the actual values</span>
+0035 
+0036 propTable = [<a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normLengthHistograms, <span class="string">'len'</span>),<span class="keyword">...</span>
+0037              <a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normOrientationHistograms,<span class="string">'ori'</span>),<span class="keyword">...</span>
+0038              <a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normCurvatureHistograms, <span class="string">'curv'</span>),<span class="keyword">...</span>
+0039              <a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normJunctionContourHistograms, <span class="string">'juncType'</span>, vecLD.junctionTypeBins)];
+0040 
+0041 
+0042 <span class="comment">% Now get the predictions from the stats model</span>
+0043 scores = predict(Mdl,propTable);
+0044 
+0045 <span class="comment">% rank the prop table and split the line drawings</span>
+0046 [~,totalIdx] = sort(scores,<span class="string">'ascend'</span>);
+0047 sumLen = cumsum(vecLD.contourLengths(totalIdx) / sum(vecLD.contourLengths));
+0048 bottomIdx = totalIdx(find(sumLen &lt;= fraction));
+0049 topIdx = totalIdx(find(sumLen &gt;= (1-fraction)));
+0050 
+0051 bottomLD.originalImage = vecLD.originalImage;
+0052 bottomLD.imsize = vecLD.imsize;
+0053 bottomLD.lineMethod = sprintf(<span class="string">'%s - split bottom %g'</span>,vecLD.lineMethod,fraction);
+0054 bottomLD.numContours = numel(bottomIdx);
+0055 bottomLD.contours = vecLD.contours(bottomIdx);
+0056 bottomLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(bottomLD);
+0057 
+0058 topLD.originalImage = vecLD.originalImage;
+0059 topLD.imsize = vecLD.imsize;
+0060 topLD.lineMethod = sprintf(<span class="string">'%s - split top %g'</span>,vecLD.lineMethod,fraction);
+0061 topLD.numContours = numel(topIdx);
+0062 topLD.contours = vecLD.contours(topIdx);
+0063 topLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(topLD);</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

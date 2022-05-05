@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of edgesSweeps</title>
+  <meta name="keywords" content="edgesSweeps">
+  <meta name="description" content="Parameter sweeps for structured edge detector.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">edges-master</a> &gt; edgesSweeps.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>edgesSweeps
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Parameter sweeps for structured edge detector.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function edgesSweeps() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Parameter sweeps for structured edge detector.
+
+ Running the parameter sweeps requires altering internal flags.
+ The sweeps are not well documented, use at your own discretion.
+
+ Structured Edge Detection Toolbox      Version 3.01
+ Code written by Piotr Dollar, 2014.
+ Licensed under the MSR-LA Full Rights License [see license.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="edgesTrain.html" class="code" title="function model = edgesTrain( varargin )">edgesTrain</a>	Train structured edge detector.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function plotExps( expNm, opts, lgd, lbl, T, type )</a></li><li><a href="#_sub2" class="code">function [jobsTrn,jobsTst] = createJobs( rtDir, opts, dataset, T )</a></li><li><a href="#_sub3" class="code">function [opts,lgd,lbl] = createExp( rtDir, expNm, dataset, full )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function edgesSweeps()</a>
+0002 <span class="comment">% Parameter sweeps for structured edge detector.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Running the parameter sweeps requires altering internal flags.</span>
+0005 <span class="comment">% The sweeps are not well documented, use at your own discretion.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Structured Edge Detection Toolbox      Version 3.01</span>
+0008 <span class="comment">% Code written by Piotr Dollar, 2014.</span>
+0009 <span class="comment">% Licensed under the MSR-LA Full Rights License [see license.txt]</span>
+0010 
+0011 <span class="comment">% select type and location of cluster (see fevalDistr.m)</span>
+0012 rtDir = <span class="string">'D:\code\research\edges\'</span>;
+0013 pDistrTrn={<span class="string">'type'</span>,<span class="string">'local'</span>}; pDistrTst=pDistrTrn;
+0014 
+0015 <span class="comment">% define parameter sweeps</span>
+0016 expNms= {<span class="string">'MD-imWidth'</span>,<span class="string">'MD-gtWidth'</span>,<span class="string">'TR-nData'</span>,<span class="string">'TR-nPos'</span>,<span class="string">'TR-nImgs'</span>,<span class="keyword">...</span>
+0017   <span class="string">'TR-sharpen'</span>,<span class="string">'TR-nTrees'</span>,<span class="string">'TR-split'</span>,<span class="string">'TR-minChild'</span>,<span class="string">'TR-maxDepth'</span>,<span class="keyword">...</span>
+0018   <span class="string">'TR-fracFtrs'</span>,<span class="string">'TR-nSamples'</span>,<span class="string">'TR-nClasses'</span>,<span class="string">'TR-discretize'</span>,<span class="keyword">...</span>
+0019   <span class="string">'FT-nCells'</span>,<span class="string">'FT-nOrients'</span>,<span class="string">'FT-normRad'</span>,<span class="string">'FT-shrink'</span>,<span class="keyword">...</span>
+0020   <span class="string">'FT-grdSmooth'</span>,<span class="string">'FT-chnSmooth'</span>,<span class="string">'FT-simSmooth'</span>,<span class="string">'final'</span>};
+0021 expNms=expNms(1:end); T=5; full=3; dataset=<span class="string">'BSDS'</span>;
+0022 [opts,lgd,lbl]=<a href="#_sub3" class="code" title="subfunction [opts,lgd,lbl] = createExp( rtDir, expNm, dataset, full )">createExp</a>(rtDir,expNms,dataset,full);
+0023 
+0024 <span class="comment">% run training and testing jobs</span>
+0025 [jobsTrn,jobsTst] = <a href="#_sub2" class="code" title="subfunction [jobsTrn,jobsTst] = createJobs( rtDir, opts, dataset, T )">createJobs</a>(rtDir,opts,dataset,T); N=length(expNms);
+0026 fprintf(<span class="string">'nTrain = %i; nTest = %i\n'</span>,length(jobsTrn),length(jobsTst));
+0027 tic, s=fevalDistr(<span class="string">'edgesTrain'</span>,jobsTrn,pDistrTrn); assert(s==1); toc
+0028 tic, s=fevalDistr(<span class="string">'edgesEval'</span>,jobsTst,pDistrTst); assert(s==1); toc
+0029 
+0030 <span class="comment">% plot results</span>
+0031 <span class="keyword">for</span> e=1:N, <a href="#_sub1" class="code" title="subfunction plotExps( expNm, opts, lgd, lbl, T, type )">plotExps</a>(expNms{e},opts{e},lgd{e},lbl{e},T,1); <span class="keyword">end</span>
+0032 
+0033 <span class="keyword">end</span>
+0034 
+0035 <a name="_sub1" href="#_subfunctions" class="code">function plotExps( expNm, opts, lgd, lbl, T, type )</a>
+0036 <span class="comment">% get all results and display error</span>
+0037 disp([expNm <span class="string">' ['</span> lbl <span class="string">']'</span>]); N=length(lgd);
+0038 res=zeros(N,T); mNms=cell(1,N);
+0039 <span class="keyword">for</span> e=1:N, mNms{e}=[opts(e).modelDir <span class="string">'val/'</span> opts(e).modelFnm]; <span class="keyword">end</span>
+0040 <span class="keyword">for</span> e=1:N, <span class="keyword">for</span> t=1:T, r=dlmread([mNms{e} <span class="string">'T'</span> int2str2(t,2) <span class="keyword">...</span>
+0041       <span class="string">'-eval/eval_bdry.txt'</span>]); r=r([4 7 8]); res(e,t)=r(type); <span class="keyword">end</span>; <span class="keyword">end</span>
+0042 stds=std(res,0,2)*100; R=mean(res,2)*100; msg=<span class="string">' %.2f +/- %.2f  [%s]\n'</span>;
+0043 <span class="keyword">for</span> e=1:N, fprintf(msg,R(e),stds(e),lgd{e}); <span class="keyword">end</span>
+0044 <span class="keyword">if</span>(0), disp(res); disp(max(res,[],2)); <span class="keyword">end</span>
+0045 types={<span class="string">'ODS'</span>,<span class="string">'OIS'</span>,<span class="string">'AP'</span>}; type=types{type};
+0046 <span class="comment">% plot sweeps (two cases for format of x labels)</span>
+0047 figPrp = {<span class="string">'Units'</span>,<span class="string">'Pixels'</span>,<span class="string">'Position'</span>,[800 600 640 220]};
+0048 figure(1); clf; set(1,figPrp{:}); set(gca,<span class="string">'FontSize'</span>,24); clr=[0 .69 .94];
+0049 pPl1={<span class="string">'LineWidth'</span>,3,<span class="string">'MarkerSize'</span>,15,<span class="string">'Color'</span>,clr,<span class="string">'MarkerFaceColor'</span>,clr};
+0050 pPl2=pPl1; clr=[1 .75 0]; pPl2{6}=clr; pPl2{8}=clr; d=0;
+0051 <span class="keyword">for</span> e=1:N, <span class="keyword">if</span>(lgd{e}(end)==<span class="string">'*'</span>), d=e; <span class="keyword">end</span>; <span class="keyword">end</span>; <span class="keyword">if</span>(d), lgd{d}(end)=[]; <span class="keyword">end</span>
+0052 plot(R,<span class="string">'-d'</span>,pPl1{:}); hold on; <span class="keyword">if</span>(d),plot(d,R(d),<span class="string">'d'</span>,pPl2{:}); <span class="keyword">end</span>; e=.001;
+0053 ylabel([type <span class="string">' \times 100'</span>]); axis([.5 N+.5 min([R; 66])-e max([R; 72])+e])
+0054 <span class="keyword">if</span>(isempty(lbl)), imLabel(lgd,<span class="string">'bottom'</span>,30,{<span class="string">'FontSize'</span>,24}); lgd=[]; <span class="keyword">end</span>
+0055 <span class="keyword">if</span>(0); xlabel(lbl); <span class="keyword">end</span>; set(gca,<span class="string">'XTick'</span>,1:1:N,<span class="string">'XTickLabel'</span>,lgd(1:1:N));
+0056 <span class="comment">% save plot</span>
+0057 plDir=[opts(1).modelDir <span class="string">'plots'</span> type <span class="string">'/'</span>]; fFig=[plDir expNm];
+0058 <span class="keyword">if</span>(~exist(plDir,<span class="string">'dir'</span>)), mkdir(plDir); <span class="keyword">end</span> <span class="comment">%#ok&lt;*CTCH&gt;</span>
+0059 <span class="keyword">for</span> t=1:25, <span class="keyword">try</span> savefig(fFig,1,<span class="string">'png'</span>); <span class="keyword">break</span>; <span class="keyword">catch</span>, pause(1), <span class="keyword">end</span>; <span class="keyword">end</span>
+0060 <span class="keyword">end</span>
+0061 
+0062 <a name="_sub2" href="#_subfunctions" class="code">function [jobsTrn,jobsTst] = createJobs( rtDir, opts, dataset, T )</a>
+0063 <span class="comment">% Prepare all jobs (one train and one test job per set of opts).</span>
+0064 opts=[opts{:}]; N=length(opts); NT=N*T;
+0065 opts=repmat(opts,1,T); nms=cell(1,NT);
+0066 jobsTrn=cell(1,NT); doneTrn=zeros(1,NT);
+0067 jobsTst=cell(1,NT); doneTst=zeros(1,NT);
+0068 thrs = logspace(-2,log10(.99),25)'; thrs(1)=1e-5;
+0069 <span class="keyword">if</span>( strcmpi(dataset,<span class="string">'bsds'</span>) )
+0070   pTest={<span class="string">'dataType'</span>,<span class="string">'val'</span>, <span class="string">'thrs'</span>,thrs, <span class="string">'cleanup'</span>,1,<span class="keyword">...</span>
+0071     <span class="string">'opts'</span>,{<span class="string">'modelDir'</span>,[rtDir <span class="string">'/sweepsBSDS/'</span>],<span class="keyword">...</span>
+0072     <span class="string">'bsdsDir'</span>,[rtDir <span class="string">'/BSR/BSDS500/data/'</span>]} };
+0073 <span class="keyword">else</span>
+0074   pTest={<span class="string">'dataType'</span>,<span class="string">'val'</span>, <span class="string">'thrs'</span>,thrs, <span class="string">'cleanup'</span>,1, <span class="string">'maxDist'</span>,.011,<span class="keyword">...</span>
+0075     <span class="string">'opts'</span>,{<span class="string">'modelDir'</span>,[rtDir <span class="string">'/sweepsNYUD/'</span>],<span class="keyword">...</span>
+0076     <span class="string">'bsdsDir'</span>,[rtDir <span class="string">'/BSR/NYUD/data/'</span>]} };
+0077 <span class="keyword">end</span>
+0078 <span class="keyword">for</span> e=1:NT
+0079   t=ceil(e/N); opts(e).seed=(t-1)*100000+1;
+0080   nm=[opts(e).modelFnm <span class="string">'T'</span> int2str2(t,2)]; opts(e).modelFnm=nm;
+0081   mFnm=[opts(e).modelDir <span class="string">'forest/'</span> nm <span class="string">'.mat'</span>]; nms{e}=nm;
+0082   eFnm=[opts(e).modelDir <span class="string">'val/'</span> nm <span class="string">'-eval/eval_bdry.txt'</span>];
+0083   doneTrn(e)=exist(mFnm,<span class="string">'file'</span>)==2; jobsTrn{e}={opts(e)};
+0084   doneTst(e)=exist(eFnm,<span class="string">'file'</span>)==2; jobsTst{e}=[mFnm pTest];
+0085 <span class="keyword">end</span>
+0086 [~,kp]=unique(nms,<span class="string">'stable'</span>);
+0087 doneTrn=doneTrn(kp); jobsTrn=jobsTrn(kp); jobsTrn=jobsTrn(~doneTrn);
+0088 doneTst=doneTst(kp); jobsTst=jobsTst(kp); jobsTst=jobsTst(~doneTst);
+0089 <span class="keyword">end</span>
+0090 
+0091 <a name="_sub3" href="#_subfunctions" class="code">function [opts,lgd,lbl] = createExp( rtDir, expNm, dataset, full )</a>
+0092 
+0093 <span class="comment">% if expNm is a cell, call recursively and return</span>
+0094 <span class="keyword">if</span>( iscell(expNm) )
+0095   N=length(expNm); opts=cell(1,N); lgd=opts; lbl=opts;
+0096   <span class="keyword">for</span> e=1:N, [opts{e},lgd{e},lbl{e}]=<span class="keyword">...</span>
+0097       <a href="#_sub3" class="code" title="subfunction [opts,lgd,lbl] = createExp( rtDir, expNm, dataset, full )">createExp</a>(rtDir,expNm{e},dataset,full); <span class="keyword">end</span>; <span class="keyword">return</span>;
+0098 <span class="keyword">end</span>
+0099 
+0100 <span class="comment">% default params for edgesTrain.m</span>
+0101 opts=<a href="edgesTrain.html" class="code" title="function model = edgesTrain( varargin )">edgesTrain</a>(); opts.nThreads=1; nData=2e5; nPos=.5;
+0102 opts.nPos=round(nData*nPos); opts.nNeg=round(nData*(1-nPos));
+0103 assert(any(strcmpi(dataset,{<span class="string">'bsds'</span>,<span class="string">'nyud'</span>})));
+0104 <span class="keyword">if</span>( strcmpi(dataset,<span class="string">'bsds'</span>) )
+0105   opts.modelDir=[rtDir <span class="string">'/sweepsBSDS/'</span>]; opts.nImgs=200;
+0106   opts.bsdsDir=[rtDir <span class="string">'/BSR/BSDS500/data/'</span>];
+0107 <span class="keyword">else</span>
+0108   opts.modelDir=[rtDir <span class="string">'/sweepsNYUD/'</span>]; opts.nImgs=381;
+0109   opts.bsdsDir=[rtDir <span class="string">'/BSR/NYUD/data/'</span>];
+0110   opts.rgbd=2; opts.fracFtrs=1/8;
+0111 <span class="keyword">end</span>
+0112 
+0113 <span class="comment">% setup opts</span>
+0114 optsDefault=opts; N=100; lgd=cell(1,N); ss=lgd;
+0115 opts=opts(ones(1,N)); hasDefault=1;
+0116 <span class="keyword">switch</span> expNm
+0117   <span class="keyword">case</span> <span class="string">'MD-imWidth'</span>
+0118     lbl=<span class="string">'window size for x'</span>; vs=[1:4 6 8]*8; N=length(vs);
+0119     <span class="keyword">for</span> e=1:N, opts(e).imWidth=vs(e); <span class="keyword">end</span>
+0120     <span class="keyword">for</span> e=1:N, opts(e).gtWidth=min(vs(e),opts(e).gtWidth); <span class="keyword">end</span>
+0121   <span class="keyword">case</span> <span class="string">'MD-gtWidth'</span>
+0122     lbl=<span class="string">'window size for y'</span>; vs=[1:4 6 8]*4; N=length(vs);
+0123     <span class="keyword">for</span> e=1:N, opts(e).gtWidth=vs(e); <span class="keyword">end</span>
+0124   <span class="keyword">case</span> <span class="string">'TR-nData'</span>
+0125     lbl=<span class="string">'# train patches x10^4'</span>; vs=[1 2 5 10 20 50 100 200]; N=length(vs);
+0126     <span class="keyword">for</span> e=1:N, opts(e).nPos=round(vs(e)*1e4*nPos); <span class="keyword">end</span>
+0127     <span class="keyword">for</span> e=1:N, opts(e).nNeg=round(vs(e)*1e4*(1-nPos)); <span class="keyword">end</span>
+0128     <span class="keyword">if</span>(full&lt;2), N=5; <span class="keyword">elseif</span>(full&lt;3), N=6; <span class="keyword">end</span>
+0129   <span class="keyword">case</span> <span class="string">'TR-nPos'</span>
+0130     lbl = <span class="string">'fraction positive data'</span>; vs=20:10:80; N=length(vs);
+0131     <span class="keyword">for</span> e=1:N, opts(e).nPos=round(nData*vs(e)/100); <span class="keyword">end</span>
+0132     <span class="keyword">for</span> e=1:N, opts(e).nNeg=round(nData*(1-vs(e)/100)); <span class="keyword">end</span>
+0133     <span class="keyword">for</span> e=1:N, lgd{e}=sprintf(<span class="string">'.%i'</span>,vs(e)/10); <span class="keyword">end</span>
+0134   <span class="keyword">case</span> <span class="string">'TR-nImgs'</span>
+0135     lbl=<span class="string">'# train images'</span>; vs=[10 20 50 100 opts(1).nImgs]; N=length(vs);
+0136     <span class="keyword">for</span> e=1:N, opts(e).nImgs=vs(e); <span class="keyword">end</span>
+0137   <span class="keyword">case</span> <span class="string">'TR-sharpen'</span>
+0138     lbl=<span class="string">'sharpening radius'</span>; vs=0:4; N=length(vs);
+0139     <span class="keyword">for</span> e=1:N, opts(e).sharpen=vs(e); <span class="keyword">end</span>
+0140   <span class="keyword">case</span> <span class="string">'TR-nTrees'</span>
+0141     lbl=<span class="string">'# decision trees'</span>; vs=2.^(0:4); N=length(vs);
+0142     <span class="keyword">for</span> e=1:N, opts(e).nTrees=vs(e); <span class="keyword">end</span>;
+0143     <span class="keyword">for</span> e=1:N, opts(e).nTreesEval=max(1,vs(e)/2); <span class="keyword">end</span>
+0144     <span class="keyword">if</span>(full&lt;2), N=4; <span class="keyword">end</span>
+0145   <span class="keyword">case</span> <span class="string">'TR-split'</span>
+0146     lbl=<span class="string">'information gain'</span>;
+0147     ss={<span class="string">'gini'</span>,<span class="string">'entropy'</span>,<span class="string">'twoing'</span>}; N=length(ss); lgd=ss;
+0148     <span class="keyword">for</span> e=1:N, opts(e).split=ss{e}; <span class="keyword">end</span>
+0149   <span class="keyword">case</span> <span class="string">'TR-minChild'</span>
+0150     lbl=<span class="string">'min samples per node'</span>; vs=2:2:16; N=length(vs);
+0151     <span class="keyword">for</span> e=1:N, opts(e).minChild=vs(e); <span class="keyword">end</span>
+0152   <span class="keyword">case</span> <span class="string">'TR-maxDepth'</span>
+0153     lbl=<span class="string">'max tree depth'</span>; vs=2.^(2:6); N=length(vs);
+0154     <span class="keyword">for</span> e=1:N, opts(e).maxDepth=vs(e); <span class="keyword">end</span>
+0155   <span class="keyword">case</span> <span class="string">'TR-fracFtrs'</span>
+0156     lbl=<span class="string">'fraction features'</span>; vs=2.^(2:6); N=length(vs);
+0157     <span class="keyword">for</span> e=1:N, opts(e).fracFtrs=1/vs(e); <span class="keyword">end</span>
+0158     <span class="keyword">for</span> e=1:N, lgd{e}=sprintf(<span class="string">'1/%i'</span>,vs(e)); <span class="keyword">end</span>
+0159   <span class="keyword">case</span> <span class="string">'TR-nSamples'</span>
+0160     lbl=<span class="string">'m (size of Z)'</span>; vs=2.^(0:2:8); N=length(vs);
+0161     <span class="keyword">for</span> e=1:N, opts(e).nSamples=vs(e); <span class="keyword">end</span>
+0162   <span class="keyword">case</span> <span class="string">'TR-nClasses'</span>
+0163     lbl=<span class="string">'k (size of C)'</span>; vs=2.^(1:5); N=length(vs);
+0164     <span class="keyword">for</span> e=1:N, opts(e).nClasses=vs(e); <span class="keyword">end</span>
+0165   <span class="keyword">case</span> <span class="string">'TR-discretize'</span>
+0166     lbl=<span class="string">'discretization type'</span>;
+0167     ss={<span class="string">'pca'</span>,<span class="string">'kmeans'</span>}; N=length(ss); lgd=ss;
+0168     <span class="keyword">for</span> e=1:N, opts(e).discretize=ss{e}; <span class="keyword">end</span>
+0169   <span class="keyword">case</span> <span class="string">'FT-nCells'</span>
+0170     lbl=<span class="string">'# grid cells'</span>; vs=1:2:7; N=length(vs);
+0171     <span class="keyword">for</span> e=1:N, opts(e).nCells=vs(e); <span class="keyword">end</span>
+0172     <span class="keyword">if</span>(full&lt;2), N=3; <span class="keyword">end</span>
+0173   <span class="keyword">case</span> <span class="string">'FT-nOrients'</span>
+0174     lbl=<span class="string">'# gradient orients'</span>; vs=0:2:8; N=length(vs);
+0175     <span class="keyword">for</span> e=1:N, opts(e).nOrients=vs(e); <span class="keyword">end</span>
+0176   <span class="keyword">case</span> <span class="string">'FT-normRad'</span>
+0177     lbl=<span class="string">'normalization radius'</span>; vs=[0 2.^(0:3)]; N=length(vs);
+0178     <span class="keyword">for</span> e=1:N, opts(e).normRad=vs(e); <span class="keyword">end</span>
+0179   <span class="keyword">case</span> <span class="string">'FT-shrink'</span>
+0180     lbl=<span class="string">'channel downsample'</span>; vs=2.^(0:2); N=length(vs);
+0181     <span class="keyword">for</span> e=1:N, opts(e).shrink=vs(e); <span class="keyword">end</span>
+0182   <span class="keyword">case</span> <span class="string">'FT-grdSmooth'</span>
+0183     lbl = <span class="string">'gradient blur'</span>; vs=[0 2.^(0:4)]; N=length(vs);
+0184     <span class="keyword">for</span> e=1:N, opts(e).grdSmooth=vs(e); <span class="keyword">end</span>
+0185   <span class="keyword">case</span> <span class="string">'FT-chnSmooth'</span>
+0186     lbl=<span class="string">'channel blur'</span>; vs=[0 2.^(0:4)]; N=length(vs);
+0187     <span class="keyword">for</span> e=1:N, opts(e).chnSmooth=vs(e); <span class="keyword">end</span>
+0188   <span class="keyword">case</span> <span class="string">'FT-simSmooth'</span>
+0189     lbl=<span class="string">'self-similarity blur'</span>; vs=[0 2.^(0:4)]; N=length(vs);
+0190     <span class="keyword">for</span> e=1:N, opts(e).simSmooth=vs(e); <span class="keyword">end</span>
+0191   <span class="keyword">case</span> <span class="string">'final'</span>
+0192     <span class="keyword">if</span>(strcmpi(dataset,<span class="string">'bsds'</span>)), vs=[0 2]; <span class="keyword">else</span>
+0193       vs=0:3; rgbd=[2 2 1 0]; <span class="keyword">for</span> e=2:4, opts(e).rgbd=rgbd(e); <span class="keyword">end</span>; <span class="keyword">end</span>
+0194     lbl=<span class="string">'final'</span>; N=length(vs); nData=2e6;
+0195     <span class="keyword">for</span> e=2:N, opts(e).nPos=round(nData*nPos); <span class="keyword">end</span>
+0196     <span class="keyword">for</span> e=2:N, opts(e).nNeg=round(nData*(1-nPos)); <span class="keyword">end</span>
+0197     <span class="keyword">if</span>(full&lt;3), N=1; <span class="keyword">end</span>
+0198   <span class="keyword">otherwise</span>, error(<span class="string">'invalid exp: %s'</span>,expNm);
+0199 <span class="keyword">end</span>
+0200 
+0201 <span class="comment">% produce final set of opts and find default opts</span>
+0202 <span class="keyword">for</span> e=1:N, <span class="keyword">if</span>(isempty(lgd{e})), lgd{e}=int2str(vs(e)); <span class="keyword">end</span>; <span class="keyword">end</span>
+0203 <span class="keyword">for</span> e=1:N, <span class="keyword">if</span>(isempty(ss{e})), ss{e}=int2str2(vs(e),5); <span class="keyword">end</span>; <span class="keyword">end</span>
+0204 O=1:N; opts=opts(O); lgd=lgd(O); ss=ss(O); d=0;
+0205 <span class="keyword">for</span> e=1:N, <span class="keyword">if</span>(isequal(optsDefault,opts(e))), d=e; <span class="keyword">break</span>; <span class="keyword">end</span>; <span class="keyword">end</span>
+0206 <span class="keyword">if</span>(hasDefault &amp;&amp; d==0), disp(expNm); assert(false); <span class="keyword">end</span>
+0207 <span class="keyword">for</span> e=1:N, opts(e).modelFnm=[expNm ss{e}]; <span class="keyword">end</span>
+0208 <span class="keyword">if</span>(hasDefault), lgd{d}=[lgd{d} <span class="string">'*'</span>]; opts(d).modelFnm=<span class="string">'Default'</span>; <span class="keyword">end</span>
+0209 <span class="keyword">if</span>(0), disp([ss' lgd']'); <span class="keyword">end</span>
+0210 
+0211 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

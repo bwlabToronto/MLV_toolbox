@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rotationMatrix</title>
+  <meta name="keywords" content="rotationMatrix">
+  <meta name="description" content="Performs different operations dealing with a rotation matrix">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; rotationMatrix.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>rotationMatrix
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Performs different operations dealing with a rotation matrix</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout=rotationMatrix(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Performs different operations dealing with a rotation matrix
+
+ USAGE
+  R = rotationMatrix( M )
+  [u,theta] = rotationMatrix( R )
+  R = rotationMatrix( theta )
+  R = rotationMatrix( u )
+  R = rotationMatrix( u, theta )
+  R = rotationMatrix( th1, th2, th3 )
+  R = rotationMatrix( R2 )
+
+ INPUTS 1 - Finds the closest rotation matrix to a given matrix M
+  M       - 3x3 matrix
+
+ INPUTS 2 - Extract the axis and the angle of a 3x3 rotation matrix
+  R       - 3x3 Rotation matrix
+
+ INPUTS 3 - Creates a 2x2 rotation matrix from an angle
+  theta   - angle of rotation (radians)
+
+ INPUTS 4 - Creates a 3x3 rotation matrix from a rotation vector
+  u       - 1x3 or 3x1 axis of rotation - norm is theta
+
+ INPUTS 5 - Creates a 3x3 rotation matrix from a rotation vector
+  u       - axis of rotation
+  theta   - angle of rotation (radians)
+
+ INPUTS 6 - Creates a 3x3 rotation matrix from 3 angles (around fixed
+            axes)
+  th1     - angle with respect to X axis
+  th2     - angle with respect to Y axis
+  th3     - angle with respect to Z axis
+      such that R = Rx*Ry*Rz
+
+ INPUTS 7 - Creates the full 3x3 rotation matrix from its first 2 rows
+  R       - 2x3 first two rows of the rotation matrix
+
+ INPUTS 8 - Extract the 3 angles of a 3x3 rotation matrix
+  R       - 3x3 Rotation matrix
+
+ OUTPUTS 1,4,5,6,7
+  R       - 3x3 rotation matrix
+
+ OUTPUTS 2
+  u       - axis of rotation
+  theta   - angle of rotation (radians)
+
+ OUTPUTS 3
+  R       - 2x2 Rotation matrix
+
+ OUTPUTS 8
+  th1     - angle with respect to X axis
+  th2     - angle with respect to Y axis
+  th3     - angle with respect to Z axis
+     such that R = Rx*Ry*Rz
+
+ EXAMPLE 1
+  R3 = rotationMatrix( [0 0 1], pi/4 )+rand(3)/50
+  R3r = rotationMatrix( R3 )
+  [u,theta]  = rotationMatrix( R3r )
+
+ EXAMPLE 2
+  R3 = rotationMatrix( [0 0 1], pi/4 );
+  [u,theta]  = rotationMatrix( R3 )
+
+ EXAMPLE 3
+  R2 = rotationMatrix( pi/4 )
+
+ EXAMPLE 4
+  R3 = rotationMatrix( [0 0 .5] )
+
+ EXAMPLE 5
+  R3 = rotationMatrix( [0 0 1], pi/4 )
+
+ EXAMPLE 6
+  R3 = rotationMatrix( pi/4,pi/4,0 )
+
+ EXAMPLE 7
+  R3 = rotationMatrix( pi/4,pi/4,0 )
+  R3bis = rotationMatrix( R3(1:2,:) )
+
+ EXAMPLE 7
+  [th1 th2 th3] = rotationmatrix( rotationMatrix( pi/4,pi/4,0 ) );
+
+ EXAMPLE 8
+  [th1 th2 th3]=rotationMatrix(rotationMatrix(1,2,3))
+
+ See also
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.35
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="rotationMatrix.html" class="code" title="function varargout=rotationMatrix(varargin)">rotationMatrix</a>	Performs different operations dealing with a rotation matrix</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="rotationMatrix.html" class="code" title="function varargout=rotationMatrix(varargin)">rotationMatrix</a>	Performs different operations dealing with a rotation matrix</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout=rotationMatrix(varargin)</a>
+0002 <span class="comment">% Performs different operations dealing with a rotation matrix</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% USAGE</span>
+0005 <span class="comment">%  R = rotationMatrix( M )</span>
+0006 <span class="comment">%  [u,theta] = rotationMatrix( R )</span>
+0007 <span class="comment">%  R = rotationMatrix( theta )</span>
+0008 <span class="comment">%  R = rotationMatrix( u )</span>
+0009 <span class="comment">%  R = rotationMatrix( u, theta )</span>
+0010 <span class="comment">%  R = rotationMatrix( th1, th2, th3 )</span>
+0011 <span class="comment">%  R = rotationMatrix( R2 )</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% INPUTS 1 - Finds the closest rotation matrix to a given matrix M</span>
+0014 <span class="comment">%  M       - 3x3 matrix</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% INPUTS 2 - Extract the axis and the angle of a 3x3 rotation matrix</span>
+0017 <span class="comment">%  R       - 3x3 Rotation matrix</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% INPUTS 3 - Creates a 2x2 rotation matrix from an angle</span>
+0020 <span class="comment">%  theta   - angle of rotation (radians)</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% INPUTS 4 - Creates a 3x3 rotation matrix from a rotation vector</span>
+0023 <span class="comment">%  u       - 1x3 or 3x1 axis of rotation - norm is theta</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% INPUTS 5 - Creates a 3x3 rotation matrix from a rotation vector</span>
+0026 <span class="comment">%  u       - axis of rotation</span>
+0027 <span class="comment">%  theta   - angle of rotation (radians)</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% INPUTS 6 - Creates a 3x3 rotation matrix from 3 angles (around fixed</span>
+0030 <span class="comment">%            axes)</span>
+0031 <span class="comment">%  th1     - angle with respect to X axis</span>
+0032 <span class="comment">%  th2     - angle with respect to Y axis</span>
+0033 <span class="comment">%  th3     - angle with respect to Z axis</span>
+0034 <span class="comment">%      such that R = Rx*Ry*Rz</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% INPUTS 7 - Creates the full 3x3 rotation matrix from its first 2 rows</span>
+0037 <span class="comment">%  R       - 2x3 first two rows of the rotation matrix</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% INPUTS 8 - Extract the 3 angles of a 3x3 rotation matrix</span>
+0040 <span class="comment">%  R       - 3x3 Rotation matrix</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% OUTPUTS 1,4,5,6,7</span>
+0043 <span class="comment">%  R       - 3x3 rotation matrix</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% OUTPUTS 2</span>
+0046 <span class="comment">%  u       - axis of rotation</span>
+0047 <span class="comment">%  theta   - angle of rotation (radians)</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">% OUTPUTS 3</span>
+0050 <span class="comment">%  R       - 2x2 Rotation matrix</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">% OUTPUTS 8</span>
+0053 <span class="comment">%  th1     - angle with respect to X axis</span>
+0054 <span class="comment">%  th2     - angle with respect to Y axis</span>
+0055 <span class="comment">%  th3     - angle with respect to Z axis</span>
+0056 <span class="comment">%     such that R = Rx*Ry*Rz</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">% EXAMPLE 1</span>
+0059 <span class="comment">%  R3 = rotationMatrix( [0 0 1], pi/4 )+rand(3)/50</span>
+0060 <span class="comment">%  R3r = rotationMatrix( R3 )</span>
+0061 <span class="comment">%  [u,theta]  = rotationMatrix( R3r )</span>
+0062 <span class="comment">%</span>
+0063 <span class="comment">% EXAMPLE 2</span>
+0064 <span class="comment">%  R3 = rotationMatrix( [0 0 1], pi/4 );</span>
+0065 <span class="comment">%  [u,theta]  = rotationMatrix( R3 )</span>
+0066 <span class="comment">%</span>
+0067 <span class="comment">% EXAMPLE 3</span>
+0068 <span class="comment">%  R2 = rotationMatrix( pi/4 )</span>
+0069 <span class="comment">%</span>
+0070 <span class="comment">% EXAMPLE 4</span>
+0071 <span class="comment">%  R3 = rotationMatrix( [0 0 .5] )</span>
+0072 <span class="comment">%</span>
+0073 <span class="comment">% EXAMPLE 5</span>
+0074 <span class="comment">%  R3 = rotationMatrix( [0 0 1], pi/4 )</span>
+0075 <span class="comment">%</span>
+0076 <span class="comment">% EXAMPLE 6</span>
+0077 <span class="comment">%  R3 = rotationMatrix( pi/4,pi/4,0 )</span>
+0078 <span class="comment">%</span>
+0079 <span class="comment">% EXAMPLE 7</span>
+0080 <span class="comment">%  R3 = rotationMatrix( pi/4,pi/4,0 )</span>
+0081 <span class="comment">%  R3bis = rotationMatrix( R3(1:2,:) )</span>
+0082 <span class="comment">%</span>
+0083 <span class="comment">% EXAMPLE 7</span>
+0084 <span class="comment">%  [th1 th2 th3] = rotationmatrix( rotationMatrix( pi/4,pi/4,0 ) );</span>
+0085 <span class="comment">%</span>
+0086 <span class="comment">% EXAMPLE 8</span>
+0087 <span class="comment">%  [th1 th2 th3]=rotationMatrix(rotationMatrix(1,2,3))</span>
+0088 <span class="comment">%</span>
+0089 <span class="comment">% See also</span>
+0090 <span class="comment">%</span>
+0091 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.35</span>
+0092 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0093 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0094 
+0095 <span class="comment">%%% Find the closest orthonormal matrix</span>
+0096 <span class="keyword">if</span> all(size(varargin{1})==[3 3]) &amp;&amp; nargout&lt;=1
+0097   [U,~,V]=svd(varargin{1});
+0098   varargout{1}=U*V';
+0099   <span class="keyword">return</span>
+0100 <span class="keyword">end</span>
+0101 
+0102 <span class="comment">%%% Takes a rotation matrix and extracts the rotation angle and axis.</span>
+0103 <span class="keyword">if</span> all(size(varargin{1})==[3 3]) &amp;&amp; nargout==2
+0104   R=varargin{1};
+0105   <span class="comment">% find location of eigenvector with eigen value other than 1</span>
+0106   <span class="comment">% eigenvalue has form cos(theta) +- i sin(theta)</span>
+0107   [v,d]=eig( R );
+0108   [dr, disc] = find( imag(d)==0 &amp; real(d)~=0 );  <span class="comment">%#ok&lt;NASGU&gt;</span>
+0109   u = v(:,dr);
+0110   varargout{1}=u;
+0111   <span class="keyword">if</span> (dr==1)
+0112     theta = acos(real( d(2,2) ));
+0113   <span class="keyword">else</span>
+0114     theta = acos(real( d(1,1) ));
+0115   <span class="keyword">end</span>
+0116   
+0117   <span class="comment">%now resolve sign ambiguity</span>
+0118   epsilon = ones(3)*.000001;
+0119   dif = R-<a href="rotationMatrix.html" class="code" title="function varargout=rotationMatrix(varargin)">rotationMatrix</a>(u,theta);
+0120   <span class="keyword">if</span>( any(any(dif&lt;-epsilon)) || any(any(dif&gt;epsilon))); theta = -theta; <span class="keyword">end</span>
+0121   varargout{2}=theta;
+0122   <span class="keyword">return</span>
+0123 <span class="keyword">end</span>
+0124 
+0125 <span class="comment">%%% Returns the matrix: R=[cos(t) -sin(t); sin(t) cos(t)].</span>
+0126 <span class="keyword">if</span> all(size(varargin{1})==[1 1])  &amp;&amp; nargin&lt;=1
+0127   theta=varargin{1};
+0128   varargout{1}=[cos(theta) -sin(theta); sin(theta) cos(theta)];
+0129   <span class="keyword">return</span>
+0130 <span class="keyword">end</span>
+0131 
+0132 <span class="comment">%%% Uses Rodrigues's formula to create a 3x3 rotation matrix R.</span>
+0133 <span class="keyword">if</span> all(sort(size(varargin{1}))==[1 3])
+0134   <span class="keyword">if</span> size(varargin{1},1) == 3; varargin{1}=varargin{1}'; <span class="keyword">end</span>
+0135   <span class="keyword">if</span> nargin==1; th=norm(varargin{1}); <span class="keyword">else</span> th=varargin{2}; <span class="keyword">end</span>
+0136   <span class="keyword">if</span> exist(<span class="string">'OCTAVE_VERSION'</span>,<span class="string">'builtin'</span>)
+0137     <span class="comment">% from http://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula</span>
+0138     z=varargin{1}; z=z/norm(z);
+0139     zcross=[ 0 -z(3) z(2); z(3) 0 -z(1); -z(2) z(1) 0 ];
+0140     varargout{1} = eye(3)+sin(th)*zcross+(1-cos(th))*(z'*z-eye(3));
+0141   <span class="keyword">else</span>
+0142     tmp = makehgtform(<span class="string">'axisrotate'</span>,varargin{1},th);
+0143     varargout{1} = tmp(1:3,1:3);
+0144   <span class="keyword">end</span>
+0145   
+0146   <span class="keyword">return</span>
+0147 <span class="keyword">end</span>
+0148 
+0149 <span class="comment">%%% creates a 3x3 rotation matrix from 3 angles (around fixed axes)</span>
+0150 <span class="keyword">if</span> nargin==3
+0151   M = makehgtform(<span class="string">'xrotate'</span>,varargin{1},<span class="string">'yrotate'</span>,varargin{2},<span class="keyword">...</span>
+0152     <span class="string">'zrotate'</span>,varargin{3});
+0153   varargout{1}=M(1:3,1:3);
+0154   <span class="keyword">return</span>
+0155 <span class="keyword">end</span>
+0156 
+0157 <span class="comment">%%% creates the full 3x3 rotation matrix from its first 2 rows</span>
+0158 <span class="keyword">if</span> all(size(varargin{1})==[2 3])
+0159   R=varargin{1}; R(3,:)=cross(R(1,:),R(2,:));
+0160   <span class="keyword">if</span> det(R)&lt;0; R(3,:)=-R(3,:); <span class="keyword">end</span>
+0161   varargout{1}=R;
+0162   <span class="keyword">return</span>
+0163 <span class="keyword">end</span>
+0164 
+0165 <span class="comment">%%% recover the 3 rotation angles</span>
+0166 <span class="keyword">if</span> all(size(varargin{1})==[3 3]) &amp;&amp; nargout==3
+0167   R=varargin{1};
+0168   varargout{2}=pi-asin(R(1,3)); temp = cos(varargout{2});
+0169   varargout{3}=atan2(-R(1,2)/temp,R(1,1)/temp);
+0170   varargout{1}=atan2(-R(2,3)/temp,R(3,3)/temp);
+0171   <span class="keyword">for</span> i=1:3; varargout{i}=mod(varargout{i},2*pi); <span class="keyword">end</span>
+0172   <span class="keyword">return</span>
+0173 <span class="keyword">end</span>
+0174 
+0175 error(<span class="string">'Input format not supported'</span>);</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

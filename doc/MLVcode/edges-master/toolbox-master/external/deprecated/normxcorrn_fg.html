@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of normxcorrn_fg</title>
+  <meta name="keywords" content="normxcorrn_fg">
+  <meta name="description" content="Normalized n-dimensional cross-correlation with a mask.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; normxcorrn_fg.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>normxcorrn_fg
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Normalized n-dimensional cross-correlation with a mask.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function C = normxcorrn_fg( T, T_fg, A, shape ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Normalized n-dimensional cross-correlation with a mask.
+
+ Similar to normxcorrn, except takes an additional argument that specifies
+ a figure ground mask for the T.  That is T_fg must be of the same
+ dimensions as T, with each entry being 0 or 1, where zero specifies
+ regions to ignore (the ground) and 1 specifies interesting regions (the
+ figure).  Essentially T_fg specifies regions in T that are interesting
+ and should be taken into account when doing normalized cross correlation.
+ This allows for templates of arbitrary shape, and not just squares.
+
+ Note: this function is approximately 3 times slower then normxcorr2
+ because it cannot use the trick of precomputing sums.
+
+ USAGE
+  C = normxcorrn_fg( T, T_fg, A, [shape] )
+
+ INPUTS
+  T           - template to correlate to each window in A
+  T_fg        - figure/ground mask for the template
+  A           - matrix to correlate T to
+  shape       - ['full'] 'valid', 'full', or 'same', see convn_fast help
+
+ OUTPUTS
+  C           - correlation matrix
+
+ EXAMPLE
+  A=rand(50);  B=rand(11);  Bfg=ones(11);
+  C1=normxcorrn_fg(B,Bfg,A);  C2=normxcorr2(B,A);
+  figure(1); im(C1); figure(2); im(C2);
+  figure(3); im(abs(C1-C2));
+
+ See also NORMXCORRN</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Normalized n-dimensional cross-correlation with a mask.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Similar to normxcorrn, except takes an additional argument that specifies</span>
+0004 <span class="comment">% a figure ground mask for the T.  That is T_fg must be of the same</span>
+0005 <span class="comment">% dimensions as T, with each entry being 0 or 1, where zero specifies</span>
+0006 <span class="comment">% regions to ignore (the ground) and 1 specifies interesting regions (the</span>
+0007 <span class="comment">% figure).  Essentially T_fg specifies regions in T that are interesting</span>
+0008 <span class="comment">% and should be taken into account when doing normalized cross correlation.</span>
+0009 <span class="comment">% This allows for templates of arbitrary shape, and not just squares.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Note: this function is approximately 3 times slower then normxcorr2</span>
+0012 <span class="comment">% because it cannot use the trick of precomputing sums.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% USAGE</span>
+0015 <span class="comment">%  C = normxcorrn_fg( T, T_fg, A, [shape] )</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% INPUTS</span>
+0018 <span class="comment">%  T           - template to correlate to each window in A</span>
+0019 <span class="comment">%  T_fg        - figure/ground mask for the template</span>
+0020 <span class="comment">%  A           - matrix to correlate T to</span>
+0021 <span class="comment">%  shape       - ['full'] 'valid', 'full', or 'same', see convn_fast help</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% OUTPUTS</span>
+0024 <span class="comment">%  C           - correlation matrix</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% EXAMPLE</span>
+0027 <span class="comment">%  A=rand(50);  B=rand(11);  Bfg=ones(11);</span>
+0028 <span class="comment">%  C1=normxcorrn_fg(B,Bfg,A);  C2=normxcorr2(B,A);</span>
+0029 <span class="comment">%  figure(1); im(C1); figure(2); im(C2);</span>
+0030 <span class="comment">%  figure(3); im(abs(C1-C2));</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% See also NORMXCORRN</span>
+0033 
+0034 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 1.5</span>
+0035 <span class="comment">% Written and maintained by Piotr Dollar    pdollar-at-cs.ucsd.edu</span>
+0036 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0037 
+0038 <a name="_sub0" href="#_subfunctions" class="code">function C = normxcorrn_fg( T, T_fg, A, shape )</a>
+0039 <span class="keyword">if</span>( nargin &lt;4 || isempty(shape)); shape=<span class="string">'full'</span>; <span class="keyword">end</span>;
+0040 
+0041 <span class="keyword">if</span>( ndims(T)~=ndims(A) || ndims(T)~=ndims(T_fg) )
+0042   error(<span class="string">'TEMPALTE, T_fg, and A must have same number of dimensions'</span>); <span class="keyword">end</span>;
+0043 <span class="keyword">if</span>( any(size(T)~=size(T_fg)))
+0044   error(<span class="string">'TEMPALTE and T_fg must have same dimensions'</span>); <span class="keyword">end</span>;
+0045 <span class="keyword">if</span>( ~all(T_fg==0 | T_fg==1))
+0046   error(<span class="string">'T_fg may have only entries either 0 or 1'</span>); <span class="keyword">end</span>;
+0047 nkeep = sum(T_fg(:));
+0048 <span class="keyword">if</span>( nkeep==0); error(<span class="string">'T_fg must have some nonzero values'</span>); <span class="keyword">end</span>;
+0049 
+0050 <span class="comment">% center T on 0 and normalize magnitued to 1, excluding ground</span>
+0051 <span class="comment">% T= (T-T_av) / ||(T-T_av)||</span>
+0052 T(T_fg==0)=0;
+0053 T = T - sum(T(:)) / nkeep;
+0054 T(T_fg==0)=0;
+0055 T = T / norm( T(:) );
+0056 
+0057 <span class="comment">% flip for convn_fast purposes</span>
+0058 <span class="keyword">for</span> d=1:ndims(T); T = flipdim(T,d); <span class="keyword">end</span>;
+0059 <span class="keyword">for</span> d=1:ndims(T_fg); T_fg = flipdim(T_fg,d); <span class="keyword">end</span>;
+0060 
+0061 <span class="comment">% get average over each window over A</span>
+0062 A_av = convn_fast( A, T_fg/nkeep, shape );
+0063 
+0064 <span class="comment">% get magnitude over each window over A &quot;mag(WA-WAav)&quot;</span>
+0065 <span class="comment">% We can rewrite the above as &quot;sqrt(SUM(WAi^2)-n*WAav^2)&quot;. so:</span>
+0066 A_mag = convn_fast( A.*A, T_fg, shape ) - nkeep * A_av .* A_av;
+0067 A_mag = sqrt(A_mag);  A_mag(A_mag&lt;.000001)=1; <span class="comment">%removes divide by 0 error</span>
+0068 
+0069 <span class="comment">% finally get C.  in each image window, we will now do:</span>
+0070 <span class="comment">% &quot;dot(T,(WA-WAav)) / mag(WA-WAav)&quot;</span>
+0071 C = convn_fast(A,T,shape) - A_av*sum(T(:));
+0072 C = C ./ A_mag;</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

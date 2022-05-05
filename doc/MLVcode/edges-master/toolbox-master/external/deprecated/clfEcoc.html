@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of clfEcoc</title>
+  <meta name="keywords" content="clfEcoc">
+  <meta name="description" content="Wrapper for ecoc that makes ecoc compatible with nfoldxval.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; clfEcoc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>clfEcoc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Wrapper for ecoc that makes ecoc compatible with nfoldxval.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function clf = clfEcoc(p,clfInit,clfparams,nclasses,use01targets) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Wrapper for ecoc that makes ecoc compatible with nfoldxval.
+
+ Requires the SVM toolbox by Anton Schwaighofer.
+
+ USAGE
+  clf = clfEcoc(p,clfInit,clfparams,nclasses,use01targets)
+
+ INPUTS
+  p               - data dimension
+  clfInit         - binary classifier init (see nfoldxval)
+  clfparams       - binary classifier parameters (see nfoldxval)
+  nclasses        - num of classes (currently 3&lt;=nclasses&lt;=7 suppored)
+  use01targets    - see ecoc
+
+ OUTPUTS
+  clf             - see ecoc
+
+ EXAMPLE
+
+ See also ECOC, <a href="nfoldxval.html" class="code" title="function CM=nfoldxval( data, IDX, clfInit, clfparams,types, ignoreT, fname, show )">NFOLDXVAL</a>, <a href="clfEcocCode.html" class="code" title="function [C,nbits] = clfEcocCode( k )">CLFECOCCODE</a>
+
+ Piotr's Image&amp;Video Toolbox      Version 2.0
+ Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]
+ Please email me if you find bugs, or have suggestions or questions!
+ Licensed under the Lesser GPL [see external/lgpl.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="clfEcocCode.html" class="code" title="function [C,nbits] = clfEcocCode( k )">clfEcocCode</a>	Generates optimal ECOC codes when 3<=nclasses<=7.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="demoClassify.html" class="code" title="function demoClassify">demoClassify</a>	DEMOCLASSIFY A demo used to test and demonstrate the usage of classifiers (clf*)</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function clf = clfEcocTrain( clf, varargin )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function clf = clfEcoc(p,clfInit,clfparams,nclasses,use01targets)</a>
+0002 <span class="comment">% Wrapper for ecoc that makes ecoc compatible with nfoldxval.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Requires the SVM toolbox by Anton Schwaighofer.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% USAGE</span>
+0007 <span class="comment">%  clf = clfEcoc(p,clfInit,clfparams,nclasses,use01targets)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% INPUTS</span>
+0010 <span class="comment">%  p               - data dimension</span>
+0011 <span class="comment">%  clfInit         - binary classifier init (see nfoldxval)</span>
+0012 <span class="comment">%  clfparams       - binary classifier parameters (see nfoldxval)</span>
+0013 <span class="comment">%  nclasses        - num of classes (currently 3&lt;=nclasses&lt;=7 suppored)</span>
+0014 <span class="comment">%  use01targets    - see ecoc</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% OUTPUTS</span>
+0017 <span class="comment">%  clf             - see ecoc</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% EXAMPLE</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% See also ECOC, NFOLDXVAL, CLFECOCCODE</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 2.0</span>
+0024 <span class="comment">% Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]</span>
+0025 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0026 <span class="comment">% Licensed under the Lesser GPL [see external/lgpl.txt]</span>
+0027 
+0028 <span class="keyword">if</span>( nclasses&lt;3 || nclasses&gt;7 )
+0029   error( <span class="string">'currently only works if 3&lt;=nclasses&lt;=7'</span>); <span class="keyword">end</span>;
+0030 <span class="keyword">if</span>( nargin&lt;5 || isempty(use01targets)); use01targets=0; <span class="keyword">end</span>;
+0031 
+0032 <span class="comment">% create code (limited for now)</span>
+0033 [C,nbits] = <a href="clfEcocCode.html" class="code" title="function [C,nbits] = clfEcocCode( k )">clfEcocCode</a>( nclasses );
+0034 clf = ecoc(nclasses, nbits, C, use01targets  ); <span class="comment">% didn't use to pass use01?</span>
+0035 clf.verbosity = 0; <span class="comment">% don't diplay output</span>
+0036 
+0037 <span class="comment">% initialize and temporarily store binary learner</span>
+0038 clf.templearner = feval( clfInit, p, clfparams{:} );
+0039 
+0040 <span class="comment">% ecoctrain2 is custom version of ecoctrain</span>
+0041 clf.funTrain = @<a href="#_sub1" class="code" title="subfunction clf = clfEcocTrain( clf, varargin )">clfEcocTrain</a>;
+0042 clf.funFwd = @ecocfwd;
+0043 
+0044 <a name="_sub1" href="#_subfunctions" class="code">function clf = clfEcocTrain( clf, varargin )</a>
+0045 
+0046 clf = ecoctrain( clf, clf.templearner, varargin{:} );</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

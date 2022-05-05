@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getPrmDflt</title>
+  <meta name="keywords" content="getPrmDflt">
+  <meta name="description" content="Helper to set default values (if not already set) of parameter struct.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; getPrmDflt.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>getPrmDflt
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Helper to set default values (if not already set) of parameter struct.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = getPrmDflt( prm, dfs, checkExtra ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Helper to set default values (if not already set) of parameter struct.
+
+ Takes input parameters and a list of 'name'/default pairs, and for each
+ 'name' for which prm has no value (prm.(name) is not a field or 'name'
+ does not appear in prm list), getPrmDflt assigns the given default
+ value. If default value for variable 'name' is 'REQ', and value for
+ 'name' is not given, an error is thrown. See below for usage details.
+
+ USAGE (nargout==1)
+  prm = getPrmDflt( prm, dfs, [checkExtra] )
+
+ USAGE (nargout&gt;1)
+  [ param1 ... paramN ] = getPrmDflt( prm, dfs, [checkExtra] )
+
+ INPUTS
+  prm          - param struct or cell of form {'name1' v1 'name2' v2 ...}
+  dfs          - cell of form {'name1' def1 'name2' def2 ...}
+  checkExtra   - [0] if 1 throw error if prm contains params not in dfs
+                 if -1 if prm contains params not in dfs adds them
+
+ OUTPUTS (nargout==1)
+  prm    - parameter struct with fields 'name1' through 'nameN' assigned
+
+ OUTPUTS (nargout&gt;1)
+  param1 - value assigned to parameter with 'name1'
+   ...
+  paramN - value assigned to parameter with 'nameN'
+
+ EXAMPLE
+  dfs = { 'x','REQ', 'y',0, 'z',[], 'eps',1e-3 };
+  prm = getPrmDflt( struct('x',1,'y',1), dfs )
+  [ x y z eps ] = getPrmDflt( {'x',2,'y',1}, dfs )
+
+ See also INPUTPARSER
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.60
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="dispMatrixIm.html" class="code" title="function dispMatrixIm( M, varargin )">dispMatrixIm</a>	Display a Matrix with non-negative entries in image form.</li><li><a href="fevalDistr.html" class="code" title="function [out,res] = fevalDistr( funNm, jobs, varargin )">fevalDistr</a>	Wrapper for embarrassingly parallel function evaluation.</li><li><a href="plotRoc.html" class="code" title="function [h,miss,stds] = plotRoc( D, varargin )">plotRoc</a>	Function for display of rocs (receiver operator characteristic curves).</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = getPrmDflt( prm, dfs, checkExtra )</a>
+0002 <span class="comment">% Helper to set default values (if not already set) of parameter struct.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Takes input parameters and a list of 'name'/default pairs, and for each</span>
+0005 <span class="comment">% 'name' for which prm has no value (prm.(name) is not a field or 'name'</span>
+0006 <span class="comment">% does not appear in prm list), getPrmDflt assigns the given default</span>
+0007 <span class="comment">% value. If default value for variable 'name' is 'REQ', and value for</span>
+0008 <span class="comment">% 'name' is not given, an error is thrown. See below for usage details.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% USAGE (nargout==1)</span>
+0011 <span class="comment">%  prm = getPrmDflt( prm, dfs, [checkExtra] )</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% USAGE (nargout&gt;1)</span>
+0014 <span class="comment">%  [ param1 ... paramN ] = getPrmDflt( prm, dfs, [checkExtra] )</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% INPUTS</span>
+0017 <span class="comment">%  prm          - param struct or cell of form {'name1' v1 'name2' v2 ...}</span>
+0018 <span class="comment">%  dfs          - cell of form {'name1' def1 'name2' def2 ...}</span>
+0019 <span class="comment">%  checkExtra   - [0] if 1 throw error if prm contains params not in dfs</span>
+0020 <span class="comment">%                 if -1 if prm contains params not in dfs adds them</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% OUTPUTS (nargout==1)</span>
+0023 <span class="comment">%  prm    - parameter struct with fields 'name1' through 'nameN' assigned</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% OUTPUTS (nargout&gt;1)</span>
+0026 <span class="comment">%  param1 - value assigned to parameter with 'name1'</span>
+0027 <span class="comment">%   ...</span>
+0028 <span class="comment">%  paramN - value assigned to parameter with 'nameN'</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% EXAMPLE</span>
+0031 <span class="comment">%  dfs = { 'x','REQ', 'y',0, 'z',[], 'eps',1e-3 };</span>
+0032 <span class="comment">%  prm = getPrmDflt( struct('x',1,'y',1), dfs )</span>
+0033 <span class="comment">%  [ x y z eps ] = getPrmDflt( {'x',2,'y',1}, dfs )</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% See also INPUTPARSER</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.60</span>
+0038 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0039 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0040 
+0041 <span class="keyword">if</span>( mod(length(dfs),2) ), error(<span class="string">'odd number of default parameters'</span>); <span class="keyword">end</span>
+0042 <span class="keyword">if</span> nargin&lt;=2, checkExtra = 0; <span class="keyword">end</span>
+0043 
+0044 <span class="comment">% get the input parameters as two cell arrays: prmVal and prmField</span>
+0045 <span class="keyword">if</span> iscell(prm) &amp;&amp; length(prm)==1, prm=prm{1}; <span class="keyword">end</span>
+0046 <span class="keyword">if</span> iscell(prm)
+0047   <span class="keyword">if</span>(mod(length(prm),2)), error(<span class="string">'odd number of parameters in prm'</span>); <span class="keyword">end</span>
+0048   prmField = prm(1:2:end); prmVal = prm(2:2:end);
+0049 <span class="keyword">else</span>
+0050   <span class="keyword">if</span>(~isstruct(prm)), error(<span class="string">'prm must be a struct or a cell'</span>); <span class="keyword">end</span>
+0051   prmVal = struct2cell(prm); prmField = fieldnames(prm);
+0052 <span class="keyword">end</span>
+0053 
+0054 <span class="comment">% get and update default values using quick for loop</span>
+0055 dfsField = dfs(1:2:end); dfsVal = dfs(2:2:end);
+0056 <span class="keyword">if</span> checkExtra&gt;0
+0057   <span class="keyword">for</span> i=1:length(prmField)
+0058     j = find(strcmp(prmField{i},dfsField));
+0059     <span class="keyword">if</span> isempty(j), error(<span class="string">'parameter %s is not valid'</span>, prmField{i}); <span class="keyword">end</span>
+0060     dfsVal(j) = prmVal(i);
+0061   <span class="keyword">end</span>
+0062 <span class="keyword">elseif</span> checkExtra&lt;0
+0063   <span class="keyword">for</span> i=1:length(prmField)
+0064     j = find(strcmp(prmField{i},dfsField));
+0065     <span class="keyword">if</span> isempty(j), j=length(dfsVal)+1; dfsField{j}=prmField{i}; <span class="keyword">end</span>
+0066     dfsVal(j) = prmVal(i);
+0067   <span class="keyword">end</span>
+0068 <span class="keyword">else</span>
+0069   <span class="keyword">for</span> i=1:length(prmField)
+0070     dfsVal(strcmp(prmField{i},dfsField)) = prmVal(i);
+0071   <span class="keyword">end</span>
+0072 <span class="keyword">end</span>
+0073 
+0074 <span class="comment">% check for missing values</span>
+0075 <span class="keyword">if</span> any(strcmp(<span class="string">'REQ'</span>,dfsVal))
+0076   cmpArray = find(strcmp(<span class="string">'REQ'</span>,dfsVal));
+0077   error([<span class="string">'Required field '''</span> dfsField{cmpArray(1)} <span class="string">''' not specified.'</span>] );
+0078 <span class="keyword">end</span>
+0079 
+0080 <span class="comment">% set output</span>
+0081 <span class="keyword">if</span> nargout==1
+0082   varargout{1} = cell2struct( dfsVal, dfsField, 2 );
+0083 <span class="keyword">else</span>
+0084   varargout = dfsVal;
+0085 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

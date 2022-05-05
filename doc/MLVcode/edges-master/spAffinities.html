@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of spAffinities</title>
+  <meta name="keywords" content="spAffinities">
+  <meta name="description" content="Compute superpixel affinities and optionally corresponding edge map.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">edges-master</a> &gt; spAffinities.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>spAffinities
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Compute superpixel affinities and optionally corresponding edge map.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [A,E,U] = spAffinities( S, E, segs, nThreads ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Compute superpixel affinities and optionally corresponding edge map.
+
+ Computes an m x m affinity matrix A where A(i,j) is the affinity between
+ superpixels i and j. A has values in [0,1]. Only affinities between
+ spatially nearby superpixels are computed; the rest are set to 0.
+
+ The affinity between superpixels is computed using the output of the
+ structured edge detector. In edgesDetect, by default local predicted
+ segmentation masks are converted to edge maps and the overlapping local
+ edge maps are subsequently averaged to produce a soft edge map. Instead,
+ the local segmentation masks can be directly used to measure affinity
+ between superpixels (or any segments). Details are omitted, but the
+ resulting affinity reasonably captures superpixels similarity. There is
+ no corresponding publication for this code at this time but please cite
+ our edge detection work if you use this code.
+
+ Given affinities, a corresponding edge map can be computed by setting the
+ edge strength between adjacent superpixels to be one minus the affinity
+ between them. The advantage of the resulting superpixel edge map over the
+ original edge map is that edges are connected and non-maximum suppression
+ is unnecessary. Given reasonable superpixels, the superpixel edges have
+ high benchmark scores (ODS/OIS/AP) similar to the edges from edgesDetect.
+
+ Finally, given the superpixel edges, the ultrametric contour map (UCM)
+ can be computed. The UCM is an edge map with the remarkable property that
+ when thresholded at any value it produces a set of closed curves (the
+ same is not true of the original edge map). In other words the UCM is a
+ soft representation of a segmentation. For more details see &quot;From
+ Contours to Regions: An Empirical Evaluation&quot; by Pablo Arbelaez et al. in
+ CVPR 2009. Computing the UCM requires the mex file ucm_mean_pb.
+ Pre-compiled binaries for some systems are provided in /private, source
+ for ucm_mean_pb is available as part of the BSDS500 dataset (see readme).
+
+ USAGE
+  [A,E,U] = spAffinities( S, E, segs, [nThreads] )
+
+ INPUTS
+  S          - [h x w] superpixel label map (S==0 are boundaries)
+  E          - [h x w] edge probability map (output of edgesDetect)
+  segs       - local segmentations (output of edgesDetect)
+  nThreads   - [4] number of computation threads
+
+ OUTPUTS
+  A          - [m x m] superpixel affinity matrix
+  E          - [h x w] superpixel edge probability map
+  U          - [h x w] ultrametric contour map (segmenation)
+
+ EXAMPLE
+
+ See also <a href="spDemo.html" class="code" title="">spDemo</a>, <a href="spDetect.html" class="code" title="function [S,V] = spDetect( I, E, varargin )">spDetect</a>, <a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>
+
+ Structured Edge Detection Toolbox      Version 3.01
+ Code written by Piotr Dollar, 2014.
+ Licensed under the MSR-LA Full Rights License [see license.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="spDemo.html" class="code" title="">spDemo</a>	Demo for Sticky Superpixels (please see readme.txt first).</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function U = computeUcm( E )</a></li><li><a href="#_sub2" class="code">function E = upsampleEdges( E0 )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [A,E,U] = spAffinities( S, E, segs, nThreads )</a>
+0002 <span class="comment">% Compute superpixel affinities and optionally corresponding edge map.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Computes an m x m affinity matrix A where A(i,j) is the affinity between</span>
+0005 <span class="comment">% superpixels i and j. A has values in [0,1]. Only affinities between</span>
+0006 <span class="comment">% spatially nearby superpixels are computed; the rest are set to 0.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% The affinity between superpixels is computed using the output of the</span>
+0009 <span class="comment">% structured edge detector. In edgesDetect, by default local predicted</span>
+0010 <span class="comment">% segmentation masks are converted to edge maps and the overlapping local</span>
+0011 <span class="comment">% edge maps are subsequently averaged to produce a soft edge map. Instead,</span>
+0012 <span class="comment">% the local segmentation masks can be directly used to measure affinity</span>
+0013 <span class="comment">% between superpixels (or any segments). Details are omitted, but the</span>
+0014 <span class="comment">% resulting affinity reasonably captures superpixels similarity. There is</span>
+0015 <span class="comment">% no corresponding publication for this code at this time but please cite</span>
+0016 <span class="comment">% our edge detection work if you use this code.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Given affinities, a corresponding edge map can be computed by setting the</span>
+0019 <span class="comment">% edge strength between adjacent superpixels to be one minus the affinity</span>
+0020 <span class="comment">% between them. The advantage of the resulting superpixel edge map over the</span>
+0021 <span class="comment">% original edge map is that edges are connected and non-maximum suppression</span>
+0022 <span class="comment">% is unnecessary. Given reasonable superpixels, the superpixel edges have</span>
+0023 <span class="comment">% high benchmark scores (ODS/OIS/AP) similar to the edges from edgesDetect.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Finally, given the superpixel edges, the ultrametric contour map (UCM)</span>
+0026 <span class="comment">% can be computed. The UCM is an edge map with the remarkable property that</span>
+0027 <span class="comment">% when thresholded at any value it produces a set of closed curves (the</span>
+0028 <span class="comment">% same is not true of the original edge map). In other words the UCM is a</span>
+0029 <span class="comment">% soft representation of a segmentation. For more details see &quot;From</span>
+0030 <span class="comment">% Contours to Regions: An Empirical Evaluation&quot; by Pablo Arbelaez et al. in</span>
+0031 <span class="comment">% CVPR 2009. Computing the UCM requires the mex file ucm_mean_pb.</span>
+0032 <span class="comment">% Pre-compiled binaries for some systems are provided in /private, source</span>
+0033 <span class="comment">% for ucm_mean_pb is available as part of the BSDS500 dataset (see readme).</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% USAGE</span>
+0036 <span class="comment">%  [A,E,U] = spAffinities( S, E, segs, [nThreads] )</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% INPUTS</span>
+0039 <span class="comment">%  S          - [h x w] superpixel label map (S==0 are boundaries)</span>
+0040 <span class="comment">%  E          - [h x w] edge probability map (output of edgesDetect)</span>
+0041 <span class="comment">%  segs       - local segmentations (output of edgesDetect)</span>
+0042 <span class="comment">%  nThreads   - [4] number of computation threads</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% OUTPUTS</span>
+0045 <span class="comment">%  A          - [m x m] superpixel affinity matrix</span>
+0046 <span class="comment">%  E          - [h x w] superpixel edge probability map</span>
+0047 <span class="comment">%  U          - [h x w] ultrametric contour map (segmenation)</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">% EXAMPLE</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">% See also spDemo, spDetect, edgesDetect</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">% Structured Edge Detection Toolbox      Version 3.01</span>
+0054 <span class="comment">% Code written by Piotr Dollar, 2014.</span>
+0055 <span class="comment">% Licensed under the MSR-LA Full Rights License [see license.txt]</span>
+0056 
+0057 <span class="keyword">if</span>(nargin&lt;4 || isempty(nThreads)), nThreads=4; <span class="keyword">end</span>
+0058 A = spDetectMex(<span class="string">'affinities'</span>,S,E,segs,nThreads);
+0059 <span class="keyword">if</span>(nargout&gt;1), E = spDetectMex(<span class="string">'edges'</span>,S,A); <span class="keyword">end</span>
+0060 <span class="keyword">if</span>(nargout&gt;2), U = <a href="#_sub1" class="code" title="subfunction U = computeUcm( E )">computeUcm</a>( E ); <span class="keyword">end</span>
+0061 
+0062 <span class="keyword">end</span>
+0063 
+0064 <a name="_sub1" href="#_subfunctions" class="code">function U = computeUcm( E )</a>
+0065 <span class="comment">% creates ultrametric contour map from SP contours</span>
+0066 E = <a href="#_sub2" class="code" title="subfunction E = upsampleEdges( E0 )">upsampleEdges</a>(E);
+0067 S=bwlabel(E==0,8); S=S(2:2:<span class="keyword">end</span>,2:2:end)-1;
+0068 S(<span class="keyword">end</span>,:)=S(end-1,:); S(:,end)=S(:,end-1);
+0069 E(end+1,:)=E(<span class="keyword">end</span>,:); E(:,end+1)=E(:,end);
+0070 U=ucm_mean_pb(E,S); U=U(1:2:end-2,1:2:end-2);
+0071 <span class="keyword">end</span>
+0072 
+0073 <a name="_sub2" href="#_subfunctions" class="code">function E = upsampleEdges( E0 )</a>
+0074 <span class="comment">% upsample E by factor of two while mostly keeping edges thin</span>
+0075 [h,w]=size(E0); h=h*2; w=w*2; E=zeros(h,w); E(1:2:h-1,1:2:w-1)=E0;
+0076 E(1:2:h-1,2:2:w-2)=min(E0(:,1:end-1),E0(:,2:end)); E(h,:)=E(h-1,:);
+0077 E(2:2:h-2,1:2:w-1)=min(E0(1:end-1,:),E0(2:<span class="keyword">end</span>,:)); E(:,w)=E(:,w-1);
+0078 <span class="comment">% remove single pixel segments created by thick edges in E0 (2x2 blocks)</span>
+0079 A=single(ones(2))/4; A=conv2(single(E0&gt;0),A)==1; [xs,ys]=find(A);
+0080 <span class="keyword">for</span> i = 1:length(xs)
+0081   x=(xs(i)-1)*2; y=(ys(i)-1)*2; es=ones(2,4)+1;
+0082   <span class="keyword">if</span>(x&gt;2   &amp;&amp; y&gt;2  ), es(:,1)=[E(x-2,y-1) E(x-1,y-2)]; <span class="keyword">end</span>
+0083   <span class="keyword">if</span>(x&lt;h-2 &amp;&amp; y&gt;2  ), es(:,2)=[E(x+2,y-1) E(x+1,y-2)]; <span class="keyword">end</span>
+0084   <span class="keyword">if</span>(x&lt;h-2 &amp;&amp; y&lt;w-2), es(:,3)=[E(x+2,y+1) E(x+1,y+2)]; <span class="keyword">end</span>
+0085   <span class="keyword">if</span>(x&gt;2   &amp;&amp; y&lt;w-2), es(:,4)=[E(x-2,y+1) E(x-1,y+2)]; <span class="keyword">end</span>
+0086   [e,j]=min(max(es));
+0087   <span class="keyword">if</span>(j==1 || j==4), x1=x-1; <span class="keyword">else</span> x1=x+1; <span class="keyword">end</span>
+0088   <span class="keyword">if</span>(j==1 || j==2), y1=y-1; <span class="keyword">else</span> y1=y+1; <span class="keyword">end</span>
+0089   E(x,y1)=e; E(x1,y)=e; E(x1,y1)=e;
+0090   <span class="keyword">if</span>(es(1,j)&lt;es(2,j)), E(x,y1)=0; <span class="keyword">else</span> E(x1,y)=0; <span class="keyword">end</span>
+0091 <span class="keyword">end</span>
+0092 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getOuterBoundary</title>
+  <meta name="keywords" content="getOuterBoundary">
+  <meta name="description" content="Copyright Morteza Rezanejad">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; getOuterBoundary.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>getOuterBoundary
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Copyright Morteza Rezanejad</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [result,result2] = getOuterBoundary(binaryImage,background) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Copyright Morteza Rezanejad
+ McGill University, Montreal, QC 2019
+
+ Contact: morteza [at] cim [dot] mcgill [dot] ca 
+ -------------------------------------------------------------------------
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
+ -------------------------------------------------------------------------
+ Skeletonization package from earlier work of Morteza Rezanejad
+ Check the https://github.com/mrezanejad/AOFSkeletons</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="InitializeNeighborhoods.html" class="code" title="function m_Neighbors8 = InitializeNeighborhoods()">InitializeNeighborhoods</a>	Copyright Morteza Rezanejad</li><li><a href="is_outer_border_point.html" class="code" title="function result2 = is_outer_border_point(binaryImage,ii,jj,m_Neighbors8,background)">is_outer_border_point</a>	Copyright Morteza Rezanejad</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="compute_gradient_vector_field.html" class="code" title="function [D,IDX] = compute_gradient_vector_field(binaryImage)">compute_gradient_vector_field</a>	Copyright Morteza Rezanejad</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Copyright Morteza Rezanejad</span>
+0002 <span class="comment">% McGill University, Montreal, QC 2019</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Contact: morteza [at] cim [dot] mcgill [dot] ca</span>
+0005 <span class="comment">% -------------------------------------------------------------------------</span>
+0006 <span class="comment">% This program is free software: you can redistribute it and/or modify</span>
+0007 <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0008 <span class="comment">% the Free Software Foundation, either version 3 of the License, or</span>
+0009 <span class="comment">% (at your option) any later version.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+0012 <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0013 <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0014 <span class="comment">% GNU General Public License for more details.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0017 <span class="comment">% along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+0018 <span class="comment">% -------------------------------------------------------------------------</span>
+0019 <span class="comment">% Skeletonization package from earlier work of Morteza Rezanejad</span>
+0020 <span class="comment">% Check the https://github.com/mrezanejad/AOFSkeletons</span>
+0021 <a name="_sub0" href="#_subfunctions" class="code">function [result,result2] = getOuterBoundary(binaryImage,background)</a>
+0022     
+0023 
+0024 m_Neighbors8 = <a href="InitializeNeighborhoods.html" class="code" title="function m_Neighbors8 = InitializeNeighborhoods()">InitializeNeighborhoods</a>();
+0025 
+0026 result2 = zeros(size(binaryImage));
+0027 
+0028 [m,n] = size(binaryImage);
+0029 result = zeros(m*n,2);
+0030 
+0031 counter = 1;
+0032 <span class="keyword">for</span> i = 2 : m-1 
+0033     <span class="keyword">for</span> j = 2 : n-1        
+0034                
+0035         
+0036         <span class="keyword">if</span>(<a href="is_outer_border_point.html" class="code" title="function result2 = is_outer_border_point(binaryImage,ii,jj,m_Neighbors8,background)">is_outer_border_point</a>(binaryImage,i,j,m_Neighbors8,background))
+0037             result(counter,:) = [i j];
+0038             result2(i,j) = 1;
+0039             counter = counter + 1;
+0040         <span class="keyword">end</span>        
+0041     <span class="keyword">end</span>
+0042 <span class="keyword">end</span>
+0043 
+0044 result = result(1:counter-1,:);
+0045 
+0046 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

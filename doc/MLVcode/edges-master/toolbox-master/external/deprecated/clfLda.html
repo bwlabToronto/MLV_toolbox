@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of clfLda</title>
+  <meta name="keywords" content="clfLda">
+  <meta name="description" content="Create a Linear Discriminant Analysis (LDA) classifier.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; clfLda.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>clfLda
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Create a Linear Discriminant Analysis (LDA) classifier.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function clf = clfLda( p, type, prior ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Create a Linear Discriminant Analysis (LDA) classifier.
+
+ Same algorithm as matlab's function 'classify' (in the statistics
+ toolbox).  Nice to have in form that actually stores a model that can be
+ applied multiple times. For the meaning and usage of prior and type see
+ classify.m 
+
+ USAGE
+  clf = clfLda( p, [type], [prior] )
+
+ INPUTS
+  p       - data dimension
+  type    - ['linear'] 'linear', 'quadratic', 'mahalanobis'
+  prior   - [] prior to use 
+ 
+ OUTPUTS
+  clf     - an LDA model ready to be trained (see clfLdaTrain)
+
+ EXAMPLE
+
+ See also <a href="nfoldxval.html" class="code" title="function CM=nfoldxval( data, IDX, clfInit, clfparams,types, ignoreT, fname, show )">NFOLDXVAL</a>, CLASSIFY, <a href="clfLdaTrain.html" class="code" title="function clf = clfLdaTrain( clf, X, Y )">CLFLDATRAIN</a>, <a href="clfLdaFwd.html" class="code" title="function Y = clfLdaFwd( clf, X )">CLFLDAFWD</a>
+
+ Piotr's Image&amp;Video Toolbox      Version 2.0
+ Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]
+ Please email me if you find bugs, or have suggestions or questions!
+ Licensed under the Lesser GPL [see external/lgpl.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="clfLdaFwd.html" class="code" title="function Y = clfLdaFwd( clf, X )">clfLdaFwd</a>	Apply the Linear Discriminant Analysis (LDA) classifier to data X.</li><li><a href="clfLdaTrain.html" class="code" title="function clf = clfLdaTrain( clf, X, Y )">clfLdaTrain</a>	Train a Linear Discriminant Analysis (LDA) classifier.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="demoClassify.html" class="code" title="function demoClassify">demoClassify</a>	DEMOCLASSIFY A demo used to test and demonstrate the usage of classifiers (clf*)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function clf = clfLda( p, type, prior )</a>
+0002 <span class="comment">% Create a Linear Discriminant Analysis (LDA) classifier.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Same algorithm as matlab's function 'classify' (in the statistics</span>
+0005 <span class="comment">% toolbox).  Nice to have in form that actually stores a model that can be</span>
+0006 <span class="comment">% applied multiple times. For the meaning and usage of prior and type see</span>
+0007 <span class="comment">% classify.m</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% USAGE</span>
+0010 <span class="comment">%  clf = clfLda( p, [type], [prior] )</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% INPUTS</span>
+0013 <span class="comment">%  p       - data dimension</span>
+0014 <span class="comment">%  type    - ['linear'] 'linear', 'quadratic', 'mahalanobis'</span>
+0015 <span class="comment">%  prior   - [] prior to use</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% OUTPUTS</span>
+0018 <span class="comment">%  clf     - an LDA model ready to be trained (see clfLdaTrain)</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% EXAMPLE</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% See also NFOLDXVAL, CLASSIFY, CLFLDATRAIN, CLFLDAFWD</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 2.0</span>
+0025 <span class="comment">% Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]</span>
+0026 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0027 <span class="comment">% Licensed under the Lesser GPL [see external/lgpl.txt]</span>
+0028 
+0029 <span class="keyword">if</span>( nargin&lt;3 ); prior=[]; <span class="keyword">end</span>
+0030 
+0031 <span class="comment">%%% get type</span>
+0032 <span class="keyword">if</span>( nargin &lt; 2 || isempty(type) )
+0033   type = 1; <span class="comment">% 'linear'</span>
+0034 <span class="keyword">elseif</span> ischar(type)
+0035   i = strmatch(lower(type), {<span class="string">'linear'</span>,<span class="string">'quadratic'</span>,<span class="string">'mahalanobis'</span>});
+0036   <span class="keyword">if</span>( length(i)&gt;1 );  
+0037     error(<span class="string">'Ambiguous value for TYPE:  %s.'</span>, type);
+0038   <span class="keyword">elseif</span>( isempty(i)); 
+0039     error(<span class="string">'Unknown value for TYPE:  %s.'</span>, type); 
+0040   <span class="keyword">end</span>;
+0041   type = i;
+0042 <span class="keyword">else</span>
+0043   error(<span class="string">'TYPE must be a string.'</span>); 
+0044 <span class="keyword">end</span>
+0045 
+0046 <span class="comment">%%% save clfLda parameters</span>
+0047 clf.prior = prior;
+0048 clf.p = p;
+0049 clf.type = <span class="string">'lda'</span>;
+0050 clf.clfLdaType = type;
+0051 clf.funTrain = @<a href="clfLdaTrain.html" class="code" title="function clf = clfLdaTrain( clf, X, Y )">clfLdaTrain</a>;
+0052 clf.funFwd = @<a href="clfLdaFwd.html" class="code" title="function Y = clfLdaFwd( clf, X )">clfLdaFwd</a>;</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

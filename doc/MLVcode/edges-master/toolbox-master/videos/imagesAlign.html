@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of imagesAlign</title>
+  <meta name="keywords" content="imagesAlign">
+  <meta name="description" content="Fast and robust estimation of homography relating two images.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">videos</a> &gt; imagesAlign.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\videos&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>imagesAlign
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Fast and robust estimation of homography relating two images.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [H,Ip] = imagesAlign( I, Iref, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Fast and robust estimation of homography relating two images.
+
+ The algorithm for image alignment is a simple but effective variant of
+ the inverse compositional algorithm. For a thorough overview, see:
+   &quot;Lucas-kanade 20 years on A unifying framework,&quot;
+   S. Baker and I. Matthews. IJCV 2004.
+ The implementation is optimized and can easily run at 20-30 fps.
+ 
+ type may take on the following values:
+  'translation'  - translation only
+  'rigid'        - translation and rotation
+  'similarity'   - translation, rotation and scale
+  'affine'       - 6 parameter affine transform
+  'rotation'     - pure rotation (about x, y and z)
+  'projective'   - full 8 parameter homography
+ Alternatively, type may be a vector of ids between 1 and 8, specifying
+ exactly the types of transforms allowed. The ids correspond, to: 1:
+ translate-x, 2: translate-y, 3: uniform scale, 4: shear, 5: non-uniform
+ scale, 6: rotate-z, 7: rotate-x, 8: rotate-y. For example, to specify
+ translation use type=[1,2]. If the transforms don't form a group, the
+ returned homography may have more degrees of freedom than expected.
+
+ Parameters (in rough order of importance): [resample] controls image
+ downsampling prior to computing H. Runtime is proportional to area, so
+ using resample&lt;1 can dramatically speed up alignment, and in general not
+ degrade performance much. [sig] controls image smoothing, sig=2 gives
+ good performance, setting sig too low causes loss of information and too
+ high will violate the linearity assumption. [epsilon] defines the
+ stopping criteria, use to adjust performance versus speed tradeoff.
+ [lambda] is a regularization term that causes small transforms to be
+ favored, in general any small non-zero setting of lambda works well.
+ [outThr] is a threshold beyond which pixels are considered outliers, be
+ careful not to set too low. [minArea] determines coarsest scale beyond
+ which the image is not downsampled (should not be set too low). [H0] can
+ be used to specify an initial alignment. Use [show] to display results.
+
+ USAGE
+  [H,Ip] = imagesAlign( I, Iref, varargin )
+
+ INPUTS
+  I          - transformed version of I
+  Iref       - reference grayscale double image
+  varargin   - additional params (struct or name/value pairs)
+   .type       - ['projective'] see above for options
+   .resample   - [1] image resampling prior to homography estimation
+   .sig        - [2] amount of Gaussian spatial smoothing to apply
+   .epsilon    - [1e-3] stopping criteria (min change in error)
+   .lambda     - [1e-6] regularization term favoring small transforms
+   .outThr     - [inf] outlier threshold
+   .minArea    - [4096] minimum image area in coarse to fine search
+   .H0         - [eye(3)] optional initial homography estimate
+   .show       - [0] optionally display results in figure show
+
+ OUTPUTS
+  H        - estimated homography to transform I into Iref
+  Ip       - tranformed version of I (slow to compute)
+
+ EXAMPLE
+  Iref = double(imread('cameraman.tif'))/255;
+  H0 = [eye(2)+randn(2)*.1 randn(2,1)*10; randn(1,2)*1e-3 1];
+  I = imtransform2(Iref,H0^-1,'pad','replicate');
+  o=50; P=ones(o)*1; I(150:149+o,150:149+o)=P;
+  prmAlign={'outThr',.1,'resample',.5,'type',1:8,'show'};
+  [H,Ip]=imagesAlign(I,Iref,prmAlign{:},1);
+  tic, for i=1:30, H=imagesAlign(I,Iref,prmAlign{:},0); end;
+  t=toc; fprintf('average fps: %f\n',30/t)
+
+ See also imTransform2
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.61
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="imagesAlignSeq.html" class="code" title="function [J,Vxs,Vys] = imagesAlignSeq( I, pFlow, type, bndThr )">imagesAlignSeq</a>	Stabilize image sequence using coarse optical flow estimation.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function H = imagesAlign1( I, Iref, prm )</a></li><li><a href="#_sub2" class="code">function [H,Hs] = ds2H( ds, wts )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [H,Ip] = imagesAlign( I, Iref, varargin )</a>
+0002 <span class="comment">% Fast and robust estimation of homography relating two images.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% The algorithm for image alignment is a simple but effective variant of</span>
+0005 <span class="comment">% the inverse compositional algorithm. For a thorough overview, see:</span>
+0006 <span class="comment">%   &quot;Lucas-kanade 20 years on A unifying framework,&quot;</span>
+0007 <span class="comment">%   S. Baker and I. Matthews. IJCV 2004.</span>
+0008 <span class="comment">% The implementation is optimized and can easily run at 20-30 fps.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% type may take on the following values:</span>
+0011 <span class="comment">%  'translation'  - translation only</span>
+0012 <span class="comment">%  'rigid'        - translation and rotation</span>
+0013 <span class="comment">%  'similarity'   - translation, rotation and scale</span>
+0014 <span class="comment">%  'affine'       - 6 parameter affine transform</span>
+0015 <span class="comment">%  'rotation'     - pure rotation (about x, y and z)</span>
+0016 <span class="comment">%  'projective'   - full 8 parameter homography</span>
+0017 <span class="comment">% Alternatively, type may be a vector of ids between 1 and 8, specifying</span>
+0018 <span class="comment">% exactly the types of transforms allowed. The ids correspond, to: 1:</span>
+0019 <span class="comment">% translate-x, 2: translate-y, 3: uniform scale, 4: shear, 5: non-uniform</span>
+0020 <span class="comment">% scale, 6: rotate-z, 7: rotate-x, 8: rotate-y. For example, to specify</span>
+0021 <span class="comment">% translation use type=[1,2]. If the transforms don't form a group, the</span>
+0022 <span class="comment">% returned homography may have more degrees of freedom than expected.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Parameters (in rough order of importance): [resample] controls image</span>
+0025 <span class="comment">% downsampling prior to computing H. Runtime is proportional to area, so</span>
+0026 <span class="comment">% using resample&lt;1 can dramatically speed up alignment, and in general not</span>
+0027 <span class="comment">% degrade performance much. [sig] controls image smoothing, sig=2 gives</span>
+0028 <span class="comment">% good performance, setting sig too low causes loss of information and too</span>
+0029 <span class="comment">% high will violate the linearity assumption. [epsilon] defines the</span>
+0030 <span class="comment">% stopping criteria, use to adjust performance versus speed tradeoff.</span>
+0031 <span class="comment">% [lambda] is a regularization term that causes small transforms to be</span>
+0032 <span class="comment">% favored, in general any small non-zero setting of lambda works well.</span>
+0033 <span class="comment">% [outThr] is a threshold beyond which pixels are considered outliers, be</span>
+0034 <span class="comment">% careful not to set too low. [minArea] determines coarsest scale beyond</span>
+0035 <span class="comment">% which the image is not downsampled (should not be set too low). [H0] can</span>
+0036 <span class="comment">% be used to specify an initial alignment. Use [show] to display results.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% USAGE</span>
+0039 <span class="comment">%  [H,Ip] = imagesAlign( I, Iref, varargin )</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">% INPUTS</span>
+0042 <span class="comment">%  I          - transformed version of I</span>
+0043 <span class="comment">%  Iref       - reference grayscale double image</span>
+0044 <span class="comment">%  varargin   - additional params (struct or name/value pairs)</span>
+0045 <span class="comment">%   .type       - ['projective'] see above for options</span>
+0046 <span class="comment">%   .resample   - [1] image resampling prior to homography estimation</span>
+0047 <span class="comment">%   .sig        - [2] amount of Gaussian spatial smoothing to apply</span>
+0048 <span class="comment">%   .epsilon    - [1e-3] stopping criteria (min change in error)</span>
+0049 <span class="comment">%   .lambda     - [1e-6] regularization term favoring small transforms</span>
+0050 <span class="comment">%   .outThr     - [inf] outlier threshold</span>
+0051 <span class="comment">%   .minArea    - [4096] minimum image area in coarse to fine search</span>
+0052 <span class="comment">%   .H0         - [eye(3)] optional initial homography estimate</span>
+0053 <span class="comment">%   .show       - [0] optionally display results in figure show</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">% OUTPUTS</span>
+0056 <span class="comment">%  H        - estimated homography to transform I into Iref</span>
+0057 <span class="comment">%  Ip       - tranformed version of I (slow to compute)</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">% EXAMPLE</span>
+0060 <span class="comment">%  Iref = double(imread('cameraman.tif'))/255;</span>
+0061 <span class="comment">%  H0 = [eye(2)+randn(2)*.1 randn(2,1)*10; randn(1,2)*1e-3 1];</span>
+0062 <span class="comment">%  I = imtransform2(Iref,H0^-1,'pad','replicate');</span>
+0063 <span class="comment">%  o=50; P=ones(o)*1; I(150:149+o,150:149+o)=P;</span>
+0064 <span class="comment">%  prmAlign={'outThr',.1,'resample',.5,'type',1:8,'show'};</span>
+0065 <span class="comment">%  [H,Ip]=imagesAlign(I,Iref,prmAlign{:},1);</span>
+0066 <span class="comment">%  tic, for i=1:30, H=imagesAlign(I,Iref,prmAlign{:},0); end;</span>
+0067 <span class="comment">%  t=toc; fprintf('average fps: %f\n',30/t)</span>
+0068 <span class="comment">%</span>
+0069 <span class="comment">% See also imTransform2</span>
+0070 <span class="comment">%</span>
+0071 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.61</span>
+0072 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0073 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0074 
+0075 <span class="comment">% get parameters</span>
+0076 dfs={<span class="string">'type'</span>,<span class="string">'projective'</span>,<span class="string">'resample'</span>,1,<span class="string">'sig'</span>,2,<span class="string">'epsilon'</span>,1e-3,<span class="keyword">...</span>
+0077   <span class="string">'lambda'</span>,1e-6,<span class="string">'outThr'</span>,inf,<span class="string">'minArea'</span>,4096,<span class="string">'H0'</span>,eye(3),<span class="string">'show'</span>,0};
+0078 [type,resample,sig,epsilon,lambda,outThr,minArea,H0,show] = <span class="keyword">...</span>
+0079   getPrmDflt(varargin,dfs,1);
+0080 filt = filterGauss(2*ceil(sig*2.5)+1,[],sig^2);
+0081 
+0082 <span class="comment">% determine type of transformation to recover</span>
+0083 <span class="keyword">if</span>(isnumeric(type)), assert(length(type)&lt;=8); <span class="keyword">else</span>
+0084   id=find(strcmpi(type,{<span class="string">'translation'</span>,<span class="string">'rigid'</span>,<span class="string">'similarity'</span>,<span class="string">'affine'</span>,<span class="keyword">...</span>
+0085     <span class="string">'rotation'</span>,<span class="string">'projective'</span>})); msgId=<span class="string">'piotr:imagesAlign'</span>;
+0086   <span class="keyword">if</span>(isempty(id)), error(msgId,<span class="string">'unknown type: %s'</span>,type); <span class="keyword">end</span>
+0087   type={1:2,[1:2 6],[1:3 6],1:6,6:8,1:8}; type=type{id};
+0088 <span class="keyword">end</span>; keep=zeros(1,8); keep(type)=1; keep=keep&gt;0;
+0089 
+0090 <span class="comment">% compute image alignment (optionally resample first)</span>
+0091 prm={keep,filt,epsilon,H0,minArea,outThr,lambda};
+0092 <span class="keyword">if</span>( resample==1 ), H=<a href="#_sub1" class="code" title="subfunction H = imagesAlign1( I, Iref, prm )">imagesAlign1</a>(I,Iref,prm); <span class="keyword">else</span>
+0093   S=eye(3); S([1 5])=resample; H0=S*H0*S^-1; prm{4}=H0;
+0094   I1=imResample(I,resample); Iref1=imResample(Iref,resample);
+0095   H=<a href="#_sub1" class="code" title="subfunction H = imagesAlign1( I, Iref, prm )">imagesAlign1</a>(I1,Iref1,prm); H=S^-1*H*S;
+0096 <span class="keyword">end</span>
+0097 
+0098 <span class="comment">% optionally rectify I and display results (can be expensive)</span>
+0099 <span class="keyword">if</span>(nargout==1 &amp;&amp; show==0), <span class="keyword">return</span>; <span class="keyword">end</span>
+0100 Ip = imtransform2(I,H,<span class="string">'pad'</span>,<span class="string">'replicate'</span>);
+0101 <span class="keyword">if</span>(show), figure(show); clf; s=@(i) subplot(2,3,i);
+0102   Is=[I Iref Ip]; ri=[min(Is(:)) max(Is(:))];
+0103   D0=abs(I-Iref); D1=abs(Ip-Iref); Ds=[D0 D1]; di=[min(Ds(:)) max(Ds(:))];
+0104   s(1); im(I,ri,0); s(2); im(Iref,ri,0); s(3); im(D0,di,0);
+0105   s(4); im(Ip,ri,0); s(5); im(Iref,ri,0); s(6); im(D1,di,0);
+0106   s(3); title(<span class="string">'|I-Iref|'</span>); s(6); title(<span class="string">'|Ip-Iref|'</span>);
+0107 <span class="keyword">end</span>
+0108 
+0109 <span class="keyword">end</span>
+0110 
+0111 <a name="_sub1" href="#_subfunctions" class="code">function H = imagesAlign1( I, Iref, prm )</a>
+0112 
+0113 <span class="comment">% apply recursively if image large</span>
+0114 [keep,filt,epsilon,H0,minArea,outThr,lambda]=deal(prm{:});
+0115 [h,w]=size(I); hc=mod(h,2); wc=mod(w,2);
+0116 <span class="keyword">if</span>( w*h&lt;minArea ), H=H0; <span class="keyword">else</span>
+0117   I1=imResample(I(1:(h-hc),1:(w-wc)),.5);
+0118   Iref1=imResample(Iref(1:(h-hc),1:(w-wc)),.5);
+0119   S=eye(3); S([1 5])=2; H0=S^-1*H0*S; prm{4}=H0;
+0120   H=<a href="#_sub1" class="code" title="subfunction H = imagesAlign1( I, Iref, prm )">imagesAlign1</a>(I1,Iref1,prm); H=S*H*S^-1;
+0121 <span class="keyword">end</span>
+0122 
+0123 <span class="comment">% smooth images (pad first so dimensions unchanged)</span>
+0124 O=ones(1,(length(filt)-1)/2); hs=[O 1:h h*O]; ws=[O 1:w w*O];
+0125 Iref=conv2(conv2(Iref(hs,ws),filt',<span class="string">'valid'</span>),filt,<span class="string">'valid'</span>);
+0126 I=conv2(conv2(I(hs,ws),filt',<span class="string">'valid'</span>),filt,<span class="string">'valid'</span>);
+0127 
+0128 <span class="comment">% pad images with nan so later can determine valid regions</span>
+0129 hs=[1 1 1:h h h]; ws=[1 1 1:w w w]; I=I(hs,ws); Iref=Iref(hs,ws);
+0130 hs=[1:2 h+3:h+4]; I(hs,:)=nan; Iref(hs,:)=nan;
+0131 ws=[1:2 w+3:w+4]; I(:,ws)=nan; Iref(:,ws)=nan;
+0132 
+0133 <span class="comment">% convert weights hardcoded for 128x128 image to given image dims</span>
+0134 wts=[1 1 1.0204 .03125 1.0313 0.0204 .00055516 .00055516];
+0135 s=sqrt(numel(Iref))/128;
+0136 wts=[wts(1:2) wts(3)^(1/s) wts(4)/s wts(5)^(1/s) wts(6)/s wts(7:8)/(s*s)];
+0137 
+0138 <span class="comment">% prepare subspace around Iref</span>
+0139 [~,Hs]=<a href="#_sub2" class="code" title="subfunction [H,Hs] = ds2H( ds, wts )">ds2H</a>(-ones(1,8),wts); Hs=Hs(:,:,keep); K=size(Hs,3);
+0140 [h,w]=size(Iref); Ts=zeros(h,w,K); k=0;
+0141 <span class="keyword">if</span>(keep(1)), k=k+1; Ts(:,1:end-1,k)=Iref(:,2:end); <span class="keyword">end</span>
+0142 <span class="keyword">if</span>(keep(2)), k=k+1; Ts(1:end-1,:,k)=Iref(2:<span class="keyword">end</span>,:); <span class="keyword">end</span>
+0143 pTransf={<span class="string">'method'</span>,<span class="string">'bilinear'</span>,<span class="string">'pad'</span>,<span class="string">'none'</span>,<span class="string">'useCache'</span>};
+0144 <span class="keyword">for</span> i=k+1:K, Ts(:,:,i)=imtransform2(Iref,Hs(:,:,i),pTransf{:},1); <span class="keyword">end</span>
+0145 Ds=Ts-Iref(:,:,ones(1,K)); Mref = ~any(isnan(Ds),3);
+0146 <span class="keyword">if</span>(0), figure(10); montage2(Ds); <span class="keyword">end</span>
+0147 Ds = reshape(Ds,[],size(Ds,3));
+0148 
+0149 <span class="comment">% iteratively project Ip onto subspace, storing transformation</span>
+0150 lambda=lambda*w*h*eye(K); ds=zeros(1,8); err=inf;
+0151 <span class="keyword">for</span> i=1:100
+0152   s=svd(H); <span class="keyword">if</span>(s(3)&lt;=1e-4*s(1)), H=eye(3); <span class="keyword">return</span>; <span class="keyword">end</span>
+0153   Ip=imtransform2(I,H,pTransf{:},0); dI=Ip-Iref; dI0=abs(dI);
+0154   M=Mref &amp; ~isnan(Ip); M0=M; <span class="keyword">if</span>(outThr&lt;inf), M=M &amp; dI0&lt;outThr; <span class="keyword">end</span>
+0155   M1=find(M); D=Ds(M1,:); ds1=(D'*D + lambda)^(-1)*(D'*dI(M1));
+0156   <span class="keyword">if</span>(any(isnan(ds1))), ds1=zeros(K,1); <span class="keyword">end</span>
+0157   ds(keep)=ds1; H1=<a href="#_sub2" class="code" title="subfunction [H,Hs] = ds2H( ds, wts )">ds2H</a>(ds,wts); H=H*H1; H=H/H(9);
+0158   err0=err; err=dI0; err(~M0)=0; err=mean2(err); del=err0-err;
+0159   <span class="keyword">if</span>(0), fprintf(<span class="string">'i=%03i err=%e del=%e\n'</span>,i,err,del); <span class="keyword">end</span>
+0160   <span class="keyword">if</span>( del&lt;epsilon ), <span class="keyword">break</span>; <span class="keyword">end</span>
+0161 <span class="keyword">end</span>
+0162 
+0163 <span class="keyword">end</span>
+0164 
+0165 <a name="_sub2" href="#_subfunctions" class="code">function [H,Hs] = ds2H( ds, wts )</a>
+0166 <span class="comment">% compute homography from offsets ds</span>
+0167 Hs=eye(3); Hs=Hs(:,:,ones(1,8));
+0168 Hs(2,3,1)=wts(1)*ds(1);                       <span class="comment">% 1 x translation</span>
+0169 Hs(1,3,2)=wts(2)*ds(2);                       <span class="comment">% 2 y translation</span>
+0170 Hs(1:2,1:2,3)=eye(2)*wts(3)^ds(3);            <span class="comment">% 3 scale</span>
+0171 Hs(2,1,4)=wts(4)*ds(4);                       <span class="comment">% 4 shear</span>
+0172 Hs(1,1,5)=wts(5)^ds(5);                       <span class="comment">% 5 scale non-uniform</span>
+0173 ct=cos(wts(6)*ds(6)); st=sin(wts(6)*ds(6));
+0174 Hs(1:2,1:2,6)=[ct -st; st ct];                <span class="comment">% 6 rotation about z</span>
+0175 ct=cos(wts(7)*ds(7)); st=sin(wts(7)*ds(7));
+0176 Hs([1 3],[1 3],7)=[ct -st; st ct];            <span class="comment">% 7 rotation about x</span>
+0177 ct=cos(wts(8)*ds(8)); st=sin(wts(8)*ds(8));
+0178 Hs(2:3,2:3,8)=[ct -st; st ct];                <span class="comment">% 8 rotation about y</span>
+0179 H=eye(3); <span class="keyword">for</span> i=1:8, H=Hs(:,:,i)*H; <span class="keyword">end</span>
+0180 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

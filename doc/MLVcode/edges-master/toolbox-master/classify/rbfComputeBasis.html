@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rbfComputeBasis</title>
+  <meta name="keywords" content="rbfComputeBasis">
+  <meta name="description" content="Get locations and sizes of radial basis functions for use in rbf network.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">classify</a> &gt; rbfComputeBasis.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\classify&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>rbfComputeBasis
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Get locations and sizes of radial basis functions for use in rbf network.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function rbfBasis = rbfComputeBasis( X, k, cluster, scale, show ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Get locations and sizes of radial basis functions for use in rbf network.
+
+ Radial basis function are a simple, fast method for universal function
+ approximation / regression. The idea is to find a mapping X-&gt;y where X
+ and y are continuous real variables. The mapping is linear over features
+ of X: y=rbfWeight*features(X). The features are of the form:
+  f_j(x) = exp(-||x-mu_j||_2^2 / 2 sig_j^2 ).
+ The number of basis functions controls the complexity of the network. Too
+ many basis functions can lead to overfitting, too few to bad
+ interpolation. Rbf networks are trained in two phases.  First, the radial
+ basis functions are found in an unsupervised manner (using only Xtrain),
+ for example by clustering Xtrain.  Next, given the basis functions,
+ Xtrain and ytrain, the basis weights are found by solving the system:
+  rbfWeight * features(Xtrain) = ytrain
+ At this point, to interpolate any new points, Xtest, use:
+  ytest = rbfWeight * features(Xtest)
+ The code below achieves all three steps:
+  rbfBasis  = rbfComputeBasis( Xtrain, k, cluster, scale, show );
+  rbfWeight = rbfComputeFtrs(Xtrain,rbfBasis) \ ytrain;
+  ytest     = rbfComputeFtrs(Xtest,rbfBasis) * rbfWeight;
+ Note, in the returned rbfBasis struct there are a number of flags that
+ control how the rbf features are computed. These can be altered to
+ achieve the desired effect.
+
+ For an in depth discussion of rbf networks see:
+  Christopher M. Bishop. &quot;Neural Networks for Pattern Recognition&quot;
+
+ USAGE
+  rbfBasis = rbfComputeBasis( X, k, [cluster], [scale], [show] )
+
+ INPUTS
+  X           - [N x d] N points of d dimensions each
+  k           - number of basis functions to use
+  cluster     - [1]: Computes cluster centers for use as rbf functions.
+              - 0: Evenly centered basis functions (ok for small d)
+  scale       - [5] Alter computed value of sigma by given factor
+                set larger for smoother results, too small -&gt; bad interp
+  show        - [0] will display results in figure(show)
+                if show&lt;0, assumes X is array Nxs^2 of N sxs patches
+
+ OUTPUTS
+  rfbBasis
+   .d          - feature vector size
+   .k          - number of basis functions actually used
+   .mu         - [d x k] rbf centers
+   .vars       - [1 x k] rbf widths
+   .var        - rbf average width
+   .globalVar  - [1] if true use single average var for rbfs
+   .constant   - [0] if true include extra basis with constant activation
+   .normalize  - [0] if true normalize overall rbf response to sum to 1
+
+ EXAMPLE
+
+ See also <a href="rbfDemo.html" class="code" title="function rbfDemo( dataType, noiseSig, scale, k, cluster, show )">RBFDEMO</a>, <a href="rbfComputeFtrs.html" class="code" title="function Xrbf = rbfComputeFtrs( X, rbfBasis )">RBFCOMPUTEFTRS</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.50
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="kmeans2.html" class="code" title="function [ IDX, C, d ] = kmeans2( X, k, varargin )">kmeans2</a>	Fast version of kmeans clustering.</li><li><a href="pdist2.html" class="code" title="function D = pdist2( X, Y, metric )">pdist2</a>	Calculates the distance between sets of vectors.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="rbfDemo.html" class="code" title="function rbfDemo( dataType, noiseSig, scale, k, cluster, show )">rbfDemo</a>	Demonstration of rbf networks for regression.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function rbfBasis = rbfComputeBasis( X, k, cluster, scale, show )</a>
+0002 <span class="comment">% Get locations and sizes of radial basis functions for use in rbf network.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Radial basis function are a simple, fast method for universal function</span>
+0005 <span class="comment">% approximation / regression. The idea is to find a mapping X-&gt;y where X</span>
+0006 <span class="comment">% and y are continuous real variables. The mapping is linear over features</span>
+0007 <span class="comment">% of X: y=rbfWeight*features(X). The features are of the form:</span>
+0008 <span class="comment">%  f_j(x) = exp(-||x-mu_j||_2^2 / 2 sig_j^2 ).</span>
+0009 <span class="comment">% The number of basis functions controls the complexity of the network. Too</span>
+0010 <span class="comment">% many basis functions can lead to overfitting, too few to bad</span>
+0011 <span class="comment">% interpolation. Rbf networks are trained in two phases.  First, the radial</span>
+0012 <span class="comment">% basis functions are found in an unsupervised manner (using only Xtrain),</span>
+0013 <span class="comment">% for example by clustering Xtrain.  Next, given the basis functions,</span>
+0014 <span class="comment">% Xtrain and ytrain, the basis weights are found by solving the system:</span>
+0015 <span class="comment">%  rbfWeight * features(Xtrain) = ytrain</span>
+0016 <span class="comment">% At this point, to interpolate any new points, Xtest, use:</span>
+0017 <span class="comment">%  ytest = rbfWeight * features(Xtest)</span>
+0018 <span class="comment">% The code below achieves all three steps:</span>
+0019 <span class="comment">%  rbfBasis  = rbfComputeBasis( Xtrain, k, cluster, scale, show );</span>
+0020 <span class="comment">%  rbfWeight = rbfComputeFtrs(Xtrain,rbfBasis) \ ytrain;</span>
+0021 <span class="comment">%  ytest     = rbfComputeFtrs(Xtest,rbfBasis) * rbfWeight;</span>
+0022 <span class="comment">% Note, in the returned rbfBasis struct there are a number of flags that</span>
+0023 <span class="comment">% control how the rbf features are computed. These can be altered to</span>
+0024 <span class="comment">% achieve the desired effect.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% For an in depth discussion of rbf networks see:</span>
+0027 <span class="comment">%  Christopher M. Bishop. &quot;Neural Networks for Pattern Recognition&quot;</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% USAGE</span>
+0030 <span class="comment">%  rbfBasis = rbfComputeBasis( X, k, [cluster], [scale], [show] )</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% INPUTS</span>
+0033 <span class="comment">%  X           - [N x d] N points of d dimensions each</span>
+0034 <span class="comment">%  k           - number of basis functions to use</span>
+0035 <span class="comment">%  cluster     - [1]: Computes cluster centers for use as rbf functions.</span>
+0036 <span class="comment">%              - 0: Evenly centered basis functions (ok for small d)</span>
+0037 <span class="comment">%  scale       - [5] Alter computed value of sigma by given factor</span>
+0038 <span class="comment">%                set larger for smoother results, too small -&gt; bad interp</span>
+0039 <span class="comment">%  show        - [0] will display results in figure(show)</span>
+0040 <span class="comment">%                if show&lt;0, assumes X is array Nxs^2 of N sxs patches</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% OUTPUTS</span>
+0043 <span class="comment">%  rfbBasis</span>
+0044 <span class="comment">%   .d          - feature vector size</span>
+0045 <span class="comment">%   .k          - number of basis functions actually used</span>
+0046 <span class="comment">%   .mu         - [d x k] rbf centers</span>
+0047 <span class="comment">%   .vars       - [1 x k] rbf widths</span>
+0048 <span class="comment">%   .var        - rbf average width</span>
+0049 <span class="comment">%   .globalVar  - [1] if true use single average var for rbfs</span>
+0050 <span class="comment">%   .constant   - [0] if true include extra basis with constant activation</span>
+0051 <span class="comment">%   .normalize  - [0] if true normalize overall rbf response to sum to 1</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">% EXAMPLE</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">% See also RBFDEMO, RBFCOMPUTEFTRS</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.50</span>
+0058 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0059 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0060 
+0061 <span class="keyword">if</span>( nargin&lt;2 || isempty(k)); error(<span class="string">'k not specified'</span>); <span class="keyword">end</span>
+0062 <span class="keyword">if</span>( nargin&lt;3 || isempty(cluster)); cluster=1;  <span class="keyword">end</span>
+0063 <span class="keyword">if</span>( nargin&lt;4 || isempty(scale)); scale=5;  <span class="keyword">end</span>
+0064 <span class="keyword">if</span>( nargin&lt;5 || isempty(show)); show=0;  <span class="keyword">end</span>
+0065 [N, d] = size(X);
+0066 
+0067 <span class="keyword">if</span>( cluster )
+0068   <span class="comment">%%% CLUSTERS subsample, run kmeans</span>
+0069   maxN=5000; <span class="keyword">if</span>( N&gt;maxN );  X=X(randSample(N,maxN),:);  N=maxN;  <span class="keyword">end</span>
+0070   prm.nTrial=5; prm.display=0;
+0071   [IDX,mu] = <a href="kmeans2.html" class="code" title="function [ IDX, C, d ] = kmeans2( X, k, varargin )">kmeans2</a>( X, k, prm );
+0072   mu = mu'; k = size(mu,2);
+0073 <span class="keyword">else</span>
+0074   <span class="comment">%%% GRID generate locations evenly spaced on grid</span>
+0075   <span class="keyword">if</span>( d&gt;4 ); error(<span class="string">'d too high. curse of dimensionality..'</span>); <span class="keyword">end</span>
+0076   nBPer = round( k ^ (1/d) );  k = nBPer ^ d; rg=[min(X)' max(X)'];
+0077   del=(rg(:,2)-rg(:,1))/(nBPer-1); rg=rg+[-del del]/2;
+0078   loc=cell(1,d);  <span class="keyword">for</span> i=1:d; loc{i}=linspace(rg(i,1),rg(i,2),nBPer); <span class="keyword">end</span>
+0079   grid=cell(1,d); <span class="keyword">if</span>(d&gt;1); [grid{:}]=ndgrid(loc{:}); <span class="keyword">else</span> grid=loc; <span class="keyword">end</span>
+0080   mu=zeros(d,k);   <span class="keyword">for</span> i=1:d; mu(i,:) = grid{i}(:); <span class="keyword">end</span>
+0081 <span class="keyword">end</span>
+0082 
+0083 <span class="comment">%%% Set var to be equal to average distance of neareast neighbor.</span>
+0084 dist = <a href="pdist2.html" class="code" title="function D = pdist2( X, Y, metric )">pdist2</a>( mu', mu' );
+0085 dist = dist + realmax * eye( k );
+0086 vars = min(dist)* scale;
+0087 var  = mean(vars);
+0088 vars = max( vars, var/100 );
+0089 
+0090 <span class="comment">%%% store results</span>
+0091 rbfBasis = struct(<span class="string">'d'</span>,d, <span class="string">'k'</span>,k, <span class="string">'mu'</span>,mu, <span class="string">'vars'</span>,vars, <span class="string">'var'</span>,var, <span class="keyword">...</span>
+0092   <span class="string">'globalVar'</span>,1, <span class="string">'constant'</span>,0, <span class="string">'normalize'</span>,0);
+0093 
+0094 <span class="comment">%%% optionally display</span>
+0095 <span class="keyword">if</span>( abs(show) )
+0096   <span class="keyword">if</span>( show&lt;0 ) <span class="comment">% if images can display</span>
+0097     siz = sqrt(d);
+0098     I = clusterMontage( reshape(X,siz,siz,N), IDX, 25, 1 );
+0099     figure(-show); clf; montage2( I );
+0100     figure(-show+1); clf; montage2(reshape(mu,siz,siz,[]));
+0101   <span class="keyword">elseif</span>( d==1 ) <span class="comment">% 1D data</span>
+0102     figure(show); clf; hold on;
+0103     minX = min(X,[],1 );  maxX = max(X,[],1 );
+0104     xs = linspace( minX, maxX, 500 )';
+0105     <span class="keyword">for</span> i=1:k
+0106       ys = exp( -(xs-mu(i)).^2 / 2 / var  );
+0107       plot( xs, ys );
+0108     <span class="keyword">end</span>
+0109   <span class="keyword">elseif</span>( d==2 ) <span class="comment">% 2D data</span>
+0110     figure(show); clf;
+0111     minX = min(X,[],1 );  maxX = max(X,[],1 );
+0112     xs1 = linspace(minX(1),maxX(1),25);
+0113     xs2 = linspace(minX(2),maxX(2),25);
+0114     [xs1,xs2] = ndgrid( xs1, xs2 );
+0115     xs = [xs1(:) xs2(:)]; n = size(xs,1);
+0116     <span class="keyword">for</span> i=1:k
+0117       mui = repmat(mu(:,i),[1 n])';
+0118       ys = exp( - sum( ((xs - mui)).^2, 2 ) / 2 / var );
+0119       surf( xs1, xs2, reshape(ys,size(xs1)) );
+0120       hold on;
+0121     <span class="keyword">end</span>;
+0122   <span class="keyword">elseif</span>( d==3 ) <span class="comment">% 3D data (show data+centers)</span>
+0123     figure(show); clf; hold on;
+0124     scatter3( X(:,1),X(:,2),X(:,3),12,<span class="string">'filled'</span>);
+0125     scatter3( mu(1,:),mu(2,:),mu(3,:),30,<span class="string">'filled'</span>);
+0126   <span class="keyword">end</span>
+0127 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

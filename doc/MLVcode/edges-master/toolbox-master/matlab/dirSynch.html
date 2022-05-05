@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dirSynch</title>
+  <meta name="keywords" content="dirSynch">
+  <meta name="description" content="Synchronize two directory trees (or show differences between them).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; dirSynch.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>dirSynch
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Synchronize two directory trees (or show differences between them).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function dirSynch( root1, root2, showOnly, flag, ignDate ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Synchronize two directory trees (or show differences between them).
+
+ If a file or directory 'name' is found in both tree1 and tree2:
+  1) if 'name' is a file in both the pair is considered the same if they
+     have identical size and identical datestamp (or if ignDate=1).
+  2) if 'name' is a directory in both the dirs are searched recursively.
+  3) if 'name' is a dir in root1 and a file in root2 (or vice-versa)
+     synchronization cannot proceed (an error is thrown).
+ If 'name' is found only in root1 or root2 it's a difference between them.
+
+ The parameter flag controls how synchronization occurs:
+  flag==0: neither tree1 nor tree2 has preference (newer file is kept)
+  flag==1: tree2 is altered to reflect tree1 (tree1 is unchanged)
+  flag==2: tree1 is altered to reflect tree2 (tree2 is unchanged)
+ Run with showOnly=1 and different values of flag to see its effect.
+
+ By default showOnly==1. If showOnly, displays a list of actions that need
+ to be performed in order to synchronize the two directory trees, but does
+ not actually perform the actions. It is highly recommended to run
+ dirSynch first with showOnly=1 before running it with showOnly=0.
+
+ USAGE
+  dirSynch( root1, root2, [showOnly], [flag], [ignDate] )
+
+ INPUTS
+  root1    - root directory of tree1
+  root2    - root directory of tree2
+  showOnly - [1] show but do NOT perform actions
+  flag     - [0] 0: synchronize; 1: set root2=root1; 2: set root1==root2
+  ignDate  - [0] if true considers two files same even if have diff dates
+
+ OUTPUTS
+  dirSynch( 'c:\toolbox', 'c:\toolbox-old', 1 )
+
+ EXAMPLE
+
+ See also
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.10
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="ticStatus.html" class="code" title="function id = ticStatus( msg, updateFreq, updateMinT, erasePrev )">ticStatus</a>	Used to display the progress of a long process.</li><li><a href="tocStatus.html" class="code" title="function tocStatus( id, fracDone )">tocStatus</a>	Used to display the progress of a long process.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function D = dirDiff( root1, root2, ignDate )</a></li><li><a href="#_sub2" class="code">function D = dirDiff1( root1, root2, ignDate, subdir )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function dirSynch( root1, root2, showOnly, flag, ignDate )</a>
+0002 <span class="comment">% Synchronize two directory trees (or show differences between them).</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% If a file or directory 'name' is found in both tree1 and tree2:</span>
+0005 <span class="comment">%  1) if 'name' is a file in both the pair is considered the same if they</span>
+0006 <span class="comment">%     have identical size and identical datestamp (or if ignDate=1).</span>
+0007 <span class="comment">%  2) if 'name' is a directory in both the dirs are searched recursively.</span>
+0008 <span class="comment">%  3) if 'name' is a dir in root1 and a file in root2 (or vice-versa)</span>
+0009 <span class="comment">%     synchronization cannot proceed (an error is thrown).</span>
+0010 <span class="comment">% If 'name' is found only in root1 or root2 it's a difference between them.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% The parameter flag controls how synchronization occurs:</span>
+0013 <span class="comment">%  flag==0: neither tree1 nor tree2 has preference (newer file is kept)</span>
+0014 <span class="comment">%  flag==1: tree2 is altered to reflect tree1 (tree1 is unchanged)</span>
+0015 <span class="comment">%  flag==2: tree1 is altered to reflect tree2 (tree2 is unchanged)</span>
+0016 <span class="comment">% Run with showOnly=1 and different values of flag to see its effect.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% By default showOnly==1. If showOnly, displays a list of actions that need</span>
+0019 <span class="comment">% to be performed in order to synchronize the two directory trees, but does</span>
+0020 <span class="comment">% not actually perform the actions. It is highly recommended to run</span>
+0021 <span class="comment">% dirSynch first with showOnly=1 before running it with showOnly=0.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% USAGE</span>
+0024 <span class="comment">%  dirSynch( root1, root2, [showOnly], [flag], [ignDate] )</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% INPUTS</span>
+0027 <span class="comment">%  root1    - root directory of tree1</span>
+0028 <span class="comment">%  root2    - root directory of tree2</span>
+0029 <span class="comment">%  showOnly - [1] show but do NOT perform actions</span>
+0030 <span class="comment">%  flag     - [0] 0: synchronize; 1: set root2=root1; 2: set root1==root2</span>
+0031 <span class="comment">%  ignDate  - [0] if true considers two files same even if have diff dates</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% OUTPUTS</span>
+0034 <span class="comment">%  dirSynch( 'c:\toolbox', 'c:\toolbox-old', 1 )</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% EXAMPLE</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% See also</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.10</span>
+0041 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0042 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0043 
+0044 <span class="keyword">if</span>(nargin&lt;3 || isempty(showOnly)), showOnly=1; <span class="keyword">end</span>;
+0045 <span class="keyword">if</span>(nargin&lt;4 || isempty(flag)), flag=0; <span class="keyword">end</span>;
+0046 <span class="keyword">if</span>(nargin&lt;5 || isempty(ignDate)), ignDate=0; <span class="keyword">end</span>;
+0047 <span class="comment">% get differences between root1/root2 and loop over them</span>
+0048 D = <a href="#_sub1" class="code" title="subfunction D = dirDiff( root1, root2, ignDate )">dirDiff</a>( root1, root2, ignDate );
+0049 roots={root1,root2}; ticId = <a href="ticStatus.html" class="code" title="function id = ticStatus( msg, updateFreq, updateMinT, erasePrev )">ticStatus</a>;
+0050 <span class="keyword">for</span> i=1:length(D)
+0051   <span class="comment">% get action</span>
+0052   <span class="keyword">if</span>( flag==1 )
+0053     <span class="keyword">if</span>( D(i).in1 ), act=1; src1=1; <span class="keyword">else</span> act=0; src1=2; <span class="keyword">end</span>
+0054   <span class="keyword">elseif</span>( flag==2 )
+0055     <span class="keyword">if</span>( D(i).in2 ), act=1; src1=2; <span class="keyword">else</span> act=0; src1=1; <span class="keyword">end</span>
+0056   <span class="keyword">else</span>
+0057     act=1;
+0058     <span class="keyword">if</span>(D(i).in1 &amp;&amp; D(i).in2)
+0059       <span class="keyword">if</span>( D(i).new1 ), src1=1; <span class="keyword">else</span> src1=2; <span class="keyword">end</span>
+0060     <span class="keyword">else</span>
+0061       <span class="keyword">if</span>( D(i).in1 ), src1=1; <span class="keyword">else</span> src1=2; <span class="keyword">end</span>
+0062     <span class="keyword">end</span>
+0063   <span class="keyword">end</span>
+0064   src2=mod(src1,2)+1;
+0065   <span class="comment">% perform action</span>
+0066   <span class="keyword">if</span>( act==1 )
+0067     <span class="keyword">if</span>( showOnly )
+0068       disp([<span class="string">'COPY '</span> int2str(src1) <span class="string">'-&gt;'</span> int2str(src2) <span class="string">': '</span> D(i).name]);
+0069     <span class="keyword">else</span>
+0070       copyfile( [roots{src1} D(i).name],  [roots{src2} D(i).name], <span class="string">'f'</span> );
+0071     <span class="keyword">end</span>;
+0072   <span class="keyword">else</span>
+0073     <span class="keyword">if</span>( showOnly )
+0074       disp([<span class="string">'DEL in  '</span> int2str(src1) <span class="string">': '</span> D(i).name]);
+0075     <span class="keyword">else</span>
+0076       fName = [roots{src1} D(i).name];
+0077       <span class="keyword">if</span>(D(i).isdir), rmdir(fName,<span class="string">'s'</span>); <span class="keyword">else</span> delete(fName); <span class="keyword">end</span>
+0078     <span class="keyword">end</span>
+0079   <span class="keyword">end</span>
+0080   <span class="keyword">if</span>(~showOnly), <a href="tocStatus.html" class="code" title="function tocStatus( id, fracDone )">tocStatus</a>( ticId, i/length(D) ); <span class="keyword">end</span>;
+0081 <span class="keyword">end</span>
+0082 <span class="keyword">end</span>
+0083 
+0084 <a name="_sub1" href="#_subfunctions" class="code">function D = dirDiff( root1, root2, ignDate )</a>
+0085 <span class="comment">% get differences from root1 to root2</span>
+0086 D1 = <a href="#_sub2" class="code" title="subfunction D = dirDiff1( root1, root2, ignDate, subdir )">dirDiff1</a>( root1, root2, ignDate, <span class="string">'/'</span> );
+0087 <span class="comment">% get differences from root2 to root1</span>
+0088 D2 = <a href="#_sub2" class="code" title="subfunction D = dirDiff1( root1, root2, ignDate, subdir )">dirDiff1</a>( root2, root1, ignDate, <span class="string">'/'</span> );
+0089 <span class="comment">% remove duplicates (arbitrarily from D2)</span>
+0090 D2=D2(~([D2.in1] &amp; [D2.in2]));
+0091 <span class="comment">% swap 1 and 2 in D2</span>
+0092 <span class="keyword">for</span> i=1:length(D2),
+0093   D2(i).in1=0; D2(i).in2=1; D2(i).new1=~D2(i).new1;
+0094 <span class="keyword">end</span>
+0095 <span class="comment">% merge</span>
+0096 D = [D1 D2];
+0097 <span class="keyword">end</span>
+0098 
+0099 <a name="_sub2" href="#_subfunctions" class="code">function D = dirDiff1( root1, root2, ignDate, subdir )</a>
+0100 <span class="keyword">if</span>(root1(end)~=<span class="string">'/'</span>), root1(end+1)=<span class="string">'/'</span>; <span class="keyword">end</span>
+0101 <span class="keyword">if</span>(root2(end)~=<span class="string">'/'</span>), root2(end+1)=<span class="string">'/'</span>; <span class="keyword">end</span>
+0102 <span class="keyword">if</span>(subdir(end)~=<span class="string">'/'</span>), subdir(end+1)=<span class="string">'/'</span>; <span class="keyword">end</span>
+0103 fs1=dir([root1 subdir]); fs2=dir([root2 subdir]);
+0104 D=struct(<span class="string">'name'</span>,0,<span class="string">'isdir'</span>,0,<span class="string">'in1'</span>,0,<span class="string">'in2'</span>,0,<span class="string">'new1'</span>,0);
+0105 D=repmat(D,[1 length(fs1)]); n=0; names2={fs2.name}; Dsub=[];
+0106 <span class="keyword">for</span> i1=1:length( fs1 )
+0107   name=fs1(i1).name; isdir=fs1(i1).isdir;
+0108   <span class="keyword">if</span>( any(strcmp(name,{<span class="string">'.'</span>,<span class="string">'..'</span>})) ), <span class="keyword">continue</span>; <span class="keyword">end</span>;
+0109   i2 = find(strcmp(name,names2));
+0110   <span class="keyword">if</span>(~isempty(i2) &amp;&amp; isdir)
+0111     <span class="comment">% cannot handle this condition</span>
+0112     <span class="keyword">if</span>(~fs2(i2).isdir), disp([root1 subdir name]); assert(false); <span class="keyword">end</span>;
+0113     <span class="comment">% recurse and record possible differences</span>
+0114     Dsub=[Dsub <a href="#_sub2" class="code" title="subfunction D = dirDiff1( root1, root2, ignDate, subdir )">dirDiff1</a>(root1,root2,ignDate,[subdir name])]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0115   <span class="keyword">elseif</span>( ~isempty(i2) &amp;&amp; fs1(i1).bytes==fs2(i2).bytes &amp;&amp; <span class="keyword">...</span>
+0116       (ignDate || fs1(i1).datenum==fs2(i2).datenum))
+0117     <span class="comment">% nothing to do - files are same</span>
+0118     <span class="keyword">continue</span>;
+0119   <span class="keyword">else</span>
+0120     <span class="comment">% record differences</span>
+0121     n=n+1;
+0122     D(n).name=[subdir name]; D(n).isdir=isdir;
+0123     D(n).in1=1; D(n).in2=~isempty(i2);
+0124     D(n).new1 = ~D(n).in2 || (fs1(i1).datenum&gt;fs2(i2).datenum);
+0125   <span class="keyword">end</span>
+0126 <span class="keyword">end</span>
+0127 D = [D(1:n) Dsub];
+0128 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

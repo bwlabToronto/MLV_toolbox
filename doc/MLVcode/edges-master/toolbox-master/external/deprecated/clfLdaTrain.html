@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of clfLdaTrain</title>
+  <meta name="keywords" content="clfLdaTrain">
+  <meta name="description" content="Train a Linear Discriminant Analysis (LDA) classifier.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; clfLdaTrain.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>clfLdaTrain
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Train a Linear Discriminant Analysis (LDA) classifier.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function clf = clfLdaTrain( clf, X, Y ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Train a Linear Discriminant Analysis (LDA) classifier.
+
+ USAGE
+  clf = clfLdaTrain( clf, X, Y )
+
+ INPUTS
+  clf     - model to be trained
+  X       - nxp data  array
+  Y       - nx1 array of labels (or cell array, see classify.m)
+
+ OUTPUTS
+  clf     - a trained LDA model
+
+ EXAMPLE
+
+ See also <a href="clfLda.html" class="code" title="function clf = clfLda( p, type, prior )">CLFLDA</a>, <a href="clfLdaFwd.html" class="code" title="function Y = clfLdaFwd( clf, X )">CLFLDAFWD</a>
+
+ Piotr's Image&amp;Video Toolbox      Version 2.0
+ Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]
+ Please email me if you find bugs, or have suggestions or questions!
+ Licensed under the Lesser GPL [see external/lgpl.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="clfLda.html" class="code" title="function clf = clfLda( p, type, prior )">clfLda</a>	Create a Linear Discriminant Analysis (LDA) classifier.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function clf = clfLdaTrain( clf, X, Y )</a>
+0002 <span class="comment">% Train a Linear Discriminant Analysis (LDA) classifier.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% USAGE</span>
+0005 <span class="comment">%  clf = clfLdaTrain( clf, X, Y )</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% INPUTS</span>
+0008 <span class="comment">%  clf     - model to be trained</span>
+0009 <span class="comment">%  X       - nxp data  array</span>
+0010 <span class="comment">%  Y       - nx1 array of labels (or cell array, see classify.m)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% OUTPUTS</span>
+0013 <span class="comment">%  clf     - a trained LDA model</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% EXAMPLE</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% See also CLFLDA, CLFLDAFWD</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 2.0</span>
+0020 <span class="comment">% Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]</span>
+0021 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0022 <span class="comment">% Licensed under the Lesser GPL [see external/lgpl.txt]</span>
+0023 
+0024 <span class="keyword">if</span>( ~strcmp(clf.type,<span class="string">'lda'</span>)); error( [<span class="string">'incorrect type: '</span> clf.type] ); <span class="keyword">end</span>
+0025 <span class="keyword">if</span>( size(X,2)~= clf.p ); error( <span class="string">'Incorrect data dimension'</span> ); <span class="keyword">end</span>
+0026 
+0027 <span class="comment">%er = consist( clf, , X );  error(er);</span>
+0028 prior = clf.prior;  type = clf.clfLdaType;
+0029 
+0030 <span class="comment">% grp2idx sorts a numeric grouping var ascending, and a string grouping</span>
+0031 <span class="comment">% var by order of first occurrence</span>
+0032 [gindex,groups] = grp2idx(Y);  gtype = Y(1);
+0033 ngroups = length(groups);
+0034 gsize = hist(gindex,1:ngroups);
+0035 [n,d] = size(X);
+0036 
+0037 <span class="comment">%%% GET PRIOR ACCORDINGLY</span>
+0038 <span class="keyword">if</span> isempty(prior)
+0039   <span class="comment">% Default to a uniform prior</span>
+0040   prior = ones(1, ngroups) / ngroups;
+0041 <span class="keyword">elseif</span>( ischar(prior) &amp;&amp; ~isempty(strmatch(lower(prior), <span class="string">'empirical'</span>)))
+0042   <span class="comment">% Estimate prior from relative Y sizes</span>
+0043   prior = gsize(:)' / sum(gsize);
+0044 <span class="keyword">elseif</span>( isnumeric(prior))
+0045   <span class="comment">% Explicit prior</span>
+0046   <span class="keyword">if</span>( min(size(prior)) ~= 1 || max(size(prior)) ~= ngroups )
+0047     error(<span class="string">'PRIOR must be a vector one element for each Y.'</span>);
+0048   <span class="keyword">elseif</span> any(prior &lt; 0)
+0049     error(<span class="string">'PRIOR cannot contain negative values.'</span>);
+0050   <span class="keyword">end</span>;
+0051   prior = prior(:)' / sum(prior); <span class="comment">% force a normalized row vector</span>
+0052 <span class="keyword">elseif</span> isstruct(prior)
+0053   [pgindex,pgroups] = grp2idx(prior.Y);
+0054   ord = repmat(NaN,1,ngroups);
+0055   <span class="keyword">for</span> i = 1:ngroups
+0056     j = strmatch(groups(i), pgroups(pgindex), <span class="string">'exact'</span>);
+0057     <span class="keyword">if</span> ~isempty(j); ord(i) = j; <span class="keyword">end</span>
+0058   <span class="keyword">end</span>
+0059   <span class="keyword">if</span> any(isnan(ord))
+0060     error(<span class="string">'PRIOR.Y must contain all of the unique values in GROUP.'</span>); <span class="keyword">end</span>
+0061   prior = prior.prob(ord);
+0062   <span class="keyword">if</span> any(prior &lt; 0)
+0063     error(<span class="string">'PRIOR.prob cannot contain negative values.'</span>); <span class="keyword">end</span>;
+0064   prior = prior(:)' / sum(prior); <span class="comment">% force a normalized row vector</span>
+0065 <span class="keyword">else</span>
+0066   error(<span class="string">'PRIOR must be a vector, structure, or the string ''empirical''.'</span>);
+0067 <span class="keyword">end</span>
+0068 
+0069 
+0070 <span class="comment">%%% get means for each group</span>
+0071 gmeans = repmat(NaN, ngroups, d);
+0072 <span class="keyword">for</span> k = 1:ngroups
+0073   gmeans(k,:) = mean(X(gindex==k,:),1);  <span class="keyword">end</span>;
+0074 
+0075 
+0076 <span class="comment">%%% get R (or RS)</span>
+0077 <span class="keyword">switch</span> type
+0078   <span class="keyword">case</span> 1 <span class="comment">% 'linear'</span>
+0079     <span class="keyword">if</span> n &lt;= ngroups
+0080       error(<span class="string">'TRAINING must have more observs than number of groups.'</span>); <span class="keyword">end</span>
+0081 
+0082     <span class="comment">% Pooled estimate of covariance</span>
+0083     [Q,R] = qr(X - gmeans(gindex,:), 0);
+0084     R = R / sqrt(n - ngroups); <span class="comment">% SigmaHat = R'*R</span>
+0085     s = svd(R);
+0086     <span class="keyword">if</span> any(s &lt;= max(s) * eps(class(s))^(3/4))
+0087       warning(<span class="string">'cov matrix of TRAIN must be pos definite.'</span>); <span class="keyword">end</span> <span class="comment">%#ok&lt;WNTAG&gt;</span>
+0088     clf.R = R;
+0089 
+0090   <span class="keyword">case</span> {2,3} <span class="comment">% 'quadratic' or 'mahalanobis'</span>
+0091     <span class="keyword">if</span> any(gsize &lt;= 1)
+0092       error(<span class="string">'Each Y in TRAINING must have at least two observations.'</span>); <span class="keyword">end</span>
+0093 
+0094     <span class="keyword">for</span> k = 1:ngroups
+0095       <span class="comment">% Stratified estimate of covariance</span>
+0096       [Q,R] = qr(X(gindex==k,:) - repmat(gmeans(k,:), gsize(k), 1), 0);
+0097       R = R / sqrt(gsize(k) - 1); <span class="comment">% SigmaHat = R'*R</span>
+0098       s = svd(R);
+0099       <span class="keyword">if</span> any(s &lt;= max(s) * eps(class(s))^(3/4))
+0100         error(<span class="string">'cov matrix of each Y in TRAINING must be pos definite.'</span>);<span class="keyword">end</span>
+0101       clf.RS{k}=R;
+0102     <span class="keyword">end</span>
+0103 <span class="keyword">end</span>
+0104 
+0105 <span class="comment">%%% store remaining clf variables</span>
+0106 clf.prior = prior;
+0107 clf.gmeans = gmeans;
+0108 clf.gtype = gtype;
+0109 clf.groups = groups;
+0110 clf.ngroups = ngroups;</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

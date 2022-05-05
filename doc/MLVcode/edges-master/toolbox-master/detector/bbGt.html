@@ -1,0 +1,1016 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bbGt</title>
+  <meta name="keywords" content="bbGt">
+  <meta name="description" content="Bounding box (bb) annotations struct, evaluation and sampling routines.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">detector</a> &gt; bbGt.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\detector&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>bbGt
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Bounding box (bb) annotations struct, evaluation and sampling routines.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = bbGt( action, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Bounding box (bb) annotations struct, evaluation and sampling routines.
+
+ bbGt gives access to two types of routines:
+ (1) Data structure for storing bb image annotations.
+ (2) Routines for evaluating the Pascal criteria for object detection.
+
+ The bb annotation stores bb for objects of interest with additional
+ information per object, such as occlusion information. The underlying
+ data structure is simply a Matlab stuct array, one struct per object.
+ This annotation format is an alternative to the annotation format used
+ for the PASCAL object challenges (in addition routines for loading PASCAL
+ format data are provided, see bbLoad()).
+
+ Each object struct has the following fields:
+  lbl  - a string label describing object type (eg: 'pedestrian')
+  bb   - [l t w h]: bb indicating predicted object extent
+  occ  - 0/1 value indicating if bb is occluded
+  bbv  - [l t w h]: bb indicating visible region (may be [0 0 0 0])
+  ign  - 0/1 value indicating bb was marked as ignore
+  ang  - [0-360] orientation of bb in degrees
+
+ Note: although orientation (angle) is stored for each bb, for now it is
+ not being used during evaluation or sampling.
+
+ bbGt contains a number of utility functions, accessed using:
+  outputs = bbGt( 'action', inputs );
+ The list of functions and help for each is given below. Also, help on
+ individual subfunctions can be accessed by: &quot;help bbGt&gt;action&quot;.
+
+%% (1) Data structure for storing bb image annotations.
+ Create annotation of n empty objects.
+   objs = bbGt( 'create', [n] );
+ Save bb annotation to text file.
+   objs = bbGt( 'bbSave', objs, fName )
+ Load bb annotation from text file and filter.
+   [objs,bbs] = bbGt( 'bbLoad', fName, [pLoad] )
+ Get object property 'name' (in a standard array).
+   vals = bbGt( 'get', objs, name )
+ Set object property 'name' (with a standard array).
+   objs = bbGt( 'set', objs, name, vals )
+ Draw an ellipse for each labeled object.
+   hs = draw( objs, pDraw )
+
+%% (2) Routines for evaluating the Pascal criteria for object detection.
+ Get all corresponding files in given directories.
+   [fs,fs0] = bbGt('getFiles', dirs, [f0], [f1] )
+ Copy corresponding files into given directories.
+   fs = bbGt( 'copyFiles', fs, dirs )
+ Load all ground truth and detection bbs in given directories.
+   [gt0,dt0] = bbGt( 'loadAll', gtDir, [dtDir], [pLoad] )
+ Evaluates detections against ground truth data.
+   [gt,dt] = bbGt( 'evalRes', gt0, dt0, [thr], [mul] )
+ Display evaluation results for given image.
+   [hs,hImg] = bbGt( 'showRes' I, gt, dt, varargin )
+ Compute ROC or PR based on outputs of evalRes on multiple images.
+   [xs,ys,ref] = bbGt( 'compRoc', gt, dt, roc, ref )
+ Extract true or false positives or negatives for visualization.
+   [Is,scores,imgIds] = bbGt( 'cropRes', gt, dt, imFs, varargin )
+ Computes (modified) overlap area between pairs of bbs.
+   oa = bbGt( 'compOas', dt, gt, [ig] )
+ Optimized version of compOas for a single pair of bbs.
+   oa = bbGt( 'compOa', dt, gt, ig )
+
+ USAGE
+  varargout = bbGt( action, varargin );
+
+ INPUTS
+  action     - string specifying action
+  varargin   - depends on action, see above
+
+ OUTPUTS
+  varargout  - depends on action, see above
+
+ EXAMPLE
+
+ See also <a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>, <a href="bbLabeler.html" class="code" title="function bbLabeler( objTypes, imgDir, resDir )">bbLabeler</a>, bbGt&gt;create, bbGt&gt;bbSave, bbGt&gt;bbLoad,
+ bbGt&gt;get, bbGt&gt;set, bbGt&gt;draw, bbGt&gt;getFiles, bbGt&gt;copyFiles,
+ bbGt&gt;loadAll, bbGt&gt;evalRes, bbGt&gt;showRes,  bbGt&gt;compRoc, bbGt&gt;cropRes,
+ bbGt&gt;compOas, bbGt&gt;compOa
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.26
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>	Functions for manipulating bounding boxes (bb).</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="acfDemoCal.html" class="code" title="">acfDemoCal</a>	Demo for aggregate channel features object detector on Caltech dataset.</li><li><a href="acfDemoInria.html" class="code" title="">acfDemoInria</a>	Demo for aggregate channel features object detector on Inria dataset.</li><li><a href="acfTest.html" class="code" title="function [miss,roc,gt,dt] = acfTest( varargin )">acfTest</a>	Test aggregate channel features object detector given ground truth.</li><li><a href="acfTrain.html" class="code" title="function detector = acfTrain( varargin )">acfTrain</a>	Train aggregate channel features object detector.</li><li><a href="bbLabeler.html" class="code" title="function bbLabeler( objTypes, imgDir, resDir )">bbLabeler</a>	Bounding box or ellipse labeler for static images.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function objs = create( n )</a></li><li><a href="#_sub2" class="code">function objs = bbSave( objs, fName )</a></li><li><a href="#_sub3" class="code">function [objs,bbs] = bbLoad( fName, varargin )</a></li><li><a href="#_sub4" class="code">function bb = bbExtent( bb, ang, ellipse )</a></li><li><a href="#_sub5" class="code">function vals = get( objs, name )</a></li><li><a href="#_sub6" class="code">function objs = set( objs, name, vals )</a></li><li><a href="#_sub7" class="code">function hs = draw( objs, varargin )</a></li><li><a href="#_sub8" class="code">function [fs,fs0] = getFiles( dirs, f0, f1 )</a></li><li><a href="#_sub9" class="code">function [fs0,fs1] = getFiles0( dir1, f0, f1, sep )</a></li><li><a href="#_sub10" class="code">function fs1 = getFiles1( dir1, fs0, sep )</a></li><li><a href="#_sub11" class="code">function fs = copyFiles( fs, dirs )</a></li><li><a href="#_sub12" class="code">function [gt0,dt0] = loadAll( gtDir, dtDir, pLoad )</a></li><li><a href="#_sub13" class="code">function [gt,dt] = evalRes( gt0, dt0, thr, mul )</a></li><li><a href="#_sub14" class="code">function [hs,hImg] = showRes( I, gt, dt, varargin )</a></li><li><a href="#_sub15" class="code">function [xs,ys,score,ref] = compRoc( gt, dt, roc, ref )</a></li><li><a href="#_sub16" class="code">function [Is,scores,imgIds] = cropRes( gt, dt, imFs, varargin )</a></li><li><a href="#_sub17" class="code">function oa = compOas( dt, gt, ig )</a></li><li><a href="#_sub18" class="code">function oa = compOa( dt, gt, ig )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = bbGt( action, varargin )</a>
+0002 <span class="comment">% Bounding box (bb) annotations struct, evaluation and sampling routines.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% bbGt gives access to two types of routines:</span>
+0005 <span class="comment">% (1) Data structure for storing bb image annotations.</span>
+0006 <span class="comment">% (2) Routines for evaluating the Pascal criteria for object detection.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% The bb annotation stores bb for objects of interest with additional</span>
+0009 <span class="comment">% information per object, such as occlusion information. The underlying</span>
+0010 <span class="comment">% data structure is simply a Matlab stuct array, one struct per object.</span>
+0011 <span class="comment">% This annotation format is an alternative to the annotation format used</span>
+0012 <span class="comment">% for the PASCAL object challenges (in addition routines for loading PASCAL</span>
+0013 <span class="comment">% format data are provided, see bbLoad()).</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Each object struct has the following fields:</span>
+0016 <span class="comment">%  lbl  - a string label describing object type (eg: 'pedestrian')</span>
+0017 <span class="comment">%  bb   - [l t w h]: bb indicating predicted object extent</span>
+0018 <span class="comment">%  occ  - 0/1 value indicating if bb is occluded</span>
+0019 <span class="comment">%  bbv  - [l t w h]: bb indicating visible region (may be [0 0 0 0])</span>
+0020 <span class="comment">%  ign  - 0/1 value indicating bb was marked as ignore</span>
+0021 <span class="comment">%  ang  - [0-360] orientation of bb in degrees</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Note: although orientation (angle) is stored for each bb, for now it is</span>
+0024 <span class="comment">% not being used during evaluation or sampling.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% bbGt contains a number of utility functions, accessed using:</span>
+0027 <span class="comment">%  outputs = bbGt( 'action', inputs );</span>
+0028 <span class="comment">% The list of functions and help for each is given below. Also, help on</span>
+0029 <span class="comment">% individual subfunctions can be accessed by: &quot;help bbGt&gt;action&quot;.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%%% (1) Data structure for storing bb image annotations.</span>
+0032 <span class="comment">% Create annotation of n empty objects.</span>
+0033 <span class="comment">%   objs = bbGt( 'create', [n] );</span>
+0034 <span class="comment">% Save bb annotation to text file.</span>
+0035 <span class="comment">%   objs = bbGt( 'bbSave', objs, fName )</span>
+0036 <span class="comment">% Load bb annotation from text file and filter.</span>
+0037 <span class="comment">%   [objs,bbs] = bbGt( 'bbLoad', fName, [pLoad] )</span>
+0038 <span class="comment">% Get object property 'name' (in a standard array).</span>
+0039 <span class="comment">%   vals = bbGt( 'get', objs, name )</span>
+0040 <span class="comment">% Set object property 'name' (with a standard array).</span>
+0041 <span class="comment">%   objs = bbGt( 'set', objs, name, vals )</span>
+0042 <span class="comment">% Draw an ellipse for each labeled object.</span>
+0043 <span class="comment">%   hs = draw( objs, pDraw )</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%%% (2) Routines for evaluating the Pascal criteria for object detection.</span>
+0046 <span class="comment">% Get all corresponding files in given directories.</span>
+0047 <span class="comment">%   [fs,fs0] = bbGt('getFiles', dirs, [f0], [f1] )</span>
+0048 <span class="comment">% Copy corresponding files into given directories.</span>
+0049 <span class="comment">%   fs = bbGt( 'copyFiles', fs, dirs )</span>
+0050 <span class="comment">% Load all ground truth and detection bbs in given directories.</span>
+0051 <span class="comment">%   [gt0,dt0] = bbGt( 'loadAll', gtDir, [dtDir], [pLoad] )</span>
+0052 <span class="comment">% Evaluates detections against ground truth data.</span>
+0053 <span class="comment">%   [gt,dt] = bbGt( 'evalRes', gt0, dt0, [thr], [mul] )</span>
+0054 <span class="comment">% Display evaluation results for given image.</span>
+0055 <span class="comment">%   [hs,hImg] = bbGt( 'showRes' I, gt, dt, varargin )</span>
+0056 <span class="comment">% Compute ROC or PR based on outputs of evalRes on multiple images.</span>
+0057 <span class="comment">%   [xs,ys,ref] = bbGt( 'compRoc', gt, dt, roc, ref )</span>
+0058 <span class="comment">% Extract true or false positives or negatives for visualization.</span>
+0059 <span class="comment">%   [Is,scores,imgIds] = bbGt( 'cropRes', gt, dt, imFs, varargin )</span>
+0060 <span class="comment">% Computes (modified) overlap area between pairs of bbs.</span>
+0061 <span class="comment">%   oa = bbGt( 'compOas', dt, gt, [ig] )</span>
+0062 <span class="comment">% Optimized version of compOas for a single pair of bbs.</span>
+0063 <span class="comment">%   oa = bbGt( 'compOa', dt, gt, ig )</span>
+0064 <span class="comment">%</span>
+0065 <span class="comment">% USAGE</span>
+0066 <span class="comment">%  varargout = bbGt( action, varargin );</span>
+0067 <span class="comment">%</span>
+0068 <span class="comment">% INPUTS</span>
+0069 <span class="comment">%  action     - string specifying action</span>
+0070 <span class="comment">%  varargin   - depends on action, see above</span>
+0071 <span class="comment">%</span>
+0072 <span class="comment">% OUTPUTS</span>
+0073 <span class="comment">%  varargout  - depends on action, see above</span>
+0074 <span class="comment">%</span>
+0075 <span class="comment">% EXAMPLE</span>
+0076 <span class="comment">%</span>
+0077 <span class="comment">% See also bbApply, bbLabeler, bbGt&gt;create, bbGt&gt;bbSave, bbGt&gt;bbLoad,</span>
+0078 <span class="comment">% bbGt&gt;get, bbGt&gt;set, bbGt&gt;draw, bbGt&gt;getFiles, bbGt&gt;copyFiles,</span>
+0079 <span class="comment">% bbGt&gt;loadAll, bbGt&gt;evalRes, bbGt&gt;showRes,  bbGt&gt;compRoc, bbGt&gt;cropRes,</span>
+0080 <span class="comment">% bbGt&gt;compOas, bbGt&gt;compOa</span>
+0081 <span class="comment">%</span>
+0082 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.26</span>
+0083 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0084 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0085 
+0086 <span class="comment">%#ok&lt;*DEFNU&gt;</span>
+0087 varargout = cell(1,max(1,nargout));
+0088 [varargout{:}] = feval(action,varargin{:});
+0089 <span class="keyword">end</span>
+0090 
+0091 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0092 
+0093 <a name="_sub1" href="#_subfunctions" class="code">function objs = create( n )</a>
+0094 <span class="comment">% Create annotation of n empty objects.</span>
+0095 <span class="comment">%</span>
+0096 <span class="comment">% USAGE</span>
+0097 <span class="comment">%  objs = bbGt( 'create', [n] )</span>
+0098 <span class="comment">%</span>
+0099 <span class="comment">% INPUTS</span>
+0100 <span class="comment">%  n      - [1] number of objects to create</span>
+0101 <span class="comment">%</span>
+0102 <span class="comment">% OUTPUTS</span>
+0103 <span class="comment">%  objs   - annotation of n 'empty' objects</span>
+0104 <span class="comment">%</span>
+0105 <span class="comment">% EXAMPLE</span>
+0106 <span class="comment">%  objs = bbGt('create')</span>
+0107 <span class="comment">%</span>
+0108 <span class="comment">% See also bbGt</span>
+0109 o=struct(<span class="string">'lbl'</span>,<span class="string">''</span>,<span class="string">'bb'</span>,[0 0 0 0],<span class="string">'occ'</span>,0,<span class="string">'bbv'</span>,[0 0 0 0],<span class="string">'ign'</span>,0,<span class="string">'ang'</span>,0);
+0110 <span class="keyword">if</span>(nargin&lt;1 || n==1), objs=o; <span class="keyword">return</span>; <span class="keyword">end</span>; objs=o(ones(n,1));
+0111 <span class="keyword">end</span>
+0112 
+0113 <a name="_sub2" href="#_subfunctions" class="code">function objs = bbSave( objs, fName )</a>
+0114 <span class="comment">% Save bb annotation to text file.</span>
+0115 <span class="comment">%</span>
+0116 <span class="comment">% USAGE</span>
+0117 <span class="comment">%  objs = bbGt( 'bbSave', objs, fName )</span>
+0118 <span class="comment">%</span>
+0119 <span class="comment">% INPUTS</span>
+0120 <span class="comment">%  objs   - objects to save</span>
+0121 <span class="comment">%  fName  - name of text file</span>
+0122 <span class="comment">%</span>
+0123 <span class="comment">% OUTPUTS</span>
+0124 <span class="comment">%  objs   - objects to save</span>
+0125 <span class="comment">%</span>
+0126 <span class="comment">% EXAMPLE</span>
+0127 <span class="comment">%</span>
+0128 <span class="comment">% See also bbGt, bbGt&gt;bbLoad</span>
+0129 vers=3; fid=fopen(fName,<span class="string">'w'</span>); assert(fid&gt;0);
+0130 fprintf(fid,<span class="string">'%% bbGt version=%i\n'</span>,vers);
+0131 objs=<a href="#_sub6" class="code" title="subfunction objs = set( objs, name, vals )">set</a>(objs,<span class="string">'bb'</span>,round(<a href="#_sub5" class="code" title="subfunction vals = get( objs, name )">get</a>(objs,<span class="string">'bb'</span>)));
+0132 objs=<a href="#_sub6" class="code" title="subfunction objs = set( objs, name, vals )">set</a>(objs,<span class="string">'bbv'</span>,round(<a href="#_sub5" class="code" title="subfunction vals = get( objs, name )">get</a>(objs,<span class="string">'bbv'</span>)));
+0133 objs=<a href="#_sub6" class="code" title="subfunction objs = set( objs, name, vals )">set</a>(objs,<span class="string">'ang'</span>,round(<a href="#_sub5" class="code" title="subfunction vals = get( objs, name )">get</a>(objs,<span class="string">'ang'</span>)));
+0134 <span class="keyword">for</span> i=1:length(objs)
+0135   o=objs(i); bb=o.bb; bbv=o.bbv;
+0136   fprintf(fid,[<span class="string">'%s'</span> repmat(<span class="string">' %i'</span>,1,11) <span class="string">'\n'</span>],o.lbl,<span class="keyword">...</span>
+0137     bb,o.occ,bbv,o.ign,o.ang);
+0138 <span class="keyword">end</span>
+0139 fclose(fid);
+0140 <span class="keyword">end</span>
+0141 
+0142 <a name="_sub3" href="#_subfunctions" class="code">function [objs,bbs] = bbLoad( fName, varargin )</a>
+0143 <span class="comment">% Load bb annotation from text file and filter.</span>
+0144 <span class="comment">%</span>
+0145 <span class="comment">% FORMAT: Specify 'format' to indicate the format of the ground truth.</span>
+0146 <span class="comment">% format=0 is the default format (created by bbSave/bbLabeler). format=1 is</span>
+0147 <span class="comment">% the PASCAL VOC format. Loading ground truth in this format requires</span>
+0148 <span class="comment">% 'VOCcode/' to be in directory path. It's part of VOCdevkit available from</span>
+0149 <span class="comment">% the PASCAL VOC: http://pascallin.ecs.soton.ac.uk/challenges/VOC/. Objects</span>
+0150 <span class="comment">% labeled as either 'truncated' or 'occluded' using the PASCAL definitions</span>
+0151 <span class="comment">% have the 'occ' flag set to true. Objects labeled as 'difficult' have the</span>
+0152 <span class="comment">% 'ign' flag set to true. 'class' is used for 'lbl'. format=2 is the</span>
+0153 <span class="comment">% ImageNet detection format and requires the ImageNet Dev Kit.</span>
+0154 <span class="comment">%</span>
+0155 <span class="comment">% FILTERING: After loading, the objects can be filtered. First, only</span>
+0156 <span class="comment">% objects with lbl in lbls or ilbls or returned. For each object, obj.ign</span>
+0157 <span class="comment">% is set to 1 if it was already at 1, if its label was in ilbls, or if any</span>
+0158 <span class="comment">% object property is outside of the specified range. The ignore flag is</span>
+0159 <span class="comment">% used during training and testing so that objects with certain properties</span>
+0160 <span class="comment">% (such as very small or heavily occluded objects) are excluded. The range</span>
+0161 <span class="comment">% for each property is a two element vector, [0 inf] by default; a property</span>
+0162 <span class="comment">% value v is inside the range if v&gt;=rng(1) &amp;&amp; v&lt;=rng(2). Tested properties</span>
+0163 <span class="comment">% include height (h), width (w), area (a), aspect ratio (ar), orientation</span>
+0164 <span class="comment">% (o), extent x-coordinate (x), extent y-coordinate (y), and fraction</span>
+0165 <span class="comment">% visible (v). The last property is computed as the visible object area</span>
+0166 <span class="comment">% divided by the total area, except if o.occ==0, in which case v=1, or</span>
+0167 <span class="comment">% all(o.bbv==o.bb), which indicates the object may be barely visible, in</span>
+0168 <span class="comment">% which case v=0 (note that v~=1 in this case).</span>
+0169 <span class="comment">%</span>
+0170 <span class="comment">% RETURN: In addition to outputting the objs, bbLoad() can return the</span>
+0171 <span class="comment">% corresponding bounding boxes (bbs) in an [nx5] array where each row is of</span>
+0172 <span class="comment">% the form [x y w h ignore], [x y w h] is the bb and ignore=obj.ign. For</span>
+0173 <span class="comment">% oriented bbs, the extent of the bb is returned, where the extent is the</span>
+0174 <span class="comment">% smallest axis aligned bb containing the oriented bb. If the oriented bb</span>
+0175 <span class="comment">% was labeled as a rectangle as opposed to an ellipse, the tightest bb will</span>
+0176 <span class="comment">% usually increase slightly in size due to the corners of the rectangle</span>
+0177 <span class="comment">% sticking out beyond the ellipse bounds. The 'ellipse' flag controls how</span>
+0178 <span class="comment">% an oriented bb is converted to a regular bb. Specifically, set ellipse=1</span>
+0179 <span class="comment">% if an ellipse tightly delineates the object and 0 if a rectangle does.</span>
+0180 <span class="comment">% Finally, if 'squarify' is not empty the (non-ignore) bbs are converted to</span>
+0181 <span class="comment">% a fixed aspect ratio using bbs=bbApply('squarify',bbs,squarify{:}).</span>
+0182 <span class="comment">%</span>
+0183 <span class="comment">% USAGE</span>
+0184 <span class="comment">%  [objs,bbs] = bbGt( 'bbLoad', fName, [pLoad] )</span>
+0185 <span class="comment">%</span>
+0186 <span class="comment">% INPUTS</span>
+0187 <span class="comment">%  fName    - name of text file</span>
+0188 <span class="comment">%  pLoad    - parameters (struct or name/value pairs)</span>
+0189 <span class="comment">%   .format   - [0] gt format 0:default, 1:PASCAL, 2:ImageNet</span>
+0190 <span class="comment">%   .ellipse  - [1] controls how oriented bb is converted to regular bb</span>
+0191 <span class="comment">%   .squarify - [] controls optional reshaping of bbs to fixed aspect ratio</span>
+0192 <span class="comment">%   .lbls     - [] return objs with these labels (or [] to return all)</span>
+0193 <span class="comment">%   .ilbls    - [] return objs with these labels but set to ignore</span>
+0194 <span class="comment">%   .hRng     - [] range of acceptable obj heights</span>
+0195 <span class="comment">%   .wRng     - [] range of acceptable obj widths</span>
+0196 <span class="comment">%   .aRng     - [] range of acceptable obj areas</span>
+0197 <span class="comment">%   .arRng    - [] range of acceptable obj aspect ratios</span>
+0198 <span class="comment">%   .oRng     - [] range of acceptable obj orientations (angles)</span>
+0199 <span class="comment">%   .xRng     - [] range of x coordinates of bb extent</span>
+0200 <span class="comment">%   .yRng     - [] range of y coordinates of bb extent</span>
+0201 <span class="comment">%   .vRng     - [] range of acceptable obj occlusion levels</span>
+0202 <span class="comment">%</span>
+0203 <span class="comment">% OUTPUTS</span>
+0204 <span class="comment">%  objs     - loaded objects</span>
+0205 <span class="comment">%  bbs      - [nx5] array containg ground truth bbs [x y w h ignore]</span>
+0206 <span class="comment">%</span>
+0207 <span class="comment">% EXAMPLE</span>
+0208 <span class="comment">%</span>
+0209 <span class="comment">% See also bbGt, bbGt&gt;bbSave</span>
+0210 
+0211 <span class="comment">% get parameters</span>
+0212 df={<span class="string">'format'</span>,0,<span class="string">'ellipse'</span>,1,<span class="string">'squarify'</span>,[],<span class="string">'lbls'</span>,[],<span class="string">'ilbls'</span>,[],<span class="string">'hRng'</span>,[],<span class="keyword">...</span>
+0213   <span class="string">'wRng'</span>,[],<span class="string">'aRng'</span>,[],<span class="string">'arRng'</span>,[],<span class="string">'oRng'</span>,[],<span class="string">'xRng'</span>,[],<span class="string">'yRng'</span>,[],<span class="string">'vRng'</span>,[]};
+0214 [format,ellipse,sqr,lbls,ilbls,hRng,wRng,aRng,arRng,oRng,xRng,yRng,vRng]<span class="keyword">...</span>
+0215   = getPrmDflt(varargin,df,1);
+0216 
+0217 <span class="comment">% load objs</span>
+0218 <span class="keyword">if</span>( format==0 )
+0219   <span class="comment">% load objs stored in default format</span>
+0220   fId=fopen(fName);
+0221   <span class="keyword">if</span>(fId==-1), error([<span class="string">'unable to open file: '</span> fName]); <span class="keyword">end</span>; v=0;
+0222   <span class="keyword">try</span> v=textscan(fId,<span class="string">'%% bbGt version=%d'</span>); v=v{1}; <span class="keyword">catch</span>, <span class="keyword">end</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+0223   <span class="keyword">if</span>(isempty(v)), v=0; <span class="keyword">end</span>
+0224   <span class="comment">% read in annotation (m is number of fields for given version v)</span>
+0225   <span class="keyword">if</span>(all(v~=[0 1 2 3])), error(<span class="string">'Unknown version %i.'</span>,v); <span class="keyword">end</span>
+0226   frmt=<span class="string">'%s %d %d %d %d %d %d %d %d %d %d %d'</span>;
+0227   ms=[10 10 11 12]; m=ms(v+1); frmt=frmt(1:2+(m-1)*3);
+0228   in=textscan(fId,frmt); <span class="keyword">for</span> i=2:m, in{i}=double(in{i}); <span class="keyword">end</span>; fclose(fId);
+0229   <span class="comment">% create objs struct from read in fields</span>
+0230   n=length(in{1}); objs=<a href="#_sub1" class="code" title="subfunction objs = create( n )">create</a>(n);
+0231   <span class="keyword">for</span> i=1:n, objs(i).lbl=in{1}{i}; objs(i).occ=in{6}(i); <span class="keyword">end</span>
+0232   bb=[in{2} in{3} in{4} in{5}]; bbv=[in{7} in{8} in{9} in{10}];
+0233   <span class="keyword">for</span> i=1:n, objs(i).bb=bb(i,:); objs(i).bbv=bbv(i,:); <span class="keyword">end</span>
+0234   <span class="keyword">if</span>(m&gt;=11), <span class="keyword">for</span> i=1:n, objs(i).ign=in{11}(i); <span class="keyword">end</span>; <span class="keyword">end</span>
+0235   <span class="keyword">if</span>(m&gt;=12), <span class="keyword">for</span> i=1:n, objs(i).ang=in{12}(i); <span class="keyword">end</span>; <span class="keyword">end</span>
+0236 <span class="keyword">elseif</span>( format==1 )
+0237   <span class="comment">% load objs stored in PASCAL VOC format</span>
+0238   <span class="keyword">if</span>(exist(<span class="string">'PASreadrecord.m'</span>,<span class="string">'file'</span>)~=2)
+0239     error(<span class="string">'bbLoad() requires the PASCAL VOC code.'</span>); <span class="keyword">end</span>
+0240   os=PASreadrecord(fName); os=os.objects;
+0241   n=length(os); objs=<a href="#_sub1" class="code" title="subfunction objs = create( n )">create</a>(n);
+0242   <span class="keyword">if</span>(~isfield(os,<span class="string">'occluded'</span>)), <span class="keyword">for</span> i=1:n, os(i).occluded=0; <span class="keyword">end</span>; <span class="keyword">end</span>
+0243   <span class="keyword">for</span> i=1:n
+0244     bb=os(i).bbox; bb(3)=bb(3)-bb(1); bb(4)=bb(4)-bb(2); objs(i).bb=bb;
+0245     objs(i).lbl=os(i).class; objs(i).ign=os(i).difficult;
+0246     objs(i).occ=os(i).occluded || os(i).truncated;
+0247     <span class="keyword">if</span>(objs(i).occ), objs(i).bbv=bb; <span class="keyword">end</span>
+0248   <span class="keyword">end</span>
+0249 <span class="keyword">elseif</span>( format==2 )
+0250   <span class="keyword">if</span>(exist(<span class="string">'VOCreadxml.m'</span>,<span class="string">'file'</span>)~=2)
+0251     error(<span class="string">'bbLoad() requires the ImageNet dev code.'</span>); <span class="keyword">end</span>
+0252   os=VOCreadxml(fName); os=os.annotation;
+0253   <span class="keyword">if</span>(isfield(os,<span class="string">'object'</span>)), os=os.object; <span class="keyword">else</span> os=[]; <span class="keyword">end</span>
+0254   n=length(os); objs=<a href="#_sub1" class="code" title="subfunction objs = create( n )">create</a>(n);
+0255   <span class="keyword">for</span> i=1:n
+0256     bb=os(i).bndbox; bb=str2double({bb.xmin bb.ymin bb.xmax bb.ymax});
+0257     bb(3)=bb(3)-bb(1); bb(4)=bb(4)-bb(2); objs(i).bb=bb;
+0258     objs(i).lbl=os(i).name;
+0259   <span class="keyword">end</span>
+0260 <span class="keyword">else</span> error(<span class="string">'bbLoad() unknown format: %i'</span>,format);
+0261 <span class="keyword">end</span>
+0262 
+0263 <span class="comment">% only keep objects whose lbl is in lbls or ilbls</span>
+0264 <span class="keyword">if</span>(~isempty(lbls) || ~isempty(ilbls)), K=true(n,1);
+0265   <span class="keyword">for</span> i=1:n, K(i)=any(strcmp(objs(i).lbl,[lbls ilbls])); <span class="keyword">end</span>
+0266   objs=objs(K); n=length(objs);
+0267 <span class="keyword">end</span>
+0268 
+0269 <span class="comment">% filter objs (set ignore flags)</span>
+0270 <span class="keyword">for</span> i=1:n, objs(i).ang=mod(objs(i).ang,360); <span class="keyword">end</span>
+0271 <span class="keyword">if</span>(~isempty(ilbls)), <span class="keyword">for</span> i=1:n, v=objs(i).lbl;
+0272     objs(i).ign = objs(i).ign || any(strcmp(v,ilbls)); <span class="keyword">end</span>; <span class="keyword">end</span>
+0273 <span class="keyword">if</span>(~isempty(xRng)),  <span class="keyword">for</span> i=1:n, v=objs(i).bb(1);
+0274     objs(i).ign = objs(i).ign || v&lt;xRng(1) || v&gt;xRng(2); <span class="keyword">end</span>; <span class="keyword">end</span>
+0275 <span class="keyword">if</span>(~isempty(xRng)),  <span class="keyword">for</span> i=1:n, v=objs(i).bb(1)+objs(i).bb(3);
+0276     objs(i).ign = objs(i).ign || v&lt;xRng(1) || v&gt;xRng(2); <span class="keyword">end</span>; <span class="keyword">end</span>
+0277 <span class="keyword">if</span>(~isempty(yRng)),  <span class="keyword">for</span> i=1:n, v=objs(i).bb(2);
+0278     objs(i).ign = objs(i).ign || v&lt;yRng(1) || v&gt;yRng(2); <span class="keyword">end</span>; <span class="keyword">end</span>
+0279 <span class="keyword">if</span>(~isempty(yRng)),  <span class="keyword">for</span> i=1:n, v=objs(i).bb(2)+objs(i).bb(4);
+0280     objs(i).ign = objs(i).ign || v&lt;yRng(1) || v&gt;yRng(2); <span class="keyword">end</span>; <span class="keyword">end</span>
+0281 <span class="keyword">if</span>(~isempty(wRng)),  <span class="keyword">for</span> i=1:n, v=objs(i).bb(3);
+0282     objs(i).ign = objs(i).ign || v&lt;wRng(1) || v&gt;wRng(2); <span class="keyword">end</span>; <span class="keyword">end</span>
+0283 <span class="keyword">if</span>(~isempty(hRng)),  <span class="keyword">for</span> i=1:n, v=objs(i).bb(4);
+0284     objs(i).ign = objs(i).ign || v&lt;hRng(1) || v&gt;hRng(2); <span class="keyword">end</span>; <span class="keyword">end</span>
+0285 <span class="keyword">if</span>(~isempty(oRng)),  <span class="keyword">for</span> i=1:n, v=objs(i).ang; <span class="keyword">if</span>(v&gt;180), v=v-360; <span class="keyword">end</span>
+0286     objs(i).ign = objs(i).ign || v&lt;oRng(1) || v&gt;oRng(2); <span class="keyword">end</span>; <span class="keyword">end</span>
+0287 <span class="keyword">if</span>(~isempty(aRng)),  <span class="keyword">for</span> i=1:n, v=objs(i).bb(3)*objs(i).bb(4);
+0288     objs(i).ign = objs(i).ign || v&lt;aRng(1) || v&gt;aRng(2); <span class="keyword">end</span>; <span class="keyword">end</span>
+0289 <span class="keyword">if</span>(~isempty(arRng)), <span class="keyword">for</span> i=1:n, v=objs(i).bb(3)/objs(i).bb(4);
+0290     objs(i).ign = objs(i).ign || v&lt;arRng(1) || v&gt;arRng(2); <span class="keyword">end</span>; <span class="keyword">end</span>
+0291 <span class="keyword">if</span>(~isempty(vRng)),  <span class="keyword">for</span> i=1:n, o=objs(i); bb=o.bb; bbv=o.bbv; <span class="comment">%#ok&lt;ALIGN&gt;</span>
+0292     <span class="keyword">if</span>(~o.occ || all(bbv==0)), v=1; <span class="keyword">elseif</span>(all(bbv==bb)), v=0; <span class="keyword">else</span>
+0293       v=(bbv(3)*bbv(4))/(bb(3)*bb(4)); <span class="keyword">end</span>
+0294     objs(i).ign = objs(i).ign || v&lt;vRng(1) || v&gt;vRng(2); <span class="keyword">end</span>
+0295 <span class="keyword">end</span>
+0296 
+0297 <span class="comment">% finally get extent of each bounding box (not trivial if ang~=0)</span>
+0298 <span class="keyword">if</span>(nargout&lt;=1), <span class="keyword">return</span>; <span class="keyword">end</span>; <span class="keyword">if</span>(n==0), bbs=zeros(0,5); <span class="keyword">return</span>; <span class="keyword">end</span>
+0299 bbs=double([reshape([objs.bb],4,[]); [objs.ign]]'); ign=bbs(:,5)==1;
+0300 <span class="keyword">for</span> i=1:n, bbs(i,1:4)=<a href="#_sub4" class="code" title="subfunction bb = bbExtent( bb, ang, ellipse )">bbExtent</a>(bbs(i,1:4),objs(i).ang,ellipse); <span class="keyword">end</span>
+0301 <span class="keyword">if</span>(~isempty(sqr)), bbs(~ign,:)=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'squarify'</span>,bbs(~ign,:),sqr{:}); <span class="keyword">end</span>
+0302 
+0303   <a name="_sub4" href="#_subfunctions" class="code">function bb = bbExtent( bb, ang, ellipse )</a>
+0304     <span class="comment">% get bb that fully contains given oriented bb</span>
+0305     <span class="keyword">if</span>(~ang), <span class="keyword">return</span>; <span class="keyword">end</span>
+0306     <span class="keyword">if</span>( ellipse ) <span class="comment">% get bb that encompases ellipse (tighter)</span>
+0307       x=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'getCenter'</span>,bb); a=bb(4)/2; b=bb(3)/2; ang=ang-90;
+0308       rx=(a*cosd(ang))^2+(b*sind(ang))^2; rx=abs(rx/sqrt(rx));
+0309       ry=(a*sind(ang))^2+(b*cosd(ang))^2; ry=abs(ry/sqrt(ry));
+0310       bb=[x(1)-rx x(2)-ry 2*rx 2*ry];
+0311     <span class="keyword">else</span> <span class="comment">% get bb that encompases rectangle (looser)</span>
+0312       c=cosd(ang); s=sind(ang); R=[c -s; s c]; rs=bb(3:4)/2;
+0313       x0=-rs(1); x1=rs(1); y0=-rs(2); y1=rs(2); pc=bb(1:2)+rs;
+0314       p=[x0 y0; x1 y0; x1 y1; x0 y1]*R'+pc(ones(4,1),:);
+0315       x0=min(p(:,1)); x1=max(p(:,1)); y0=min(p(:,2)); y1=max(p(:,2));
+0316       bb=[x0 y0 x1-x0 y1-y0];
+0317     <span class="keyword">end</span>
+0318   <span class="keyword">end</span>
+0319 <span class="keyword">end</span>
+0320 
+0321 <a name="_sub5" href="#_subfunctions" class="code">function vals = get( objs, name )</a>
+0322 <span class="comment">% Get object property 'name' (in a standard array).</span>
+0323 <span class="comment">%</span>
+0324 <span class="comment">% USAGE</span>
+0325 <span class="comment">%  vals = bbGt( 'get', objs, name )</span>
+0326 <span class="comment">%</span>
+0327 <span class="comment">% INPUTS</span>
+0328 <span class="comment">%  objs   - [nx1] struct array of objects</span>
+0329 <span class="comment">%  name   - property name ('lbl','bb','occ',etc.)</span>
+0330 <span class="comment">%</span>
+0331 <span class="comment">% OUTPUTS</span>
+0332 <span class="comment">%  vals   - [nxk] array of n values (k=1 or 4)</span>
+0333 <span class="comment">%</span>
+0334 <span class="comment">% EXAMPLE</span>
+0335 <span class="comment">%</span>
+0336 <span class="comment">% See also bbGt, bbGt&gt;set</span>
+0337 nObj=length(objs); <span class="keyword">if</span>(nObj==0), vals=[]; <span class="keyword">return</span>; <span class="keyword">end</span>
+0338 <span class="keyword">switch</span> name
+0339   <span class="keyword">case</span> <span class="string">'lbl'</span>, vals={objs.lbl}';
+0340   <span class="keyword">case</span> <span class="string">'bb'</span>,  vals=reshape([objs.bb]',4,[])';
+0341   <span class="keyword">case</span> <span class="string">'occ'</span>, vals=[objs.occ]';
+0342   <span class="keyword">case</span> <span class="string">'bbv'</span>, vals=reshape([objs.bbv]',4,[])';
+0343   <span class="keyword">case</span> <span class="string">'ign'</span>, vals=[objs.ign]';
+0344   <span class="keyword">case</span> <span class="string">'ang'</span>, vals=[objs.ang]';
+0345   <span class="keyword">otherwise</span>, error(<span class="string">'unkown type %s'</span>,name);
+0346 <span class="keyword">end</span>
+0347 <span class="keyword">end</span>
+0348 
+0349 <a name="_sub6" href="#_subfunctions" class="code">function objs = set( objs, name, vals )</a>
+0350 <span class="comment">% Set object property 'name' (with a standard array).</span>
+0351 <span class="comment">%</span>
+0352 <span class="comment">% USAGE</span>
+0353 <span class="comment">%  objs = bbGt( 'set', objs, name, vals )</span>
+0354 <span class="comment">%</span>
+0355 <span class="comment">% INPUTS</span>
+0356 <span class="comment">%  objs   - [nx1] struct array of objects</span>
+0357 <span class="comment">%  name   - property name ('lbl','bb','occ',etc.)</span>
+0358 <span class="comment">%  vals   - [nxk] array of n values (k=1 or 4)</span>
+0359 <span class="comment">%</span>
+0360 <span class="comment">% OUTPUTS</span>
+0361 <span class="comment">%  objs   - [nx1] struct array of updated objects</span>
+0362 <span class="comment">%</span>
+0363 <span class="comment">% EXAMPLE</span>
+0364 <span class="comment">%</span>
+0365 <span class="comment">% See also bbGt, bbGt&gt;get</span>
+0366 nObj=length(objs);
+0367 <span class="keyword">switch</span> name
+0368   <span class="keyword">case</span> <span class="string">'lbl'</span>, <span class="keyword">for</span> i=1:nObj, objs(i).lbl=vals{i}; <span class="keyword">end</span>
+0369   <span class="keyword">case</span> <span class="string">'bb'</span>,  <span class="keyword">for</span> i=1:nObj, objs(i).bb=vals(i,:); <span class="keyword">end</span>
+0370   <span class="keyword">case</span> <span class="string">'occ'</span>, <span class="keyword">for</span> i=1:nObj, objs(i).occ=vals(i); <span class="keyword">end</span>
+0371   <span class="keyword">case</span> <span class="string">'bbv'</span>, <span class="keyword">for</span> i=1:nObj, objs(i).bbv=vals(i,:); <span class="keyword">end</span>
+0372   <span class="keyword">case</span> <span class="string">'ign'</span>, <span class="keyword">for</span> i=1:nObj, objs(i).ign=vals(i); <span class="keyword">end</span>
+0373   <span class="keyword">case</span> <span class="string">'ang'</span>, <span class="keyword">for</span> i=1:nObj, objs(i).ang=vals(i); <span class="keyword">end</span>
+0374   <span class="keyword">otherwise</span>, error(<span class="string">'unkown type %s'</span>,name);
+0375 <span class="keyword">end</span>
+0376 <span class="keyword">end</span>
+0377 
+0378 <a name="_sub7" href="#_subfunctions" class="code">function hs = draw( objs, varargin )</a>
+0379 <span class="comment">% Draw an ellipse for each labeled object.</span>
+0380 <span class="comment">%</span>
+0381 <span class="comment">% USAGE</span>
+0382 <span class="comment">%  hs = bbGt( 'draw', objs, pDraw )</span>
+0383 <span class="comment">%</span>
+0384 <span class="comment">% INPUTS</span>
+0385 <span class="comment">%  objs       - [nx1] struct array of objects</span>
+0386 <span class="comment">%  pDraw      - parameters (struct or name/value pairs)</span>
+0387 <span class="comment">%   .col        - ['g'] color or [nx1] array of colors</span>
+0388 <span class="comment">%   .lw         - [2] line width</span>
+0389 <span class="comment">%   .ls         - ['-'] line style</span>
+0390 <span class="comment">%</span>
+0391 <span class="comment">% OUTPUTS</span>
+0392 <span class="comment">%  hs     - [nx1] handles to drawn graphic objects</span>
+0393 <span class="comment">%</span>
+0394 <span class="comment">% EXAMPLE</span>
+0395 <span class="comment">%</span>
+0396 <span class="comment">% See also bbGt</span>
+0397 dfs={<span class="string">'col'</span>,[],<span class="string">'lw'</span>,2,<span class="string">'ls'</span>,<span class="string">'-'</span>};
+0398 [col,lw,ls]=getPrmDflt(varargin,dfs,1);
+0399 n=length(objs); hold on; hs=zeros(n,4);
+0400 <span class="keyword">if</span>(isempty(col)), <span class="keyword">if</span>(n==1), col=<span class="string">'g'</span>; <span class="keyword">else</span> col=hsv(n); <span class="keyword">end</span>; <span class="keyword">end</span>
+0401 tProp={<span class="string">'FontSize'</span>,10,<span class="string">'color'</span>,<span class="string">'w'</span>,<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>,<span class="keyword">...</span>
+0402   <span class="string">'VerticalAlignment'</span>,<span class="string">'bottom'</span>};
+0403 <span class="keyword">for</span> i=1:n
+0404   bb=objs(i).bb; ci=col(i,:);
+0405   hs(i,1)=text(bb(1),bb(2),objs(i).lbl,tProp{:});
+0406   x=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'getCenter'</span>,bb); r=bb(3:4)/2; a=objs(i).ang/180*pi-pi/2;
+0407   [hs(i,2),hs(i,3),hs(i,4)]=plotEllipse(x(2),x(1),r(2),r(1),a,ci,[],lw,ls);
+0408 <span class="keyword">end</span>; hold off;
+0409 <span class="keyword">end</span>
+0410 
+0411 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0412 
+0413 <a name="_sub8" href="#_subfunctions" class="code">function [fs,fs0] = getFiles( dirs, f0, f1 )</a>
+0414 <span class="comment">% Get all corresponding files in given directories.</span>
+0415 <span class="comment">%</span>
+0416 <span class="comment">% The first dir in 'dirs' serves as the baseline dir. getFiles() returns</span>
+0417 <span class="comment">% all files in the baseline dir and all corresponding files in the</span>
+0418 <span class="comment">% remaining dirs to the files in the baseline dir, in the same order. Two</span>
+0419 <span class="comment">% files are in correspondence if they have the same base name (regardless</span>
+0420 <span class="comment">% of extension). For example, given a file named &quot;name.jpg&quot;, a</span>
+0421 <span class="comment">% corresponding file may be named &quot;name.txt&quot; or &quot;name.jpg.txt&quot;. Every file</span>
+0422 <span class="comment">% in the baseline dir must have a matching file in the remaining dirs.</span>
+0423 <span class="comment">%</span>
+0424 <span class="comment">% USAGE</span>
+0425 <span class="comment">%  [fs,fs0] = bbGt('getFiles', dirs, [f0], [f1] )</span>
+0426 <span class="comment">%</span>
+0427 <span class="comment">% INPUTS</span>
+0428 <span class="comment">%   dirs      - {1xm} list of m directories</span>
+0429 <span class="comment">%   f0        - [1] index of first file in baseline dir to use</span>
+0430 <span class="comment">%   f1        - [inf] index of last file in baseline dir to use</span>
+0431 <span class="comment">%</span>
+0432 <span class="comment">% OUTPUTS</span>
+0433 <span class="comment">%   fs        - {mxn} list of full file names in each dir</span>
+0434 <span class="comment">%   fs0       - {1xn} list of file names without path or extensions</span>
+0435 <span class="comment">%</span>
+0436 <span class="comment">% EXAMPLE</span>
+0437 <span class="comment">%</span>
+0438 <span class="comment">% See also bbGt</span>
+0439 
+0440 <span class="keyword">if</span>(nargin&lt;2 || isempty(f0)), f0=1; <span class="keyword">end</span>
+0441 <span class="keyword">if</span>(nargin&lt;3 || isempty(f1)), f1=inf; <span class="keyword">end</span>
+0442 m=length(dirs); assert(m&gt;0); sep=filesep;
+0443 
+0444 <span class="keyword">for</span> d=1:m, dir1=dirs{d}; dir1(dir1==<span class="string">'\'</span>)=sep; dir1(dir1==<span class="string">'/'</span>)=sep;
+0445   <span class="keyword">if</span>(dir1(end)==sep), dir1(end)=[]; <span class="keyword">end</span>; dirs{d}=dir1; <span class="keyword">end</span>
+0446 
+0447 [fs0,fs1] = <a href="#_sub9" class="code" title="subfunction [fs0,fs1] = getFiles0( dir1, f0, f1, sep )">getFiles0</a>(dirs{1},f0,f1,sep);
+0448 n1=length(fs0); fs=cell(m,n1); fs(1,:)=fs1;
+0449 <span class="keyword">for</span> d=2:m, fs(d,:)=<a href="#_sub10" class="code" title="subfunction fs1 = getFiles1( dir1, fs0, sep )">getFiles1</a>(dirs{d},fs0,sep); <span class="keyword">end</span>
+0450 
+0451   <a name="_sub9" href="#_subfunctions" class="code">function [fs0,fs1] = getFiles0( dir1, f0, f1, sep )</a>
+0452     <span class="comment">% get fs1 in dir1 (and fs0 without path or extension)</span>
+0453     fs1=dir([dir1 sep <span class="string">'*'</span>]); fs1={fs1.name}; fs1=fs1(3:end);
+0454     fs1=fs1(f0:min(f1,end)); fs0=fs1; n=length(fs0);
+0455     <span class="keyword">if</span>(n==0), error(<span class="string">'No files found in baseline dir %s.'</span>,dir1); <span class="keyword">end</span>
+0456     <span class="keyword">for</span> i=1:n, fs1{i}=[dir1 sep fs0{i}]; <span class="keyword">end</span>
+0457     n=length(fs0); <span class="keyword">for</span> i=1:n, f=fs0{i};
+0458       f(find(f==<span class="string">'.'</span>,1,<span class="string">'first'</span>):end)=[]; fs0{i}=f; <span class="keyword">end</span>
+0459   <span class="keyword">end</span>
+0460 
+0461   <a name="_sub10" href="#_subfunctions" class="code">function fs1 = getFiles1( dir1, fs0, sep )</a>
+0462     <span class="comment">% get fs1 in dir1 corresponding to fs0</span>
+0463     n=length(fs0); fs1=cell(1,n); i2=0; i1=0;
+0464     fs2=dir(dir1); fs2={fs2.name}; n2=length(fs2);
+0465     eMsg=<span class="string">'''%s'' has no corresponding file in %s.'</span>;
+0466     <span class="keyword">for</span> i0=1:n, r=length(fs0{i0}); match=0;
+0467       <span class="keyword">while</span>(i2&lt;n2), i2=i2+1; <span class="keyword">if</span>(strcmpi(fs0{i0},fs2{i2}(1:min(<span class="keyword">end</span>,r))))
+0468           i1=i1+1; fs1{i1}=fs2{i2}; match=1; <span class="keyword">break</span>; <span class="keyword">end</span>; <span class="keyword">end</span>
+0469       <span class="keyword">if</span>(~match), error(eMsg,fs0{i0},dir1); <span class="keyword">end</span>
+0470     <span class="keyword">end</span>
+0471     <span class="keyword">for</span> i1=1:n, fs1{i1}=[dir1 sep fs1{i1}]; <span class="keyword">end</span>
+0472   <span class="keyword">end</span>
+0473 <span class="keyword">end</span>
+0474 
+0475 <a name="_sub11" href="#_subfunctions" class="code">function fs = copyFiles( fs, dirs )</a>
+0476 <span class="comment">% Copy corresponding files into given directories.</span>
+0477 <span class="comment">%</span>
+0478 <span class="comment">% Useful for splitting data into training, validation and testing sets.</span>
+0479 <span class="comment">% See also bbGt&gt;getFiles for obtaining a set of corresponding files.</span>
+0480 <span class="comment">%</span>
+0481 <span class="comment">% USAGE</span>
+0482 <span class="comment">%  fs = bbGt( 'copyFiles', fs, dirs )</span>
+0483 <span class="comment">%</span>
+0484 <span class="comment">% INPUTS</span>
+0485 <span class="comment">%   fs        - {mxn} list of full file names in each dir</span>
+0486 <span class="comment">%   dirs      - {1xm} list of m target directories</span>
+0487 <span class="comment">%</span>
+0488 <span class="comment">% OUTPUTS</span>
+0489 <span class="comment">%   fs        - {mxn} list of full file names of copied files</span>
+0490 <span class="comment">%</span>
+0491 <span class="comment">% EXAMPLE</span>
+0492 <span class="comment">%</span>
+0493 <span class="comment">% See also bbGt, bbGt&gt;getFiles</span>
+0494 [m,n]=size(fs); assert(numel(dirs)==m); <span class="keyword">if</span>(n==0), <span class="keyword">return</span>; <span class="keyword">end</span>
+0495 <span class="keyword">for</span> d=1:m
+0496   <span class="keyword">if</span>(~exist(dirs{d},<span class="string">'dir'</span>)), mkdir(dirs{d}); <span class="keyword">end</span>
+0497   <span class="keyword">for</span> i=1:n, f=fs{d,i}; j=[0 find(f==<span class="string">'/'</span> | f==<span class="string">'\'</span>)]; j=j(end);
+0498     fs{d,i}=[dirs{d} <span class="string">'/'</span> f(j+1:end)]; copyfile(f,fs{d,i}); <span class="keyword">end</span>
+0499 <span class="keyword">end</span>
+0500 <span class="keyword">end</span>
+0501 
+0502 <a name="_sub12" href="#_subfunctions" class="code">function [gt0,dt0] = loadAll( gtDir, dtDir, pLoad )</a>
+0503 <span class="comment">% Load all ground truth and detection bbs in given directories.</span>
+0504 <span class="comment">%</span>
+0505 <span class="comment">% Loads each ground truth (gt) annotation in gtDir and the corresponding</span>
+0506 <span class="comment">% detection (dt) in dtDir. gt and dt files must correspond according to</span>
+0507 <span class="comment">% getFiles(). Alternatively, dtDir may be a filename of a single text file</span>
+0508 <span class="comment">% that contains the detection results across all images.</span>
+0509 <span class="comment">%</span>
+0510 <span class="comment">% Each dt should be a text file where each row contains 5 numbers</span>
+0511 <span class="comment">% representing a bb (left/top/width/height/score). If dtDir is a text file,</span>
+0512 <span class="comment">% it should contain the detection results across the full set of images. In</span>
+0513 <span class="comment">% this case each row in the text file should have an extra leading column</span>
+0514 <span class="comment">% specifying the image id: (imgId/left/top/width/height/score).</span>
+0515 <span class="comment">%</span>
+0516 <span class="comment">% The output of this function can be used in bbGt&gt;evalRes().</span>
+0517 <span class="comment">%</span>
+0518 <span class="comment">% USAGE</span>
+0519 <span class="comment">%  [gt0,dt0] = bbGt( 'loadAll', gtDir, [dtDir], [pLoad] )</span>
+0520 <span class="comment">%</span>
+0521 <span class="comment">% INPUTS</span>
+0522 <span class="comment">%  gtDir      - location of ground truth</span>
+0523 <span class="comment">%  dtDir      - [] optional location of detections</span>
+0524 <span class="comment">%  pLoad      - {} params for bbGt&gt;bbLoad() (determine format/filtering)</span>
+0525 <span class="comment">%</span>
+0526 <span class="comment">% OUTPUTS</span>
+0527 <span class="comment">%  gt0        - {1xn} loaded ground truth bbs (each is a mx5 array of bbs)</span>
+0528 <span class="comment">%  dt0        - {1xn} loaded detections (each is a mx5 array of bbs)</span>
+0529 <span class="comment">%</span>
+0530 <span class="comment">% EXAMPLE</span>
+0531 <span class="comment">%</span>
+0532 <span class="comment">% See also bbGt, bbGt&gt;getFiles, bbGt&gt;evalRes</span>
+0533 
+0534 <span class="comment">% get list of files</span>
+0535 <span class="keyword">if</span>(nargin&lt;2), dtDir=[]; <span class="keyword">end</span>
+0536 <span class="keyword">if</span>(nargin&lt;3), pLoad={}; <span class="keyword">end</span>
+0537 <span class="keyword">if</span>(isempty(dtDir)), fs=<a href="#_sub8" class="code" title="subfunction [fs,fs0] = getFiles( dirs, f0, f1 )">getFiles</a>({gtDir}); gtFs=fs(1,:); <span class="keyword">else</span>
+0538   dtFile=length(dtDir)&gt;4 &amp;&amp; strcmp(dtDir(end-3:end),<span class="string">'.txt'</span>);
+0539   <span class="keyword">if</span>(dtFile), dirs={gtDir}; <span class="keyword">else</span> dirs={gtDir,dtDir}; <span class="keyword">end</span>
+0540   fs=<a href="#_sub8" class="code" title="subfunction [fs,fs0] = getFiles( dirs, f0, f1 )">getFiles</a>(dirs); gtFs=fs(1,:);
+0541   <span class="keyword">if</span>(dtFile), dtFs=dtDir; <span class="keyword">else</span> dtFs=fs(2,:); <span class="keyword">end</span>
+0542 <span class="keyword">end</span>
+0543 
+0544 <span class="comment">% load ground truth</span>
+0545 <span class="keyword">persistent</span> keyPrv gtPrv; key={gtDir,pLoad}; n=length(gtFs);
+0546 <span class="keyword">if</span>(isequal(key,keyPrv)), gt0=gtPrv; <span class="keyword">else</span> gt0=cell(1,n);
+0547   <span class="keyword">for</span> i=1:n, [~,gt0{i}]=<a href="#_sub3" class="code" title="subfunction [objs,bbs] = bbLoad( fName, varargin )">bbLoad</a>(gtFs{i},pLoad); <span class="keyword">end</span>
+0548   gtPrv=gt0; keyPrv=key;
+0549 <span class="keyword">end</span>
+0550 
+0551 <span class="comment">% load detections</span>
+0552 <span class="keyword">if</span>(isempty(dtDir) || nargout&lt;=1), dt0=cell(0); <span class="keyword">return</span>; <span class="keyword">end</span>
+0553 <span class="keyword">if</span>(iscell(dtFs)), dt0=cell(1,n);
+0554   <span class="keyword">for</span> i=1:n, dt1=load(dtFs{i},<span class="string">'-ascii'</span>);
+0555     <span class="keyword">if</span>(numel(dt1)==0), dt1=zeros(0,5); <span class="keyword">end</span>; dt0{i}=dt1(:,1:5); <span class="keyword">end</span>
+0556 <span class="keyword">else</span>
+0557   dt1=load(dtFs,<span class="string">'-ascii'</span>); <span class="keyword">if</span>(numel(dt1)==0), dt1=zeros(0,6); <span class="keyword">end</span>
+0558   ids=dt1(:,1); assert(max(ids)&lt;=n);
+0559   dt0=cell(1,n); <span class="keyword">for</span> i=1:n, dt0{i}=dt1(ids==i,2:6); <span class="keyword">end</span>
+0560 <span class="keyword">end</span>
+0561 
+0562 <span class="keyword">end</span>
+0563 
+0564 <a name="_sub13" href="#_subfunctions" class="code">function [gt,dt] = evalRes( gt0, dt0, thr, mul )</a>
+0565 <span class="comment">% Evaluates detections against ground truth data.</span>
+0566 <span class="comment">%</span>
+0567 <span class="comment">% Uses modified Pascal criteria that allows for &quot;ignore&quot; regions. The</span>
+0568 <span class="comment">% Pascal criteria states that a ground truth bounding box (gtBb) and a</span>
+0569 <span class="comment">% detected bounding box (dtBb) match if their overlap area (oa):</span>
+0570 <span class="comment">%  oa(gtBb,dtBb) = area(intersect(gtBb,dtBb)) / area(union(gtBb,dtBb))</span>
+0571 <span class="comment">% is over a sufficient threshold (typically .5). In the modified criteria,</span>
+0572 <span class="comment">% the dtBb can match any subregion of a gtBb set to &quot;ignore&quot;. Choosing</span>
+0573 <span class="comment">% gtBb' in gtBb that most closely matches dtBb can be done by using</span>
+0574 <span class="comment">% gtBb'=intersect(dtBb,gtBb). Computing oa(gtBb',dtBb) is equivalent to</span>
+0575 <span class="comment">%  oa'(gtBb,dtBb) = area(intersect(gtBb,dtBb)) / area(dtBb)</span>
+0576 <span class="comment">% For gtBb set to ignore the above formula for oa is used.</span>
+0577 <span class="comment">%</span>
+0578 <span class="comment">% Highest scoring detections are matched first. Matches to standard,</span>
+0579 <span class="comment">% (non-ignore) gtBb are preferred. Each dtBb and gtBb may be matched at</span>
+0580 <span class="comment">% most once, except for ignore-gtBb which can be matched multiple times.</span>
+0581 <span class="comment">% Unmatched dtBb are false-positives, unmatched gtBb are false-negatives.</span>
+0582 <span class="comment">% Each match between a dtBb and gtBb is a true-positive, except matches</span>
+0583 <span class="comment">% between dtBb and ignore-gtBb which do not affect the evaluation criteria.</span>
+0584 <span class="comment">%</span>
+0585 <span class="comment">% In addition to taking gt/dt results on a single image, evalRes() can take</span>
+0586 <span class="comment">% cell arrays of gt/dt bbs, in which case evaluation proceeds on each</span>
+0587 <span class="comment">% element. Use bbGt&gt;loadAll() to load gt/dt for multiple images.</span>
+0588 <span class="comment">%</span>
+0589 <span class="comment">% Each gt/dt output row has a flag match that is either -1/0/1:</span>
+0590 <span class="comment">%  for gt: -1=ignore,  0=fn [unmatched],  1=tp [matched]</span>
+0591 <span class="comment">%  for dt: -1=ignore,  0=fp [unmatched],  1=tp [matched]</span>
+0592 <span class="comment">%</span>
+0593 <span class="comment">% USAGE</span>
+0594 <span class="comment">%  [gt, dt] = bbGt( 'evalRes', gt0, dt0, [thr], [mul] )</span>
+0595 <span class="comment">%</span>
+0596 <span class="comment">% INPUTS</span>
+0597 <span class="comment">%  gt0  - [mx5] ground truth array with rows [x y w h ignore]</span>
+0598 <span class="comment">%  dt0  - [nx5] detection results array with rows [x y w h score]</span>
+0599 <span class="comment">%  thr  - [.5] the threshold on oa for comparing two bbs</span>
+0600 <span class="comment">%  mul  - [0] if true allow multiple matches to each gt</span>
+0601 <span class="comment">%</span>
+0602 <span class="comment">% OUTPUTS</span>
+0603 <span class="comment">%  gt   - [mx5] ground truth results [x y w h match]</span>
+0604 <span class="comment">%  dt   - [nx6] detection results [x y w h score match]</span>
+0605 <span class="comment">%</span>
+0606 <span class="comment">% EXAMPLE</span>
+0607 <span class="comment">%</span>
+0608 <span class="comment">% See also bbGt, bbGt&gt;compOas, bbGt&gt;loadAll</span>
+0609 
+0610 <span class="comment">% get parameters</span>
+0611 <span class="keyword">if</span>(nargin&lt;3 || isempty(thr)), thr=.5; <span class="keyword">end</span>
+0612 <span class="keyword">if</span>(nargin&lt;4 || isempty(mul)), mul=0; <span class="keyword">end</span>
+0613 
+0614 <span class="comment">% if gt0 and dt0 are cell arrays run on each element in turn</span>
+0615 <span class="keyword">if</span>( iscell(gt0) &amp;&amp; iscell(dt0) ), n=length(gt0);
+0616   assert(length(dt0)==n); gt=cell(1,n); dt=gt;
+0617   <span class="keyword">for</span> i=1:n, [gt{i},dt{i}] = <a href="#_sub13" class="code" title="subfunction [gt,dt] = evalRes( gt0, dt0, thr, mul )">evalRes</a>(gt0{i},dt0{i},thr,mul); <span class="keyword">end</span>; <span class="keyword">return</span>;
+0618 <span class="keyword">end</span>
+0619 
+0620 <span class="comment">% check inputs</span>
+0621 <span class="keyword">if</span>(isempty(gt0)), gt0=zeros(0,5); <span class="keyword">end</span>
+0622 <span class="keyword">if</span>(isempty(dt0)), dt0=zeros(0,5); <span class="keyword">end</span>
+0623 assert( size(dt0,2)==5 ); nd=size(dt0,1);
+0624 assert( size(gt0,2)==5 ); ng=size(gt0,1);
+0625 
+0626 <span class="comment">% sort dt highest score first, sort gt ignore last</span>
+0627 [~,ord]=sort(dt0(:,5),<span class="string">'descend'</span>); dt0=dt0(ord,:);
+0628 [~,ord]=sort(gt0(:,5),<span class="string">'ascend'</span>); gt0=gt0(ord,:);
+0629 gt=gt0; gt(:,5)=-gt(:,5); dt=dt0; dt=[dt zeros(nd,1)];
+0630 
+0631 <span class="comment">% Attempt to match each (sorted) dt to each (sorted) gt</span>
+0632 oa = <a href="#_sub17" class="code" title="subfunction oa = compOas( dt, gt, ig )">compOas</a>( dt(:,1:4), gt(:,1:4), gt(:,5)==-1 );
+0633 <span class="keyword">for</span> d=1:nd
+0634   bstOa=thr; bstg=0; bstm=0; <span class="comment">% info about best match so far</span>
+0635   <span class="keyword">for</span> g=1:ng
+0636     <span class="comment">% if this gt already matched, continue to next gt</span>
+0637     m=gt(g,5); <span class="keyword">if</span>( m==1 &amp;&amp; ~mul ), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0638     <span class="comment">% if dt already matched, and on ignore gt, nothing more to do</span>
+0639     <span class="keyword">if</span>( bstm~=0 &amp;&amp; m==-1 ), <span class="keyword">break</span>; <span class="keyword">end</span>
+0640     <span class="comment">% compute overlap area, continue to next gt unless better match made</span>
+0641     <span class="keyword">if</span>(oa(d,g)&lt;bstOa), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0642     <span class="comment">% match successful and best so far, store appropriately</span>
+0643     bstOa=oa(d,g); bstg=g; <span class="keyword">if</span>(m==0), bstm=1; <span class="keyword">else</span> bstm=-1; <span class="keyword">end</span>
+0644   <span class="keyword">end</span>; g=bstg; m=bstm;
+0645   <span class="comment">% store type of match for both dt and gt</span>
+0646   <span class="keyword">if</span>(m==-1), dt(d,6)=m; <span class="keyword">elseif</span>(m==1), gt(g,5)=m; dt(d,6)=m; <span class="keyword">end</span>
+0647 <span class="keyword">end</span>
+0648 
+0649 <span class="keyword">end</span>
+0650 
+0651 <a name="_sub14" href="#_subfunctions" class="code">function [hs,hImg] = showRes( I, gt, dt, varargin )</a>
+0652 <span class="comment">% Display evaluation results for given image.</span>
+0653 <span class="comment">%</span>
+0654 <span class="comment">% USAGE</span>
+0655 <span class="comment">%  [hs,hImg] = bbGt( 'showRes', I, gt, dt, varargin )</span>
+0656 <span class="comment">%</span>
+0657 <span class="comment">% INPUTS</span>
+0658 <span class="comment">%  I          - image to display, image filename, or []</span>
+0659 <span class="comment">%  gt         - first output of evalRes()</span>
+0660 <span class="comment">%  dt         - second output of evalRes()</span>
+0661 <span class="comment">%  varargin   - additional parameters (struct or name/value pairs)</span>
+0662 <span class="comment">%   .evShow     - [1] if true show results of evaluation</span>
+0663 <span class="comment">%   .gtShow     - [1] if true show ground truth</span>
+0664 <span class="comment">%   .dtShow     - [1] if true show detections</span>
+0665 <span class="comment">%   .cols       - ['krg'] colors for ignore/mistake/correct</span>
+0666 <span class="comment">%   .gtLs       - ['-'] line style for gt bbs</span>
+0667 <span class="comment">%   .dtLs       - ['--'] line style for dt bbs</span>
+0668 <span class="comment">%   .lw         - [3] line width</span>
+0669 <span class="comment">%</span>
+0670 <span class="comment">% OUTPUTS</span>
+0671 <span class="comment">%  hs         - handles to bbs and text labels</span>
+0672 <span class="comment">%  hImg       - handle for image graphics object</span>
+0673 <span class="comment">%</span>
+0674 <span class="comment">% EXAMPLE</span>
+0675 <span class="comment">%</span>
+0676 <span class="comment">% See also bbGt, bbGt&gt;evalRes</span>
+0677 dfs={<span class="string">'evShow'</span>,1,<span class="string">'gtShow'</span>,1,<span class="string">'dtShow'</span>,1,<span class="string">'cols'</span>,<span class="string">'krg'</span>,<span class="keyword">...</span>
+0678   <span class="string">'gtLs'</span>,<span class="string">'-'</span>,<span class="string">'dtLs'</span>,<span class="string">'--'</span>,<span class="string">'lw'</span>,3};
+0679 [evShow,gtShow,dtShow,cols,gtLs,dtLs,lw]=getPrmDflt(varargin,dfs,1);
+0680 <span class="comment">% optionally display image</span>
+0681 <span class="keyword">if</span>(ischar(I)), I=imread(I); <span class="keyword">end</span>
+0682 <span class="keyword">if</span>(~isempty(I)), hImg=im(I,[],0); title(<span class="string">''</span>); <span class="keyword">end</span>
+0683 <span class="comment">% display bbs with or w/o color coding based on output of evalRes</span>
+0684 hold on; hs=cell(1,1000); k=0;
+0685 <span class="keyword">if</span>( evShow )
+0686   <span class="keyword">if</span>(gtShow), <span class="keyword">for</span> i=1:size(gt,1), k=k+1;
+0687       hs{k}=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'draw'</span>,gt(i,1:4),cols(gt(i,5)+2),lw,gtLs); <span class="keyword">end</span>; <span class="keyword">end</span>
+0688   <span class="keyword">if</span>(dtShow), <span class="keyword">for</span> i=1:size(dt,1), k=k+1;
+0689       hs{k}=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'draw'</span>,dt(i,1:5),cols(dt(i,6)+2),lw,dtLs); <span class="keyword">end</span>; <span class="keyword">end</span>
+0690 <span class="keyword">else</span>
+0691   <span class="keyword">if</span>(gtShow), k=k+1; hs{k}=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'draw'</span>,gt(:,1:4),cols(3),lw,gtLs); <span class="keyword">end</span>
+0692   <span class="keyword">if</span>(dtShow), k=k+1; hs{k}=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'draw'</span>,dt(:,1:5),cols(3),lw,dtLs); <span class="keyword">end</span>
+0693 <span class="keyword">end</span>
+0694 hs=[hs{:}]; hold off;
+0695 <span class="keyword">end</span>
+0696 
+0697 <a name="_sub15" href="#_subfunctions" class="code">function [xs,ys,score,ref] = compRoc( gt, dt, roc, ref )</a>
+0698 <span class="comment">% Compute ROC or PR based on outputs of evalRes on multiple images.</span>
+0699 <span class="comment">%</span>
+0700 <span class="comment">% ROC=&quot;Receiver operating characteristic&quot;; PR=&quot;Precision Recall&quot;</span>
+0701 <span class="comment">% Also computes result at reference points (ref):</span>
+0702 <span class="comment">%  which for ROC curves is the *detection* rate at reference *FPPI*</span>
+0703 <span class="comment">%  which for PR curves is the *precision* at reference *recall*</span>
+0704 <span class="comment">% Note, FPPI=&quot;false positive per image&quot;</span>
+0705 <span class="comment">%</span>
+0706 <span class="comment">% USAGE</span>
+0707 <span class="comment">%  [xs,ys,score,ref] = bbGt( 'compRoc', gt, dt, roc, ref )</span>
+0708 <span class="comment">%</span>
+0709 <span class="comment">% INPUTS</span>
+0710 <span class="comment">%  gt         - {1xn} first output of evalRes() for each image</span>
+0711 <span class="comment">%  dt         - {1xn} second output of evalRes() for each image</span>
+0712 <span class="comment">%  roc        - [1] if 1 compue ROC else compute PR</span>
+0713 <span class="comment">%  ref        - [] reference points for ROC or PR curve</span>
+0714 <span class="comment">%</span>
+0715 <span class="comment">% OUTPUTS</span>
+0716 <span class="comment">%  xs         - x coords for curve: ROC-&gt;FPPI; PR-&gt;recall</span>
+0717 <span class="comment">%  ys         - y coords for curve: ROC-&gt;TP; PR-&gt;precision</span>
+0718 <span class="comment">%  score      - detection scores corresponding to each (x,y)</span>
+0719 <span class="comment">%  ref        - recall or precision at each reference point</span>
+0720 <span class="comment">%</span>
+0721 <span class="comment">% EXAMPLE</span>
+0722 <span class="comment">%</span>
+0723 <span class="comment">% See also bbGt, bbGt&gt;evalRes</span>
+0724 
+0725 <span class="comment">% get additional parameters</span>
+0726 <span class="keyword">if</span>(nargin&lt;3 || isempty(roc)), roc=1; <span class="keyword">end</span>
+0727 <span class="keyword">if</span>(nargin&lt;4 || isempty(ref)), ref=[]; <span class="keyword">end</span>
+0728 <span class="comment">% convert to single matrix, discard ignore bbs</span>
+0729 nImg=length(gt); assert(length(dt)==nImg);
+0730 gt=cat(1,gt{:}); gt=gt(gt(:,5)~=-1,:);
+0731 dt=cat(1,dt{:}); dt=dt(dt(:,6)~=-1,:);
+0732 <span class="comment">% compute results</span>
+0733 <span class="keyword">if</span>(size(dt,1)==0), xs=0; ys=0; score=0; ref=ref*0; <span class="keyword">return</span>; <span class="keyword">end</span>
+0734 m=length(ref); np=size(gt,1); score=dt(:,5); tp=dt(:,6);
+0735 [score,order]=sort(score,<span class="string">'descend'</span>); tp=tp(order);
+0736 fp=double(tp~=1); fp=cumsum(fp); tp=cumsum(tp);
+0737 <span class="keyword">if</span>( roc )
+0738   xs=fp/nImg; ys=tp/np; xs1=[-inf; xs]; ys1=[0; ys];
+0739   <span class="keyword">for</span> i=1:m, j=find(xs1&lt;=ref(i)); ref(i)=ys1(j(end)); <span class="keyword">end</span>
+0740 <span class="keyword">else</span>
+0741   xs=tp/np; ys=tp./(fp+tp); xs1=[xs; inf]; ys1=[ys; 0];
+0742   <span class="keyword">for</span> i=1:m, j=find(xs1&gt;=ref(i)); ref(i)=ys1(j(1)); <span class="keyword">end</span>
+0743 <span class="keyword">end</span>
+0744 <span class="keyword">end</span>
+0745 
+0746 <a name="_sub16" href="#_subfunctions" class="code">function [Is,scores,imgIds] = cropRes( gt, dt, imFs, varargin )</a>
+0747 <span class="comment">% Extract true or false positives or negatives for visualization.</span>
+0748 <span class="comment">%</span>
+0749 <span class="comment">% USAGE</span>
+0750 <span class="comment">%  [Is,scores,imgIds] = bbGt( 'cropRes', gt, dt, imFs, varargin )</span>
+0751 <span class="comment">%</span>
+0752 <span class="comment">% INPUTS</span>
+0753 <span class="comment">%  gt         - {1xN} first output of evalRes() for each image</span>
+0754 <span class="comment">%  dt         - {1xN} second output of evalRes() for each image</span>
+0755 <span class="comment">%  imFs       - {1xN} name of each image</span>
+0756 <span class="comment">%  varargin   - additional parameters (struct or name/value pairs)</span>
+0757 <span class="comment">%   .dims       - ['REQ'] target dimensions for extracted windows</span>
+0758 <span class="comment">%   .pad        - [0] padding amount for cropping</span>
+0759 <span class="comment">%   .type       - ['fp'] one of: 'fp', 'fn', 'tp', 'dt'</span>
+0760 <span class="comment">%   .n          - [100] max number of windows to extract</span>
+0761 <span class="comment">%   .show       - [1] figure for displaying results (or 0)</span>
+0762 <span class="comment">%   .fStr       - ['%0.1f'] label{i}=num2str(score(i),fStr)</span>
+0763 <span class="comment">%   .embed      - [0] if true embed dt/gt bbs into cropped windows</span>
+0764 <span class="comment">%</span>
+0765 <span class="comment">% OUTPUTS</span>
+0766 <span class="comment">%  Is         - [dimsxn] extracted image windows</span>
+0767 <span class="comment">%  scores     - [1xn] detection score for each bb unless 'fn'</span>
+0768 <span class="comment">%  imgIds     - [1xn] image id for each cropped window</span>
+0769 <span class="comment">%</span>
+0770 <span class="comment">% EXAMPLE</span>
+0771 <span class="comment">%</span>
+0772 <span class="comment">% See also bbGt, bbGt&gt;evalRes</span>
+0773 dfs={<span class="string">'dims'</span>,<span class="string">'REQ'</span>,<span class="string">'pad'</span>,0,<span class="string">'type'</span>,<span class="string">'fp'</span>,<span class="string">'n'</span>,100,<span class="keyword">...</span>
+0774   <span class="string">'show'</span>,1,<span class="string">'fStr'</span>,<span class="string">'%0.1f'</span>,<span class="string">'embed'</span>,0};
+0775 [dims,pad,type,n,show,fStr,embed]=getPrmDflt(varargin,dfs,1);
+0776 N=length(imFs); assert(length(gt)==N &amp;&amp; length(dt)==N);
+0777 <span class="comment">% crop patches either in gt or dt according to type</span>
+0778 <span class="keyword">switch</span> type
+0779   <span class="keyword">case</span> <span class="string">'fn'</span>, bbs=gt; keep=@(bbs) bbs(:,5)==0;
+0780   <span class="keyword">case</span> <span class="string">'fp'</span>, bbs=dt; keep=@(bbs) bbs(:,6)==0;
+0781   <span class="keyword">case</span> <span class="string">'tp'</span>, bbs=dt; keep=@(bbs) bbs(:,6)==1;
+0782   <span class="keyword">case</span> <span class="string">'dt'</span>, bbs=dt; keep=@(bbs) bbs(:,6)&gt;=0;
+0783   <span class="keyword">otherwise</span>, error(<span class="string">'unknown type: %s'</span>,type);
+0784 <span class="keyword">end</span>
+0785 <span class="comment">% create ids that will map each bb to correct name</span>
+0786 ms=zeros(1,N); <span class="keyword">for</span> i=1:N, ms(i)=size(bbs{i},1); <span class="keyword">end</span>; cms=[0 cumsum(ms)];
+0787 ids=zeros(1,sum(ms)); <span class="keyword">for</span> i=1:N, ids(cms(i)+1:cms(i+1))=i; <span class="keyword">end</span>
+0788 <span class="comment">% flatten bbs and keep relevent subset</span>
+0789 bbs=cat(1,bbs{:}); K=keep(bbs); bbs=bbs(K,:); ids=ids(K); n=min(n,sum(K));
+0790 <span class="comment">% reorder bbs appropriately</span>
+0791 <span class="keyword">if</span>(~strcmp(type,<span class="string">'fn'</span>)), [~,ord]=sort(bbs(:,5),<span class="string">'descend'</span>); <span class="keyword">else</span>
+0792   <span class="keyword">if</span>(size(bbs,1)&lt;n), ord=randperm(size(bbs,1)); <span class="keyword">else</span> ord=1:n; <span class="keyword">end</span>; <span class="keyword">end</span>
+0793 bbs=bbs(ord(1:n),:); ids=ids(ord(1:n));
+0794 <span class="comment">% extract patches from each image</span>
+0795 <span class="keyword">if</span>(n==0), Is=[]; scores=[]; imgIds=[]; <span class="keyword">return</span>; <span class="keyword">end</span>;
+0796 Is=cell(1,n); scores=zeros(1,n); imgIds=zeros(1,n);
+0797 <span class="keyword">if</span>(any(pad&gt;0)), dims1=dims.*(1+pad); rs=dims1./dims; dims=dims1; <span class="keyword">end</span>
+0798 <span class="keyword">if</span>(any(pad&gt;0)), bbs=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'resize'</span>,bbs,rs(1),rs(2)); <span class="keyword">end</span>
+0799 <span class="keyword">for</span> i=1:N
+0800   locs=find(ids==i); <span class="keyword">if</span>(isempty(locs)), <span class="keyword">continue</span>; <span class="keyword">end</span>; I=imread(imFs{i});
+0801   <span class="keyword">if</span>( embed )
+0802     <span class="keyword">if</span>(any(strcmp(type,{<span class="string">'fp'</span>,<span class="string">'dt'</span>}))), bbs1=gt{i};
+0803     <span class="keyword">else</span> bbs1=dt{i}(:,[1:4 6]); <span class="keyword">end</span>
+0804     I=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'embed'</span>,I,bbs1(bbs1(:,5)==0,1:4),<span class="string">'col'</span>,[255 0 0]);
+0805     I=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'embed'</span>,I,bbs1(bbs1(:,5)==1,1:4),<span class="string">'col'</span>,[0 255 0]);
+0806   <span class="keyword">end</span>
+0807   Is1=<a href="bbApply.html" class="code" title="function varargout = bbApply( action, varargin )">bbApply</a>(<span class="string">'crop'</span>,I,bbs(locs,1:4),<span class="string">'replicate'</span>,dims);
+0808   <span class="keyword">for</span> j=1:length(locs), Is{locs(j)}=Is1{j}; <span class="keyword">end</span>;
+0809   scores(locs)=bbs(locs,5); imgIds(locs)=i;
+0810 <span class="keyword">end</span>; Is=cell2array(Is);
+0811 <span class="comment">% optionally display</span>
+0812 <span class="keyword">if</span>(~show), <span class="keyword">return</span>; <span class="keyword">end</span>; figure(show); pMnt={<span class="string">'hasChn'</span>,size(Is1{1},3)&gt;1};
+0813 <span class="keyword">if</span>(isempty(fStr)), montage2(Is,pMnt); title(type); <span class="keyword">return</span>; <span class="keyword">end</span>
+0814 ls=cell(1,n); <span class="keyword">for</span> i=1:n, ls{i}=int2str2(imgIds(i)); <span class="keyword">end</span>
+0815 <span class="keyword">if</span>(~strcmp(type,<span class="string">'fn'</span>))
+0816   <span class="keyword">for</span> i=1:n, ls{i}=[ls{i} <span class="string">'/'</span> num2str(scores(i),fStr)]; <span class="keyword">end</span>; <span class="keyword">end</span>
+0817 montage2(Is,[pMnt <span class="string">'labels'</span> {ls}]); title(type);
+0818 <span class="keyword">end</span>
+0819 
+0820 <a name="_sub17" href="#_subfunctions" class="code">function oa = compOas( dt, gt, ig )</a>
+0821 <span class="comment">% Computes (modified) overlap area between pairs of bbs.</span>
+0822 <span class="comment">%</span>
+0823 <span class="comment">% Uses modified Pascal criteria with &quot;ignore&quot; regions. The overlap area</span>
+0824 <span class="comment">% (oa) of a ground truth (gt) and detected (dt) bb is defined as:</span>
+0825 <span class="comment">%  oa(gt,dt) = area(intersect(dt,dt)) / area(union(gt,dt))</span>
+0826 <span class="comment">% In the modified criteria, a gt bb may be marked as &quot;ignore&quot;, in which</span>
+0827 <span class="comment">% case the dt bb can can match any subregion of the gt bb. Choosing gt' in</span>
+0828 <span class="comment">% gt that most closely matches dt can be done using gt'=intersect(dt,gt).</span>
+0829 <span class="comment">% Computing oa(gt',dt) is equivalent to:</span>
+0830 <span class="comment">%  oa'(gt,dt) = area(intersect(gt,dt)) / area(dt)</span>
+0831 <span class="comment">%</span>
+0832 <span class="comment">% USAGE</span>
+0833 <span class="comment">%  oa = bbGt( 'compOas', dt, gt, [ig] )</span>
+0834 <span class="comment">%</span>
+0835 <span class="comment">% INPUTS</span>
+0836 <span class="comment">%  dt       - [mx4] detected bbs</span>
+0837 <span class="comment">%  gt       - [nx4] gt bbs</span>
+0838 <span class="comment">%  ig       - [nx1] 0/1 ignore flags (0 by default)</span>
+0839 <span class="comment">%</span>
+0840 <span class="comment">% OUTPUTS</span>
+0841 <span class="comment">%  oas      - [m x n] overlap area between each gt and each dt bb</span>
+0842 <span class="comment">%</span>
+0843 <span class="comment">% EXAMPLE</span>
+0844 <span class="comment">%  dt=[0 0 10 10]; gt=[0 0 20 20];</span>
+0845 <span class="comment">%  oa0 = bbGt('compOas',dt,gt,0)</span>
+0846 <span class="comment">%  oa1 = bbGt('compOas',dt,gt,1)</span>
+0847 <span class="comment">%</span>
+0848 <span class="comment">% See also bbGt, bbGt&gt;evalRes</span>
+0849 m=size(dt,1); n=size(gt,1); oa=zeros(m,n);
+0850 <span class="keyword">if</span>(nargin&lt;3), ig=zeros(n,1); <span class="keyword">end</span>
+0851 de=dt(:,[1 2])+dt(:,[3 4]); da=dt(:,3).*dt(:,4);
+0852 ge=gt(:,[1 2])+gt(:,[3 4]); ga=gt(:,3).*gt(:,4);
+0853 <span class="keyword">for</span> i=1:m
+0854   <span class="keyword">for</span> j=1:n
+0855     w=min(de(i,1),ge(j,1))-max(dt(i,1),gt(j,1)); <span class="keyword">if</span>(w&lt;=0), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0856     h=min(de(i,2),ge(j,2))-max(dt(i,2),gt(j,2)); <span class="keyword">if</span>(h&lt;=0), <span class="keyword">continue</span>; <span class="keyword">end</span>
+0857     t=w*h; <span class="keyword">if</span>(ig(j)), u=da(i); <span class="keyword">else</span> u=da(i)+ga(j)-t; <span class="keyword">end</span>; oa(i,j)=t/u;
+0858   <span class="keyword">end</span>
+0859 <span class="keyword">end</span>
+0860 <span class="keyword">end</span>
+0861 
+0862 <a name="_sub18" href="#_subfunctions" class="code">function oa = compOa( dt, gt, ig )</a>
+0863 <span class="comment">% Optimized version of compOas for a single pair of bbs.</span>
+0864 <span class="comment">%</span>
+0865 <span class="comment">% USAGE</span>
+0866 <span class="comment">%  oa = bbGt( 'compOa', dt, gt, ig )</span>
+0867 <span class="comment">%</span>
+0868 <span class="comment">% INPUTS</span>
+0869 <span class="comment">%  dt       - [1x4] detected bb</span>
+0870 <span class="comment">%  gt       - [1x4] gt bb</span>
+0871 <span class="comment">%  ig       - 0/1 ignore flag</span>
+0872 <span class="comment">%</span>
+0873 <span class="comment">% OUTPUTS</span>
+0874 <span class="comment">%  oa       - overlap area between gt and dt bb</span>
+0875 <span class="comment">%</span>
+0876 <span class="comment">% EXAMPLE</span>
+0877 <span class="comment">%  dt=[0 0 10 10]; gt=[0 0 20 20];</span>
+0878 <span class="comment">%  oa0 = bbGt('compOa',dt,gt,0)</span>
+0879 <span class="comment">%  oa1 = bbGt('compOa',dt,gt,1)</span>
+0880 <span class="comment">%</span>
+0881 <span class="comment">% See also bbGt, bbGt&gt;compOas</span>
+0882 w=min(dt(3)+dt(1),gt(3)+gt(1))-max(dt(1),gt(1)); <span class="keyword">if</span>(w&lt;=0),oa=0; <span class="keyword">return</span>; <span class="keyword">end</span>
+0883 h=min(dt(4)+dt(2),gt(4)+gt(2))-max(dt(2),gt(2)); <span class="keyword">if</span>(h&lt;=0),oa=0; <span class="keyword">return</span>; <span class="keyword">end</span>
+0884 i=w*h; <span class="keyword">if</span>(ig),u=dt(3)*dt(4); <span class="keyword">else</span> u=dt(3)*dt(4)+gt(3)*gt(4)-i; <span class="keyword">end</span>; oa=i/u;
+0885 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

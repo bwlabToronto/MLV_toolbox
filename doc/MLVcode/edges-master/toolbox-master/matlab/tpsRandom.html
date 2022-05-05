@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of tpsRandom</title>
+  <meta name="keywords" content="tpsRandom">
+  <meta name="description" content="Obtain a random warp with the same bending energy as the original.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; tpsRandom.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>tpsRandom
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Obtain a random warp with the same bending energy as the original.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = tpsRandom( LnInv, bendE ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Obtain a random warp with the same bending energy as the original.
+
+ USAGE
+  w = tpsRandom( LnInv, bendE )
+
+ INPUTS
+  LnInv  - [see tpsGetWarp] bookstein warping parameters
+  bendE  - amount of bening energy for random warp to have
+
+ OUTPUTS
+  w      - nonlinear component of warp for use in tpsInterpolate
+
+ EXAMPLE
+
+ See also <a href="tpsGetWarp.html" class="code" title="function [warp,L,LnInv,bendE] = tpsGetWarp( lambda, xsS, ysS, xsD, ysD )">TPSGETWARP</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = tpsRandom( LnInv, bendE )</a>
+0002 <span class="comment">% Obtain a random warp with the same bending energy as the original.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% USAGE</span>
+0005 <span class="comment">%  w = tpsRandom( LnInv, bendE )</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% INPUTS</span>
+0008 <span class="comment">%  LnInv  - [see tpsGetWarp] bookstein warping parameters</span>
+0009 <span class="comment">%  bendE  - amount of bening energy for random warp to have</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% OUTPUTS</span>
+0012 <span class="comment">%  w      - nonlinear component of warp for use in tpsInterpolate</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% EXAMPLE</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% See also TPSGETWARP</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0019 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0020 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0021 
+0022 n = size(LnInv,1);
+0023 u = rand(n-3,1) - .5;
+0024 u = u / norm(u);
+0025 u = [u; 0; 0; 0];
+0026 
+0027 <span class="comment">% get U, sig, sigInv, requires some fanangling</span>
+0028 [U,sig] = eig(LnInv);
+0029 U = real(U); sig=real(sig);
+0030 sig( abs(sig)&lt;.000001)=0;
+0031 <span class="comment">%sigInv = sig;</span>
+0032 <span class="comment">%sigInv(abs(sig)&gt;.000001) = 1./sigInv(abs(sig)&gt;.000001);</span>
+0033 
+0034 <span class="comment">% get w (and v?)</span>
+0035 <span class="comment">%v = sqrt(bendE)* U * sqrt(sigInv) * u;</span>
+0036 w = sqrt(bendE)* U * sqrt(sig) * u;
+0037 
+0038 <span class="comment">% % should be eye(N) with 3 0's</span>
+0039 <span class="comment">% sqrt(sigInv) * U' * LnInv * U * sqrt(sigInv)</span>
+0040 <span class="comment">% % should be equal</span>
+0041 <span class="comment">% v' * LnInv * v, bendE</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

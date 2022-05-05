@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of spDemo</title>
+  <meta name="keywords" content="spDemo">
+  <meta name="description" content="Demo for Sticky Superpixels (please see readme.txt first).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">edges-master</a> &gt; spDemo.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>spDemo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Demo for Sticky Superpixels (please see readme.txt first).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Demo for Sticky Superpixels (please see readme.txt first).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>	Detect edges in image.</li><li><a href="spAffinities.html" class="code" title="function [A,E,U] = spAffinities( S, E, segs, nThreads )">spAffinities</a>	Compute superpixel affinities and optionally corresponding edge map.</li><li><a href="spDetect.html" class="code" title="function [S,V] = spDetect( I, E, varargin )">spDetect</a>	Detect Sticky Superpixels in image.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Demo for Sticky Superpixels (please see readme.txt first).</span>
+0002 
+0003 <span class="comment">%% load pre-trained edge detection model and set opts (see edgesDemo.m)</span>
+0004 model=load(<span class="string">'models/forest/modelBsds'</span>); model=model.model;
+0005 model.opts.nms=-1; model.opts.nThreads=4;
+0006 model.opts.multiscale=0; model.opts.sharpen=2;
+0007 
+0008 <span class="comment">%% set up opts for spDetect (see spDetect.m)</span>
+0009 opts = <a href="spDetect.html" class="code" title="function [S,V] = spDetect( I, E, varargin )">spDetect</a>;
+0010 opts.nThreads = 4;  <span class="comment">% number of computation threads</span>
+0011 opts.k = 512;       <span class="comment">% controls scale of superpixels (big k -&gt; big sp)</span>
+0012 opts.alpha = .5;    <span class="comment">% relative importance of regularity versus data terms</span>
+0013 opts.beta = .9;     <span class="comment">% relative importance of edge versus color terms</span>
+0014 opts.merge = 0;     <span class="comment">% set to small value to merge nearby superpixels at end</span>
+0015 
+0016 <span class="comment">%% detect and display superpixels (see spDetect.m)</span>
+0017 I = imread(<span class="string">'offices_00634.jpg'</span>);
+0018 [E,~,~,segs]=<a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>(I,model);
+0019 tic, [S,V] = <a href="spDetect.html" class="code" title="function [S,V] = spDetect( I, E, varargin )">spDetect</a>(I,E,opts); toc
+0020 figure(1); im(I); figure(2); im(V);
+0021 
+0022 <span class="comment">%% compute ultrametric contour map from superpixels (see spAffinities.m)</span>
+0023 tic, [~,~,U]=<a href="spAffinities.html" class="code" title="function [A,E,U] = spAffinities( S, E, segs, nThreads )">spAffinities</a>(S,E,segs,opts.nThreads); toc
+0024 figure(3); im(1-U); <span class="keyword">return</span>;
+0025 
+0026 <span class="comment">%% compute video superpixels reusing initialization from previous frame</span>
+0027 Is=seqIo(which(<span class="string">'peds30.seq'</span>),<span class="string">'toImgs'</span>); Vs=single(Is); opts.bounds=0; tic
+0028 <span class="keyword">for</span> i=1:size(Is,4), I=Is(:,:,:,i); E=<a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>(I,model);
+0029   [opts.seed,Vs(:,:,:,i)]=<a href="spDetect.html" class="code" title="function [S,V] = spDetect( I, E, varargin )">spDetect</a>(I,E,opts); <span class="keyword">end</span>; opts.seed=[]; toc
+0030 Vs=uint8(Vs*255); playMovie([Is Vs],15,-10,struct(<span class="string">'hasChn'</span>,1))</pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

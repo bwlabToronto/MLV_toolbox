@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of clfLdaFwd</title>
+  <meta name="keywords" content="clfLdaFwd">
+  <meta name="description" content="Apply the Linear Discriminant Analysis (LDA) classifier to data X.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">MLVcode</a> &gt; <a href="../../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="../index.html">external</a> &gt; <a href="index.html">deprecated</a> &gt; clfLdaFwd.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\external\deprecated&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>clfLdaFwd
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Apply the Linear Discriminant Analysis (LDA) classifier to data X.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function Y = clfLdaFwd( clf, X ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Apply the Linear Discriminant Analysis (LDA) classifier to data X.
+
+ USAGE
+  Y = clfLdaFwd( clf, X )
+
+ INPUTS
+  clf     - trained model
+  X       - nxp data array
+
+ OUTPUTS
+  Y       - nx1 vector of labels predicted according to the model
+
+ EXAMPLE
+
+ See also <a href="clfLda.html" class="code" title="function clf = clfLda( p, type, prior )">CLFLDA</a>, <a href="clfLdaTrain.html" class="code" title="function clf = clfLdaTrain( clf, X, Y )">CLFLDATRAIN</a>
+
+ Piotr's Image&amp;Video Toolbox      Version 2.0
+ Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]
+ Please email me if you find bugs, or have suggestions or questions!
+ Licensed under the Lesser GPL [see external/lgpl.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="clfLda.html" class="code" title="function clf = clfLda( p, type, prior )">clfLda</a>	Create a Linear Discriminant Analysis (LDA) classifier.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Y = clfLdaFwd( clf, X )</a>
+0002 <span class="comment">% Apply the Linear Discriminant Analysis (LDA) classifier to data X.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% USAGE</span>
+0005 <span class="comment">%  Y = clfLdaFwd( clf, X )</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% INPUTS</span>
+0008 <span class="comment">%  clf     - trained model</span>
+0009 <span class="comment">%  X       - nxp data array</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% OUTPUTS</span>
+0012 <span class="comment">%  Y       - nx1 vector of labels predicted according to the model</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% EXAMPLE</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% See also CLFLDA, CLFLDATRAIN</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Piotr's Image&amp;Video Toolbox      Version 2.0</span>
+0019 <span class="comment">% Copyright 2008 Piotr Dollar.  [pdollar-at-caltech.edu]</span>
+0020 <span class="comment">% Please email me if you find bugs, or have suggestions or questions!</span>
+0021 <span class="comment">% Licensed under the Lesser GPL [see external/lgpl.txt]</span>
+0022 
+0023 <span class="keyword">if</span>( ~strcmp(clf.type,<span class="string">'lda'</span>)); error( [<span class="string">'incorrect type: '</span> clf.type] ); <span class="keyword">end</span>
+0024 <span class="keyword">if</span>( size(X,2)~= clf.p ); error( <span class="string">'Incorrect data dimension'</span> ); <span class="keyword">end</span>
+0025 
+0026 <span class="comment">%%% get clf settings</span>
+0027 type = clf.clfLdaType;
+0028 prior = clf.prior;
+0029 gmeans = clf.gmeans;
+0030 gtype = clf.gtype;
+0031 groups = clf.groups;
+0032 ngroups = clf.ngroups;
+0033 
+0034 <span class="comment">%%% calculate D matrix</span>
+0035 n = size(X,1);  D = repmat(NaN, n, ngroups);
+0036 <span class="keyword">switch</span> type
+0037   <span class="keyword">case</span> 1 <span class="comment">% 'linear'</span>
+0038     <span class="comment">% MVN relative log posterior density, by group, for each X</span>
+0039     R = clf.R;
+0040     <span class="keyword">for</span> k = 1:ngroups
+0041       A = (X - repmat(gmeans(k,:), n, 1)) / R;
+0042       D(:,k) = log(prior(k)) - .5*sum(A .* A, 2);
+0043     <span class="keyword">end</span>
+0044   <span class="keyword">case</span> {2,3} <span class="comment">% 'quadratic' or 'mahalanobis'</span>
+0045     <span class="keyword">for</span> k = 1:ngroups
+0046       R=clf.RS{k};
+0047       A = (X - repmat(gmeans(k,:), n, 1)) / R;
+0048       <span class="keyword">switch</span> type
+0049         <span class="keyword">case</span> 2 <span class="comment">% 'quadratic'</span>
+0050           <span class="comment">% MVN relative log posterior density, by group, for each X</span>
+0051           D(:,k) = log(prior(k)) -.5*(sum(A .* A, 2)+log(prod(diag(R))^2));
+0052         <span class="keyword">case</span> 3 <span class="comment">% 'mahalanobis'</span>
+0053           <span class="comment">% Negative squared Mahalanobis distance, by group, for each</span>
+0054           <span class="comment">% X.  Prior probabilities are not used</span>
+0055           D(:,k) = -sum(A .* A, 2);
+0056       <span class="keyword">end</span>
+0057     <span class="keyword">end</span>
+0058 <span class="keyword">end</span>
+0059 
+0060 <span class="comment">%%% find nearest group to each observation in X data</span>
+0061 [tmp Y] = max(D, [], 2);
+0062 
+0063 <span class="comment">%%% Convert back to original grouping variable</span>
+0064 <span class="keyword">if</span> isnumeric(gtype)
+0065   groups = str2num(char(groups)); <span class="comment">%#ok&lt;ST2NM&gt;</span>
+0066   Y = groups(Y);
+0067 <span class="keyword">elseif</span> ischar(gtype)
+0068   groups = char(groups);
+0069   Y = groups(Y,:);
+0070 <span class="keyword">else</span> <span class="comment">%if iscellstr(group)</span>
+0071   Y = groups(Y);
+0072 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

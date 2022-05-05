@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ind2sub2</title>
+  <meta name="keywords" content="ind2sub2">
+  <meta name="description" content="Improved version of ind2sub.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; ind2sub2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>ind2sub2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Improved version of ind2sub.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function sub = ind2sub2( siz, ind ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Improved version of ind2sub.
+
+ Almost the same as ind2sub, except always returns only a single output
+ that contains all the index locations.  Also handles multiple linear
+ indicies at the same time. See help for ind2sub for more info.
+
+ USAGE
+  sub = ind2sub2( siz, ind )
+
+ INPUTS
+  siz     - size of array into which ind is an index
+  ind     - linear index (or vector of indicies) into given array
+
+ OUTPUTS
+  sub     - sub(i,:) is the ith set of subscripts into the array.
+
+ EXAMPLE
+  sub = ind2sub2( [10,10], 20 )         % 10 2
+  sub = ind2sub2( [10,10], [20 19] )    % 10 2; 9 2
+
+ See also IND2SUB, <a href="sub2ind2.html" class="code" title="function ind = sub2ind2( siz, sub )">SUB2IND2</a>
+
+ Piotr's Computer Vision Matlab Toolbox      Version 2.0
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function sub = ind2sub2( siz, ind )</a>
+0002 <span class="comment">% Improved version of ind2sub.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Almost the same as ind2sub, except always returns only a single output</span>
+0005 <span class="comment">% that contains all the index locations.  Also handles multiple linear</span>
+0006 <span class="comment">% indicies at the same time. See help for ind2sub for more info.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% USAGE</span>
+0009 <span class="comment">%  sub = ind2sub2( siz, ind )</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% INPUTS</span>
+0012 <span class="comment">%  siz     - size of array into which ind is an index</span>
+0013 <span class="comment">%  ind     - linear index (or vector of indicies) into given array</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% OUTPUTS</span>
+0016 <span class="comment">%  sub     - sub(i,:) is the ith set of subscripts into the array.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% EXAMPLE</span>
+0019 <span class="comment">%  sub = ind2sub2( [10,10], 20 )         % 10 2</span>
+0020 <span class="comment">%  sub = ind2sub2( [10,10], [20 19] )    % 10 2; 9 2</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% See also IND2SUB, SUB2IND2</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 2.0</span>
+0025 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0026 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0027 
+0028 <span class="keyword">if</span>( any(ind&gt;prod(siz)) ); error(<span class="string">'index out of range'</span>); <span class="keyword">end</span>
+0029 
+0030 <span class="comment">% taken almost directly from ind2sub.m</span>
+0031 ind = ind(:);
+0032 nd = length(siz);
+0033 k = [1 cumprod(siz(1:end-1))];
+0034 ind = ind - 1;
+0035 sub = zeros(length(ind),nd);
+0036 <span class="keyword">for</span> i = nd:-1:1
+0037   sub(:,i) = floor(ind/k(i))+1;
+0038   ind = rem(ind,k(i));
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

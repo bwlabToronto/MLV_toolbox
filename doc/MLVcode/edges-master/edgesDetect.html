@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of edgesDetect</title>
+  <meta name="keywords" content="edgesDetect">
+  <meta name="description" content="Detect edges in image.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">edges-master</a> &gt; edgesDetect.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>edgesDetect
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Detect edges in image.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [E,O,inds,segs] = edgesDetect( I, model ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Detect edges in image.
+
+ For an introductory tutorial please see edgesDemo.m.
+
+ The following model params may be altered prior to detecting edges:
+  prm = stride, sharpen, multiscale, nTreesEval, nThreads, nms
+ Simply alter model.opts.prm. For example, set model.opts.nms=1 to enable
+ non-maximum suppression. See edgesTrain for parameter details.
+
+ USAGE
+  [E,O,inds,segs] = edgesDetect( I, model )
+
+ INPUTS
+  I          - [h x w x 3] color input image
+  model      - structured edge model trained with edgesTrain
+
+ OUTPUTS
+  E          - [h x w] edge probability map
+  O          - [h x w] coarse edge normal orientation (0=left, pi/2=up)
+  inds       - [h/s x w/s x nTreesEval] leaf node indices
+  segs       - [g x g x h/s x w/s x nTreesEval] local segmentations
+
+ EXAMPLE
+
+ See also <a href="edgesDemo.html" class="code" title="">edgesDemo</a>, <a href="edgesTrain.html" class="code" title="function model = edgesTrain( varargin )">edgesTrain</a>, <a href="edgesChns.html" class="code" title="function [chnsReg,chnsSim] = edgesChns( I, opts )">edgesChns</a>
+
+ Structured Edge Detection Toolbox      Version 3.01
+ Code written by Piotr Dollar, 2014.
+ Licensed under the MSR-LA Full Rights License [see license.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="edgesChns.html" class="code" title="function [chnsReg,chnsSim] = edgesChns( I, opts )">edgesChns</a>	Compute features for structured edge detection.</li><li><a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>	Detect edges in image.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="edgeBoxes.html" class="code" title="function bbs = edgeBoxes( I, model, varargin )">edgeBoxes</a>	Generate Edge Boxes object proposals in given image(s).</li><li><a href="edgesDemo.html" class="code" title="">edgesDemo</a>	Demo for Structured Edge Detector (please see readme.txt first).</li><li><a href="edgesDemoRgbd.html" class="code" title="">edgesDemoRgbd</a>	Demo for RGBD Structured Edge Detector (please see readme.txt first).</li><li><a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>	Detect edges in image.</li><li><a href="edgesEval.html" class="code" title="function varargout = edgesEval( model, varargin )">edgesEval</a>	Run and evaluate structured edge detector on BSDS500.</li><li><a href="spDemo.html" class="code" title="">spDemo</a>	Demo for Sticky Superpixels (please see readme.txt first).</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [E,O,inds,segs] = edgesDetect( I, model )</a>
+0002 <span class="comment">% Detect edges in image.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% For an introductory tutorial please see edgesDemo.m.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% The following model params may be altered prior to detecting edges:</span>
+0007 <span class="comment">%  prm = stride, sharpen, multiscale, nTreesEval, nThreads, nms</span>
+0008 <span class="comment">% Simply alter model.opts.prm. For example, set model.opts.nms=1 to enable</span>
+0009 <span class="comment">% non-maximum suppression. See edgesTrain for parameter details.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% USAGE</span>
+0012 <span class="comment">%  [E,O,inds,segs] = edgesDetect( I, model )</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% INPUTS</span>
+0015 <span class="comment">%  I          - [h x w x 3] color input image</span>
+0016 <span class="comment">%  model      - structured edge model trained with edgesTrain</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% OUTPUTS</span>
+0019 <span class="comment">%  E          - [h x w] edge probability map</span>
+0020 <span class="comment">%  O          - [h x w] coarse edge normal orientation (0=left, pi/2=up)</span>
+0021 <span class="comment">%  inds       - [h/s x w/s x nTreesEval] leaf node indices</span>
+0022 <span class="comment">%  segs       - [g x g x h/s x w/s x nTreesEval] local segmentations</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% EXAMPLE</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% See also edgesDemo, edgesTrain, edgesChns</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Structured Edge Detection Toolbox      Version 3.01</span>
+0029 <span class="comment">% Code written by Piotr Dollar, 2014.</span>
+0030 <span class="comment">% Licensed under the MSR-LA Full Rights License [see license.txt]</span>
+0031 
+0032 <span class="comment">% get parameters</span>
+0033 opts=model.opts; opts.nTreesEval=min(opts.nTreesEval,opts.nTrees);
+0034 <span class="keyword">if</span>(~isfield(opts,<span class="string">'sharpen'</span>)), opts.sharpen=0; <span class="keyword">end</span>
+0035 <span class="keyword">if</span>(~isfield(model,<span class="string">'segs'</span>)), model.segs=[]; model.nSegs=[]; <span class="keyword">end</span>
+0036 opts.stride=max(opts.stride,opts.shrink); model.opts=opts;
+0037 
+0038 <span class="keyword">if</span>( opts.multiscale )
+0039   <span class="comment">% if multiscale run edgesDetect multiple times</span>
+0040   ss=2.^(-1:1); k=length(ss); inds=cell(1,k); segs=inds;
+0041   siz=size(I); model.opts.multiscale=0; model.opts.nms=0; E=0;
+0042   <span class="keyword">for</span> i=1:k, s=ss(i); I1=imResample(I,s);
+0043     <span class="keyword">if</span>(nargout&lt;4), [E1,~,inds{i}]=<a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>(I1,model);
+0044     <span class="keyword">else</span> [E1,~,inds{i},segs{i}]=<a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>(I1,model); <span class="keyword">end</span>
+0045     E=E+imResample(E1,siz(1:2));
+0046   <span class="keyword">end</span>; E=E/k; model.opts=opts;
+0047   
+0048 <span class="keyword">else</span>
+0049   <span class="comment">% pad image, making divisible by 4</span>
+0050   siz=size(I); r=opts.imWidth/2; p=[r r r r];
+0051   p([2 4])=p([2 4])+mod(4-mod(siz(1:2)+2*r,4),4);
+0052   I = imPad(I,p,<span class="string">'symmetric'</span>);
+0053   
+0054   <span class="comment">% compute features and apply forest to image</span>
+0055   [chnsReg,chnsSim] = <a href="edgesChns.html" class="code" title="function [chnsReg,chnsSim] = edgesChns( I, opts )">edgesChns</a>( I, opts );
+0056   s=opts.sharpen; <span class="keyword">if</span>(s), I=convTri(rgbConvert(I,<span class="string">'rgb'</span>),1); <span class="keyword">end</span>
+0057   <span class="keyword">if</span>(nargout&lt;4), [E,inds] = edgesDetectMex(model,I,chnsReg,chnsSim);
+0058   <span class="keyword">else</span> [E,inds,segs] = edgesDetectMex(model,I,chnsReg,chnsSim); <span class="keyword">end</span>
+0059   
+0060   <span class="comment">% normalize and finalize edge maps</span>
+0061   t=opts.stride^2/opts.gtWidth^2/opts.nTreesEval; r=opts.gtWidth/2;
+0062   <span class="keyword">if</span>(s==0), t=t*2; <span class="keyword">elseif</span>(s==1), t=t*1.8; <span class="keyword">else</span> t=t*1.66; <span class="keyword">end</span>
+0063   E=E(1+r:siz(1)+r,1+r:siz(2)+r,:)*t; E=convTri(E,1);
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="comment">% compute approximate orientation O from edges E</span>
+0067 <span class="keyword">if</span>( opts.nms==-1 ), O=[]; <span class="keyword">elseif</span>( nargout&gt;1 || opts.nms )
+0068   [Ox,Oy]=gradient2(convTri(E,4));
+0069   [Oxx,~]=gradient2(Ox); [Oxy,Oyy]=gradient2(Oy);
+0070   O=mod(atan(Oyy.*sign(-Oxy)./(Oxx+1e-5)),pi);
+0071 <span class="keyword">end</span>
+0072 
+0073 <span class="comment">% perform nms</span>
+0074 <span class="keyword">if</span>( opts.nms&gt;0 ), E=edgesNmsMex(E,O,1,5,1.01,opts.nThreads); <span class="keyword">end</span>
+0075 
+0076 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

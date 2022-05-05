@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Contents</title>
+  <meta name="keywords" content="Contents">
+  <meta name="description" content="EDGES">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">MLVcode</a> &gt; <a href="index.html">edges-master</a> &gt; Contents.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>Contents
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>EDGES</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> EDGES
+ See also readme.txt
+
+ Fast edge detector code is based on the paper:
+  P. Dollár and C. Zitnick
+  &quot;Structured Forests for Fast Edge Detection&quot;, ICCV 2013.
+ Please cite the above paper if you end up using the edge detector.
+
+ Edge Boxes object proposal generation is based on the paper:
+  C. Zitnick and P. Dollár
+  &quot;Edge Boxes: Locating Object Proposals from Edges&quot;, ECCV 2014.
+ Please cite the above paper if you end up using the object proposals.
+
+ Structured Edge detector code:
+   <a href="edgesChns.html" class="code" title="function [chnsReg,chnsSim] = edgesChns( I, opts )">edgesChns</a>       - Compute features for structured edge detection.
+   <a href="edgesDemo.html" class="code" title="">edgesDemo</a>       - Demo for Structured Edge Detector (please see readme.txt first).
+   <a href="edgesDemoRgbd.html" class="code" title="">edgesDemoRgbd</a>   - Demo for RGBD Structured Edge Detector (please see readme.txt first).
+   <a href="edgesDetect.html" class="code" title="function [E,O,inds,segs] = edgesDetect( I, model )">edgesDetect</a>     - Detect edges in image.
+   <a href="edgesSweeps.html" class="code" title="function edgesSweeps()">edgesSweeps</a>     - Parameter sweeps for structured edge detector.
+   <a href="edgesTrain.html" class="code" title="function model = edgesTrain( varargin )">edgesTrain</a>      - Train structured edge detector.
+
+ Edge detection evaluation code:
+   <a href="edgesEval.html" class="code" title="function varargout = edgesEval( model, varargin )">edgesEval</a>       - Run and evaluate structured edge detector on BSDS500.
+   <a href="edgesEvalDir.html" class="code" title="function varargout = edgesEvalDir( varargin )">edgesEvalDir</a>    - Calculate edge precision/recall results for directory of edge images.
+   <a href="edgesEvalImg.html" class="code" title="function [thrs,cntR,sumR,cntP,sumP,V] = edgesEvalImg( E, G, varargin )">edgesEvalImg</a>    - Calculate edge precision/recall results for single edge image.
+   <a href="edgesEvalPlot.html" class="code" title="function edgesEvalPlot( algs, nms, cols )">edgesEvalPlot</a>   - Plot edge precision/recall results for directory of edge images.
+
+ Edge Boxes object proposal generation code:
+   <a href="edgeBoxes.html" class="code" title="function bbs = edgeBoxes( I, model, varargin )">edgeBoxes</a>       - Generate Edge Boxes object proposals in given image(s).
+   <a href="edgeBoxesDemo.html" class="code" title="">edgeBoxesDemo</a>   - Demo for Edge Boxes (please see readme.txt first).
+   <a href="edgeBoxesSweeps.html" class="code" title="function edgeBoxesSweeps()">edgeBoxesSweeps</a> - Parameter sweeps for Edges Boxes object proposals.
+
+ Object proposal evaluation code:
+   <a href="boxesData.html" class="code" title="function data = boxesData( varargin )">boxesData</a>       - Get ground truth data for object proposal bounding box evaluation.
+   <a href="boxesEval.html" class="code" title="function recall = boxesEval( varargin )">boxesEval</a>       - Perform object proposal bounding box evaluation and plot results.
+
+ Sticky Edge Adhesive Superpixel code:
+   <a href="spDemo.html" class="code" title="">spDemo</a>          - Demo for Sticky Superpixels (please see readme.txt first).
+   <a href="spDetect.html" class="code" title="function [S,V] = spDetect( I, E, varargin )">spDetect</a>        - Detect Sticky Superpixels in image.
+   <a href="spAffinities.html" class="code" title="function [A,E,U] = spAffinities( S, E, segs, nThreads )">spAffinities</a>    - Compute superpixel affinities and optionally corresponding edge map.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

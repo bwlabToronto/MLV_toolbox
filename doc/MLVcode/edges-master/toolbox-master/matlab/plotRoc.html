@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plotRoc</title>
+  <meta name="keywords" content="plotRoc">
+  <meta name="description" content="Function for display of rocs (receiver operator characteristic curves).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">MLVcode</a> &gt; <a href="../../index.html">edges-master</a> &gt; <a href="#">toolbox-master</a> &gt; <a href="index.html">matlab</a> &gt; plotRoc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode\edges-master\toolbox-master\matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>plotRoc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Function for display of rocs (receiver operator characteristic curves).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [h,miss,stds] = plotRoc( D, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Function for display of rocs (receiver operator characteristic curves).
+
+ Display roc curves. Consistent usage ensures uniform look for rocs. The
+ input D should have n rows, each of which is of the form:
+  D = [falsePosRate truePosRate]
+ D is generated, for example, by scanning a detection threshold over n
+ values from 0 (so first entry is [1 1]) to 1 (so last entry is [0 0]).
+ Alternatively D can be a cell vector of rocs, in which case an average
+ ROC will be shown with error bars. Plots missRate (which is just 1 minus
+ the truePosRate) on the y-axis versus the falsePosRate on the x-axis.
+
+ USAGE
+  [h,miss,stds] = plotRoc( D, prm )
+
+ INPUTS
+  D    - [nx2] n data points along roc [falsePosRate truePosRate]
+         typically ranges from [1 1] to [0 0] (or may be reversed)
+  prm  - [] param struct
+   .color    - ['g'] color for curve
+   .lineSt   - ['-'] linestyle (see LineSpec)
+   .lineWd   - [4] curve width
+   .logx     - [0] use logarithmic scale for x-axis
+   .logy     - [0] use logarithmic scale for y-axis
+   .marker   - [''] marker type (see LineSpec)
+   .mrkrSiz  - [12] marker size
+   .nMarker  - [5] number of markers (regularly spaced) to display
+   .lims     - [0 1 0 1] axes limits
+   .smooth   - [0] if T compute lower envelop of roc to smooth staircase
+   .fpTarget - [] return miss rates at given fp values (and draw lines)
+   .xLbl     - ['false positive rate'] label for x-axis
+   .yLbl     - ['miss rate'] label for y-axis
+
+ OUTPUTS
+  h    - plot handle for use in legend only
+  miss - average miss rates at fpTarget reference values
+  stds - standard deviation of miss rates at fpTarget reference values
+
+ EXAMPLE
+  k=2; x=0:.0001:1; data1 = [1-x; (1-x.^k).^(1/k)]';
+  k=3; x=0:.0001:1; data2 = [1-x; (1-x.^k).^(1/k)]';
+  hs(1)=plotRoc(data1,struct('color','g','marker','s'));
+  hs(2)=plotRoc(data2,struct('color','b','lineSt','--'));
+  legend( hs, {'roc1','roc2'} ); xlabel('fp'); ylabel('fn');
+
+ See also
+
+ Piotr's Computer Vision Matlab Toolbox      Version 3.02
+ Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]
+ Licensed under the Simplified BSD License [see external/bsd.txt]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="getPrmDflt.html" class="code" title="function varargout = getPrmDflt( prm, dfs, checkExtra )">getPrmDflt</a>	Helper to set default values (if not already set) of parameter struct.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function DQ = quantizeRocs( Ds, nPnts, logx, lims )</a></li><li><a href="#_sub2" class="code">function D1 = smoothRoc( D )</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [h,miss,stds] = plotRoc( D, varargin )</a>
+0002 <span class="comment">% Function for display of rocs (receiver operator characteristic curves).</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Display roc curves. Consistent usage ensures uniform look for rocs. The</span>
+0005 <span class="comment">% input D should have n rows, each of which is of the form:</span>
+0006 <span class="comment">%  D = [falsePosRate truePosRate]</span>
+0007 <span class="comment">% D is generated, for example, by scanning a detection threshold over n</span>
+0008 <span class="comment">% values from 0 (so first entry is [1 1]) to 1 (so last entry is [0 0]).</span>
+0009 <span class="comment">% Alternatively D can be a cell vector of rocs, in which case an average</span>
+0010 <span class="comment">% ROC will be shown with error bars. Plots missRate (which is just 1 minus</span>
+0011 <span class="comment">% the truePosRate) on the y-axis versus the falsePosRate on the x-axis.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% USAGE</span>
+0014 <span class="comment">%  [h,miss,stds] = plotRoc( D, prm )</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% INPUTS</span>
+0017 <span class="comment">%  D    - [nx2] n data points along roc [falsePosRate truePosRate]</span>
+0018 <span class="comment">%         typically ranges from [1 1] to [0 0] (or may be reversed)</span>
+0019 <span class="comment">%  prm  - [] param struct</span>
+0020 <span class="comment">%   .color    - ['g'] color for curve</span>
+0021 <span class="comment">%   .lineSt   - ['-'] linestyle (see LineSpec)</span>
+0022 <span class="comment">%   .lineWd   - [4] curve width</span>
+0023 <span class="comment">%   .logx     - [0] use logarithmic scale for x-axis</span>
+0024 <span class="comment">%   .logy     - [0] use logarithmic scale for y-axis</span>
+0025 <span class="comment">%   .marker   - [''] marker type (see LineSpec)</span>
+0026 <span class="comment">%   .mrkrSiz  - [12] marker size</span>
+0027 <span class="comment">%   .nMarker  - [5] number of markers (regularly spaced) to display</span>
+0028 <span class="comment">%   .lims     - [0 1 0 1] axes limits</span>
+0029 <span class="comment">%   .smooth   - [0] if T compute lower envelop of roc to smooth staircase</span>
+0030 <span class="comment">%   .fpTarget - [] return miss rates at given fp values (and draw lines)</span>
+0031 <span class="comment">%   .xLbl     - ['false positive rate'] label for x-axis</span>
+0032 <span class="comment">%   .yLbl     - ['miss rate'] label for y-axis</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% OUTPUTS</span>
+0035 <span class="comment">%  h    - plot handle for use in legend only</span>
+0036 <span class="comment">%  miss - average miss rates at fpTarget reference values</span>
+0037 <span class="comment">%  stds - standard deviation of miss rates at fpTarget reference values</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% EXAMPLE</span>
+0040 <span class="comment">%  k=2; x=0:.0001:1; data1 = [1-x; (1-x.^k).^(1/k)]';</span>
+0041 <span class="comment">%  k=3; x=0:.0001:1; data2 = [1-x; (1-x.^k).^(1/k)]';</span>
+0042 <span class="comment">%  hs(1)=plotRoc(data1,struct('color','g','marker','s'));</span>
+0043 <span class="comment">%  hs(2)=plotRoc(data2,struct('color','b','lineSt','--'));</span>
+0044 <span class="comment">%  legend( hs, {'roc1','roc2'} ); xlabel('fp'); ylabel('fn');</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">% See also</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">% Piotr's Computer Vision Matlab Toolbox      Version 3.02</span>
+0049 <span class="comment">% Copyright 2014 Piotr Dollar.  [pdollar-at-gmail.com]</span>
+0050 <span class="comment">% Licensed under the Simplified BSD License [see external/bsd.txt]</span>
+0051 
+0052 <span class="comment">% get params</span>
+0053 [color,lineSt,lineWd,logx,logy,marker,mrkrSiz,nMarker,lims,smooth, <span class="keyword">...</span>
+0054   fpTarget,xLbl,yLbl] = <a href="getPrmDflt.html" class="code" title="function varargout = getPrmDflt( prm, dfs, checkExtra )">getPrmDflt</a>( varargin, {<span class="string">'color'</span> <span class="string">'g'</span> <span class="string">'lineSt'</span> <span class="string">'-'</span> <span class="keyword">...</span>
+0055   <span class="string">'lineWd'</span> 4 <span class="string">'logx'</span> 0 <span class="string">'logy'</span> 0 <span class="string">'marker'</span> <span class="string">''</span> <span class="string">'mrkrSiz'</span> 12 <span class="string">'nMarker'</span> 5 <span class="keyword">...</span>
+0056   <span class="string">'lims'</span> [] <span class="string">'smooth'</span> 0 <span class="string">'fpTarget'</span> [] <span class="string">'xLbl'</span> <span class="string">'false positive rate'</span> <span class="keyword">...</span>
+0057   <span class="string">'yLbl'</span> <span class="string">'miss rate'</span> } );
+0058 <span class="keyword">if</span>( isempty(lims) ); lims=[logx*1e-5 1 logy*1e-5 1]; <span class="keyword">end</span>
+0059 
+0060 <span class="comment">% ensure descending fp rate, change to miss rate, optionally 'nicefy' roc</span>
+0061 <span class="keyword">if</span>(~iscell(D)), D={D}; <span class="keyword">end</span>; nD=length(D);
+0062 <span class="keyword">for</span> j=1:nD, assert(size(D{j},2)==2); <span class="keyword">end</span>
+0063 <span class="keyword">for</span> j=1:nD, <span class="keyword">if</span>(D{j}(1,2)&lt;D{j}(<span class="keyword">end</span>,2)), D{j}=flipud(D{j}); <span class="keyword">end</span>; <span class="keyword">end</span>
+0064 <span class="keyword">for</span> j=1:nD, D{j}(:,2)=1-D{j}(:,2); assert(all(D{j}(:,2)&gt;=0)); <span class="keyword">end</span>
+0065 <span class="keyword">if</span>(smooth), <span class="keyword">for</span> j=1:nD, D{j}=<a href="#_sub2" class="code" title="subfunction D1 = smoothRoc( D )">smoothRoc</a>(D{j}); <span class="keyword">end</span>; <span class="keyword">end</span>
+0066 
+0067 <span class="comment">% plot: (1) h for legend only, (2) markers, (3) error bars, (4) roc curves</span>
+0068 hold on; axis(lims); xlabel(xLbl); ylabel(yLbl);
+0069 prmMrkr = {<span class="string">'MarkerSize'</span>,mrkrSiz,<span class="string">'MarkerFaceColor'</span>,color};
+0070 prmClr={<span class="string">'Color'</span>,color}; prmPlot = [prmClr,{<span class="string">'LineWidth'</span>,lineWd}];
+0071 h = plot( 2, 0, [lineSt marker], prmMrkr{:}, prmPlot{:} ); <span class="comment">%(1)</span>
+0072 DQ = <a href="#_sub1" class="code" title="subfunction DQ = quantizeRocs( Ds, nPnts, logx, lims )">quantizeRocs</a>( D, nMarker, logx, lims ); DQm=mean(DQ,3);
+0073 <span class="keyword">if</span>(~isempty(marker))
+0074   plot(DQm(:,1),DQm(:,2),marker,prmClr{:},prmMrkr{:} ); <span class="keyword">end</span> <span class="comment">%(2)</span>
+0075 <span class="keyword">if</span>(nD&gt;1), DQs=std(DQ,0,3);
+0076   errorbar(DQm(:,1),DQm(:,2),DQs(:,2),<span class="string">'.'</span>,prmClr{:}); <span class="keyword">end</span> <span class="comment">%(3)</span>
+0077 <span class="keyword">if</span>(nD==1), DQ=D{1}; <span class="keyword">else</span> DQ=<a href="#_sub1" class="code" title="subfunction DQ = quantizeRocs( Ds, nPnts, logx, lims )">quantizeRocs</a>(D,100,logx,lims); <span class="keyword">end</span>
+0078 DQm = mean(DQ,3); plot( DQm(:,1), DQm(:,2), lineSt, prmPlot{:} ); <span class="comment">%(4)</span>
+0079 
+0080 <span class="comment">% plot line at given fp rate</span>
+0081 m=length(fpTarget); miss=zeros(1,m); stds=miss;
+0082 <span class="keyword">if</span>( m&gt;0 )
+0083   assert( min(DQm(:,1))&lt;=min(fpTarget) ); DQs=std(DQ,0,3);
+0084   <span class="keyword">for</span> i=1:m, j=find(DQm(:,1)&lt;=fpTarget(i)); j=j(1);
+0085     miss(i)=DQm(j,2); stds(i)=DQs(j,2); <span class="keyword">end</span>
+0086   fp=min(fpTarget); plot([fp fp],lims(3:4),<span class="string">'Color'</span>,.7*[1 1 1]);
+0087   fp=max(fpTarget); plot([fp fp],lims(3:4),<span class="string">'Color'</span>,.7*[1 1 1]);
+0088 <span class="keyword">end</span>
+0089 
+0090 <span class="comment">% set log axes</span>
+0091 <span class="keyword">if</span>( logx==1 )
+0092   ticks=10.^(-8:8);
+0093   set(gca,<span class="string">'XScale'</span>,<span class="string">'log'</span>,<span class="string">'XTick'</span>,ticks);
+0094 <span class="keyword">end</span>
+0095 <span class="keyword">if</span>( logy==1 )
+0096   ticks=[.001 .002 .005 .01 .02 .05 .1 .2 .5 1];
+0097   set(gca,<span class="string">'YScale'</span>,<span class="string">'log'</span>,<span class="string">'YTick'</span>,ticks);
+0098 <span class="keyword">end</span>
+0099 <span class="keyword">if</span>( logx==1 || logy==1 ), grid on;
+0100   set(gca,<span class="string">'XMinorGrid'</span>,<span class="string">'off'</span>,<span class="string">'XMinorTic'</span>,<span class="string">'off'</span>);
+0101   set(gca,<span class="string">'YMinorGrid'</span>,<span class="string">'off'</span>,<span class="string">'YMinorTic'</span>,<span class="string">'off'</span>);
+0102 <span class="keyword">end</span>
+0103 
+0104 <span class="keyword">end</span>
+0105 
+0106 <a name="_sub1" href="#_subfunctions" class="code">function DQ = quantizeRocs( Ds, nPnts, logx, lims )</a>
+0107 <span class="comment">% estimate miss rate at each target fp rate</span>
+0108 nD=length(Ds); DQ=zeros(nPnts,2,nD);
+0109 <span class="keyword">if</span>(logx==1), fps=logspace(log10(lims(1)),log10(lims(2)),nPnts);
+0110 <span class="keyword">else</span> fps=linspace(lims(1),lims(2),nPnts); <span class="keyword">end</span>; fps=flipud(fps');
+0111 <span class="keyword">for</span> j=1:nD, D=[Ds{j}; 0 1]; k=1; fp=D(k,1);
+0112   <span class="keyword">for</span> i=1:nPnts
+0113     <span class="keyword">while</span>( k&lt;size(D,1) &amp;&amp; fp&gt;=fps(i) ), k=k+1; fp=D(k,1); <span class="keyword">end</span>
+0114     k0=max(k-1,1); fp0=D(k0,1); assert(fp0&gt;=fp);
+0115     <span class="keyword">if</span>(fp0==fp), r=.5; <span class="keyword">else</span> r=(fps(i)-fp)/(fp0-fp); <span class="keyword">end</span>
+0116     DQ(i,1,j)=fps(i); DQ(i,2,j)=r*D(k0,2)+(1-r)*D(k,2);
+0117   <span class="keyword">end</span>
+0118 <span class="keyword">end</span>
+0119 <span class="keyword">end</span>
+0120 
+0121 <a name="_sub2" href="#_subfunctions" class="code">function D1 = smoothRoc( D )</a>
+0122 D1 = zeros(size(D));
+0123 n = size(D,1); cnt=0;
+0124 <span class="keyword">for</span> i=1:n
+0125   isAnkle = (i==1) || (i==n);
+0126   <span class="keyword">if</span>( ~isAnkle )
+0127     dP=D1(cnt,:); dC=D(i,:); dN=D(i+1,:);
+0128     isAnkle = (dC(1)~=dP(1)) &amp;&amp; (dC(2)~=dN(2));
+0129   <span class="keyword">end</span>
+0130   <span class="keyword">if</span>(isAnkle); cnt=cnt+1; D1(cnt,:)=D(i,:); <span class="keyword">end</span>
+0131 <span class="keyword">end</span>
+0132 D1=D1(1:cnt,:);
+0133 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 05-May-2022 14:52:24 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
