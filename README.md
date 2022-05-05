@@ -11,6 +11,9 @@ In this section, we are going to explain what MLV_toolbox is.
 
 **Requirements**
 
+* [Matlab R2014a or newer](https://www.mathworks.com/products/matlab.html)
+* Matlab Image Processing and Computer Vision Toolbox
+
 **Datasets**
 
 **Usage**
