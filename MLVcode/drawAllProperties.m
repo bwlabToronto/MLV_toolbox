@@ -1,6 +1,6 @@
 function figIDs = drawAllProperties(vecLD,mode,properties)
 % figIDs = drawAllProperties(vecLD,mode,properties)
-% Draws the original line drawing and all of its properties.
+%   Draws the original line drawing and all of its properties.
 %
 % Input:
 %   vecLD - the vectorized line drawing to be drawn
@@ -12,6 +12,15 @@ function figIDs = drawAllProperties(vecLD,mode,properties)
 % Return:
 %   figIDs: a vector of the figure IDs of the individual figures.
 %           just one ID for mode = 'subplots' 
+%
+% See also drawLinedrawing, drawLinedrawingProperty
+
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 
 if nargin < 3
     properties = {'Original','Length','Orientation','Curvature','Junctions'};

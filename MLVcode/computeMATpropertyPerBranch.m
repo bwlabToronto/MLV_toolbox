@@ -1,3 +1,19 @@
+function result = computeMATpropertyPerBranch(curBranch,property,K)
+% result = computeMATpropertyPerBranch(curBranch,property,K)
+%   computes the specified MAT property for a particular skeletal branch.
+%
+% Input:
+%   curBranch - the skeltal branch for which property should be computed,
+%   property - a string with signaling the property that should be computed
+%              one of: 'parallelism', 'separation' , 'taper', 'mirror'
+%   K - the length of the window on the skeletal branch for computing
+%       property. default: 5
+%
+% Output:
+%   result - the skeletal branch with the respective scores applied.
+%
+% See also computeMATproperty
+
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %
@@ -21,15 +37,14 @@
 % started with saliency scores based on symmetry and later added separation
 % this does not mean all the scores computed here are just symmetry
 
-function result = computeMATpropertyPerBranch(curBranch,property,K)
-
-
+% The default value of K is 5
+if nargin < 3
+    K = 5;
+end
 
 N = length(curBranch.X);
 [R,dR,dX,dY]=getBranchDerivative(curBranch);
 result = zeros(N,1);
-
-
 
 switch lower(property)
     case 'parallelism'  

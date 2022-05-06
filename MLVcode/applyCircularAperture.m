@@ -15,6 +15,13 @@ function maskedLD = applyCircularAperture(vecLD,radius)
 % Neuroimage, 135, 32-44. https://doi.org/10.1016/j.neuroimage.2016.04.021
 %
 
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 if nargin < 2
     radius = min(vecLD.imsize)/2;
 end

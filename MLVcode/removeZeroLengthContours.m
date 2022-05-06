@@ -9,6 +9,13 @@ function [resultLD,contourIdxRemoved] = removeZeroLengthContours(vecLD)
 %   resultLD - vectorized line drawing wiht zero-length contours removed
 %   contourIdxRemoved - indices of contours in vecLD that were removed
 
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 if ~isfield(vecLD,'contourLengths')
     computeLength(vecLD);
 end

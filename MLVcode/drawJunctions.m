@@ -12,7 +12,7 @@ function drawJunctions(Junctions,types,MarkerSize,colors)
 %   Junctions - the junctions to be drawn. E.g., from vecLD.junctions.
 %
 %   alternatively:
-%   vecLD - the vectoirized line drawing with the junctions included.
+%   vecLD - the vectorized line drawing with the junctions included.
 %
 %   types - cell array with the types of junctions to be drawn in order
 %           any combination of 'T','X','Y','Arrow','Star
@@ -21,6 +21,15 @@ function drawJunctions(Junctions,types,MarkerSize,colors)
 %                default: lines()
 %   colors - Nx3 array of RGB values to be used as colors
 %            default: Matlab's 'lines' color map - the regular order for line plots.
+%
+% See also drawLinedrawing, drawLinedrawingProperty
+
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 
 if nargin < 3
     MarkerSize = 5;

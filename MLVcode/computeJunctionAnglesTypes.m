@@ -14,9 +14,18 @@ function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)
 %                'T': T junction - three segments: 160 < a < 200
 %                'Arrow': arrow juctions - three segments: a > 200
 %                'Y': Y junctions - three segments: a < 160
-%                'X': X junctions - four segments: 0 < a < 150
+%                'X': X junctions - four segments.
 %                'L': L junctions - two segments
 %                'Star': Star junctions - more than four segments
+%
+% See also computeJunctions
+
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 
 Thresh = 2; % threshold (in pixels) for when to consider a point to be on the junction
 Thresh2 = Thresh * Thresh;

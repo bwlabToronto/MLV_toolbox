@@ -14,6 +14,15 @@ function Junctions = detectJunctions(vecLD)
 %               an output of this function. See cleanupJunctions for more.
 %               segmentIDs - a vector with the indices to the line segments
 %               within the participating contours.
+%
+% See also computeJunctions
+
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 
 
 % parameters for heuristic detection

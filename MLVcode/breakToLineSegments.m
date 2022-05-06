@@ -26,26 +26,15 @@ while t<=n
             start = t-1;
         else
             t = t+1;
-        end
-        
+        end        
     end
 end
 
 scores = zeros(size(XY,1),1);
-% plot(XY(:,1),XY(:,2),'.');
-% hold on;
-% size(XY)
 counter = 1;
 for i = 1 : length(lineSegs)
-curLS = lineSegs{i};
-N = size(curLS,1);
-% counter
-% counter+N-1
-% disp('----')
-scores(counter:counter+N-1) = 1-1/N;
-counter = counter + N-1;
-% plot([curLS(1,1),curLS(end,1)],[curLS(1,2),curLS(end,2)],'r-');
-% plot([curLS(1,1),curLS(end,1)],[curLS(1,2),curLS(end,2)],'c*');
+    curLS = lineSegs{i};
+    N = size(curLS,1);
+    scores(counter:counter+N-1) = 1-1/N;
+    counter = counter + N-1;
 end
-% axis equal
-% axis off

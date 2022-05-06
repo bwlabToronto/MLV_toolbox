@@ -10,6 +10,13 @@ function vecLD = computeContourProperties(vecLD,whichProps)
 % Output:
 %   vecLD - a vector LD of structs with the requested contour properties added
 
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 
 if nargin < 2
     whichProps = {'orientation','length','curvature','junctions'};

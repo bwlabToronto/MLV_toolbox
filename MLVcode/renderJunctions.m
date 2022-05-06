@@ -1,7 +1,6 @@
 function img = renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)
 % renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)
-%
-%   Draws junctions into an image.
+%   Draws junctions into an existing image.
 %
 % Input:
 %   Junctions - the junctions to be drawn. E.g., from vecLD.junctions.
@@ -16,6 +15,13 @@ function img = renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)
 %                default: lines()
 %   colors - Nx3 array of RGB values to be used as colors
 %            default: Matlab's 'lines' color map - the regular order for line plots.
+
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 
 junctionTypes = {Junctions(:).type};
 if isempty(types)

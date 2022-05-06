@@ -19,6 +19,14 @@ function Position = lineIntersection(queryLine,refLine,RE,AE)
 %   If the lines do intersect, the coordintes [x,y] of the intersection point.
 %   Otherwise Position will be empty [].
 
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
+
 eps = 1e-4;
 
 Ay = queryLine(3) - queryLine(1);

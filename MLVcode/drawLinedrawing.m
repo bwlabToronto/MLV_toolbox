@@ -9,6 +9,13 @@ function drawLinedrawing(vecLD,lineWidth,color)
 %   color - the RGB color for drawing the contours.
 %           default: [0,0,0] (black)
 
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 if nargin < 3
     color = [0,0,0];
 end

@@ -17,6 +17,13 @@ function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)
 % Return:
 %   img - the RGB image with the contours drawn in.
 
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 
 if nargin < 5
     color = [0,0,0];

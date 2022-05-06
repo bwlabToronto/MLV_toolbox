@@ -15,10 +15,18 @@ function vecLD = computeJunctions(vecLD)
 %   type       - based on the largest angle a, one of: 
 %                'T': T junction - three segments: 160 < a < 200
 %                'Y': Y junctions - three segments: a < 160
-%                'X': X junctions - four segments: 0 < a < 150
+%                'X': X junctions - four segments.
 %                'Arrow': arrow juctions - three segments: a > 200
 %                'Star': Star junctions - more than four segments
+%
+% See also detectJunctions, cleanupJunctions, computeJunctionAnglesTypes
 
+% -----------------------------------------------------
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 
 if ~isfield(vecLD,'orientations')
     vecLD = computeOrientation(vecLD);
