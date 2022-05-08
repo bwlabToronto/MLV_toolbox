@@ -1,5 +1,5 @@
 function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)
-% [topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction)
+% [topLD, bottomLD] = splitLDbyStatsModel(vecLD,properties,fraction)
 % Splits up the contours in the line drawing vecLD according to feature
 % properties, weighted by the histogramWeights.
 %
