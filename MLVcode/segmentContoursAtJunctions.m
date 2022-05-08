@@ -1,7 +1,7 @@
 function newLD = segmentContoursAtJunctions(vecLD)
 % newLD = segmentContoursAtJunctions(vecLD)
 %   Creates a new line drawing with the contours segmented into separate 
-%   contours  at junctions. That is, the new contours will terminate at 
+%   contours at junctions. That is, the new contours will terminate at 
 %   junction points and not run through them. Otherwise, the new drawing 
 %   is identical to the old one.
 %
@@ -10,7 +10,7 @@ function newLD = segmentContoursAtJunctions(vecLD)
 %           there is no field called "junctions", they will be computed.
 %
 % Output:
-%   newLD - the new line drawing with contours split att eh junctions.
+%   newLD - the new line drawing with contours split at the junctions.
 
 if ~isfield(vecLD,'junctions')
     vecLD = computeJunctions(vecLD);

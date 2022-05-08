@@ -1,12 +1,7 @@
 function drawJunctions(Junctions,types,MarkerSize,colors)
 % drawJunctions(Junctions,types,MarkerSize,colors)
-%   Draws the junctions intot eh current figure.
+%   Draws the junctions into the current figure.
 %
-% drawJunctions(vecLD,types,MarkerSize,colors)
-%   Draws the line drawing vecLD with the Jucntions superimposed into the
-%   current figure.
-%
-% Draws the junctions into the current figure.
 %
 % Input:
 %   Junctions - the junctions to be drawn. E.g., from vecLD.junctions.
