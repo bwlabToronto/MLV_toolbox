@@ -5,7 +5,7 @@ function img = renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)
 % Input:
 %   Junctions - the junctions to be drawn. E.g., from vecLD.junctions.
 %   types - cell array with the types of junctions to be drawn in order
-%           any combination of 'L','T','X','Y','Arrow','Star
+%           any combination of 'T','X','Y','Arrow','Star'
 %           default: {} - all junctions
 %   img - an existing RGB image to draw into. 
 %   LDimsize - the image size that the coordinates are based on. Use vecLD.imsizxe for the coordinates in [w,h]. If imsize is different from vecLD.imsize, the

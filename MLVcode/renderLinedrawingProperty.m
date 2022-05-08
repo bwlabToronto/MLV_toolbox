@@ -54,7 +54,7 @@ scaleVec = [scaleVec,scaleVec];
 for c = 1:vecLD.numContours
     scaledCoords = vecLD.contours{c} .* repmat(scaleVec,size(vecLD.contours{c},1),1);
     for s = 1:size(scaledCoords,1)
-        img = insertShape(img,'Line',scaledCoords,'Color',cmap(colorIdx{c}(s),:),'LineWidth',lineWidth,'SmoothEdges',false);
+        img = insertShape(img,'Line',scaledCoords(s,:),'Color',cmap(colorIdx{c}(s),:),'LineWidth',lineWidth,'SmoothEdges',false);
     end
 end
 
