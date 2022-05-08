@@ -16,10 +16,6 @@ function MAT = computeMAT(imgLD,threshold_angle)
 %   distance_map: a distance transform image the same size as imgLD
 %   AOF: average outward flux image computed from the distance transform 
 
-
-
-
-
 binaryImage = imgLD;
 
 
