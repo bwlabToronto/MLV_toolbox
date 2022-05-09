@@ -59,5 +59,6 @@ switch property
         error(['Unknown property: ',property]);
 end
 
-axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
 axis ij image;
+axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
+
