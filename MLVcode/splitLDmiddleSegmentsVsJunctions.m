@@ -1,15 +1,14 @@
 function [middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)
 % [middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)
-%
-%   Divides the contours into middle segments between junctions and the end
-%   quarters of the segmetns around junctions.
+% Divides the contours into middle segments between junctions and the end
+% quarters of the segments around junctions.
 %
 % Input:
 %   vecLD - the vectorized line drawing to be split
 % 
 % Output:
 %   middleLD - vectorized line drawing with the middle segments
-%   junctionLD - vectorized line drawing with segmetns at the junctions
+%   junctionLD - vectorized line drawing with segments at the junctions
 %
 % This functionality was used in:
 % John Wilder, Sven Dickinson, Allan Jepson, Dirk B. Walther

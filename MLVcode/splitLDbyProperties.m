@@ -1,5 +1,5 @@
 function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights)
-% [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights,histogramWeights)
+% [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights)
 % Splits up the contours in the line drawing vecLD according to feature
 % properties.
 %

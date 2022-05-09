@@ -1,6 +1,6 @@
 function histTable = histogramToTable(histogram,shortName,bins)
-% histTable = histogramToTable(histogram,bins,shortName)
-%   Converts histogram into a table with variable names constructd from
+% histTable = histogramToTable(histogram,shortName,bins)
+%   Converts histogram into a table with variable names constructed from
 %   shortName and, if porvided, bins.
 %
 % Input:
