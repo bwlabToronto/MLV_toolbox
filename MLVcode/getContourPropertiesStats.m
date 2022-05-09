@@ -1,5 +1,5 @@
 function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)
-% [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, minmaxLen, minmaxCurv, whichStats)
+% [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)
 %       computes histograms for the contour properties for the vectorized line drawing LD.
 % Input:
 %   vecLD - vectorized line drawing data structure

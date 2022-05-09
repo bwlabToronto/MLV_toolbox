@@ -8,7 +8,7 @@ function histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)
 %
 % Input:
 %   vecLD: a vectorized line drawing with stats for properties already computed
-%   imageFeature: a cell array of strings that indicate the names  of te
+%   imageFeature: a cell array of strings that indicate the names  of the
 %                 fields in vecLD that should be turned into the table
 %   shortNames: a cell array of strings with short names (e.g.,
 %               'ori','len' etc.) that are used to name the columns of the table

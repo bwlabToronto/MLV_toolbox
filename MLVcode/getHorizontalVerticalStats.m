@@ -11,9 +11,10 @@ function [vecLD,HorVerHistogram,bins,shortName] = getHorizontalVerticalStats(vec
 % Output:
 %   vecLD: the line drawing structure with individual orientation histograms
 %   added
-%   HorVerHistogram: the histogram of orientations of line segmetns, weighted
+%   HorVerHistogram: the histogram of orientations of line segments, weighted
 %                    by their lengths
 %   bins: a vector with the bin centers
+%   shortName: 'horver'
 
 if nargin < 2
     numBins = 8;
