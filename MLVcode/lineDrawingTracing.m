@@ -1,7 +1,5 @@
 function vecLD = lineDrawingTracing(fileName)
 
-
-
 threshold_edge_strength = 0.85;
 
 I = imread(fileName);
@@ -39,25 +37,9 @@ while(coverage <0.01 && threshold_edge_strength ~=1)
     
 end
 
-% close all;
-% figure;
-% subplot(1,2,1);
-% imshow(I);
-% subplot(1,2,2);
-% extractContoursLD(F);
-% lineDrawingImage = get_figure_image();
-
-
-
-
-% originalImage
-% image size
 image = ~F;
 SegList  = GetConSeg(image);
 all_boundary_points = find(image~=0);
-% imshow(ones(size(image)))
-% all_X = [];
-% all_Y = [];
 
 vecLD.numContours = length(SegList);
 vecLD.contours = {};
@@ -66,23 +48,9 @@ for i = 1 : length(SegList)
     
     indices = sub2ind(size(image),contour(:,1),contour(:,2));
     all_boundary_points = setdiff(all_boundary_points,indices);
-    % [Ys,Xs]=smooth_contours(contour(:,1), contour(:,2), 10);
     Ys = contour(:,1);
-    Xs = contour(:,2);
-    
-    vecLD.contours{i} = [Xs(1:end-1),Ys(1:end-1),Xs(2:end),Ys(2:end)];
-    
-    % vecLD = mergeLineSegments(vecLD,1);
-    % if(size(contour,1) > 0)
-    %     hold on;
-    %     %plot(Ys,Xs,'Color',colors(mod(found_contours,size(colors,1))+1,:),'LineWidth',2);
-    %     plot(Ys,Xs,'Color',[0 0 0],'LineWidth',2);
-    % end
-    % new_all_X = [all_X,size(Xs,1),Xs'];
-    % all_X = new_all_X;
-    % new_all_Y = [all_Y,size(Ys,1),Ys'];
-    % all_Y = new_all_Y;
-    
+    Xs = contour(:,2);    
+    vecLD.contours{i} = [Xs(1:end-1),Ys(1:end-1),Xs(2:end),Ys(2:end)];   
 end
 vecLD = mergeLineSegments(vecLD,1);
 
