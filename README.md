@@ -33,6 +33,7 @@ setup
 **Extracting Line Drawings**
 
 The main function for extracting line drawings is "lineDrawingTracing.m". 
+*_ Please note that the line drawing extraction process can take a while to finish, depending on the image size. _*
 
 Example usage:
 
