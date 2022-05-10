@@ -32,7 +32,7 @@ vecLD = lineDrawingTracing(fileName);
 drawLinedrawing(vecLD);
 
 ```
-
+![]()
 
 
 **Computing Medial Axis Properties**

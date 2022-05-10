@@ -2,8 +2,6 @@ function vecLD = lineDrawingTracing(fileName)
 
 
 
-addpath(genpath('.'))
-
 threshold_edge_strength = 0.85;
 
 I = imread(fileName);
