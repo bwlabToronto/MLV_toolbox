@@ -22,10 +22,11 @@ We are working on the python version and we have a plan to release the python ve
 
 **Setup Path**
 The first step to use the MLV toolbox is to add the required folders to the Matlab path. You can do this on Matlab's Graphical User Interface or by running the following lines of codes:
-
+````
 ```
 setup
 ```
+````
 
 
 **Extracting Line Drawings**
