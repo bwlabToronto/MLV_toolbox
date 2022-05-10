@@ -44,7 +44,7 @@ figure;
 subplot(1,2,1);
 imshow(imread('example.jpg'));
 subplot(1,2,2);
-drawLinedrawing(vecLD);
+drawLinedrawing(vecLD,3,'b');
 ```
 
 Output:
