@@ -1,6 +1,4 @@
-<p align="center">
 <img src='images/Logo_Banner.png' width=40%> 
-</p>
 --------------------------------------------------------------------------------
 
 The MLV toolbox provides a set of mid-level vision 
