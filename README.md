@@ -48,10 +48,8 @@ drawLinedrawing(vecLD);
 ```
 
 Output:
+<img src='images/example_output.png' > 
 
-<p align="center">
-<img src='images/example_output.png' width=60%> 
-</p>
 
 **Computing Medial Axis Properties**
 
