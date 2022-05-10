@@ -10,7 +10,13 @@ We are working on the python version and we have a plan to release the python ve
 
 ## Table of Contents
 - [Requirements](#Requirements)
-- 
+- [Usage](#Usage)
+- [Datasets](#Datasets)
+- [FAQs](#FAQs)
+- [References](#References)
+
+
+
 ## Requirements
 
 * [Matlab](https://www.mathworks.com/products/matlab.html)
@@ -68,4 +74,4 @@ Note that the drawLineDrawing takes a LineDrawing (LD) data structure (represent
 ## FAQs
 
 
-**References**
+**References](#References)**
