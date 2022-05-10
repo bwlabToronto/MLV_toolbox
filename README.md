@@ -1,4 +1,4 @@
-<img src='images/Logo_Banner.png' width=40%/> 
+<img src='images/Logo_Banner.png' width=40% align="center"> 
 
 --------------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ imshow(imread('example.jpg'));
 subplot(1,2,2);
 drawLinedrawing(vecLD);
 ```
-<img src='images/example_output.png' width=40%/> 
+<img src='images/example_output.png' width=60% align="center"> 
 
 
 **Computing Medial Axis Properties**
