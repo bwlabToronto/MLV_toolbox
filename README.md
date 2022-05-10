@@ -48,6 +48,7 @@ drawLinedrawing(vecLD);
 ```
 
 Output:
+
 <img src='images/example_output.png' width=70%> 
 
 
