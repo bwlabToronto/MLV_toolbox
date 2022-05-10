@@ -9,7 +9,8 @@ We are working on the python version and we have a plan to release the python ve
 *_Please stay tuned for updates!_* 
 
 ## Table of Contents
-
+- [Requirements](#Requirements)
+- 
 ## Requirements
 
 * [Matlab](https://www.mathworks.com/products/matlab.html)
