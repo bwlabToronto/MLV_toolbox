@@ -74,4 +74,4 @@ Note that the drawLineDrawing takes a LineDrawing (LD) data structure (represent
 ## FAQs
 
 
-**References](#References)**
+## References
