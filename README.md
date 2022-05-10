@@ -21,6 +21,7 @@ We are working on the python version and we have a plan to release the python ve
 ## Usage
 
 **Setup Path**
+
 The first step to use the MLV toolbox is to add the required folders to the Matlab path. You can do this on Matlab's Graphical User Interface or by running the following line of code in the command window:
 
 ```matlab
@@ -36,10 +37,14 @@ The main function for extracting line drawings is "lineDrawingTracing.m".
 Example usage:
 
 ```
+
 fileName= 'example.jpg';
 vecLD = lineDrawingTracing(fileName);
+figure;
+subplot(1,2,1);
+imshow(imread('example.jpg'));
+subplot(1,2,2);
 drawLinedrawing(vecLD);
-
 ```
 ![]()
 
