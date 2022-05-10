@@ -39,7 +39,6 @@ The main function for extracting line drawings is "lineDrawingTracing.m".
 Example usage:
 
 ```
-
 fileName= 'example.jpg';
 vecLD = lineDrawingTracing(fileName);
 figure;
@@ -48,7 +47,7 @@ imshow(imread('example.jpg'));
 subplot(1,2,2);
 drawLinedrawing(vecLD);
 ```
-![]()
+<img src='images/example_output.png' width=40%/> 
 
 
 **Computing Medial Axis Properties**
