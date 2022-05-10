@@ -1,5 +1,6 @@
-<img src='images/Logo_Banner.png' width=40% align="center"> 
-
+<p align="center">
+<img src='images/Logo_Banner.png' width=40%> 
+</p>
 --------------------------------------------------------------------------------
 
 The MLV toolbox provides a set of mid-level vision 
@@ -47,8 +48,12 @@ imshow(imread('example.jpg'));
 subplot(1,2,2);
 drawLinedrawing(vecLD);
 ```
-<img src='images/example_output.png' width=60% align="center"> 
 
+Output:
+
+<p align="center">
+<img src='images/example_output.png' width=60%> 
+</p>
 
 **Computing Medial Axis Properties**
 
