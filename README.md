@@ -79,7 +79,7 @@ imshow(imoverlay(rgb2gray(img),MAT.skeleton,'b'))
 ```
 
 Output:
-<img src='images/mountain.png' width=40% style="display: block; margin: 0 auto" ><img src='images/mountain_mat.png' width=40% style="border-radius:50%">
+<img src='images/mountain_example.png' width=70%>
 
 For a runnable matlab live code (.mlx), please refer to the [script](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getMedialAxis.mlx).
 
