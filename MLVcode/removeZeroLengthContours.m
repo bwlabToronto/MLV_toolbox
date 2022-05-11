@@ -17,7 +17,7 @@ function [resultLD,contourIdxRemoved] = removeZeroLengthContours(vecLD)
 %------------------------------------------------------
 
 if ~isfield(vecLD,'contourLengths')
-    computeLength(vecLD);
+    vecLD = computeLength(vecLD);
 end
 
 contourIdxRemoved = find(vecLD.contourLengths == 0);
