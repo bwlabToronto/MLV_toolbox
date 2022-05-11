@@ -70,6 +70,11 @@ MAT = computeMAT(img,28);
 imshow(imoverlay(rgb2gray(img),MAT.skeleton,'red'));
 ```
 
+Output:
+
+<img src='images/mountains_mat.png' width=70%> 
+
+
 
 **Computing Contour Properties**
 
