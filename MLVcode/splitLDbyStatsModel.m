@@ -1,20 +1,19 @@
 function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)
 % [topLD, bottomLD] = splitLDbyStatsModel(vecLD,properties,fraction)
-% Splits up the contours in the line drawing vecLD according to feature
-% properties, weighted by the histogramWeights.
+%   Splits up the contours in the line drawing vecLD according to a
+%   pre-trained regression model.
 %
 % Input:
 %   vecLD - vectorized line drawing to be split. The structure should
 %           already contain all relevant feature histograms. 
 %           See also: getContourPropertiesStats
 %
-%   properties - the property or properties to be considered.
-%                These properties are implemented:
-%                'Length','Orientation','Curvature','Junctions'
-%                properties can either be one of these strings
-%                or a cell array of more than one. If more than one
-%                property is included, the rankings according to the
-%                properties are linearly combined using weights.
+%   Mdl - the pretrained regression model that should be applied to contour
+%         features in order to split the drawing. For instancem this could
+%         be a linear regression model created with fitlm:
+%         https://www.mathworks.com/help/stats/fitlm.html
+%         or a random forest model created with fitrensemble:
+%         https://www.mathworks.com/help/stats/fitrensemble.html
 %
 %   fraction - the fraction of pixels to preserve.
 %              Only whole contours will be assigned. The splitting is
