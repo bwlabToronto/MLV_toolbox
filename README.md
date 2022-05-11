@@ -194,6 +194,6 @@ year = {2019}
 
 ## License
 
-The MLV toolbox contains various modules from different projects. Please make sure to check each file individual license. 
+The MLV toolbox contains various modules from different projects. Please take some time to check licenses on the released files. 
 
 
