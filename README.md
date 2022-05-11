@@ -95,6 +95,8 @@ For a runnable matlab live code (.mlx) with more examples to run, please refer t
 
 **Computing Contour Properties**
 
+<img src='images/mountain_mirror_s.png' width=40%> <img src='images/mountain_mirror_c.png' width=40%>
+
 **Manipulating Line Drawings**
 
 **Batch Processing**
