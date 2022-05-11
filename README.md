@@ -159,3 +159,34 @@ In this toolbox, we introduce the [TorontoScene](https://github.com/bwlabToronto
 We are working on this section, please make sure to check back here in the future. As of now, please ask your questions on the discussion page of the MLV toolbox available [here](https://github.com/bwlabToronto/MLV_toolbox/discussions). 
 
 ## References
+
+If you use the MLV toolbox, we appreciate it if you cite the following papers:
+
+```
+@InProceedings{rezanejad2019scene,
+author = {Rezanejad, Morteza and Downs, Gabriel and Wilder, John and Walther, Dirk B and Jepson, Allan and Dickinson, Sven and Siddiqi, Kaleem},
+title = {Scene Categorization from Contours: Medial Axis Based Salience Measures},
+booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+month = {June},
+year = {2019}
+}
+@article{walther2014nonaccidental,
+  title={Nonaccidental properties underlie human categorization of complex natural scenes},
+  author={Walther, Dirk B and Shen, Dandan},
+  journal={Psychological science},
+  volume={25},
+  number={4},
+  pages={851--860},
+  year={2014},
+  publisher={Sage Publications Sage CA: Los Angeles, CA}
+}
+@incollection{rezanejad2013flux,
+  title={Flux graphs for 2D shape analysis},
+  author={Rezanejad, Morteza and Siddiqi, Kaleem},
+  booktitle={Shape Perception in Human and Computer Vision},
+  pages={41--54},
+  year={2013},
+  publisher={Springer}
+}
+
+```
