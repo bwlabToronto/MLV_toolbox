@@ -64,6 +64,8 @@ For a runnable matlab live code (.mlx), please refer to the [script](https://git
 
 **Computing Medial Axis Properties**
 
+<img src='images/medial_axis_transform.png' width=70%> 
+
 Using MLV, one can compute accurate AOF-based medial axis transform (MAT) from binary images. These images can either be rendered from LineDrawing (LD) datastructures (check out renderLinedrawing.m function) or be binary images from other sources. Please see the following example of a mountain scene where the MAT is computed from the binary image. 
 
 ```
