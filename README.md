@@ -96,10 +96,11 @@ For a runnable Matlab live code (.mlx) with more examples to run, please refer t
 **Computing Contour Properties**
 
 Using the MLV toolbox, there are two major types of contour properties that one can compute:
-- Contour based properties
 - Medial-axis based properties
+- Contour based properties
 
 
+To compute medial-axis based properties, the user should first compute MAT representation first and then use the proper needed functions. Take a look at the following block of code as an example. 
 
 ```
 load('dataSets/TorontoScenes/mountains_vecLD.mat');
@@ -116,7 +117,13 @@ drawMATproperty(MATcontourImages.mirror);
 title('Mirror Symmetry','FontSize',24);
 ```
 
+Output:
+
 <img src='images/mountain_mirror_example.png' width=80%> 
+
+As shown above, we see the local mirror symmetry scores on an example LineDrawing (LD) structure, where colors show low to high scores from blue to red respectively. 
+
+
 
 **Manipulating Line Drawings**
 
