@@ -52,7 +52,7 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="renderLinedrawingProperty.html" class="code" title="function img = renderLinedrawingProperty(vecLD,property,img,imsize,lineWidth)">renderLinedrawingProperty</a>	img = renderLinedrawingProperty(vecLD,property,img,imSize,color)</li></ul>
+<li><a href="renderLinedrawingProperty.html" class="code" title="function img = renderLinedrawingProperty(vecLD,property,img,imsize,lineWidth)">renderLinedrawingProperty</a>	img = renderLinedrawingProperty(vecLD,property,img,imSize,color)</li><li><a href="renderMATproperty.html" class="code" title="function img = renderMATproperty(skeletonImageWithRating,vecLD)">renderMATproperty</a>	</li></ul>
 <!-- crossreference -->
 
 
@@ -77,41 +77,48 @@ This function is called by:
 0017 <span class="comment">% Return:</span>
 0018 <span class="comment">%   img - the RGB image with the contours drawn in.</span>
 0019 
-0020 
-0021 <span class="keyword">if</span> nargin &lt; 5
-0022     color = [0,0,0];
-0023 <span class="keyword">end</span>
-0024 
-0025 <span class="keyword">if</span> nargin &lt; 4
-0026     lineWidth = 1;
-0027 <span class="keyword">end</span>
-0028 
-0029 <span class="keyword">if</span> nargin &lt; 3
-0030     imsize = [];
-0031 <span class="keyword">end</span>
-0032 <span class="keyword">if</span> isempty(imsize)
-0033     imsize = vecLD.imsize;
+0020 <span class="comment">% -----------------------------------------------------</span>
+0021 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0022 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0025 <span class="comment">%------------------------------------------------------</span>
+0026 
+0027 
+0028 <span class="keyword">if</span> nargin &lt; 5
+0029     color = [0,0,0];
+0030 <span class="keyword">end</span>
+0031 
+0032 <span class="keyword">if</span> nargin &lt; 4
+0033     lineWidth = 1;
 0034 <span class="keyword">end</span>
 0035 
-0036 <span class="keyword">if</span> nargin &lt; 2
-0037     img = [];
+0036 <span class="keyword">if</span> nargin &lt; 3
+0037     imsize = [];
 0038 <span class="keyword">end</span>
-0039 <span class="keyword">if</span> isempty(img)
-0040     img = ones([imsize(2),imsize(1),3]);
+0039 <span class="keyword">if</span> isempty(imsize)
+0040     imsize = vecLD.imsize;
 0041 <span class="keyword">end</span>
 0042 
-0043 <span class="comment">% define a evctor for scaling the coordinates up or down as needed</span>
-0044 scaleVec = imsize ./ vecLD.imsize;
-0045 scaleVec = [scaleVec,scaleVec];
-0046 
-0047 <span class="comment">% loop over contours</span>
-0048 <span class="keyword">for</span> c = 1:vecLD.numContours
-0049     scaledCoords = vecLD.contours{c} .* repmat(scaleVec,size(vecLD.contours{c},1),1);
-0050     img = insertShape(img,<span class="string">'Line'</span>,scaledCoords,<span class="string">'Color'</span>,color,<span class="string">'LineWidth'</span>,lineWidth,<span class="string">'SmoothEdges'</span>,false);
-0051 <span class="keyword">end</span>
-0052 
-0053 <span class="comment">% That's it, we're done.</span>
-0054</pre></div>
-<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0043 <span class="keyword">if</span> nargin &lt; 2
+0044     img = [];
+0045 <span class="keyword">end</span>
+0046 <span class="keyword">if</span> isempty(img)
+0047     img = ones([imsize(2),imsize(1),3]);
+0048 <span class="keyword">end</span>
+0049 
+0050 <span class="comment">% define a evctor for scaling the coordinates up or down as needed</span>
+0051 scaleVec = imsize ./ vecLD.imsize;
+0052 scaleVec = [scaleVec,scaleVec];
+0053 
+0054 <span class="comment">% loop over contours</span>
+0055 <span class="keyword">for</span> c = 1:vecLD.numContours
+0056     scaledCoords = vecLD.contours{c} .* repmat(scaleVec,size(vecLD.contours{c},1),1);
+0057     img = insertShape(img,<span class="string">'Line'</span>,scaledCoords,<span class="string">'Color'</span>,color,<span class="string">'LineWidth'</span>,lineWidth,<span class="string">'SmoothEdges'</span>,false);
+0058 <span class="keyword">end</span>
+0059 
+0060 <span class="comment">% That's it, we're done.</span>
+0061</pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

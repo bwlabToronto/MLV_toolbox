@@ -81,56 +81,64 @@ This function is called by:
 0019 <span class="comment">%   If the lines do intersect, the coordintes [x,y] of the intersection point.</span>
 0020 <span class="comment">%   Otherwise Position will be empty [].</span>
 0021 
-0022 eps = 1e-4;
-0023 
-0024 Ay = queryLine(3) - queryLine(1);
-0025 Ax = queryLine(4) - queryLine(2);
-0026 By = refLine(3) - refLine(1);
-0027 Bx = refLine(4) - refLine(2);
-0028 Cy = refLine(1) - queryLine(1);
-0029 Cx = refLine(2) - queryLine(2);
-0030 
-0031 D = Ay * Bx - Ax * By;
-0032 
-0033 warning(<span class="string">'off'</span>,<span class="string">'MATLAB:divideByZero'</span>); <span class="comment">% divide by zero is okay here</span>
-0034 a = (Bx * Cy - By * Cx) / D;
-0035 b = (Ax * Cy - Ay * Cx) / D;
-0036 
-0037 at=min( RE,  AE/max(abs(Ax),abs(Ay))); <span class="comment">%calculate the threshold of the ratio</span>
-0038 bt=min( RE,  AE/max(abs(Bx),abs(By))); <span class="comment">%calculate the threshold of the ratio</span>
-0039 
-0040 <span class="keyword">if</span> (-at&lt;=a) &amp;&amp; (a&lt;=1+at) &amp;&amp; (-bt &lt;= b) &amp;&amp; (b &lt;= 1+bt)
-0041     <span class="comment">% special cases where a or b are 0 or 1</span>
-0042     <span class="keyword">if</span> abs(a) &lt; eps
-0043         Position = queryLine([1:2]);
-0044     <span class="keyword">elseif</span> abs(a-1) &lt; eps
-0045         Position = queryLine([3:4]);
-0046     <span class="keyword">elseif</span> abs(b) &lt; eps
-0047         Position = refLine([1:2]);
-0048     <span class="keyword">elseif</span> abs(b-1) &lt; eps
-0049         Position = refLine([3:4]);
-0050     <span class="keyword">else</span>
-0051         <span class="comment">% general case</span>
-0052         A1=queryLine(2)-queryLine(4);
-0053         B1=queryLine(3)-queryLine(1);
-0054         C1=queryLine(1)*queryLine(4)-queryLine(2)*queryLine(3);
-0055     
-0056         A2=refLine(2)-refLine(4);
-0057         B2=refLine(3)-refLine(1);
-0058         C2=refLine(1)*refLine(4)-refLine(2)*refLine(3);
-0059     
-0060         D=A1*B2-A2*B1;
-0061     
-0062         Position(1)=(B1*C2-B2*C1)/D;
-0063         Position(2)=(A2*C1-A1*C2)/D;
-0064         <span class="keyword">if</span> any(Position &lt; 0)
-0065             keyboard;
-0066         <span class="keyword">end</span>
-0067     <span class="keyword">end</span>
-0068 <span class="keyword">else</span>
-0069     Position=[];
-0070 <span class="keyword">end</span>
-0071</pre></div>
-<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0022 <span class="comment">% -----------------------------------------------------</span>
+0023 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0024 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0027 <span class="comment">%------------------------------------------------------</span>
+0028 
+0029 
+0030 eps = 1e-4;
+0031 
+0032 Ay = queryLine(3) - queryLine(1);
+0033 Ax = queryLine(4) - queryLine(2);
+0034 By = refLine(3) - refLine(1);
+0035 Bx = refLine(4) - refLine(2);
+0036 Cy = refLine(1) - queryLine(1);
+0037 Cx = refLine(2) - queryLine(2);
+0038 
+0039 D = Ay * Bx - Ax * By;
+0040 
+0041 warning(<span class="string">'off'</span>,<span class="string">'MATLAB:divideByZero'</span>); <span class="comment">% divide by zero is okay here</span>
+0042 a = (Bx * Cy - By * Cx) / D;
+0043 b = (Ax * Cy - Ay * Cx) / D;
+0044 
+0045 at=min( RE,  AE/max(abs(Ax),abs(Ay))); <span class="comment">%calculate the threshold of the ratio</span>
+0046 bt=min( RE,  AE/max(abs(Bx),abs(By))); <span class="comment">%calculate the threshold of the ratio</span>
+0047 
+0048 <span class="keyword">if</span> (-at&lt;=a) &amp;&amp; (a&lt;=1+at) &amp;&amp; (-bt &lt;= b) &amp;&amp; (b &lt;= 1+bt)
+0049     <span class="comment">% special cases where a or b are 0 or 1</span>
+0050     <span class="keyword">if</span> abs(a) &lt; eps
+0051         Position = queryLine([1:2]);
+0052     <span class="keyword">elseif</span> abs(a-1) &lt; eps
+0053         Position = queryLine([3:4]);
+0054     <span class="keyword">elseif</span> abs(b) &lt; eps
+0055         Position = refLine([1:2]);
+0056     <span class="keyword">elseif</span> abs(b-1) &lt; eps
+0057         Position = refLine([3:4]);
+0058     <span class="keyword">else</span>
+0059         <span class="comment">% general case</span>
+0060         A1=queryLine(2)-queryLine(4);
+0061         B1=queryLine(3)-queryLine(1);
+0062         C1=queryLine(1)*queryLine(4)-queryLine(2)*queryLine(3);
+0063     
+0064         A2=refLine(2)-refLine(4);
+0065         B2=refLine(3)-refLine(1);
+0066         C2=refLine(1)*refLine(4)-refLine(2)*refLine(3);
+0067     
+0068         D=A1*B2-A2*B1;
+0069     
+0070         Position(1)=(B1*C2-B2*C1)/D;
+0071         Position(2)=(A2*C1-A1*C2)/D;
+0072         <span class="keyword">if</span> any(Position &lt; 0)
+0073             Position = [];
+0074         <span class="keyword">end</span>
+0075     <span class="keyword">end</span>
+0076 <span class="keyword">else</span>
+0077     Position=[];
+0078 <span class="keyword">end</span>
+0079</pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

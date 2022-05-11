@@ -28,13 +28,12 @@
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)
-
-   Draws junctions into an image.
+   Draws junctions into an existing image.
 
  Input:
    Junctions - the junctions to be drawn. E.g., from vecLD.junctions.
    types - cell array with the types of junctions to be drawn in order
-           any combination of 'L','T','X','Y','Arrow','Star
+           any combination of 'T','X','Y','Arrow','Star'
            default: {} - all junctions
    img - an existing RGB image to draw into. 
    LDimsize - the image size that the coordinates are based on. Use vecLD.imsizxe for the coordinates in [w,h]. If imsize is different from vecLD.imsize, the
@@ -60,49 +59,55 @@ This function is called by:
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function img = renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)</a>
 0002 <span class="comment">% renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)</span>
-0003 <span class="comment">%</span>
-0004 <span class="comment">%   Draws junctions into an image.</span>
-0005 <span class="comment">%</span>
-0006 <span class="comment">% Input:</span>
-0007 <span class="comment">%   Junctions - the junctions to be drawn. E.g., from vecLD.junctions.</span>
-0008 <span class="comment">%   types - cell array with the types of junctions to be drawn in order</span>
-0009 <span class="comment">%           any combination of 'L','T','X','Y','Arrow','Star</span>
-0010 <span class="comment">%           default: {} - all junctions</span>
-0011 <span class="comment">%   img - an existing RGB image to draw into.</span>
-0012 <span class="comment">%   LDimsize - the image size that the coordinates are based on. Use vecLD.imsizxe for the coordinates in [w,h]. If imsize is different from vecLD.imsize, the</span>
-0013 <span class="comment">%            drawing will be scaled up or down to the new imsize.</span>
-0014 <span class="comment">%            default: [] (use vecLD.imsize)</span>
-0015 <span class="comment">%   Markersize - the size of the marker for the junctions</span>
-0016 <span class="comment">%                default: lines()</span>
-0017 <span class="comment">%   colors - Nx3 array of RGB values to be used as colors</span>
-0018 <span class="comment">%            default: Matlab's 'lines' color map - the regular order for line plots.</span>
-0019 
-0020 junctionTypes = {Junctions(:).type};
-0021 <span class="keyword">if</span> isempty(types)
-0022     types = unique(junctionTypes);
-0023 <span class="keyword">end</span>
-0024 numTypes = length(types);
+0003 <span class="comment">%   Draws junctions into an existing image.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   Junctions - the junctions to be drawn. E.g., from vecLD.junctions.</span>
+0007 <span class="comment">%   types - cell array with the types of junctions to be drawn in order</span>
+0008 <span class="comment">%           any combination of 'T','X','Y','Arrow','Star'</span>
+0009 <span class="comment">%           default: {} - all junctions</span>
+0010 <span class="comment">%   img - an existing RGB image to draw into.</span>
+0011 <span class="comment">%   LDimsize - the image size that the coordinates are based on. Use vecLD.imsizxe for the coordinates in [w,h]. If imsize is different from vecLD.imsize, the</span>
+0012 <span class="comment">%            drawing will be scaled up or down to the new imsize.</span>
+0013 <span class="comment">%            default: [] (use vecLD.imsize)</span>
+0014 <span class="comment">%   Markersize - the size of the marker for the junctions</span>
+0015 <span class="comment">%                default: lines()</span>
+0016 <span class="comment">%   colors - Nx3 array of RGB values to be used as colors</span>
+0017 <span class="comment">%            default: Matlab's 'lines' color map - the regular order for line plots.</span>
+0018 
+0019 <span class="comment">% -----------------------------------------------------</span>
+0020 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0021 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0024 <span class="comment">%------------------------------------------------------</span>
 0025 
-0026 <span class="keyword">if</span> nargin &lt; 6
-0027     colors = lines(numTypes);
-0028 <span class="keyword">end</span>
-0029 <span class="keyword">if</span> nargin &lt; 5
-0030     MarkerSize = 5;
-0031 <span class="keyword">end</span>
-0032 <span class="keyword">if</span> nargin &lt; 4
-0033     LDimsize = size(img,[2,1]);
+0026 junctionTypes = {Junctions(:).type};
+0027 <span class="keyword">if</span> isempty(types)
+0028     types = unique(junctionTypes);
+0029 <span class="keyword">end</span>
+0030 numTypes = length(types);
+0031 
+0032 <span class="keyword">if</span> nargin &lt; 6
+0033     colors = lines(numTypes);
 0034 <span class="keyword">end</span>
-0035 <span class="keyword">if</span> isempty(LDimsize)
-0036     LDimsize = size(img,[2,1]);
+0035 <span class="keyword">if</span> nargin &lt; 5
+0036     MarkerSize = 5;
 0037 <span class="keyword">end</span>
-0038 
-0039 positions = reshape([Junctions(:).position],2,length(Junctions))';
-0040 positions(:,3) = MarkerSize;
-0041 <span class="keyword">for</span> t = 1:length(types)
-0042     typeIdx = strcmp(types{t},junctionTypes);
-0043     img = insertShape(img,<span class="string">'FilledCircle'</span>,positions(typeIdx,:),<span class="string">'Color'</span>,colors(t,:));
-0044 <span class="keyword">end</span>
-0045</pre></div>
-<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0038 <span class="keyword">if</span> nargin &lt; 4
+0039     LDimsize = size(img,[2,1]);
+0040 <span class="keyword">end</span>
+0041 <span class="keyword">if</span> isempty(LDimsize)
+0042     LDimsize = size(img,[2,1]);
+0043 <span class="keyword">end</span>
+0044 
+0045 positions = reshape([Junctions(:).position],2,length(Junctions))';
+0046 positions(:,3) = MarkerSize;
+0047 <span class="keyword">for</span> t = 1:length(types)
+0048     typeIdx = strcmp(types{t},junctionTypes);
+0049     img = insertShape(img,<span class="string">'FilledCircle'</span>,positions(typeIdx,:),<span class="string">'Color'</span>,colors(t,:));
+0050 <span class="keyword">end</span>
+0051</pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

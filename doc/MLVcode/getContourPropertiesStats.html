@@ -4,7 +4,7 @@
 <head>
   <title>Description of getContourPropertiesStats</title>
   <meta name="keywords" content="getContourPropertiesStats">
-  <meta name="description" content="[vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, minmaxLen, minmaxCurv, whichStats)">
+  <meta name="description" content="[vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>[vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, minmaxLen, minmaxCurv, whichStats)</strong></div>
+<div class="box"><strong>[vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, minmaxLen, minmaxCurv, whichStats)
+<div class="fragment"><pre class="comment"> [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)
        computes histograms for the contour properties for the vectorized line drawing LD.
  Input:
    vecLD - vectorized line drawing data structure
@@ -65,7 +65,7 @@ This function is called by:
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)</a>
-0002 <span class="comment">% [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, minmaxLen, minmaxCurv, whichStats)</span>
+0002 <span class="comment">% [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)</span>
 0003 <span class="comment">%       computes histograms for the contour properties for the vectorized line drawing LD.</span>
 0004 <span class="comment">% Input:</span>
 0005 <span class="comment">%   vecLD - vectorized line drawing data structure</span>
@@ -143,6 +143,6 @@ This function is called by:
 0077     <span class="keyword">end</span>
 0078 <span class="keyword">end</span>
 0079</pre></div>
-<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

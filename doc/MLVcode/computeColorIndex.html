@@ -29,11 +29,11 @@
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> colorIdx = computeColorIndex(vecLD,property)
 
- Computes a color index for srawing line drawings with their properties.
- Used by drawLinedrawingPorperties and drawLinedrawingPropertiesToImage
+ Computes a color index for drawing line drawings with their properties.
+ Used by drawLinedrawingProperty and drawAllProperties
 
  Input:
-   vecLD - the vectorize line drawing with its properteis computed
+   vecLD - the vectorized line drawing with its properteis computed
    property - one of 'length','curvature','orientation'
 
  Return:
@@ -57,11 +57,11 @@ This function is called by:
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [colorIdx,cmap] = computeColorIndex(vecLD,property)</a>
 0002 <span class="comment">% colorIdx = computeColorIndex(vecLD,property)</span>
 0003 <span class="comment">%</span>
-0004 <span class="comment">% Computes a color index for srawing line drawings with their properties.</span>
-0005 <span class="comment">% Used by drawLinedrawingPorperties and drawLinedrawingPropertiesToImage</span>
+0004 <span class="comment">% Computes a color index for drawing line drawings with their properties.</span>
+0005 <span class="comment">% Used by drawLinedrawingProperty and drawAllProperties</span>
 0006 <span class="comment">%</span>
 0007 <span class="comment">% Input:</span>
-0008 <span class="comment">%   vecLD - the vectorize line drawing with its properteis computed</span>
+0008 <span class="comment">%   vecLD - the vectorized line drawing with its properteis computed</span>
 0009 <span class="comment">%   property - one of 'length','curvature','orientation'</span>
 0010 <span class="comment">%</span>
 0011 <span class="comment">% Return:</span>
@@ -105,6 +105,6 @@ This function is called by:
 0049 <span class="keyword">end</span>
 0050 
 0051</pre></div>
-<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

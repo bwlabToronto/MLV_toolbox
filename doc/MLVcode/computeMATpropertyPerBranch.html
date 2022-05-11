@@ -4,7 +4,7 @@
 <head>
   <title>Description of computeMATpropertyPerBranch</title>
   <meta name="keywords" content="computeMATpropertyPerBranch">
-  <meta name="description" content="Copyright Morteza Rezanejad">
+  <meta name="description" content="result = computeMATpropertyPerBranch(curBranch,property,K)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,30 +21,26 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>Copyright Morteza Rezanejad</strong></div>
+<div class="box"><strong>result = computeMATpropertyPerBranch(curBranch,property,K)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function result = computeMATpropertyPerBranch(curBranch,property,K) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> Copyright Morteza Rezanejad
- McGill University, Montreal, QC 2019
+<div class="fragment"><pre class="comment"> result = computeMATpropertyPerBranch(curBranch,property,K)
+   computes the specified MAT property for a particular skeletal branch.
 
- Contact: morteza [at] cim [dot] mcgill [dot] ca 
- -------------------------------------------------------------------------
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
- -------------------------------------------------------------------------</pre></div>
+ Input:
+   curBranch - the skeltal branch for which property should be computed,
+   property - a string with signaling the property that should be computed
+              one of: 'parallelism', 'separation' , 'taper', 'mirror'
+   K - the length of the window on the skeletal branch for computing
+       property. default: 5
+
+ Output:
+   result - the skeletal branch with the respective scores applied.
+
+ See also <a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a></pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -53,7 +49,7 @@ This function calls:
 <li><a href="breakToLineSegments.html" class="code" title="function [lineSegs,dists,scores] = breakToLineSegments(XY)">breakToLineSegments</a>	</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>	Copyright Morteza Rezanejad</li></ul>
+<li><a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>	[skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)</li></ul>
 <!-- crossreference -->
 
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -61,134 +57,149 @@ This function is called by:
 <li><a href="#_sub1" class="code">function [R,dR,dX,dY]=getBranchDerivative(branch)</a></li></ul>
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% Copyright Morteza Rezanejad</span>
-0002 <span class="comment">% McGill University, Montreal, QC 2019</span>
-0003 <span class="comment">%</span>
-0004 <span class="comment">% Contact: morteza [at] cim [dot] mcgill [dot] ca</span>
-0005 <span class="comment">% -------------------------------------------------------------------------</span>
-0006 <span class="comment">% This program is free software: you can redistribute it and/or modify</span>
-0007 <span class="comment">% it under the terms of the GNU General Public License as published by</span>
-0008 <span class="comment">% the Free Software Foundation, either version 3 of the License, or</span>
-0009 <span class="comment">% (at your option) any later version.</span>
-0010 <span class="comment">%</span>
-0011 <span class="comment">% This program is distributed in the hope that it will be useful,</span>
-0012 <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-0013 <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-0014 <span class="comment">% GNU General Public License for more details.</span>
-0015 <span class="comment">%</span>
-0016 <span class="comment">% You should have received a copy of the GNU General Public License</span>
-0017 <span class="comment">% along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
-0018 <span class="comment">% -------------------------------------------------------------------------</span>
-0019 
-0020 <span class="comment">% here is the main scoring function --&gt; please note that we originally</span>
-0021 <span class="comment">% started with saliency scores based on symmetry and later added separation</span>
-0022 <span class="comment">% this does not mean all the scores computed here are just symmetry</span>
-0023 
-0024 <a name="_sub0" href="#_subfunctions" class="code">function result = computeMATpropertyPerBranch(curBranch,property,K)</a>
-0025 
-0026 
-0027 
-0028 N = length(curBranch.X);
-0029 [R,dR,dX,dY]=<a href="#_sub1" class="code" title="subfunction [R,dR,dX,dY]=getBranchDerivative(branch)">getBranchDerivative</a>(curBranch);
-0030 result = zeros(N,1);
-0031 
-0032 
-0033 
-0034 <span class="keyword">switch</span> lower(property)
-0035     <span class="keyword">case</span> <span class="string">'parallelism'</span>  
-0036         <span class="comment">% this is computing the first derivative of the arc length</span>
-0037         skeletalAxisLength = (dX.^2+dY.^2).^.5;
-0038         arcLengthVar = (dX.^2+dY.^2+dR.^2).^.5;
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function result = computeMATpropertyPerBranch(curBranch,property,K)</a>
+0002 <span class="comment">% result = computeMATpropertyPerBranch(curBranch,property,K)</span>
+0003 <span class="comment">%   computes the specified MAT property for a particular skeletal branch.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   curBranch - the skeltal branch for which property should be computed,</span>
+0007 <span class="comment">%   property - a string with signaling the property that should be computed</span>
+0008 <span class="comment">%              one of: 'parallelism', 'separation' , 'taper', 'mirror'</span>
+0009 <span class="comment">%   K - the length of the window on the skeletal branch for computing</span>
+0010 <span class="comment">%       property. default: 5</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Output:</span>
+0013 <span class="comment">%   result - the skeletal branch with the respective scores applied.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% See also computeMATproperty</span>
+0016 
+0017 <span class="comment">% Copyright Morteza Rezanejad</span>
+0018 <span class="comment">% McGill University, Montreal, QC 2019</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Contact: morteza [at] cim [dot] mcgill [dot] ca</span>
+0021 <span class="comment">% -------------------------------------------------------------------------</span>
+0022 <span class="comment">% This program is free software: you can redistribute it and/or modify</span>
+0023 <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0024 <span class="comment">% the Free Software Foundation, either version 3 of the License, or</span>
+0025 <span class="comment">% (at your option) any later version.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+0028 <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0029 <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0030 <span class="comment">% GNU General Public License for more details.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0033 <span class="comment">% along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+0034 <span class="comment">% -------------------------------------------------------------------------</span>
+0035 
+0036 <span class="comment">% here is the main scoring function --&gt; please note that we originally</span>
+0037 <span class="comment">% started with saliency scores based on symmetry and later added separation</span>
+0038 <span class="comment">% this does not mean all the scores computed here are just symmetry</span>
 0039 
-0040         <span class="keyword">if</span>(N&gt;=3)
-0041 
-0042             <span class="keyword">for</span> i = 2 : N-1
-0043                 <span class="comment">% effective K</span>
-0044                 eK = min(min(i-1,N-i),K);
-0045                 nom = sum(skeletalAxisLength(i-eK:i+eK));
-0046                 denom = sum(arcLengthVar(i-eK:i+eK));
-0047                 result(i) = nom/denom;
-0048             <span class="keyword">end</span>        
-0049         <span class="keyword">end</span>
-0050         
-0051         
-0052     <span class="keyword">case</span> <span class="string">'separation'</span> 
-0053         <span class="comment">% this is computing the inverse of the radius function</span>
-0054         result = 1-1./R;
-0055     
-0056     <span class="keyword">case</span> <span class="string">'taper'</span>
-0057         <span class="comment">% this is computing the second derivative of the arc length</span>
-0058         dR = smoothdata(dR);
-0059         ddR = diff(dR);
-0060         <span class="keyword">if</span>(length(ddR) &gt;= 1)
-0061             newddR = [ddR;ddR(end)];
-0062         <span class="keyword">else</span>
-0063             newddR = dR;
+0040 <span class="comment">% The default value of K is 5</span>
+0041 <span class="keyword">if</span> nargin &lt; 3
+0042     K = 5;
+0043 <span class="keyword">end</span>
+0044 
+0045 N = length(curBranch.X);
+0046 [R,dR,dX,dY]=<a href="#_sub1" class="code" title="subfunction [R,dR,dX,dY]=getBranchDerivative(branch)">getBranchDerivative</a>(curBranch);
+0047 result = zeros(N,1);
+0048 
+0049 <span class="keyword">switch</span> lower(property)
+0050     <span class="keyword">case</span> <span class="string">'parallelism'</span>  
+0051         <span class="comment">% this is computing the first derivative of the arc length</span>
+0052         skeletalAxisLength = (dX.^2+dY.^2).^.5;
+0053         arcLengthVar = (dX.^2+dY.^2+dR.^2).^.5;
+0054 
+0055         <span class="keyword">if</span>(N&gt;=3)
+0056 
+0057             <span class="keyword">for</span> i = 2 : N-1
+0058                 <span class="comment">% effective K</span>
+0059                 eK = min(min(i-1,N-i),K);
+0060                 nom = sum(skeletalAxisLength(i-eK:i+eK));
+0061                 denom = sum(arcLengthVar(i-eK:i+eK));
+0062                 result(i) = nom/denom;
+0063             <span class="keyword">end</span>        
 0064         <span class="keyword">end</span>
-0065         ddR = newddR;
-0066         ddR = smoothdata(ddR);
-0067 
-0068         skeletalAxisLength = (dX.^2+dY.^2).^.5;
-0069         arcLengthVar = (dX.^2+dY.^2+(ddR).^2).^.5;
-0070 
-0071         <span class="keyword">if</span>(N&gt;=3)
-0072 
-0073             <span class="keyword">for</span> i = 2 : N-1
-0074                 <span class="comment">% effective K</span>
-0075                 eK = min(min(i-1,N-i),K);
-0076                 nom = sum(skeletalAxisLength(i-eK:i+eK));
-0077                 denom = sum(arcLengthVar(i-eK:i+eK));
-0078                 result(i) = nom/denom;
-0079             <span class="keyword">end</span>        
-0080         <span class="keyword">end</span>
-0081         
-0082      <span class="keyword">case</span> <span class="string">'mirror'</span>   
-0083         <span class="comment">% computing curvature of the medial axis</span>
-0084         X = curBranch.X;
-0085         Y = curBranch.Y;
-0086         <span class="keyword">if</span> length(X)&gt; 3
-0087             [~,~,result] = <a href="breakToLineSegments.html" class="code" title="function [lineSegs,dists,scores] = breakToLineSegments(XY)">breakToLineSegments</a>([X,Y]);
-0088         <span class="keyword">end</span>
-0089      
-0090     <span class="keyword">otherwise</span>
-0091         
-0092         <span class="comment">%</span>
-0093         error(<span class="string">'Unknown property %s'</span>,property);
-0094        
-0095 <span class="keyword">end</span>
-0096 
-0097 result = smoothdata(result,<span class="string">'movmean'</span>,3);
-0098 result = result.^10;
-0099 
-0100 <span class="keyword">end</span>
-0101 
-0102 
-0103 <a name="_sub1" href="#_subfunctions" class="code">function [R,dR,dX,dY]=getBranchDerivative(branch)</a>
-0104 
-0105 R = branch.Radius;
-0106 R = smoothdata(R,<span class="string">'movmean'</span>,2);
-0107 
-0108 
-0109 <span class="keyword">if</span>(length(R)&gt;1)
-0110     
-0111     X = branch.X;
-0112     Y = branch.Y;
-0113     dX = diff(X);
-0114     dY = diff(Y);
-0115     dR = diff(R);
-0116     
-0117     
-0118     dX = [dX;dX(end)];
-0119     dY = [dY;dY(end)];
-0120     dR = [dR;dR(end)];
-0121     
-0122 <span class="keyword">else</span>
-0123     dR = 0;
-0124     dX = 0;
-0125     dY = 0;
-0126 <span class="keyword">end</span>
-0127 
-0128 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0065         
+0066         
+0067     <span class="keyword">case</span> <span class="string">'separation'</span> 
+0068         <span class="comment">% this is computing the inverse of the radius function</span>
+0069         result = 1-1./R;
+0070     
+0071     <span class="keyword">case</span> <span class="string">'taper'</span>
+0072         <span class="comment">% this is computing the second derivative of the arc length</span>
+0073         dR = smoothdata(dR);
+0074         ddR = diff(dR);
+0075         <span class="keyword">if</span>(length(ddR) &gt;= 1)
+0076             newddR = [ddR;ddR(end)];
+0077         <span class="keyword">else</span>
+0078             newddR = dR;
+0079         <span class="keyword">end</span>
+0080         ddR = newddR;
+0081         ddR = smoothdata(ddR);
+0082 
+0083         skeletalAxisLength = (dX.^2+dY.^2).^.5;
+0084         arcLengthVar = (dX.^2+dY.^2+(ddR).^2).^.5;
+0085 
+0086         <span class="keyword">if</span>(N&gt;=3)
+0087 
+0088             <span class="keyword">for</span> i = 2 : N-1
+0089                 <span class="comment">% effective K</span>
+0090                 eK = min(min(i-1,N-i),K);
+0091                 nom = sum(skeletalAxisLength(i-eK:i+eK));
+0092                 denom = sum(arcLengthVar(i-eK:i+eK));
+0093                 result(i) = nom/denom;
+0094             <span class="keyword">end</span>        
+0095         <span class="keyword">end</span>
+0096         
+0097      <span class="keyword">case</span> <span class="string">'mirror'</span>   
+0098         <span class="comment">% computing curvature of the medial axis</span>
+0099         X = curBranch.X;
+0100         Y = curBranch.Y;
+0101         <span class="keyword">if</span> length(X)&gt; 3
+0102             [~,~,result] = <a href="breakToLineSegments.html" class="code" title="function [lineSegs,dists,scores] = breakToLineSegments(XY)">breakToLineSegments</a>([X,Y]);
+0103         <span class="keyword">end</span>
+0104      
+0105     <span class="keyword">otherwise</span>
+0106         
+0107         <span class="comment">%</span>
+0108         error(<span class="string">'Unknown property %s'</span>,property);
+0109        
+0110 <span class="keyword">end</span>
+0111 
+0112 result = smoothdata(result,<span class="string">'movmean'</span>,3);
+0113 result = result.^10;
+0114 
+0115 <span class="keyword">end</span>
+0116 
+0117 
+0118 <a name="_sub1" href="#_subfunctions" class="code">function [R,dR,dX,dY]=getBranchDerivative(branch)</a>
+0119 
+0120 R = branch.Radius;
+0121 R = smoothdata(R,<span class="string">'movmean'</span>,2);
+0122 
+0123 
+0124 <span class="keyword">if</span>(length(R)&gt;1)
+0125     
+0126     X = branch.X;
+0127     Y = branch.Y;
+0128     dX = diff(X);
+0129     dY = diff(Y);
+0130     dR = diff(R);
+0131     
+0132     
+0133     dX = [dX;dX(end)];
+0134     dY = [dY;dY(end)];
+0135     dR = [dR;dR(end)];
+0136     
+0137 <span class="keyword">else</span>
+0138     dR = 0;
+0139     dX = 0;
+0140     dY = 0;
+0141 <span class="keyword">end</span>
+0142 
+0143 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

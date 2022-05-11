@@ -4,7 +4,7 @@
 <head>
   <title>Description of splitLDbyProperties</title>
   <meta name="keywords" content="splitLDbyProperties">
-  <meta name="description" content="[topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights,histogramWeights)">
+  <meta name="description" content="[topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>[topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights,histogramWeights)</strong></div>
+<div class="box"><strong>[topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights,histogramWeights)
+<div class="fragment"><pre class="comment"> [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights)
  Splits up the contours in the line drawing vecLD according to feature
  properties.
 
@@ -82,7 +82,7 @@ This function is called by:
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights)</a>
-0002 <span class="comment">% [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights,histogramWeights)</span>
+0002 <span class="comment">% [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weights)</span>
 0003 <span class="comment">% Splits up the contours in the line drawing vecLD according to feature</span>
 0004 <span class="comment">% properties.</span>
 0005 <span class="comment">%</span>
@@ -191,6 +191,6 @@ This function is called by:
 0108 topLD.contours = vecLD.contours(topIdx);
 0109 topLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(topLD);
 0110</pre></div>
-<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

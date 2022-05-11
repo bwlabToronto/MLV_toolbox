@@ -29,7 +29,7 @@
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> newLD = segmentContoursAtJunctions(vecLD)
    Creates a new line drawing with the contours segmented into separate 
-   contours  at junctions. That is, the new contours will terminate at 
+   contours at junctions. That is, the new contours will terminate at 
    junction points and not run through them. Otherwise, the new drawing 
    is identical to the old one.
 
@@ -38,7 +38,7 @@
            there is no field called &quot;junctions&quot;, they will be computed.
 
  Output:
-   newLD - the new line drawing with contours split att eh junctions.</pre></div>
+   newLD - the new line drawing with contours split at the junctions.</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -56,7 +56,7 @@ This function is called by:
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function newLD = segmentContoursAtJunctions(vecLD)</a>
 0002 <span class="comment">% newLD = segmentContoursAtJunctions(vecLD)</span>
 0003 <span class="comment">%   Creates a new line drawing with the contours segmented into separate</span>
-0004 <span class="comment">%   contours  at junctions. That is, the new contours will terminate at</span>
+0004 <span class="comment">%   contours at junctions. That is, the new contours will terminate at</span>
 0005 <span class="comment">%   junction points and not run through them. Otherwise, the new drawing</span>
 0006 <span class="comment">%   is identical to the old one.</span>
 0007 <span class="comment">%</span>
@@ -65,7 +65,7 @@ This function is called by:
 0010 <span class="comment">%           there is no field called &quot;junctions&quot;, they will be computed.</span>
 0011 <span class="comment">%</span>
 0012 <span class="comment">% Output:</span>
-0013 <span class="comment">%   newLD - the new line drawing with contours split att eh junctions.</span>
+0013 <span class="comment">%   newLD - the new line drawing with contours split at the junctions.</span>
 0014 
 0015 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'junctions'</span>)
 0016     vecLD = <a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>(vecLD);
@@ -175,6 +175,6 @@ This function is called by:
 0120 
 0121     <span class="comment">% that's it for this old contour</span>
 0122 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

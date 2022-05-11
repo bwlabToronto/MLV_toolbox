@@ -4,7 +4,7 @@
 <head>
   <title>Description of histogramToTable</title>
   <meta name="keywords" content="histogramToTable">
-  <meta name="description" content="histTable = histogramToTable(histogram,bins,shortName)">
+  <meta name="description" content="histTable = histogramToTable(histogram,shortName,bins)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,14 +21,14 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>histTable = histogramToTable(histogram,bins,shortName)</strong></div>
+<div class="box"><strong>histTable = histogramToTable(histogram,shortName,bins)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function histTable = histogramToTable(histogram,shortName,bins) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> histTable = histogramToTable(histogram,bins,shortName)
-   Converts histogram into a table with variable names constructd from
+<div class="fragment"><pre class="comment"> histTable = histogramToTable(histogram,shortName,bins)
+   Converts histogram into a table with variable names constructed from
    shortName and, if porvided, bins.
 
  Input:
@@ -50,15 +50,15 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="allLDHistogramsToTable.html" class="code" title="function histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)">allLDHistogramsToTable</a>	histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)</li><li><a href="splitLDbyStatsModel.html" class="code" title="function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)">splitLDbyStatsModel</a>	[topLD, bottomLD] = splitLDbyHistogramWeights(vecLD,properties,fraction)</li></ul>
+<li><a href="allLDHistogramsToTable.html" class="code" title="function histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)">allLDHistogramsToTable</a>	histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)</li><li><a href="splitLDbyStatsModel.html" class="code" title="function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)">splitLDbyStatsModel</a>	[topLD, bottomLD] = splitLDbyStatsModel(vecLD,properties,fraction)</li></ul>
 <!-- crossreference -->
 
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function histTable = histogramToTable(histogram,shortName,bins)</a>
-0002 <span class="comment">% histTable = histogramToTable(histogram,bins,shortName)</span>
-0003 <span class="comment">%   Converts histogram into a table with variable names constructd from</span>
+0002 <span class="comment">% histTable = histogramToTable(histogram,shortName,bins)</span>
+0003 <span class="comment">%   Converts histogram into a table with variable names constructed from</span>
 0004 <span class="comment">%   shortName and, if porvided, bins.</span>
 0005 <span class="comment">%</span>
 0006 <span class="comment">% Input:</span>
@@ -99,6 +99,6 @@ This function is called by:
 0041 
 0042 
 0043</pre></div>
-<hr><address>Generated on Thu 05-May-2022 15:20:21 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
