@@ -71,7 +71,7 @@ imshow(imoverlay(rgb2gray(img),MAT.skeleton,'red'));
 ```
 
 Output:
-<img src='images/mountains_mat.png' width=40%> <img src='images/mountains_mat.png' width=40%> 
+<img src='images/mountains.png' width=40%> <img src='images/mountains_mat.png' width=40%> 
 
 
 
