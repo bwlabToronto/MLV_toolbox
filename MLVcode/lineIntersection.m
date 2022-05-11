@@ -70,7 +70,7 @@ if (-at<=a) && (a<=1+at) && (-bt <= b) && (b <= 1+bt)
         Position(1)=(B1*C2-B2*C1)/D;
         Position(2)=(A2*C1-A1*C2)/D;
         if any(Position < 0)
-            keyboard;
+            Position = [];
         end
     end
 else
