@@ -14,6 +14,7 @@ We are working on the python version and we have a plan to release the python ve
 - [Datasets](#Datasets)
 - [FAQs](#FAQs)
 - [References](#References)
+- [License](#License)
 
 
 
@@ -190,3 +191,9 @@ year = {2019}
 }
 
 ```
+
+## License
+
+The MLV toolbox contains various modules from different projects. Please make sure to check each file individual license. 
+
+
