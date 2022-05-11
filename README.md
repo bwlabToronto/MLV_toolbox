@@ -66,7 +66,7 @@ For a runnable matlab live code (.mlx), please refer to the [script](https://git
 
 <img src='images/medial_axis_transform.png' width=70%> 
 
-Using MLV, one can compute accurate AOF-based medial axis transform (MAT) from binary images. These images can either be rendered from LineDrawing (LD) datastructures (check out renderLinedrawing.m function) or be binary images from other sources. Please see the following example of a mountain scene where the MAT is computed from the binary image. 
+Using MLV, one can compute accurate AOF-based medial axis transform (MAT) from binary images. These images can either be rendered from LineDrawing (LD) datastructures (check out renderLinedrawing.m function) or be binary images from other sources. As the example (bunny) above shows, there are some intermediate steps in the process of extracting MAT, including the extraction of distance map as well as extraction of the average outward flux map (AOF). These information along with skeleton are stored in the MAT computed from a binary image. Please see the following example of a mountain scene where the MAT is computed from the binary image. 
 
 ```
 img = imread('images/mountain.png');
@@ -79,9 +79,17 @@ imshow(imoverlay(rgb2gray(img),MAT.skeleton,'b'))
 ```
 
 Output:
+
 <img src='images/mountain_example.png' width=70%>
 
-For a runnable matlab live code (.mlx), please refer to the [script](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getMedialAxis.mlx).
+In this example, 28 represents the object angle degree that the medial axis is thresholded at. For further information, please refer to the book: [Medial Representations](https://link.springer.com/book/10.1007/978-1-4020-8658-8). The higher the threshold, the less of medial axis branches are retained in the final representation.
+
+The final MAT includes the following attributes in its data structure:
+- skeleton 
+- distance_map
+- AOF
+
+For a runnable matlab live code (.mlx) with more examples to run, please refer to the [script](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getMedialAxis.mlx).
 
 
 
