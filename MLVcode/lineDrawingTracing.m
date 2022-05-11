@@ -1,4 +1,11 @@
 function vecLD = lineDrawingTracing(fileName)
+% vecLD = lineDrawingTracing(fileName)
+% Converts a photograph into a line drawing image
+%
+% Input:
+%   fileName - photograph image file
+% Output:
+%   vecLD - vectorized line drawing
 
 threshold_edge_strength = 0.85;
 

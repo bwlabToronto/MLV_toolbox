@@ -1,4 +1,12 @@
 function d = getDistanceFromLineSegment(XY)
+% d = getDistanceFromLineSegment(XY)
+% 
+%
+% Input:
+%   XY - 
+% Output:
+%   d - 
+
 if size(XY,1) <=2
     d = 0;
 else

@@ -1,4 +1,14 @@
 function vecLD = removeDuplicatedContours(vecLD)
+% vecLD = removeDuplicatedContours(vecLD)
+% Remove contours that are overlapping
+%
+% Input:
+%   vecLD - vectorized line drawing data structure
+% Output:
+%   vecLD - vectorized line drawing data structure with overlapping
+%   contours removed
+
+
 % curVecLD = vecLD;
 vecLD = computeLength(vecLD);
 finalToBeRemoved = [];

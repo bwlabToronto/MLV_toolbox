@@ -1,4 +1,14 @@
 function vecLD = mergeLineSegments(vecLD,threshParam)
+% vecLD = mergeLineSegments(vecLD,threshParam)
+% Merge Line Segments
+%
+% Input:
+%   vecLD - vectorized line drawing data structure
+%   threshParam - 
+% Output:
+%   vecLD - vectorized line drawing with
+
+
 
 for cc = 1 : vecLD.numContours
     curContour = vecLD.contours{cc};

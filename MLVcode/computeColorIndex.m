@@ -1,5 +1,5 @@
 function [colorIdx,cmap] = computeColorIndex(vecLD,property)
-% colorIdx = computeColorIndex(vecLD,property)
+% [colorIdx,cmap] = computeColorIndex(vecLD,property)
 %
 % Computes a color index for drawing line drawings with their properties.
 % Used by drawLinedrawingProperty and drawAllProperties
