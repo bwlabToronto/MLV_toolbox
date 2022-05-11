@@ -66,7 +66,7 @@ For a runnable matlab live code (.mlx), please refer to the [script](https://git
 
 <img src='images/medial_axis_transform.png' width=70%> 
 
-Using MLV, one can compute accurate AOF-based medial axis transform (MAT) from binary images. These images can either be rendered from LineDrawing (LD) datastructures (check out renderLinedrawing.m function) or be binary images from other sources. As the example (bunny) above shows, there are some intermediate steps in the process of extracting MAT, including the extraction of distance map as well as extraction of the average outward flux map (AOF). These information along with skeleton are stored in the MAT computed from a binary image. Please see the following example of a mountain scene where the MAT is computed from the binary image. 
+Using MLV, one can compute accurate AOF-based medial axis transform (MAT) from binary images. These images can either be rendered from LineDrawing (LD) datastructures (check out renderLinedrawing.m function) or be binary images from other sources. Like the example (bunny) above shows, there are some intermediate steps in the process of extracting MAT, including the extraction of the distance map as well as the extraction of the average outward flux map (AOF). This information along with the skeleton is stored in the MAT computed from a binary image. Please see the following example of a mountain scene where the MAT is computed from the binary image. 
 
 ```
 img = imread('images/mountain.png');
@@ -89,7 +89,7 @@ The final MAT includes the following attributes in its data structure:
 - AOF (step c)
 - skeleton (step d)
 
-For a runnable matlab live code (.mlx) with more examples to run, please refer to the [script](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getMedialAxis.mlx).
+For a runnable Matlab live code (.mlx) with more examples to run, please refer to the [script](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getMedialAxis.mlx).
 
 
 
@@ -123,6 +123,6 @@ Will be available in future releases ...
 
 ## FAQs
 
-We are working on this section, please make sure to check back here in the future. As of now, please ask your questions in the discussion page of the MLV toolbox available [here](https://github.com/bwlabToronto/MLV_toolbox/discussions). 
+We are working on this section, please make sure to check back here in the future. As of now, please ask your questions on the discussion page of the MLV toolbox available [here](https://github.com/bwlabToronto/MLV_toolbox/discussions). 
 
 ## References
