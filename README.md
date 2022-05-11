@@ -75,5 +75,6 @@ For a runnable matlab live code (.mlx), please refer to the [script](https://git
 
 ## FAQs
 
+We are working on this section, please make sure to check back here in the future. As of now, please ask your questions in the discussion page of the MLV toolbox available [here](https://github.com/bwlabToronto/MLV_toolbox/discussions). 
 
 ## References
