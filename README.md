@@ -104,12 +104,13 @@ MAT = computeMAT(imgLD,28);
 figure;
 subplot(1,2,1);
 drawMATproperty(MATskeletonImages.mirror);
-subplot(1,2,1);
+title('Mirror Symmetry','FontSize',24);
+subplot(1,2,2);
 drawMATproperty(MATcontourImages.mirror);
 title('Mirror Symmetry','FontSize',24);
 ```
 
-<img src='mountain_mirror_example' width=80%> 
+<img src='images/mountain_mirror_example.png' width=80%> 
 
 **Manipulating Line Drawings**
 
