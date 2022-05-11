@@ -64,6 +64,13 @@ For a runnable matlab live code (.mlx), please refer to the [script](https://git
 
 **Computing Medial Axis Properties**
 
+```
+img = imread('images/mountain.png');
+MAT = computeMAT(img,28);
+imshow(imoverlay(rgb2gray(img),MAT.skeleton,'red'));
+```
+
+
 **Computing Contour Properties**
 
 **Manipulating Line Drawings**
