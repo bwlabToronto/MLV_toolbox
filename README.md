@@ -84,10 +84,10 @@ Output:
 
 In this example, 28 represents the object angle degree that the medial axis is thresholded at. For further information, please refer to the book: [Medial Representations](https://link.springer.com/book/10.1007/978-1-4020-8658-8). The higher the threshold, the less of medial axis branches are retained in the final representation.
 
-The final MAT includes the following attributes in its data structure:
-- skeleton 
-- distance_map
-- AOF
+The final MAT includes the following attributes in its data structure: 
+- distance_map (step b)
+- AOF (step c)
+- skeleton (step d)
 
 For a runnable matlab live code (.mlx) with more examples to run, please refer to the [script](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getMedialAxis.mlx).
 
