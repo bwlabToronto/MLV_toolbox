@@ -6,11 +6,11 @@ function figIDs = drawAllProperties(vecLD,mode,properties)
 %   vecLD - the vectorized line drawing to be drawn
 %   mode - one of: 'subplot' - draw properties into one figure using subplot (default)
 %                  'separate' - draw properties into separate figures
-%   properties: a cell array of text labels of the properteis to be drawn
+%   properties -  a cell array of text labels of the properteis to be drawn
 %               default: {'Original','Length','Orientation','Curvature','Junctions'}
 %
 % Return:
-%   figIDs: a vector of the figure IDs of the individual figures.
+%   figIDs -  a vector of the figure IDs of the individual figures.
 %           just one ID for mode = 'subplots' 
 %
 % See also drawLinedrawing, drawLinedrawingProperty

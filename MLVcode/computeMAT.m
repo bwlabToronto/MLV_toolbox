@@ -1,20 +1,19 @@
 function MAT = computeMAT(imgLD,threshold_angle)
-% MAT = computeMAT(imgLD, parameters)
+% MAT = computeMAT(imgLD, threshold_angle)
 %   Extracts the Medial Axis Transform from a given line drawing image (imgLD) and 
 %   returns its distance map, its average out flux (AOF) map and the skeleton.
 % 
 % Input: 
-%   imgLD: a line drawing image
-%   threshold_angle: threshold on the object angle, the default is 28
-%   degrees.
+%   imgLD - a line drawing image
+%   threshold_angle - threshold on the object angle
+%                    default: 28 degrees
 %
 % Output:
-%   MAT: a matlab struct with the following fields:
-%   skeleton: skeleton is a binary image the same size as imgLD and 1s
-%   represents where skeleton appears and 0s represents other pixels
-%   image where 
-%   distance_map: a distance transform image the same size as imgLD
-%   AOF: average outward flux image computed from the distance transform 
+%   MAT - a matlab struct with the following fields:
+%       skeleton - a binary image the same size as imgLD. 1s
+%                  represent where skeleton appears
+%       distance_map - a distance transformed image as the same size as imgLD
+%       AOF - average outward flux image computed from the distance transform 
 
 binaryImage = imgLD;
 
