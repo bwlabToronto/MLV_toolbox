@@ -121,9 +121,26 @@ Output:
 
 <img src='images/mountain_mirror_example.png' width=80%> 
 
-As shown above, we see the local mirror symmetry scores on an example LineDrawing (LD) structure, where colors show low to high scores from blue to red respectively. 
+As shown above, we see the local mirror symmetry scores on an example LineDrawing (LD) structure, where colors show low to high scores from blue to red respectively. Check out a more detailed example Matlab Live Script (.mlv) [here](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getMATScores.mlx). 
 
+Similar to medial-axis based properties, one can also compute contour based properties using the MLV toolbox. Please take a look at the following block of code as an example.
 
+```
+load('dataSets/TorontoScenes/mountains_vecLD.mat');
+cute = vecLD(11);
+cute = computeContourProperties(cute);
+figure;
+subplot(1,2,1);
+drawLinedrawingProperty(cute,['orientation']);
+subplot(1,2,2);
+drawLinedrawingProperty(cute,'junctions');
+```
+
+Output:
+
+<img src='images/mountain_contour_features_example.png' width=80%> 
+
+Again, check out a more detailed example Matlab Live Script (.mlv) [here](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getcontourfeatures.mlx). 
 
 **Manipulating Line Drawings**
 
