@@ -67,7 +67,11 @@ For a runnable matlab live code (.mlx), please refer to the [script](https://git
 ```
 img = imread('images/mountain.png');
 MAT = computeMAT(img,28);
-imshow(imoverlay(rgb2gray(img),MAT.skeleton,'red'));
+figure;
+subplot(1,2,1);
+imshow(img);
+subplot(1,2,2);
+imshow(imoverlay(rgb2gray(img),MAT.skeleton,'red'))
 ```
 
 Output:
