@@ -1,5 +1,5 @@
 function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)
-% [topLD, bottomLD] = splitLDbyStatsModel(vecLD,properties,fraction)
+% [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)
 %   Splits up the contours in the line drawing vecLD according to a
 %   pre-trained regression model.
 %

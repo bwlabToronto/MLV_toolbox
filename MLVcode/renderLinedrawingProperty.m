@@ -4,7 +4,7 @@ function img = renderLinedrawingProperty(vecLD,property,img,imsize,lineWidth)
 %
 % Input:
 %   vecLD - the vectorized line drawing to be drawn.
-%   property - one of 'length','curvature','orientation'
+%   property - one of 'length','curvature','orientation', 'junctions'
 %   img - an existing image to draw into. If [], a new RGB image with a white background 
 %         will be initialized. Default: []
 %   imsize - the image size in [w,h]. If imsize is different from vecLD.imsize, the
@@ -38,7 +38,7 @@ property = lower(property);
 
 % special case for junctions
 if strcmp(property, 'junctions')
-    img = renderLinedrawing(vecLD,img,imsize,[0,0,0],lineWidth);
+    img = renderLinedrawing(vecLD,img,imsize,lineWidth, [0,0,0]);
     img = renderJunctions(vecLD.junctions,{},img,vecLD.imsize);
     return;
 end
