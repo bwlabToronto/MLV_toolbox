@@ -95,6 +95,12 @@ For a runnable Matlab live code (.mlx) with more examples to run, please refer t
 
 **Computing Contour Properties**
 
+Using the MLV toolbox, there are two major types of contour properties that one can compute:
+- Contour based properties
+- Medial-axis based properties
+
+
+
 ```
 load('dataSets/TorontoScenes/mountains_vecLD.mat');
 cute = vecLD(11);
