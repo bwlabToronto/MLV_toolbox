@@ -95,7 +95,21 @@ For a runnable matlab live code (.mlx) with more examples to run, please refer t
 
 **Computing Contour Properties**
 
-<img src='images/mountain_mirror_s.png' width=40%> <img src='images/mountain_mirror_c.png' width=40%>
+```
+load('dataSets/TorontoScenes/mountains_vecLD.mat');
+cute = vecLD(11);
+imgLD = renderLinedrawing(cute);
+MAT = computeMAT(imgLD,28);
+[MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD);
+figure;
+subplot(1,2,1);
+drawMATproperty(MATskeletonImages.mirror);
+subplot(1,2,1);
+drawMATproperty(MATcontourImages.mirror);
+title('Mirror Symmetry','FontSize',24);
+```
+
+<img src='mountain_mirror_example' width=80%> 
 
 **Manipulating Line Drawings**
 
