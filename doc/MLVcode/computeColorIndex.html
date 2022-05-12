@@ -4,7 +4,7 @@
 <head>
   <title>Description of computeColorIndex</title>
   <meta name="keywords" content="computeColorIndex">
-  <meta name="description" content="colorIdx = computeColorIndex(vecLD,property)">
+  <meta name="description" content="[colorIdx,cmap] = computeColorIndex(vecLD,property)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>colorIdx = computeColorIndex(vecLD,property)</strong></div>
+<div class="box"><strong>[colorIdx,cmap] = computeColorIndex(vecLD,property)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [colorIdx,cmap] = computeColorIndex(vecLD,property) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> colorIdx = computeColorIndex(vecLD,property)
+<div class="fragment"><pre class="comment"> [colorIdx,cmap] = computeColorIndex(vecLD,property)
 
  Computes a color index for drawing line drawings with their properties.
  Used by drawLinedrawingProperty and drawAllProperties
@@ -55,7 +55,7 @@ This function is called by:
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [colorIdx,cmap] = computeColorIndex(vecLD,property)</a>
-0002 <span class="comment">% colorIdx = computeColorIndex(vecLD,property)</span>
+0002 <span class="comment">% [colorIdx,cmap] = computeColorIndex(vecLD,property)</span>
 0003 <span class="comment">%</span>
 0004 <span class="comment">% Computes a color index for drawing line drawings with their properties.</span>
 0005 <span class="comment">% Used by drawLinedrawingProperty and drawAllProperties</span>
@@ -69,42 +69,52 @@ This function is called by:
 0013 <span class="comment">%   line segment, specifying the index into the color map</span>
 0014 <span class="comment">%   cmap - the color map appropriate for this property</span>
 0015 
-0016 property = lower(property);
-0017 
-0018 colorIdx = {};
-0019 numCols = 256;
-0020 
-0021 <span class="keyword">switch</span> property
-0022     <span class="keyword">case</span> <span class="string">'length'</span>
-0023         allLengths = log10(vecLD.contourLengths+1);
-0024         minProp = min(allLengths);
-0025         maxProp = max(allLengths);
-0026         col = round((allLengths - minProp) / (maxProp-minProp) * (numCols-1) + 1);
-0027         <span class="keyword">for</span> c = 1:vecLD.numContours
-0028             colorIdx{c} = zeros(size(vecLD.contours{c},1),1) + col(c);
-0029         <span class="keyword">end</span>
-0030         cmap = jet(numCols);
-0031 
-0032     <span class="keyword">case</span> <span class="string">'curvature'</span>
-0033         allCurv = log10([vecLD.curvatures{:}]+1);
-0034         maxProp = max(allCurv)*0.8; <span class="comment">% Here we're fudging the range a little so that high curvatures are emphasized more</span>
-0035         minProp = min(allCurv);
-0036         <span class="keyword">for</span> c = 1:vecLD.numContours
-0037             colorIdx{c} = min(round((log10(vecLD.curvatures{c}+1) - minProp) / (maxProp-minProp) * (numCols-1) + 1),numCols);
-0038         <span class="keyword">end</span>
-0039         cmap = jet(numCols);
-0040 
-0041     <span class="keyword">case</span> <span class="string">'orientation'</span>
-0042         <span class="keyword">for</span> c = 1:vecLD.numContours
-0043             colorIdx{c} = round(mod(vecLD.orientations{c},180) / 180 * (numCols-1) + 1);
-0044         <span class="keyword">end</span>
-0045         cmap = hsv(numCols);
-0046 
-0047     <span class="keyword">otherwise</span>
-0048         error([<span class="string">'Unknown property: '</span>,property]);
-0049 <span class="keyword">end</span>
+0016 <span class="comment">% -----------------------------------------------------</span>
+0017 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0018 <span class="comment">% http://www.mlvtoolbox.org</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0021 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0024 <span class="comment">%------------------------------------------------------</span>
+0025 
+0026 property = lower(property);
+0027 
+0028 colorIdx = {};
+0029 numCols = 256;
+0030 
+0031 <span class="keyword">switch</span> property
+0032     <span class="keyword">case</span> <span class="string">'length'</span>
+0033         allLengths = log10(vecLD.contourLengths+1);
+0034         minProp = min(allLengths);
+0035         maxProp = max(allLengths);
+0036         col = round((allLengths - minProp) / (maxProp-minProp) * (numCols-1) + 1);
+0037         <span class="keyword">for</span> c = 1:vecLD.numContours
+0038             colorIdx{c} = zeros(size(vecLD.contours{c},1),1) + col(c);
+0039         <span class="keyword">end</span>
+0040         cmap = jet(numCols);
+0041 
+0042     <span class="keyword">case</span> <span class="string">'curvature'</span>
+0043         allCurv = log10([vecLD.curvatures{:}]+1);
+0044         maxProp = max(allCurv)*0.8; <span class="comment">% Here we're fudging the range a little so that high curvatures are emphasized more</span>
+0045         minProp = min(allCurv);
+0046         <span class="keyword">for</span> c = 1:vecLD.numContours
+0047             colorIdx{c} = min(round((log10(vecLD.curvatures{c}+1) - minProp) / (maxProp-minProp) * (numCols-1) + 1),numCols);
+0048         <span class="keyword">end</span>
+0049         cmap = jet(numCols);
 0050 
-0051</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0051     <span class="keyword">case</span> <span class="string">'orientation'</span>
+0052         <span class="keyword">for</span> c = 1:vecLD.numContours
+0053             colorIdx{c} = round(mod(vecLD.orientations{c},180) / 180 * (numCols-1) + 1);
+0054         <span class="keyword">end</span>
+0055         cmap = hsv(numCols);
+0056 
+0057     <span class="keyword">otherwise</span>
+0058         error([<span class="string">'Unknown property: '</span>,property]);
+0059 <span class="keyword">end</span>
+0060 
+0061</pre></div>
+<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

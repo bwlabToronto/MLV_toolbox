@@ -4,7 +4,7 @@
 <head>
   <title>Description of drawMATproperty</title>
   <meta name="keywords" content="drawMATproperty">
-  <meta name="description" content="">
+  <meta name="description" content="drawMATproperty(skeletonImageWithRating,vecLD)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,20 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong></strong></div>
+<div class="box"><strong>drawMATproperty(skeletonImageWithRating,vecLD)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function drawMATproperty(skeltonImageWithRating,vecLD) </strong></div>
+<div class="box"><strong>function drawMATproperty(skeletonImageWithRating,vecLD) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"></pre></div>
+<div class="fragment"><pre class="comment"> drawMATproperty(skeletonImageWithRating,vecLD)
+   Draws a colored line drawing with line color determined by the 
+   MAT property provided in skeltonImageWithRating.
+
+ Input:
+   skeltonImageWithRating - this is an image with with the skeleton pixels
+   given a rating of importance based on a mid-level property.
+   vecLD: the vectorized line drawing</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -42,34 +49,45 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 
-0002 <a name="_sub0" href="#_subfunctions" class="code">function drawMATproperty(skeltonImageWithRating,vecLD)</a>
-0003 
-0004 <span class="keyword">if</span> nargin ==2
-0005     <a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,lineWidth,color)">drawLinedrawing</a>(vecLD);
-0006     hold on;
-0007 <span class="keyword">end</span>
-0008 markerSize = floor(0.05*max(size(skeltonImageWithRating)));
-0009 inds = find(skeltonImageWithRating~=0);
-0010 imsize = size(skeltonImageWithRating);
-0011 scores = skeltonImageWithRating(inds);
-0012 sortedScores = sort(scores);
-0013 cutOffInd = max(round(0.05*(length(sortedScores))),1);
-0014 thresh = sortedScores(cutOffInd);
-0015 scoresScaled = scores;
-0016 <span class="comment">% scoresScaled(scores&lt; thresh) = thresh;</span>
-0017 <span class="comment">% scoresScaled = rescale(scoresScaled,0,1);</span>
-0018 
-0019 <span class="comment">% hfig = figure('units','normalized','outerposition',[0 0 1 1]);</span>
-0020 [X,Y] = ind2sub(imsize,inds);
-0021 scatter(Y,X,markerSize,scoresScaled,<span class="string">'Marker'</span>,<span class="string">'.'</span>);
-0022 colormap(jet)
-0023 axis ij image
-0024 box on
-0025 set(gcf,<span class="string">'color'</span>,<span class="string">'w'</span>);
-0026 colorbar(<span class="string">'Limits'</span>,[0,1],<span class="string">'Ticks'</span>,[0,0.5,1],<span class="string">'TickLabels'</span>,{<span class="string">'lowest'</span>,<span class="string">'intermediate'</span>,<span class="string">'highest'</span>},<span class="string">'FontSize'</span>,16);
-0027 
-0028 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function drawMATproperty(skeletonImageWithRating,vecLD)</a>
+0002 <span class="comment">% drawMATproperty(skeletonImageWithRating,vecLD)</span>
+0003 <span class="comment">%   Draws a colored line drawing with line color determined by the</span>
+0004 <span class="comment">%   MAT property provided in skeltonImageWithRating.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input:</span>
+0007 <span class="comment">%   skeltonImageWithRating - this is an image with with the skeleton pixels</span>
+0008 <span class="comment">%   given a rating of importance based on a mid-level property.</span>
+0009 <span class="comment">%   vecLD: the vectorized line drawing</span>
+0010 
+0011 <span class="comment">% -----------------------------------------------------</span>
+0012 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0013 <span class="comment">% http://www.mlvtoolbox.org</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Copyright Morteza Rezanejad</span>
+0016 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
+0019 <span class="comment">%------------------------------------------------------</span>
+0020 
+0021 <span class="keyword">if</span> nargin ==2
+0022     <a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,lineWidth,color)">drawLinedrawing</a>(vecLD);
+0023     hold on;
+0024 <span class="keyword">end</span>
+0025 markerSize = floor(0.05*max(size(skeletonImageWithRating)));
+0026 inds = find(skeletonImageWithRating~=0);
+0027 imsize = size(skeletonImageWithRating);
+0028 scores = skeletonImageWithRating(inds);
+0029 sortedScores = sort(scores);
+0030 cutOffInd = max(round(0.05*(length(sortedScores))),1);
+0031 [X,Y] = ind2sub(imsize,inds);
+0032 scatter(Y,X,markerSize,scoresScaled,<span class="string">'Marker'</span>,<span class="string">'.'</span>);
+0033 colormap(jet)
+0034 axis ij image
+0035 box on
+0036 set(gcf,<span class="string">'color'</span>,<span class="string">'w'</span>);
+0037 colorbar(<span class="string">'Limits'</span>,[0,1],<span class="string">'Ticks'</span>,[0,0.5,1],<span class="string">'TickLabels'</span>,{<span class="string">'lowest'</span>,<span class="string">'intermediate'</span>,<span class="string">'highest'</span>},<span class="string">'FontSize'</span>,16);
+0038 
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

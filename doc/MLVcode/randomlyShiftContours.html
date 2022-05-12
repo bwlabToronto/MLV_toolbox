@@ -85,48 +85,51 @@ This function is called by:
 0027 <span class="comment">% Neuroimage, 135, 32-44. https://doi.org/10.1016/j.neuroimage.2016.04.021</span>
 0028 
 0029 <span class="comment">% -----------------------------------------------------</span>
-0030 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0031 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0030 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0031 <span class="comment">% http://www.mlvtoolbox.org</span>
 0032 <span class="comment">%</span>
-0033 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0034 <span class="comment">%------------------------------------------------------</span>
-0035 
-0036 <span class="keyword">if</span> nargin &lt; 2
-0037     maxShift = vecLD.imsize;
-0038 <span class="keyword">end</span>
-0039 <span class="keyword">if</span> numel(maxShift) == 1
-0040     maxShift = [maxShift,maxShift];
+0033 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0034 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0037 <span class="comment">%------------------------------------------------------</span>
+0038 
+0039 <span class="keyword">if</span> nargin &lt; 2
+0040     maxShift = vecLD.imsize;
 0041 <span class="keyword">end</span>
-0042 
-0043 shiftedLD.originalImage = vecLD.originalImage;
-0044 shiftedLD.imsize = vecLD.imsize;
-0045 shiftedLD.lineMethod = vecLD.lineMethod;
-0046 shiftedLD.numContours = vecLD.numContours;
-0047 shiftedLD.contours = {};
-0048 
-0049 <span class="keyword">for</span> c = 1:vecLD.numContours
-0050     <span class="comment">% X direction</span>
-0051     minX = min(cat(1,vecLD.contours{c}(:,1),vecLD.contours{c}(:,3)));
-0052     maxX = max(cat(1,vecLD.contours{c}(:,1),vecLD.contours{c}(:,3)));
-0053     
-0054     lowX = min(minX-1,maxShift(1));
-0055     highX = min(vecLD.imsize(1) - maxX, maxShift(1));
-0056     shiftX = randi([-lowX,highX]);
-0057 
-0058     <span class="comment">% Y direction</span>
-0059     minY = min(cat(1,vecLD.contours{c}(:,2),vecLD.contours{c}(:,4)));
-0060     maxY = max(cat(1,vecLD.contours{c}(:,2),vecLD.contours{c}(:,4)));
-0061     
-0062     lowY = min(minY-1,maxShift(2));
-0063     highY = min(vecLD.imsize(2) - maxY, maxShift(2));
-0064     shiftY = randi([-lowY,highY]);
-0065 
-0066     <span class="comment">% shift the coordinates</span>
-0067     shiftVector = [shiftX,shiftY,shiftX,shiftY];
-0068     shiftedLD.contours{c} = vecLD.contours{c} + repmat(shiftVector,size(vecLD.contours{c},1),1);
-0069 <span class="keyword">end</span>
-0070 
-0071</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0042 <span class="keyword">if</span> numel(maxShift) == 1
+0043     maxShift = [maxShift,maxShift];
+0044 <span class="keyword">end</span>
+0045 
+0046 shiftedLD.originalImage = vecLD.originalImage;
+0047 shiftedLD.imsize = vecLD.imsize;
+0048 shiftedLD.lineMethod = vecLD.lineMethod;
+0049 shiftedLD.numContours = vecLD.numContours;
+0050 shiftedLD.contours = {};
+0051 
+0052 <span class="keyword">for</span> c = 1:vecLD.numContours
+0053     <span class="comment">% X direction</span>
+0054     minX = min(cat(1,vecLD.contours{c}(:,1),vecLD.contours{c}(:,3)));
+0055     maxX = max(cat(1,vecLD.contours{c}(:,1),vecLD.contours{c}(:,3)));
+0056     
+0057     lowX = min(minX-1,maxShift(1));
+0058     highX = min(vecLD.imsize(1) - maxX, maxShift(1));
+0059     shiftX = randi([-lowX,highX]);
+0060 
+0061     <span class="comment">% Y direction</span>
+0062     minY = min(cat(1,vecLD.contours{c}(:,2),vecLD.contours{c}(:,4)));
+0063     maxY = max(cat(1,vecLD.contours{c}(:,2),vecLD.contours{c}(:,4)));
+0064     
+0065     lowY = min(minY-1,maxShift(2));
+0066     highY = min(vecLD.imsize(2) - maxY, maxShift(2));
+0067     shiftY = randi([-lowY,highY]);
+0068 
+0069     <span class="comment">% shift the coordinates</span>
+0070     shiftVector = [shiftX,shiftY,shiftX,shiftY];
+0071     shiftedLD.contours{c} = vecLD.contours{c} + repmat(shiftVector,size(vecLD.contours{c},1),1);
+0072 <span class="keyword">end</span>
+0073 
+0074</pre></div>
+<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

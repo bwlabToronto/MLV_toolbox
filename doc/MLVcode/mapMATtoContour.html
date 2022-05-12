@@ -4,7 +4,7 @@
 <head>
   <title>Description of mapMATtoContour</title>
   <meta name="keywords" content="mapMATtoContour">
-  <meta name="description" content="Copyright Morteza Rezanejad">
+  <meta name="description" content="contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,30 +21,28 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>Copyright Morteza Rezanejad</strong></div>
+<div class="box"><strong>contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> Copyright Morteza Rezanejad
- McGill University, Montreal, QC 2019
+<div class="fragment"><pre class="comment"> contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)
+   This function maps all property scores computed on top of Medial Axis
+   Transform back to a line drawing image. The important point here to
+   remember is that, as there could be two medial axis branches
+   around a line drawing contour, we get one or two scores mapped back and
+   between those we compute the maximum of the two. 
+   
+ Input:
+   skeletalBranches - branches traced from skeleton representation
+   imgLD - the binary line drawing image
+   skeletonImageWithRating - the 2D matrix of skeleton image with MAT
+   based scores
 
- Contact: morteza [at] cim [dot] mcgill [dot] ca 
- -------------------------------------------------------------------------
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
- -------------------------------------------------------------------------</pre></div>
+ Output:
+   contourImageWithRating - the binary line drawing image with the property 
+   scores mapped from skeleton image with MAT based scores</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -53,7 +51,7 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a>	</li></ul>
+<li><a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a>	[MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)</li></ul>
 <!-- crossreference -->
 
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -61,184 +59,204 @@ This function is called by:
 <li><a href="#_sub1" class="code">function [FP1,FP2,SKInds]=getTangentPointsContour(contour,imsize)</a></li><li><a href="#_sub2" class="code">function [FX1,FY1,FX2,FY2]=getIntersectionTangents(x1,y1,r1,x2,y2,r2)</a></li></ul>
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% Copyright Morteza Rezanejad</span>
-0002 <span class="comment">% McGill University, Montreal, QC 2019</span>
-0003 <span class="comment">%</span>
-0004 <span class="comment">% Contact: morteza [at] cim [dot] mcgill [dot] ca</span>
-0005 <span class="comment">% -------------------------------------------------------------------------</span>
-0006 <span class="comment">% This program is free software: you can redistribute it and/or modify</span>
-0007 <span class="comment">% it under the terms of the GNU General Public License as published by</span>
-0008 <span class="comment">% the Free Software Foundation, either version 3 of the License, or</span>
-0009 <span class="comment">% (at your option) any later version.</span>
-0010 <span class="comment">%</span>
-0011 <span class="comment">% This program is distributed in the hope that it will be useful,</span>
-0012 <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-0013 <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-0014 <span class="comment">% GNU General Public License for more details.</span>
-0015 <span class="comment">%</span>
-0016 <span class="comment">% You should have received a copy of the GNU General Public License</span>
-0017 <span class="comment">% along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
-0018 <span class="comment">% -------------------------------------------------------------------------</span>
-0019 <a name="_sub0" href="#_subfunctions" class="code">function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)</a>
-0020 
-0021 
-0022 
-0023 <span class="keyword">if</span> length(size(imgLD)) == 3
-0024     imgLD = squeeze(imgLD(:,:,1));
-0025 <span class="keyword">end</span>
-0026 imsize = size(imgLD);
-0027 imgLDInds = find(imgLD==0);
-0028 [contourX,contourY] = ind2sub(imsize,imgLDInds);
-0029 contourXY = [contourX,contourY];
-0030 
-0031 
-0032 
-0033 contourImageWithRating = zeros(imsize);
-0034 
-0035 <span class="keyword">for</span> i = 1 : length(skeletalBranches)
-0036     
-0037     
-0038     cur_contour = skeletalBranches(i);
-0039     [FP1,FP2,SKInds]=<a href="#_sub1" class="code" title="subfunction [FP1,FP2,SKInds]=getTangentPointsContour(contour,imsize)">getTangentPointsContour</a>(cur_contour,imsize);
-0040     FP = [FP1;FP2];
-0041     AllSKInds = [SKInds;SKInds];
-0042     neigh_radius = 4;
-0043     <span class="keyword">if</span>(size(FP)&gt;0)
-0044         [IDX,D] = knnsearch(FP,contourXY);
-0045         T = find(D &lt; neigh_radius);
-0046         <span class="keyword">if</span>(~isempty(T))
-0047             reconstructedInds = imgLDInds(T);
-0048             currentScores = contourImageWithRating(reconstructedInds);
-0049             newScores = skeletonImageWithRating(AllSKInds(IDX(T)));
-0050             contourImageWithRating(reconstructedInds) = max(newScores,currentScores);
-0051         <span class="keyword">end</span>
-0052     <span class="keyword">end</span>
-0053 <span class="keyword">end</span>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)</a>
+0002 <span class="comment">% contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)</span>
+0003 <span class="comment">%   This function maps all property scores computed on top of Medial Axis</span>
+0004 <span class="comment">%   Transform back to a line drawing image. The important point here to</span>
+0005 <span class="comment">%   remember is that, as there could be two medial axis branches</span>
+0006 <span class="comment">%   around a line drawing contour, we get one or two scores mapped back and</span>
+0007 <span class="comment">%   between those we compute the maximum of the two.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Input:</span>
+0010 <span class="comment">%   skeletalBranches - branches traced from skeleton representation</span>
+0011 <span class="comment">%   imgLD - the binary line drawing image</span>
+0012 <span class="comment">%   skeletonImageWithRating - the 2D matrix of skeleton image with MAT</span>
+0013 <span class="comment">%   based scores</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Output:</span>
+0016 <span class="comment">%   contourImageWithRating - the binary line drawing image with the property</span>
+0017 <span class="comment">%   scores mapped from skeleton image with MAT based scores</span>
+0018 
+0019 
+0020 <span class="comment">% -----------------------------------------------------</span>
+0021 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0022 <span class="comment">% http://www.mlvtoolbox.org</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Copyright Morteza Rezanejad</span>
+0025 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
+0028 <span class="comment">%------------------------------------------------------</span>
+0029 <span class="comment">% This program is free software: you can redistribute it and/or modify</span>
+0030 <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0031 <span class="comment">% the Free Software Foundation, either version 3 of the License, or</span>
+0032 <span class="comment">% (at your option) any later version.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+0035 <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0036 <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+0037 <span class="comment">% GNU General Public License for more details.</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0040 <span class="comment">% along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+0041 <span class="comment">% -------------------------------------------------------------------------</span>
+0042 
+0043 <span class="keyword">if</span> length(size(imgLD)) == 3
+0044     imgLD = squeeze(imgLD(:,:,1));
+0045 <span class="keyword">end</span>
+0046 imsize = size(imgLD);
+0047 imgLDInds = find(imgLD==0);
+0048 [contourX,contourY] = ind2sub(imsize,imgLDInds);
+0049 contourXY = [contourX,contourY];
+0050 
+0051 
+0052 
+0053 contourImageWithRating = zeros(imsize);
 0054 
-0055 <span class="keyword">end</span>
-0056 
-0057 
-0058 
-0059 <a name="_sub1" href="#_subfunctions" class="code">function [FP1,FP2,SKInds]=getTangentPointsContour(contour,imsize)</a>
-0060 R = contour.Radius;
-0061 X = contour.X;
-0062 Y = contour.Y;
-0063 
-0064 SKInds = [];
-0065 
-0066 <span class="keyword">if</span>(length(X)&gt;=1)
-0067     FX1 = [];
-0068     FY1 = [];
-0069     FX2 = [];
-0070     FY2 = [];
-0071     
-0072     
-0073     <span class="keyword">for</span> i = 1 : length(X)-1
-0074         x1 = X(i);
-0075         x2 = X(i+1);
-0076         y1 = Y(i);
-0077         y2 = Y(i+1);
-0078         rv1 = R(i);
-0079         rv2 = R(i+1);
-0080         
-0081         <span class="keyword">for</span> r1 = [rv1-0.1,rv1,rv1+0.1,]
-0082             <span class="keyword">for</span> r2 = [rv2-0.1,rv2,rv2+0.1]
-0083                 [fx1,fy1,fx2,fy2]=<a href="#_sub2" class="code" title="subfunction [FX1,FY1,FX2,FY2]=getIntersectionTangents(x1,y1,r1,x2,y2,r2)">getIntersectionTangents</a>(x1,y1,r1,x2,y2,r2);
-0084                 skIndex = sub2ind(imsize,x1,y1);
+0055 <span class="keyword">for</span> i = 1 : length(skeletalBranches)
+0056     
+0057     
+0058     cur_contour = skeletalBranches(i);
+0059     [FP1,FP2,SKInds]=<a href="#_sub1" class="code" title="subfunction [FP1,FP2,SKInds]=getTangentPointsContour(contour,imsize)">getTangentPointsContour</a>(cur_contour,imsize);
+0060     FP = [FP1;FP2];
+0061     AllSKInds = [SKInds;SKInds];
+0062     neigh_radius = 4;
+0063     <span class="keyword">if</span>(size(FP)&gt;0)
+0064         [IDX,D] = knnsearch(FP,contourXY);
+0065         T = find(D &lt; neigh_radius);
+0066         <span class="keyword">if</span>(~isempty(T))
+0067             reconstructedInds = imgLDInds(T);
+0068             currentScores = contourImageWithRating(reconstructedInds);
+0069             newScores = skeletonImageWithRating(AllSKInds(IDX(T)));
+0070             contourImageWithRating(reconstructedInds) = max(newScores,currentScores);
+0071         <span class="keyword">end</span>
+0072     <span class="keyword">end</span>
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="keyword">end</span>
+0076 
+0077 
+0078 
+0079 <a name="_sub1" href="#_subfunctions" class="code">function [FP1,FP2,SKInds]=getTangentPointsContour(contour,imsize)</a>
+0080 R = contour.Radius;
+0081 X = contour.X;
+0082 Y = contour.Y;
+0083 
+0084 SKInds = [];
 0085 
-0086                 nFX1 = [FX1;fx1];
-0087                 nFY1 = [FY1;fy1];
-0088                 nFX2 = [FX2;fx2];
-0089                 nFY2 = [FY2;fy2];
-0090                 FX1 = nFX1;
-0091                 FY1 = nFY1;
-0092                 FX2 = nFX2;
-0093                 FY2 = nFY2;
-0094                 nSKInds = [SKInds;skIndex];
-0095                 SKInds = nSKInds;
-0096             <span class="keyword">end</span>
-0097         <span class="keyword">end</span>
-0098     <span class="keyword">end</span>
-0099     FP1 = [FX1,FY1];
-0100     FP2 = [FX2,FY2];
-0101 <span class="keyword">else</span>
-0102     FP1 = [];
-0103     FP2 = [];
-0104 <span class="keyword">end</span>
+0086 <span class="keyword">if</span>(length(X)&gt;=1)
+0087     FX1 = [];
+0088     FY1 = [];
+0089     FX2 = [];
+0090     FY2 = [];
+0091     
+0092     
+0093     <span class="keyword">for</span> i = 1 : length(X)-1
+0094         x1 = X(i);
+0095         x2 = X(i+1);
+0096         y1 = Y(i);
+0097         y2 = Y(i+1);
+0098         rv1 = R(i);
+0099         rv2 = R(i+1);
+0100         
+0101         <span class="keyword">for</span> r1 = [rv1-0.1,rv1,rv1+0.1,]
+0102             <span class="keyword">for</span> r2 = [rv2-0.1,rv2,rv2+0.1]
+0103                 [fx1,fy1,fx2,fy2]=<a href="#_sub2" class="code" title="subfunction [FX1,FY1,FX2,FY2]=getIntersectionTangents(x1,y1,r1,x2,y2,r2)">getIntersectionTangents</a>(x1,y1,r1,x2,y2,r2);
+0104                 skIndex = sub2ind(imsize,x1,y1);
 0105 
-0106 <span class="keyword">end</span>
-0107 
-0108 
-0109 
-0110 <a name="_sub2" href="#_subfunctions" class="code">function [FX1,FY1,FX2,FY2]=getIntersectionTangents(x1,y1,r1,x2,y2,r2)</a>
-0111 
-0112 d = sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-0113 
-0114 <span class="keyword">if</span>(d == 0)
-0115     FX1 = x1;
-0116     FY1 = y1;
-0117     FX2 = x1;
-0118     FY2 = y1;
-0119 <span class="keyword">else</span>
-0120     r1MinusR2 = r2-r1;
-0121     cosAlpha = r1MinusR2/d;
-0122     <span class="keyword">if</span>(abs(cosAlpha) &gt; 1)
-0123         cosAlpha = cosAlpha/(abs(cosAlpha)+0.00001);
-0124     <span class="keyword">end</span>
-0125     
-0126     sinAlpha = sqrt(1-cosAlpha*cosAlpha);
-0127     FX1 = [];
-0128     FY1 = [];
-0129     FX2 = [];
-0130     FY2 = [];
-0131     
-0132     alpha = 0.5;
-0133     
-0134     beta = 1 - alpha;
-0135     mx = alpha*x1+beta*x2;
-0136     my = alpha*y1+beta*y2;
-0137     mr = alpha*r1+beta*r2;
-0138     
-0139     vx = x1-mx;
-0140     vy = y1-my;
-0141     
-0142     fvx1 = cosAlpha*vx+sinAlpha*vy;
-0143     fvy1 = -sinAlpha*vx+cosAlpha*vy;
-0144     
-0145     fvx2 = cosAlpha*vx-sinAlpha*vy;
-0146     fvy2 = sinAlpha*vx+cosAlpha*vy;
-0147     
-0148     nv1 = sqrt(fvx1*fvx1 + fvy1*fvy1);
-0149     s1 = mr/nv1;
-0150     fvx1 = fvx1*s1;
-0151     fvy1 = fvy1*s1;
-0152     
+0106                 nFX1 = [FX1;fx1];
+0107                 nFY1 = [FY1;fy1];
+0108                 nFX2 = [FX2;fx2];
+0109                 nFY2 = [FY2;fy2];
+0110                 FX1 = nFX1;
+0111                 FY1 = nFY1;
+0112                 FX2 = nFX2;
+0113                 FY2 = nFY2;
+0114                 nSKInds = [SKInds;skIndex];
+0115                 SKInds = nSKInds;
+0116             <span class="keyword">end</span>
+0117         <span class="keyword">end</span>
+0118     <span class="keyword">end</span>
+0119     FP1 = [FX1,FY1];
+0120     FP2 = [FX2,FY2];
+0121 <span class="keyword">else</span>
+0122     FP1 = [];
+0123     FP2 = [];
+0124 <span class="keyword">end</span>
+0125 
+0126 <span class="keyword">end</span>
+0127 
+0128 
+0129 
+0130 <a name="_sub2" href="#_subfunctions" class="code">function [FX1,FY1,FX2,FY2]=getIntersectionTangents(x1,y1,r1,x2,y2,r2)</a>
+0131 
+0132 d = sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+0133 
+0134 <span class="keyword">if</span>(d == 0)
+0135     FX1 = x1;
+0136     FY1 = y1;
+0137     FX2 = x1;
+0138     FY2 = y1;
+0139 <span class="keyword">else</span>
+0140     r1MinusR2 = r2-r1;
+0141     cosAlpha = r1MinusR2/d;
+0142     <span class="keyword">if</span>(abs(cosAlpha) &gt; 1)
+0143         cosAlpha = cosAlpha/(abs(cosAlpha)+0.00001);
+0144     <span class="keyword">end</span>
+0145     
+0146     sinAlpha = sqrt(1-cosAlpha*cosAlpha);
+0147     FX1 = [];
+0148     FY1 = [];
+0149     FX2 = [];
+0150     FY2 = [];
+0151     
+0152     alpha = 0.5;
 0153     
-0154     nv2 = sqrt(fvx2*fvx2 + fvy2*fvy2);
-0155     s2 = mr/nv2;
-0156     fvx2 = fvx2*s2;
-0157     fvy2 = fvy2*s2;
+0154     beta = 1 - alpha;
+0155     mx = alpha*x1+beta*x2;
+0156     my = alpha*y1+beta*y2;
+0157     mr = alpha*r1+beta*r2;
 0158     
-0159     
-0160     fx1 = mx+fvx1;
-0161     fy1 = my+fvy1;
-0162     
-0163     fx2 = mx+fvx2;
-0164     fy2 = my+fvy2;
-0165     nFX1 = [FX1;fx1];
-0166     nFY1 = [FY1;fy1];
-0167     nFX2 = [FX2;fx2];
-0168     nFY2 = [FY2;fy2];
-0169     FX1 = nFX1;
-0170     FY1 = nFY1;
-0171     FX2 = nFX2;
-0172     FY2 = nFY2;
+0159     vx = x1-mx;
+0160     vy = y1-my;
+0161     
+0162     fvx1 = cosAlpha*vx+sinAlpha*vy;
+0163     fvy1 = -sinAlpha*vx+cosAlpha*vy;
+0164     
+0165     fvx2 = cosAlpha*vx-sinAlpha*vy;
+0166     fvy2 = sinAlpha*vx+cosAlpha*vy;
+0167     
+0168     nv1 = sqrt(fvx1*fvx1 + fvy1*fvy1);
+0169     s1 = mr/nv1;
+0170     fvx1 = fvx1*s1;
+0171     fvy1 = fvy1*s1;
+0172     
 0173     
-0174     
-0175 <span class="keyword">end</span>
-0176 
-0177 
-0178 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0174     nv2 = sqrt(fvx2*fvx2 + fvy2*fvy2);
+0175     s2 = mr/nv2;
+0176     fvx2 = fvx2*s2;
+0177     fvy2 = fvy2*s2;
+0178     
+0179     
+0180     fx1 = mx+fvx1;
+0181     fy1 = my+fvy1;
+0182     
+0183     fx2 = mx+fvx2;
+0184     fy2 = my+fvy2;
+0185     nFX1 = [FX1;fx1];
+0186     nFY1 = [FY1;fy1];
+0187     nFX2 = [FX2;fx2];
+0188     nFY2 = [FY2;fy2];
+0189     FX1 = nFX1;
+0190     FY1 = nFY1;
+0191     FX2 = nFX2;
+0192     FY2 = nFY2;
+0193     
+0194     
+0195 <span class="keyword">end</span>
+0196 
+0197 
+0198 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

@@ -76,38 +76,41 @@ This function is called by:
 0017 <span class="comment">%            default: Matlab's 'lines' color map - the regular order for line plots.</span>
 0018 
 0019 <span class="comment">% -----------------------------------------------------</span>
-0020 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0021 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0020 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0021 <span class="comment">% http://www.mlvtoolbox.org</span>
 0022 <span class="comment">%</span>
-0023 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0024 <span class="comment">%------------------------------------------------------</span>
-0025 
-0026 junctionTypes = {Junctions(:).type};
-0027 <span class="keyword">if</span> isempty(types)
-0028     types = unique(junctionTypes);
-0029 <span class="keyword">end</span>
-0030 numTypes = length(types);
-0031 
-0032 <span class="keyword">if</span> nargin &lt; 6
-0033     colors = lines(numTypes);
-0034 <span class="keyword">end</span>
-0035 <span class="keyword">if</span> nargin &lt; 5
-0036     MarkerSize = 5;
+0023 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0024 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0027 <span class="comment">%------------------------------------------------------</span>
+0028 
+0029 junctionTypes = {Junctions(:).type};
+0030 <span class="keyword">if</span> isempty(types)
+0031     types = unique(junctionTypes);
+0032 <span class="keyword">end</span>
+0033 numTypes = length(types);
+0034 
+0035 <span class="keyword">if</span> nargin &lt; 6
+0036     colors = lines(numTypes);
 0037 <span class="keyword">end</span>
-0038 <span class="keyword">if</span> nargin &lt; 4
-0039     LDimsize = size(img,[2,1]);
+0038 <span class="keyword">if</span> nargin &lt; 5
+0039     MarkerSize = 5;
 0040 <span class="keyword">end</span>
-0041 <span class="keyword">if</span> isempty(LDimsize)
+0041 <span class="keyword">if</span> nargin &lt; 4
 0042     LDimsize = size(img,[2,1]);
 0043 <span class="keyword">end</span>
-0044 
-0045 positions = reshape([Junctions(:).position],2,length(Junctions))';
-0046 positions(:,3) = MarkerSize;
-0047 <span class="keyword">for</span> t = 1:length(types)
-0048     typeIdx = strcmp(types{t},junctionTypes);
-0049     img = insertShape(img,<span class="string">'FilledCircle'</span>,positions(typeIdx,:),<span class="string">'Color'</span>,colors(t,:));
-0050 <span class="keyword">end</span>
-0051</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0044 <span class="keyword">if</span> isempty(LDimsize)
+0045     LDimsize = size(img,[2,1]);
+0046 <span class="keyword">end</span>
+0047 
+0048 positions = reshape([Junctions(:).position],2,length(Junctions))';
+0049 positions(:,3) = MarkerSize;
+0050 <span class="keyword">for</span> t = 1:length(types)
+0051     typeIdx = strcmp(types{t},junctionTypes);
+0052     img = insertShape(img,<span class="string">'FilledCircle'</span>,positions(typeIdx,:),<span class="string">'Color'</span>,colors(t,:));
+0053 <span class="keyword">end</span>
+0054</pre></div>
+<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

@@ -61,15 +61,25 @@ This function is called by:
 0009 <span class="comment">% Output:</span>
 0010 <span class="comment">%   vecLD- a vector LD of structs with orientation information added</span>
 0011 
-0012 vecLD.orientations = {};
-0013 
-0014 <span class="keyword">for</span> c = 1:vecLD.numContours
-0015     thisCon = vecLD.contours{c};  
-0016     vecLD.orientations{c} = mod(atan2d((thisCon(:,4)-thisCon(:,2)),(thisCon(:,3)-thisCon(:,1))),360)';    
-0017     vecLD.contours{c} = thisCon;
-0018 <span class="keyword">end</span>
-0019 
-0020 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0012 <span class="comment">% -----------------------------------------------------</span>
+0013 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0014 <span class="comment">% http://www.mlvtoolbox.org</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0017 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0020 <span class="comment">%------------------------------------------------------</span>
+0021 
+0022 vecLD.orientations = {};
+0023 
+0024 <span class="keyword">for</span> c = 1:vecLD.numContours
+0025     thisCon = vecLD.contours{c};  
+0026     vecLD.orientations{c} = mod(atan2d((thisCon(:,4)-thisCon(:,2)),(thisCon(:,3)-thisCon(:,1))),360)';    
+0027     vecLD.contours{c} = thisCon;
+0028 <span class="keyword">end</span>
+0029 
+0030 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

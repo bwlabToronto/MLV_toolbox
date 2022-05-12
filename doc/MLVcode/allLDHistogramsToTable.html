@@ -75,17 +75,27 @@ This function is called by:
 0016 <span class="comment">% Return:</span>
 0017 <span class="comment">%   histTable: the table with the histograms.</span>
 0018 
-0019 histTable = table();
-0020 
-0021 <span class="keyword">for</span> f = 1:length(imageFeatures)
-0022     <span class="keyword">if</span> strcmp(shortNames{f},<span class="string">'juncType'</span>)
-0023         bins = vecLD.junctionTypeBins;
-0024     <span class="keyword">else</span>
-0025         bins = [];
-0026     <span class="keyword">end</span>
-0027     histTable = [histTable,<a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(getfield(vecLD,imageFeatures{f}),shortNames{f},bins)];
-0028 <span class="keyword">end</span>
-0029</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0019 <span class="comment">% -----------------------------------------------------</span>
+0020 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0021 <span class="comment">% http://www.mlvtoolbox.org</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0024 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0027 <span class="comment">%------------------------------------------------------</span>
+0028 
+0029 histTable = table();
+0030 
+0031 <span class="keyword">for</span> f = 1:length(imageFeatures)
+0032     <span class="keyword">if</span> strcmp(shortNames{f},<span class="string">'juncType'</span>)
+0033         bins = vecLD.junctionTypeBins;
+0034     <span class="keyword">else</span>
+0035         bins = [];
+0036     <span class="keyword">end</span>
+0037     histTable = [histTable,<a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(getfield(vecLD,imageFeatures{f}),shortNames{f},bins)];
+0038 <span class="keyword">end</span>
+0039</pre></div>
+<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

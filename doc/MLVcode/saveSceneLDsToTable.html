@@ -63,54 +63,64 @@ This function is called by:
 0010 <span class="comment">%   resultsTable - the table that got written to the CSV file</span>
 0011 <span class="comment">%   statsLD - vectorized line drawings with their statistcs added</span>
 0012 
-0013 categories = {<span class="string">'beaches'</span>,<span class="string">'cities'</span>,<span class="string">'forests'</span>,<span class="string">'highways'</span>,<span class="string">'mountains'</span>,<span class="string">'offices'</span>};
-0014 
-0015 allLDs = [];
-0016 allMaxLen = [];
-0017 minCurv = NaN;
-0018 maxCurv = NaN;
-0019 minLen = NaN;
-0020 maxLen = NaN;
-0021 
-0022 <span class="keyword">for</span> c = 1:length(categories)
-0023     fprintf(<span class="string">'\n%s\n===============\n'</span>,categories{c});
-0024     load([categories{c},<span class="string">'_vecLD'</span>]);
-0025     <span class="keyword">for</span> l = 1:numel(vecLD)
-0026         imageName = vecLD(l).originalImage;
-0027         fprintf(<span class="string">'\t%d. %s\n'</span>,l,imageName);
-0028         thisCurv = [vecLD(l).curvatures{:}];
-0029         minCurv = min(minCurv,min(thisCurv));
-0030         maxCurv = max(maxCurv,max(thisCurv));
-0031         minLen = min(minLen,min(vecLD(l).contourLengths));
-0032         maxLen = max(maxLen,max(vecLD(l).contourLengths));
-0033         allMaxLen = [allMaxLen,max(vecLD(l).contourLengths)];
-0034     <span class="keyword">end</span>
-0035     allLDs = [allLDs,vecLD];
-0036 <span class="keyword">end</span>
-0037 
-0038 fprintf(<span class="string">'min/max Length = %g / %g\n'</span>,minLen,maxLen);
-0039 fprintf(<span class="string">'min/max Curvature = %g / %g\n'</span>,minCurv,maxCurv);
-0040 
-0041 resultsTable = table;
-0042 whichStats = {<span class="string">'orientation'</span>,<span class="string">'horver'</span>,<span class="string">'length'</span>,<span class="string">'curvature'</span>,<span class="string">'junctions'</span>};
-0043 junctionTypes = {<span class="string">'Arrow'</span>,<span class="string">'T'</span>,<span class="string">'X'</span>,<span class="string">'Y'</span>};
-0044 
-0045 statsLDs = [];
-0046 <span class="keyword">for</span> l = 1:numel(allLDs)
-0047     imageName = allLDs(l).originalImage;
-0048     <span class="comment">%[thisLD,histograms,bins,statsNames] = getContourPropertiesStats(allLDs(l),whichStats,[minLen,maxLen],[minCurv,maxCurv],junctionTypes);</span>
-0049     [thisLD,histograms,bins,statsNames] = <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)">getContourPropertiesStats</a>(allLDs(l),whichStats);
-0050     tt = table({imageName},<span class="string">'VariableNames'</span>,{<span class="string">'ImageName'</span>});
-0051     tt = [tt,convertHistogramsToTable(histograms,bins,statsNames)];
-0052     resultsTable = [resultsTable;tt];
-0053     statsLDs = [statsLDs,thisLD];
-0054 <span class="keyword">end</span>
-0055 
-0056 writetable(resultsTable,csvFileName);
-0057 fprintf(<span class="string">'\nResults table written to: %s\n'</span>,csvFileName);
-0058 save(<span class="string">'statsLDs'</span>,<span class="string">'statsLDs'</span>);
-0059 fprintf(<span class="string">'\nStats saved in statsLDs\n'</span>);
-0060</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0013 <span class="comment">% -----------------------------------------------------</span>
+0014 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0015 <span class="comment">% http://www.mlvtoolbox.org</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0018 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0021 <span class="comment">%------------------------------------------------------</span>
+0022 
+0023 categories = {<span class="string">'beaches'</span>,<span class="string">'cities'</span>,<span class="string">'forests'</span>,<span class="string">'highways'</span>,<span class="string">'mountains'</span>,<span class="string">'offices'</span>};
+0024 
+0025 allLDs = [];
+0026 allMaxLen = [];
+0027 minCurv = NaN;
+0028 maxCurv = NaN;
+0029 minLen = NaN;
+0030 maxLen = NaN;
+0031 
+0032 <span class="keyword">for</span> c = 1:length(categories)
+0033     fprintf(<span class="string">'\n%s\n===============\n'</span>,categories{c});
+0034     load([categories{c},<span class="string">'_vecLD'</span>]);
+0035     <span class="keyword">for</span> l = 1:numel(vecLD)
+0036         imageName = vecLD(l).originalImage;
+0037         fprintf(<span class="string">'\t%d. %s\n'</span>,l,imageName);
+0038         thisCurv = [vecLD(l).curvatures{:}];
+0039         minCurv = min(minCurv,min(thisCurv));
+0040         maxCurv = max(maxCurv,max(thisCurv));
+0041         minLen = min(minLen,min(vecLD(l).contourLengths));
+0042         maxLen = max(maxLen,max(vecLD(l).contourLengths));
+0043         allMaxLen = [allMaxLen,max(vecLD(l).contourLengths)];
+0044     <span class="keyword">end</span>
+0045     allLDs = [allLDs,vecLD];
+0046 <span class="keyword">end</span>
+0047 
+0048 fprintf(<span class="string">'min/max Length = %g / %g\n'</span>,minLen,maxLen);
+0049 fprintf(<span class="string">'min/max Curvature = %g / %g\n'</span>,minCurv,maxCurv);
+0050 
+0051 resultsTable = table;
+0052 whichStats = {<span class="string">'orientation'</span>,<span class="string">'horver'</span>,<span class="string">'length'</span>,<span class="string">'curvature'</span>,<span class="string">'junctions'</span>};
+0053 junctionTypes = {<span class="string">'Arrow'</span>,<span class="string">'T'</span>,<span class="string">'X'</span>,<span class="string">'Y'</span>};
+0054 
+0055 statsLDs = [];
+0056 <span class="keyword">for</span> l = 1:numel(allLDs)
+0057     imageName = allLDs(l).originalImage;
+0058     <span class="comment">%[thisLD,histograms,bins,statsNames] = getContourPropertiesStats(allLDs(l),whichStats,[minLen,maxLen],[minCurv,maxCurv],junctionTypes);</span>
+0059     [thisLD,histograms,bins,statsNames] = <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)">getContourPropertiesStats</a>(allLDs(l),whichStats);
+0060     tt = table({imageName},<span class="string">'VariableNames'</span>,{<span class="string">'ImageName'</span>});
+0061     tt = [tt,convertHistogramsToTable(histograms,bins,statsNames)];
+0062     resultsTable = [resultsTable;tt];
+0063     statsLDs = [statsLDs,thisLD];
+0064 <span class="keyword">end</span>
+0065 
+0066 writetable(resultsTable,csvFileName);
+0067 fprintf(<span class="string">'\nResults table written to: %s\n'</span>,csvFileName);
+0068 save(<span class="string">'statsLDs'</span>,<span class="string">'statsLDs'</span>);
+0069 fprintf(<span class="string">'\nStats saved in statsLDs\n'</span>);
+0070</pre></div>
+<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

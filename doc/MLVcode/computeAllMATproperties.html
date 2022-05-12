@@ -4,7 +4,7 @@
 <head>
   <title>Description of computeAllMATproperties</title>
   <meta name="keywords" content="computeAllMATproperties">
-  <meta name="description" content="">
+  <meta name="description" content="[MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,19 +21,41 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong></strong></div>
+<div class="box"><strong>[MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"></pre></div>
+<div class="fragment"><pre class="comment"> [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)
+   computes all medial axis-based properties for a line drawing image
+   given its medial axis representation
+
+ Input:
+   MAT - medial axis transform  
+   imgLD - the line drawing image
+   properties - the type of property that the user wants to look at. 
+   The list of options include:
+   1. 'parallelism'
+   2. 'separation'
+   3. 'mirror'
+   4. 'taper'
+   if properties given empty, the code produces three properties ('parallelism', 
+   'separation', 'mirror')offer. 
+
+ Output:
+   MATcontourImages -  The contour images rated by the specific set of
+   properties
+   MATskeletonImages - The medial axis transform images rated by the specific set of
+   properties
+   skeletalBranches - The set of skeletal branches traced from medial axis
+   transform</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>	[skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)</li><li><a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>	Copyright Morteza Rezanejad</li><li><a href="traceSkeleton.html" class="code" title="function allBranches = traceSkeleton(MAT)">traceSkeleton</a>	Copyright Morteza Rezanejad</li></ul>
+<li><a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>	[skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)</li><li><a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>	contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)</li><li><a href="traceSkeleton.html" class="code" title="function allBranches = traceSkeleton(MAT)">traceSkeleton</a>	allBranches = traceSkeleton(MAT)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
@@ -42,27 +64,57 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 
-0002 <a name="_sub0" href="#_subfunctions" class="code">function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)</a>
-0003 
-0004 skeletalBranches = <a href="traceSkeleton.html" class="code" title="function allBranches = traceSkeleton(MAT)">traceSkeleton</a>(MAT);
-0005 
-0006 <span class="keyword">if</span> nargin &lt; 3
-0007     properties = {<span class="string">'parallelism'</span>, <span class="string">'separation'</span>, <span class="string">'mirror'</span>} ;
-0008 <span class="keyword">end</span>
-0009 
-0010 
-0011 
-0012 <span class="keyword">for</span> propertyInd = 1:length(properties)
-0013     property = properties{propertyInd};      
-0014     [skeletonImageWithRating,skeletalBranches] = <a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>(MAT,property,skeletalBranches);
-0015     contourImageWithRating = <a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>(skeletalBranches,imgLD,skeletonImageWithRating);
-0016     MATskeletonImages.(property) = skeletonImageWithRating;
-0017     MATcontourImages.(property) = contourImageWithRating;
-0018 <span class="keyword">end</span>
-0019 
-0020 
-0021 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)</a>
+0002 <span class="comment">% [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)</span>
+0003 <span class="comment">%   computes all medial axis-based properties for a line drawing image</span>
+0004 <span class="comment">%   given its medial axis representation</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input:</span>
+0007 <span class="comment">%   MAT - medial axis transform</span>
+0008 <span class="comment">%   imgLD - the line drawing image</span>
+0009 <span class="comment">%   properties - the type of property that the user wants to look at.</span>
+0010 <span class="comment">%   The list of options include:</span>
+0011 <span class="comment">%   1. 'parallelism'</span>
+0012 <span class="comment">%   2. 'separation'</span>
+0013 <span class="comment">%   3. 'mirror'</span>
+0014 <span class="comment">%   4. 'taper'</span>
+0015 <span class="comment">%   if properties given empty, the code produces three properties ('parallelism',</span>
+0016 <span class="comment">%   'separation', 'mirror')offer.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Output:</span>
+0019 <span class="comment">%   MATcontourImages -  The contour images rated by the specific set of</span>
+0020 <span class="comment">%   properties</span>
+0021 <span class="comment">%   MATskeletonImages - The medial axis transform images rated by the specific set of</span>
+0022 <span class="comment">%   properties</span>
+0023 <span class="comment">%   skeletalBranches - The set of skeletal branches traced from medial axis</span>
+0024 <span class="comment">%   transform</span>
+0025 
+0026 <span class="comment">% -----------------------------------------------------</span>
+0027 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0028 <span class="comment">% http://www.mlvtoolbox.org</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% Copyright Morteza Rezanejad</span>
+0031 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
+0034 <span class="comment">%------------------------------------------------------</span>
+0035 
+0036 skeletalBranches = <a href="traceSkeleton.html" class="code" title="function allBranches = traceSkeleton(MAT)">traceSkeleton</a>(MAT);
+0037 
+0038 <span class="keyword">if</span> nargin &lt; 3
+0039     properties = {<span class="string">'parallelism'</span>, <span class="string">'separation'</span>, <span class="string">'mirror'</span>} ;
+0040 <span class="keyword">end</span>
+0041 
+0042 <span class="keyword">for</span> propertyInd = 1:length(properties)
+0043     property = properties{propertyInd};      
+0044     [skeletonImageWithRating,skeletalBranches] = <a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>(MAT,property,skeletalBranches);
+0045     contourImageWithRating = <a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>(skeletalBranches,imgLD,skeletonImageWithRating);
+0046     MATskeletonImages.(property) = skeletonImageWithRating;
+0047     MATcontourImages.(property) = contourImageWithRating;
+0048 <span class="keyword">end</span>
+0049 
+0050 
+0051 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
