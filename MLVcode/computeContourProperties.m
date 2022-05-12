@@ -11,6 +11,9 @@ function vecLD = computeContourProperties(vecLD,whichProps)
 %   vecLD - a vector LD of structs with the requested contour properties added
 
 % -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
 % Copyright Dirk Bernhardt-Walther
 % University of Toronto, Toronto, Ontario, Canada, 2022
 %

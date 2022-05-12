@@ -40,6 +40,15 @@ function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weigh
 %   topLD - line drawing strcture with the top-ranked contours
 %   bottomLD - line drawing structure with the bottom-ranked contours
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 
 if ~iscell(properties)
     properties = {properties};

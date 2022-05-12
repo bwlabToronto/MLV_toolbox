@@ -16,6 +16,16 @@ function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBin
 %   bins: a vector with the bin centers
 %   shortNames: {'juncType','juncAngle'}
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 if nargin < 3
     junctionTypes = {'T','Y','X','Arrow','Star'};
 end

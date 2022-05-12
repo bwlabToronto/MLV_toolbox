@@ -9,12 +9,21 @@ function [middleLD, junctionLD] = splitLDmiddleSegmentsVsJunctions(vecLD)
 % Output:
 %   middleLD - vectorized line drawing with the middle segments
 %   junctionLD - vectorized line drawing with segments at the junctions
-%
+
 % This functionality was used in:
 % John Wilder, Sven Dickinson, Allan Jepson, Dirk B. Walther
 % Spatial relationships between contours impact rapid scene classification. 
 % Journal of Vision 2018;18(8):1. doi: https://doi.org/10.1167/18.8.1.
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 
 % first, segment the LD at the junctions
 vecLD = segmentContoursAtJunctions(vecLD);

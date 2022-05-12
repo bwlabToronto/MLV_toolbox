@@ -1,6 +1,6 @@
 function vecLD = removeDuplicatedContours(vecLD)
 % vecLD = removeDuplicatedContours(vecLD)
-% Remove contours that are overlapping
+% Remove contours that are overlapping.
 %
 % Input:
 %   vecLD - vectorized line drawing data structure
@@ -8,6 +8,15 @@ function vecLD = removeDuplicatedContours(vecLD)
 %   vecLD - vectorized line drawing data structure with overlapping
 %   contours removed
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Morteza Rezanejad
+% McGill University, Montreal, QC 2019
+%
+% Contact: morteza [at] cim [dot] mcgill [dot] ca 
+%------------------------------------------------------
 
 % curVecLD = vecLD;
 vecLD = computeLength(vecLD);

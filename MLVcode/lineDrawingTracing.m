@@ -7,6 +7,16 @@ function vecLD = lineDrawingTracing(fileName)
 % Output:
 %   vecLD - vectorized line drawing
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Morteza Rezanejad
+% McGill University, Montreal, QC 2019
+%
+% Contact: morteza [at] cim [dot] mcgill [dot] ca 
+%------------------------------------------------------
+
 threshold_edge_strength = 0.85;
 
 I = imread(fileName);

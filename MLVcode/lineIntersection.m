@@ -20,6 +20,9 @@ function Position = lineIntersection(queryLine,refLine,RE,AE)
 %   Otherwise Position will be empty [].
 
 % -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
 % Copyright Dirk Bernhardt-Walther
 % University of Toronto, Toronto, Ontario, Canada, 2022
 %

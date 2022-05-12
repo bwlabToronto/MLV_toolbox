@@ -26,6 +26,16 @@ function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)
 %   topLD - line drawing strcture with the top-ranked contours
 %   bottomLD - line drawing structure with the bottom-ranked contours
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 % construct properties table
 numVar = length(Mdl.PredictorNames);
 propTable = table('Size',[vecLD.numContours,numVar],'VariableTypes',repmat({'double'},1,numVar),'VariableNames',Mdl.PredictorNames);

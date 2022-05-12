@@ -10,6 +10,10 @@ function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFrom
 %   skeletonImage - a binary image the same size as imgLD. 1s represent where skeleton appears
 %   distImage - a distance transformed image as the same size as imgLD
 %   thin_boundary - thinned binary image
+
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
 %
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019

@@ -1,5 +1,9 @@
 function m_Neighbors8 = InitializeNeighborhoods()
 % m_Neighbors8 = InitializeNeighborhoods()
+
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
 %
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019

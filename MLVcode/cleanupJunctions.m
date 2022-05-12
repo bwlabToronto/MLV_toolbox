@@ -2,6 +2,15 @@ function cleanedJunctions = cleanupJunctions(Junctions, Thresh)
 % cleanedJunctions = cleanupJunctions(Junctions, Thresh)
 %       cleans up junctions by merging junctions that are within Thresh pixels of
 %       each other.
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 %
 % Input:
 %   Junctions - as computed by detectJunctions
@@ -9,6 +18,17 @@ function cleanedJunctions = cleanupJunctions(Junctions, Thresh)
 %
 % Output:
 %   cleanedJunctions - cleaned up and merged.
+
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 
 if nargin < 2
     Thresh=2;

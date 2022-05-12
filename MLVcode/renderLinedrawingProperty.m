@@ -16,6 +16,16 @@ function img = renderLinedrawingProperty(vecLD,property,img,imsize,lineWidth)
 % Return:
 %   img - the RGB image with the contours drawn in.
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 if nargin < 5
     lineWidth = 1;
 end

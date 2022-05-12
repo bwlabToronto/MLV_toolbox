@@ -18,6 +18,9 @@ function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)
 %   img - the RGB image with the contours drawn in.
 
 % -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
 % Copyright Dirk Bernhardt-Walther
 % University of Toronto, Toronto, Ontario, Canada, 2022
 %

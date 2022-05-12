@@ -17,6 +17,16 @@ function rotatedLD = rotateLinedrawing(vecLD,angle)
 % Neuroimage, 135, 32-44. https://doi.org/10.1016/j.neuroimage.2016.04.021
 %
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 rotatedLD.originalImage = vecLD.originalImage;
 rotatedLD.imsize = vecLD.imsize;
 rotatedLD.lineMethod = vecLD.lineMethod;

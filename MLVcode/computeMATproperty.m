@@ -17,6 +17,10 @@ function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,pro
 %
 % See also computeMATpropertyPerBranch, traceSkeleton
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %

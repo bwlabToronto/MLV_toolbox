@@ -7,6 +7,15 @@ function vecLD = computeCurvature(vecLD)
 % Output:
 %   vecLD- a vector LD of structs with curvature information added
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
 
 if ~isfield(vecLD,'orientations')
     vecLD = computeOrientation(vecLD);

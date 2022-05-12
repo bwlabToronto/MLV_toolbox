@@ -13,6 +13,16 @@ function [colorIdx,cmap] = computeColorIndex(vecLD,property)
 %   line segment, specifying the index into the color map
 %   cmap - the color map appropriate for this property
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 property = lower(property);
 
 colorIdx = {};

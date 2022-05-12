@@ -16,6 +16,16 @@ function histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)
 % Return:
 %   histTable: the table with the histograms.
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 histTable = table();
 
 for f = 1:length(imageFeatures)

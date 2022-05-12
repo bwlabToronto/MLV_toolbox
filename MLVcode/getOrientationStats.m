@@ -14,6 +14,16 @@ function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins
 %   bins: a vector with the bin centers
 %   shortName: 'ori'
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 if nargin < 2
     numBins = 8;
 end

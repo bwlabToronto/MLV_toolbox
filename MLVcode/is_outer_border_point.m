@@ -9,7 +9,10 @@ function result2 = is_outer_border_point(binaryImage,ii,jj,m_Neighbors8,backgrou
 %   background - 
 % Output:
 %   result2 - 
-%
+
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
 %
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019

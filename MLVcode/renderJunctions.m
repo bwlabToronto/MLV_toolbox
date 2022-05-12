@@ -17,6 +17,9 @@ function img = renderJunctions(Junctions,types,img,LDimsize,MarkerSize,colors)
 %            default: Matlab's 'lines' color map - the regular order for line plots.
 
 % -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
 % Copyright Dirk Bernhardt-Walther
 % University of Toronto, Toronto, Ontario, Canada, 2022
 %

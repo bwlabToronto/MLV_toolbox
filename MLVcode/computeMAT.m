@@ -15,6 +15,16 @@ function MAT = computeMAT(imgLD,threshold_angle)
 %       distance_map - a distance transformed image as the same size as imgLD
 %       AOF - average outward flux image computed from the distance transform 
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Morteza Rezanejad
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: morteza [at] cim [dot] mcgill [dot] ca
+%------------------------------------------------------
+
 binaryImage = imgLD;
 
 
