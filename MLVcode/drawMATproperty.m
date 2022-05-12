@@ -1,5 +1,15 @@
-
 function drawMATproperty(skeltonImageWithRating,vecLD)
+%
+
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Morteza Rezanejad
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: Morteza.Rezanejad@gmail.com
+%------------------------------------------------------
 
 if nargin ==2
     drawLinedrawing(vecLD);

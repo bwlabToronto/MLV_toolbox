@@ -1,12 +1,15 @@
+function sphere_points = sample_sphere_2D(number_of_samples)
+%
+
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
 % http://www.mlvtoolbox.org
 %
 % Copyright Morteza Rezanejad
-% McGill University, Montreal, QC 2019
+% University of Toronto, Toronto, Ontario, Canada, 2022
 %
-% Contact: morteza [at] cim [dot] mcgill [dot] ca 
-% -------------------------------------------------------------------------
+% Contact: Morteza.Rezanejad@gmail.com
+%------------------------------------------------------
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
 % the Free Software Foundation, either version 3 of the License, or
@@ -22,7 +25,6 @@
 % -------------------------------------------------------------------------
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
-function sphere_points = sample_sphere_2D(number_of_samples)
 
 sphere_points = zeros(number_of_samples,2);
 

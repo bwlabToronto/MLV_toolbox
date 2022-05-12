@@ -1,12 +1,15 @@
+function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)
+%
+
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
 % http://www.mlvtoolbox.org
 %
 % Copyright Morteza Rezanejad
-% McGill University, Montreal, QC 2019
+% University of Toronto, Toronto, Ontario, Canada, 2022
 %
-% Contact: morteza [at] cim [dot] mcgill [dot] ca 
-% -------------------------------------------------------------------------
+% Contact: Morteza.Rezanejad@gmail.com
+%------------------------------------------------------
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
 % the Free Software Foundation, either version 3 of the License, or
@@ -20,9 +23,6 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 % -------------------------------------------------------------------------
-function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)
-
-
 
 if length(size(imgLD)) == 3
     imgLD = squeeze(imgLD(:,:,1));

@@ -15,9 +15,9 @@ function vecLD = mergeLineSegments(vecLD,threshParam)
 % http://www.mlvtoolbox.org
 %
 % Copyright Morteza Rezanejad
-% McGill University, Montreal, QC 2019
+% University of Toronto, Toronto, Ontario, Canada, 2022
 %
-% Contact: morteza [at] cim [dot] mcgill [dot] ca 
+% Contact: Morteza.Rezanejad@gmail.com
 %------------------------------------------------------
 
 for cc = 1 : vecLD.numContours
