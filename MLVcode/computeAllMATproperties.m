@@ -1,5 +1,16 @@
-
 function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)
+% [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)
+%   computes all Medial Axis-based properties for an image.
+%
+% Input:
+%   MAT - medial axis transform object
+%   imgLD - 
+%   properties - 
+%
+% Output:
+%   MATcontourImages -  
+%   MATskeletonImages - 
+%   skeletalBranches - 
 
 skeletalBranches = traceSkeleton(MAT);
 

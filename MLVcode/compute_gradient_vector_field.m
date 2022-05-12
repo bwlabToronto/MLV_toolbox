@@ -3,11 +3,11 @@ function [D,IDX] = compute_gradient_vector_field(binaryImage)
 %   Computes Gradient Vector Field
 %
 % Input:
-%   binaryImage - binary image
+%   binaryImage - binary image to compute the gradient vector field
 % Output:
-%   D - 
-%   IDX - 
-%
+%   D - distance map computed with respect to the binary image.
+%   IDX - the index of the closest point to the boundary
+
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %
