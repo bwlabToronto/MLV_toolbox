@@ -1,5 +1,11 @@
-function drawMATproperty(skeltonImageWithRating,vecLD)
+function fig = drawMATproperty(skeletonImageWithRating,vecLD)
+% fig = drawMATproperty(skeletonImageWithRating,vecLD)
+%   Draws a colored line drawing with line color determined by the 
+%   MAT property provided in skeltonImageWithRating.
 %
+% Input:
+%   skeltonImageWithRating - 
+%   vecLD: the vectorized line drawing
 
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
@@ -15,10 +21,10 @@ if nargin ==2
     drawLinedrawing(vecLD);
     hold on;
 end
-markerSize = floor(0.05*max(size(skeltonImageWithRating)));
-inds = find(skeltonImageWithRating~=0);
-imsize = size(skeltonImageWithRating);
-scores = skeltonImageWithRating(inds);
+markerSize = floor(0.05*max(size(skeletonImageWithRating)));
+inds = find(skeletonImageWithRating~=0);
+imsize = size(skeletonImageWithRating);
+scores = skeletonImageWithRating(inds);
 sortedScores = sort(scores);
 cutOffInd = max(round(0.05*(length(sortedScores))),1);
 thresh = sortedScores(cutOffInd);
