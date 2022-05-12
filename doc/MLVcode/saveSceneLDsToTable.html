@@ -4,7 +4,7 @@
 <head>
   <title>Description of saveSceneLDsToTable</title>
   <meta name="keywords" content="saveSceneLDsToTable">
-  <meta name="description" content="allSceneLDsToCSV(csvFileName)">
+  <meta name="description" content="[resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>allSceneLDsToCSV(csvFileName)</strong></div>
+<div class="box"><strong>[resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [resultsTable,statsLD] = saveSceneLDsToTable(csvFileName) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> allSceneLDsToCSV(csvFileName)
+<div class="fragment"><pre class="comment"> [resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)
    Writes the histogram properties of all scene line drawings to a CSV
    file.
 
@@ -52,7 +52,7 @@ This function is called by:
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)</a>
-0002 <span class="comment">% allSceneLDsToCSV(csvFileName)</span>
+0002 <span class="comment">% [resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)</span>
 0003 <span class="comment">%   Writes the histogram properties of all scene line drawings to a CSV</span>
 0004 <span class="comment">%   file.</span>
 0005 <span class="comment">%</span>
@@ -121,6 +121,6 @@ This function is called by:
 0068 save(<span class="string">'statsLDs'</span>,<span class="string">'statsLDs'</span>);
 0069 fprintf(<span class="string">'\nStats saved in statsLDs\n'</span>);
 0070</pre></div>
-<hr><address>Generated on Thu 12-May-2022 19:53:41 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Thu 12-May-2022 19:55:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
