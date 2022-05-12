@@ -1,5 +1,5 @@
 function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)
-%
+% contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)
 
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
