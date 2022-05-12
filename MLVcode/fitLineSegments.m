@@ -1,4 +1,18 @@
-function [lineSegs,dists,scores] = breakToLineSegments(XY)
+function [lineSegs,dists,scores] = fitLineSegments(XY)
+% [lineSegs,dists,scores] = fitLineSegments(XY)
+%   This function fits a set of line segments to a sequence of traced XY coordinates.
+%
+% Input:
+%   XY - a matrix n x 2 xy coordiantes ,
+%   
+% Output:
+%   lineSegs - the cell array of line segments computed from XY,
+%   dists - the array of all distances from each 2D point (x,y) to the line
+%   segments stored in lineSegs
+%   scores - the amount of bending computed using the number of points in each 
+%   line segments 
+
+
 
 counter = 1;
 start = 1;

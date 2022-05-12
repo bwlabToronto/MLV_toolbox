@@ -1,14 +1,24 @@
 function vecLD = mergeLineSegments(vecLD,threshParam)
 % vecLD = mergeLineSegments(vecLD,threshParam)
-% Merge Line Segments
+% Merge individual line semgents into contours and, eventually, 
+% a vectorized line drawing. 
 %
 % Input:
 %   vecLD - vectorized line drawing data structure
-%   threshParam - 
+%   threshParam - maximum distance (in pixels) for two line segments to merge
+%   
 % Output:
 %   vecLD - vectorized line drawing with
 
-
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Morteza Rezanejad
+% McGill University, Montreal, QC 2019
+%
+% Contact: morteza [at] cim [dot] mcgill [dot] ca 
+%------------------------------------------------------
 
 for cc = 1 : vecLD.numContours
     curContour = vecLD.contours{cc};
@@ -59,4 +69,42 @@ for cc = 1 : vecLD.numContours
 end
 
  vecLD = removeDuplicatedContours(vecLD);
+end
+
+function vecLD = removeDuplicatedContours(vecLD)
+% vecLD = removeDuplicatedContours(vecLD)
+% Remove contours that are overlapping.
+%
+% Input:
+%   vecLD - vectorized line drawing data structure
+% Output:
+%   vecLD - vectorized line drawing data structure with overlapping
+%   contours removed
+
+vecLD = computeLength(vecLD);
+finalToBeRemoved = [];
+for i = 1 : vecLD.numContours
+    contour_i = vecLD.contours{i};
+    XY_i = [contour_i(:,1:2);contour_i(end,3:4)];
+    toBeRemoved = [];
+    for j = i+1 : vecLD.numContours
+        contour_j = vecLD.contours{j};
+        XY_j = [contour_j(:,1:2);contour_j(end,3:4)];
+        [~,d_j]=knnsearch(XY_i,XY_j);
+        [~,d_i]=knnsearch(XY_j,XY_i);
+        d = max(max(d_i),max(d_j));
+        if d < 1
+            toBeRemoved = [toBeRemoved;j];
+        end
+    end
+    if ~isempty(toBeRemoved)
+        toBeRemoved = [toBeRemoved;i];
+        [~,maxInd]=max(vecLD.contourLengths(toBeRemoved));
+        finalToBeRemoved = [finalToBeRemoved;setdiff(toBeRemoved,toBeRemoved(maxInd))];
+    end       
+end
+
+vecLD.contours(finalToBeRemoved) = [];
+vecLD.numContours = length(vecLD.contours);
+
 end
