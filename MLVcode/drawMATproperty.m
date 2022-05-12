@@ -1,10 +1,11 @@
-function fig = drawMATproperty(skeletonImageWithRating,vecLD)
-% fig = drawMATproperty(skeletonImageWithRating,vecLD)
+function drawMATproperty(skeletonImageWithRating,vecLD)
+% drawMATproperty(skeletonImageWithRating,vecLD)
 %   Draws a colored line drawing with line color determined by the 
 %   MAT property provided in skeltonImageWithRating.
 %
 % Input:
-%   skeltonImageWithRating - 
+%   skeltonImageWithRating - this is an image with with the skeleton pixels
+%   given a rating of importance based on a mid-level property.
 %   vecLD: the vectorized line drawing
 
 % -----------------------------------------------------
@@ -27,12 +28,6 @@ imsize = size(skeletonImageWithRating);
 scores = skeletonImageWithRating(inds);
 sortedScores = sort(scores);
 cutOffInd = max(round(0.05*(length(sortedScores))),1);
-thresh = sortedScores(cutOffInd);
-scoresScaled = scores;
-% scoresScaled(scores< thresh) = thresh;
-% scoresScaled = rescale(scoresScaled,0,1);
-
-% hfig = figure('units','normalized','outerposition',[0 0 1 1]);
 [X,Y] = ind2sub(imsize,inds);
 scatter(Y,X,markerSize,scoresScaled,'Marker','.');
 colormap(jet)
