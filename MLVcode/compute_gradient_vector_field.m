@@ -53,6 +53,30 @@ end
 
 D = D1-D2;
 
+end
 
+function result2 = is_outer_border_point(binaryImage,ii,jj,m_Neighbors8,background)
+        
+if(binaryImage(ii,jj)==background)
+    result2 = 0;
+    nOfBackgroundPoints = 0;
+    nOfForegoundPoints = 0;
+    iterator = 1;
+    while( (nOfBackgroundPoints == 0 || nOfForegoundPoints == 0) && iterator <= 8 )
+
+        if(binaryImage(ii+m_Neighbors8(iterator,1),jj++m_Neighbors8(iterator,2)) > background)
+            nOfForegoundPoints = nOfForegoundPoints + 1;
+        end
+        if(binaryImage(ii+m_Neighbors8(iterator,1),jj++m_Neighbors8(iterator,2)) <= background)
+            nOfBackgroundPoints = nOfBackgroundPoints + 1;
+        end
+        iterator = iterator + 1;
+    end
+    if nOfBackgroundPoints > 0 && nOfForegoundPoints > 0
+        result2 = 1;
+    end
+else
+    result2 = 0;
+end
 
 end
