@@ -1,3 +1,15 @@
+function fluxImage = compute_aof(D ,IDX,sphere_points,epsilon)
+% fluxImage = compute_aof(D ,IDX,sphere_points,epsilon)
+%   This function computes the gradient vector field with regard to a distance 
+%    function.
+%
+% Input:
+%   D - distance map computed with respect to the binary image.
+%   IDX - the index of the closest point to the boundary.
+% Output:
+%   fluxImage - the flux image is a 2D matrix with average outward flux
+%   values computed from the gradient vector field of a binary image. 
+
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %
@@ -18,9 +30,6 @@
 % -------------------------------------------------------------------------
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
-
-function fluxImage = compute_aof(D ,IDX,sphere_points,epsilon)
-
 
 
 %initialize Q
