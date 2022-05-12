@@ -1,16 +1,27 @@
 function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)
 % [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)
-%   computes all Medial Axis-based properties for an image.
+%   computes all medial axis-based properties for a line drawing image
+%   given its medial axis representation
 %
 % Input:
-%   MAT - medial axis transform object
-%   imgLD - 
-%   properties - 
+%   MAT - medial axis transform  
+%   imgLD - the line drawing image
+%   properties - the type of property that the user wants to look at. 
+%   The list of options include:
+%   1. 'parallelism'
+%   2. 'separation'
+%   3. 'mirror'
+%   4. 'taper'
+%   if properties given empty, the code produces three properties ('parallelism', 
+%   'separation', 'mirror')offer. 
 %
 % Output:
-%   MATcontourImages -  
-%   MATskeletonImages - 
-%   skeletalBranches - 
+%   MATcontourImages -  The contour images rated by the specific set of
+%   properties
+%   MATskeletonImages - The medial axis transform images rated by the specific set of
+%   properties
+%   skeletalBranches - The set of skeletal branches traced from medial axis
+%   transform
 
 skeletalBranches = traceSkeleton(MAT);
 
