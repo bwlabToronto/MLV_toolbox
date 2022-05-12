@@ -1,14 +1,14 @@
 function vecLD = mergeLineSegments(vecLD,threshParam)
 % vecLD = mergeLineSegments(vecLD,threshParam)
-% Merge individual line semgents into contours and, eventually, 
-% a vectorized line drawing. 
+% Merge individual line segments into longer line segments.
+% Think of it smoothing along line segments.
 %
 % Input:
-%   vecLD - vectorized line drawing data structure
-%   threshParam - maximum distance (in pixels) for two line segments to merge
+%   vecLD - vectorized line drawing with contours that 
+%   threshParam - maximum distance (in pixels) for two line segments to merge.
 %   
 % Output:
-%   vecLD - vectorized line drawing with
+%   vecLD - vectorized line drawing with the merged contours.
 
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
