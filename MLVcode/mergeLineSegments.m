@@ -4,7 +4,8 @@ function vecLD = mergeLineSegments(vecLD,threshParam)
 % Think of it smoothing along line segments.
 %
 % Input:
-%   vecLD - vectorized line drawing with contours that 
+%   vecLD - vectorized line drawing with contours that contain many short
+%           segments. Segments will be combined if they are collinear. 
 %   threshParam - maximum distance (in pixels) for two line segments to merge.
 %   
 % Output:
