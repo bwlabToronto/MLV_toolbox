@@ -1,4 +1,6 @@
-function [lineSegs,dists,scores] = breakToLineSegments(XY)
+
+
+function [lineSegs,dists,scores] = fitLineSegments(XY)
 
 counter = 1;
 start = 1;
