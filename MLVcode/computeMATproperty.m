@@ -8,7 +8,8 @@ function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,pro
 %              one of: 'parallelism', 'separation' , 'taper', 'mirror'
 %   skeletalBranches - the medial axis skeleton. If this argument is
 %       omitted, skeltalBranches are comptued using traceSkeleton
-%   K - TODO - default: 5
+%   K - the length of the window on the skeletal branch for computing
+%       property. default: 5
 %
 % Output:
 %   skeletonImageWithRating - the image of the medial axis skeleton with
