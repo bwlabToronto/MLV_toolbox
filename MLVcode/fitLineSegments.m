@@ -12,7 +12,15 @@ function [lineSegs,dists,scores] = fitLineSegments(XY)
 %   scores - the amount of bending computed using the number of points in each 
 %   line segments 
 
-
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Morteza Rezanejad
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: Morteza.Rezanejad@gmail.com
+%------------------------------------------------------
 
 counter = 1;
 start = 1;

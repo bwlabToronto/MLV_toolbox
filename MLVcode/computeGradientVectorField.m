@@ -1,19 +1,13 @@
-function result2 = is_outer_border_point(binaryImage,ii,jj,m_Neighbors8,background)
-%
+function [D,IDX] = computeGradientVectorField(binaryImage)
+% [D,IDX] = computeGradientVectorField(binaryImage)
+%   Computes Gradient Vector Field
 %
 % Input:
-%   binaryImage - binary image
-%   ii - 
-%   jj - 
-%   m_Neighbors8 - 
-%   background - 
+%   binaryImage - binary image to compute the gradient vector field
 % Output:
-%   result2 - 
+%   D - distance map computed with respect to the binary image.
+%   IDX - the index of the closest point to the boundary
 
-% -----------------------------------------------------
-% This file is part of the Mid Level Vision Toolbox: 
-% http://www.mlvtoolbox.org
-%
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %
@@ -35,6 +29,33 @@ function result2 = is_outer_border_point(binaryImage,ii,jj,m_Neighbors8,backgrou
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
 
+
+
+newBinaryImage = binaryImage;
+outerBoundary = getOuterBoundary(binaryImage,0);
+
+size(outerBoundary);
+
+for i = 1 : size(outerBoundary,1)
+    newBinaryImage(outerBoundary(i,1),outerBoundary(i,2)) = 1;
+end
+
+[D2,IDX2] = bwdist(newBinaryImage);
+[D1,IDX1] = bwdist(~binaryImage);
+
+IDX1(D1==0) = 0;
+IDX2 (D2==0) = 0;
+
+IDX = IDX1+IDX2;
+for i = 1 : size(outerBoundary,1)
+    IDX(outerBoundary(i,1),outerBoundary(i,2)) = sub2ind(size(IDX),outerBoundary(i,1),outerBoundary(i,2));
+end
+
+D = D1-D2;
+
+end
+
+function result2 = is_outer_border_point(binaryImage,ii,jj,m_Neighbors8,background)
         
 if(binaryImage(ii,jj)==background)
     result2 = 0;
@@ -57,5 +78,30 @@ if(binaryImage(ii,jj)==background)
 else
     result2 = 0;
 end
+
+end
+
+function [result,result2] = getOuterBoundary(binaryImage,background)
+m_Neighbors8 = InitializeNeighborhoods();
+
+result2 = zeros(size(binaryImage));
+
+[m,n] = size(binaryImage);
+result = zeros(m*n,2);
+
+counter = 1;
+for i = 2 : m-1 
+    for j = 2 : n-1        
+               
+        
+        if(is_outer_border_point(binaryImage,i,j,m_Neighbors8,background))
+            result(counter,:) = [i j];
+            result2(i,j) = 1;
+            counter = counter + 1;
+        end        
+    end
+end
+
+result = result(1:counter-1,:);
 
 end

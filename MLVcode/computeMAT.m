@@ -22,7 +22,7 @@ function MAT = computeMAT(imgLD,threshold_angle)
 % Copyright Morteza Rezanejad
 % University of Toronto, Toronto, Ontario, Canada, 2022
 %
-% Contact: morteza [at] cim [dot] mcgill [dot] ca
+% Contact: Morteza.Rezanejad@gmail.com
 %------------------------------------------------------
 
 binaryImage = imgLD;

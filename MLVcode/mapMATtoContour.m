@@ -1,12 +1,31 @@
+function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)
+% contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)
+%   This function maps all property scores computed on top of Medial Axis
+%   Transform back to a line drawing image. The important point here to
+%   remember is that, as there could be two medial axis branches
+%   around a line drawing contour, we get one or two scores mapped back and
+%   between those we compute the maximum of the two. 
+%   
+% Input:
+%   skeletalBranches - branches traced from skeleton representation
+%   imgLD - the binary line drawing image
+%   skeletonImageWithRating - the 2D matrix of skeleton image with MAT
+%   based scores
+%
+% Output:
+%   contourImageWithRating - the binary line drawing image with the property 
+%   scores mapped from skeleton image with MAT based scores
+
+
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
 % http://www.mlvtoolbox.org
 %
 % Copyright Morteza Rezanejad
-% McGill University, Montreal, QC 2019
+% University of Toronto, Toronto, Ontario, Canada, 2022
 %
-% Contact: morteza [at] cim [dot] mcgill [dot] ca 
-% -------------------------------------------------------------------------
+% Contact: Morteza.Rezanejad@gmail.com
+%------------------------------------------------------
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
 % the Free Software Foundation, either version 3 of the License, or
@@ -20,9 +39,6 @@
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>.
 % -------------------------------------------------------------------------
-function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)
-
-
 
 if length(size(imgLD)) == 3
     imgLD = squeeze(imgLD(:,:,1));

@@ -10,6 +10,16 @@ function [resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)
 %   resultsTable - the table that got written to the CSV file
 %   statsLD - vectorized line drawings with their statistcs added
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Dirk Bernhardt-Walther
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: dirk.walther@gmail.com
+%------------------------------------------------------
+
 categories = {'beaches','cities','forests','highways','mountains','offices'};
 
 allLDs = [];
