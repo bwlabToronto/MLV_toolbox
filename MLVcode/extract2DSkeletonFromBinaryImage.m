@@ -48,12 +48,12 @@ area_threshold = max(floor(fraction*max(size(binaryImage,1),size(binaryImage,2))
 
 % Computing Gradient Vector Field
 %fprintf('Distance function and gradient vector field is being computed ...\n');
-[distImage,IDX] = compute_gradient_vector_field(thin_boundary);
+[distImage,IDX] = computeGradientVectorField(thin_boundary);
 % Consider a sphere with radius 1 with some sample points on that
 sphere_points = sample_sphere_2D(number_of_samples);
 % Computing Average outward flux
 %fprintf('Average outward flux is being computed ...\n');
-fluxImage = compute_aof(distImage,IDX,sphere_points,epsilon);
+fluxImage = computeAOF(distImage,IDX,sphere_points,epsilon);
 skeletonImage = fluxImage;
 skeletonImage(fluxImage < threshold*number_of_samples) = 0;
 skeletonImage(fluxImage > threshold*number_of_samples) = 1;
@@ -63,4 +63,14 @@ skeletonImage = bwmorph(skeletonImage,'skel',inf);
 skeletonImage= bwareaopen(skeletonImage,area_threshold);
 
 
+end
+
+function sphere_points = sample_sphere_2D(number_of_samples)
+sphere_points = zeros(number_of_samples,2);
+alpha = (2*pi)/(number_of_samples);
+for i = 1 : number_of_samples
+    sphere_points(i,1) = cos(alpha*(i-1));
+    sphere_points(i,2) = sin(alpha*(i-1));
+    
+end
 end

@@ -1,5 +1,5 @@
-function fluxImage = compute_aof(D ,IDX,sphere_points,epsilon)
-% fluxImage = compute_aof(D ,IDX,sphere_points,epsilon)
+function fluxImage = computeAOF(D ,IDX,sphere_points,epsilon)
+% fluxImage = computeAOF(D ,IDX,sphere_points,epsilon)
 %   This function computes the gradient vector field with regard to a distance 
 %    function.
 %

@@ -1,5 +1,5 @@
-function [D,IDX] = compute_gradient_vector_field(binaryImage)
-% [D,IDX] = compute_gradient_vector_field(binaryImage)
+function [D,IDX] = computeGradientVectorField(binaryImage)
+% [D,IDX] = computeGradientVectorField(binaryImage)
 %   Computes Gradient Vector Field
 %
 % Input:
@@ -78,5 +78,30 @@ if(binaryImage(ii,jj)==background)
 else
     result2 = 0;
 end
+
+end
+
+function [result,result2] = getOuterBoundary(binaryImage,background)
+m_Neighbors8 = InitializeNeighborhoods();
+
+result2 = zeros(size(binaryImage));
+
+[m,n] = size(binaryImage);
+result = zeros(m*n,2);
+
+counter = 1;
+for i = 2 : m-1 
+    for j = 2 : n-1        
+               
+        
+        if(is_outer_border_point(binaryImage,i,j,m_Neighbors8,background))
+            result(counter,:) = [i j];
+            result2(i,j) = 1;
+            counter = counter + 1;
+        end        
+    end
+end
+
+result = result(1:counter-1,:);
 
 end
