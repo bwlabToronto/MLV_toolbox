@@ -103,7 +103,7 @@ switch lower(property)
         X = curBranch.X;
         Y = curBranch.Y;
         if length(X)> 3
-            [~,~,result] = breakToLineSegments([X,Y]);
+            [~,~,result] = fitLineSegments([X,Y]);
         end
      
     otherwise
