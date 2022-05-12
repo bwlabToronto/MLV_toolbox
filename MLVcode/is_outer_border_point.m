@@ -1,3 +1,16 @@
+function result2 = is_outer_border_point(binaryImage,ii,jj,m_Neighbors8,background)
+%
+%
+% Input:
+%   binaryImage - binary image
+%   ii - 
+%   jj - 
+%   m_Neighbors8 - 
+%   background - 
+% Output:
+%   result2 - 
+%
+%
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %
@@ -18,7 +31,7 @@
 % -------------------------------------------------------------------------
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
-function result2 = is_outer_border_point(binaryImage,ii,jj,m_Neighbors8,background)
+
         
 if(binaryImage(ii,jj)==background)
     result2 = 0;

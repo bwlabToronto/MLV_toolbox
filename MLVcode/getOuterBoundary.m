@@ -1,3 +1,14 @@
+function [result,result2] = getOuterBoundary(binaryImage,background)
+% [result,result2] = getOuterBoundary(binaryImage,background)
+%   
+%
+% Input:
+%   binaryImage - binary image
+%   background - 
+% Output:
+%   result - 
+%   result2 - 
+%
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %
@@ -18,7 +29,6 @@
 % -------------------------------------------------------------------------
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
-function [result,result2] = getOuterBoundary(binaryImage,background)
     
 
 m_Neighbors8 = InitializeNeighborhoods();

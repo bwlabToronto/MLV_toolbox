@@ -1,3 +1,6 @@
+function m_Neighbors8 = InitializeNeighborhoods()
+% m_Neighbors8 = InitializeNeighborhoods()
+%
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %
@@ -18,7 +21,6 @@
 % -------------------------------------------------------------------------
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
-function m_Neighbors8 = InitializeNeighborhoods()
 
 
 m_Neighbors8 = [-1,-1; -1,0; -1,1; 0,-1; 0,1; 1,-1; 1,0; 1,1];

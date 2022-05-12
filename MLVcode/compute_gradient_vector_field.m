@@ -1,3 +1,13 @@
+function [D,IDX] = compute_gradient_vector_field(binaryImage)
+% [D,IDX] = compute_gradient_vector_field(binaryImage)
+%   Computes Gradient Vector Field
+%
+% Input:
+%   binaryImage - binary image
+% Output:
+%   D - 
+%   IDX - 
+%
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %
@@ -19,7 +29,6 @@
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
 
-function [D,IDX] = compute_gradient_vector_field(binaryImage)
 
 
 newBinaryImage = binaryImage;

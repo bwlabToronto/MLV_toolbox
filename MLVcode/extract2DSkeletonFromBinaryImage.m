@@ -1,3 +1,16 @@
+function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)
+% [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)
+%   extracts Skeleton From Binary Image
+%
+% Input:
+%   binaryImage - binary image
+%   threshold - 
+% Output:
+%   fluxImage - average outward flux image computed from the distance transform
+%   skeletonImage - a binary image the same size as imgLD. 1s represent where skeleton appears
+%   distImage - a distance transformed image as the same size as imgLD
+%   thin_boundary - thinned binary image
+%
 % Copyright Morteza Rezanejad
 % McGill University, Montreal, QC 2019
 %
@@ -19,7 +32,6 @@
 % Skeletonization package from earlier work of Morteza Rezanejad
 % Check the https://github.com/mrezanejad/AOFSkeletons
 
-function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)
 
 thin_boundary = double(~bwmorph(~binaryImage,'skel',inf));
 
