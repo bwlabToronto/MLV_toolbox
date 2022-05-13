@@ -139,7 +139,7 @@ Output:
 
 <img src='images/mountain_contour_features_example.png' width=80%> 
 
-Again, check out a more detailed example Matlab Live Script (.mlv) [here](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getcontourfeatures.mlx). 
+Again, check out a more detailed example Matlab Live Script (.mlv) [here](https://github.com/bwlabToronto/MLV_toolbox/blob/main/Demos/getcontourfeatures_Single.mlx). 
 
 **Manipulating Line Drawings**
 
