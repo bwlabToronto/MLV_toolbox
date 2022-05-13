@@ -13,6 +13,7 @@ We are working on the python version and we have a plan to release the python ve
 - [FAQs](#FAQs)
 - [References](#References)
 - [License](#License)
+- [Detailed Function Documentation](https://htmlpreview.github.io/?https://github.com/bwlabToronto/MLV_toolbox/blob/main/doc/index.html)
 
 
 
