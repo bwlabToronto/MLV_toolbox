@@ -77,17 +77,16 @@ This function is called by:
 0026 inds = find(skeletonImageWithRating~=0);
 0027 imsize = size(skeletonImageWithRating);
 0028 scores = skeletonImageWithRating(inds);
-0029 sortedScores = sort(scores);
-0030 cutOffInd = max(round(0.05*(length(sortedScores))),1);
-0031 [X,Y] = ind2sub(imsize,inds);
-0032 scatter(Y,X,markerSize,scoresScaled,<span class="string">'Marker'</span>,<span class="string">'.'</span>);
-0033 colormap(jet)
-0034 axis ij image
-0035 box on
-0036 set(gcf,<span class="string">'color'</span>,<span class="string">'w'</span>);
-0037 colorbar(<span class="string">'Limits'</span>,[0,1],<span class="string">'Ticks'</span>,[0,0.5,1],<span class="string">'TickLabels'</span>,{<span class="string">'lowest'</span>,<span class="string">'intermediate'</span>,<span class="string">'highest'</span>},<span class="string">'FontSize'</span>,16);
-0038 
-0039 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Thu 12-May-2022 19:55:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0029 [X,Y] = ind2sub(imsize,inds);
+0030 scatter(Y,X,markerSize,scores,<span class="string">'Marker'</span>,<span class="string">'.'</span>);
+0031 colormap(jet)
+0032 box on
+0033 set(gcf,<span class="string">'color'</span>,<span class="string">'w'</span>);
+0034 colorbar(<span class="string">'Limits'</span>,[0,1],<span class="string">'Ticks'</span>,[0,0.5,1],<span class="string">'TickLabels'</span>,{<span class="string">'lowest'</span>,<span class="string">'intermediate'</span>,<span class="string">'highest'</span>},<span class="string">'FontSize'</span>,16);
+0035 axis ij image;
+0036 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
+0037 
+0038 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 12-May-2022 22:18:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
