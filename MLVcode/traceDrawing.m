@@ -1,7 +1,7 @@
 function vecLD = traceDrawing(fileName)
 % vecLD = traceDrawings(fileName)
-% Converts a drawing (we assume a black pencil like drawing on a white background)
-% into a line drawing image
+% Converts a drawing image (we assume a black pencil like drawing on a white background)
+% into a vectorized line drawing data structure.
 %
 % Input:
 %   fileName - drawing image file
