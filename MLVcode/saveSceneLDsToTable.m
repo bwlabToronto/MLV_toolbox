@@ -1,5 +1,5 @@
 function [resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)
-% [resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)
+% allSceneLDsToCSV(csvFileName)
 %   Writes the histogram properties of all scene line drawings to a CSV
 %   file.
 %

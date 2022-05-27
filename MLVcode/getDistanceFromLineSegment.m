@@ -8,16 +8,6 @@ function d = getDistanceFromLineSegment(XY)
 %   d - the distance of all the points in XY from the line segments that
 %   connect the last point to the first point (XY(1,:) -> XY(end,:))
 
-% -----------------------------------------------------
-% This file is part of the Mid Level Vision Toolbox: 
-% http://www.mlvtoolbox.org
-%
-% Copyright Morteza Rezanejad
-% University of Toronto, Toronto, Ontario, Canada, 2022
-%
-% Contact: Morteza.Rezanejad@gmail.com
-%------------------------------------------------------
-
 if size(XY,1) <=2
     d = 0;
 else

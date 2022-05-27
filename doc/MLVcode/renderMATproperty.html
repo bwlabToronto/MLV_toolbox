@@ -4,7 +4,7 @@
 <head>
   <title>Description of renderMATproperty</title>
   <meta name="keywords" content="renderMATproperty">
-  <meta name="description" content="img = renderMATproperty(skeletonImageWithRating,vecLD)">
+  <meta name="description" content="">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,21 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>img = renderMATproperty(skeletonImageWithRating,vecLD)</strong></div>
+<div class="box"><strong></strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function img = renderMATproperty(skeletonImageWithRating,vecLD) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> img = renderMATproperty(skeletonImageWithRating,vecLD)
-   Draws the MAT property scores on top of the line drawing.
-
- Input:
-   skeletonImageWithRating - the 2D matrix of skeleton image with MAT-based scores
-   vecLD - the vectorized line drawing
-
- Output:
-   img - the image with the MAT scores drawn in</pre></div>
+<div class="fragment"><pre class="comment"></pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -50,51 +42,32 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function img = renderMATproperty(skeletonImageWithRating,vecLD)</a>
-0002 <span class="comment">% img = renderMATproperty(skeletonImageWithRating,vecLD)</span>
-0003 <span class="comment">%   Draws the MAT property scores on top of the line drawing.</span>
-0004 <span class="comment">%</span>
-0005 <span class="comment">% Input:</span>
-0006 <span class="comment">%   skeletonImageWithRating - the 2D matrix of skeleton image with MAT-based scores</span>
-0007 <span class="comment">%   vecLD - the vectorized line drawing</span>
-0008 <span class="comment">%</span>
-0009 <span class="comment">% Output:</span>
-0010 <span class="comment">%   img - the image with the MAT scores drawn in</span>
-0011 
-0012 <span class="comment">% -----------------------------------------------------</span>
-0013 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0014 <span class="comment">% http://www.mlvtoolbox.org</span>
-0015 <span class="comment">%</span>
-0016 <span class="comment">% Copyright Dirk Bernhardt-Walther and Morteza Rezanejad</span>
-0017 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0018 <span class="comment">%</span>
-0019 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0020 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
-0021 <span class="comment">%------------------------------------------------------</span>
-0022 
-0023 <span class="keyword">if</span> nargin == 2
-0024     img = <a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>(vecLD);
-0025 <span class="keyword">else</span>
-0026     img = ones([size(skeltonImageWithRating),3]);
-0027 <span class="keyword">end</span>
-0028 
-0029 inds = find(skeletonImageWithRating~=0);
-0030 imsize = size(skeletonImageWithRating);
-0031 scores = skeletonImageWithRating(inds);
-0032 sortedScores = sort(scores);
-0033 cutOffInd = max(round(0.05*(length(sortedScores))),1);
-0034 thresh = sortedScores(cutOffInd);
-0035 scoresScaled = scores;
-0036 scoresScaled(scores&lt; thresh) = thresh;
-0037 scoresScaled = round(rescale(scoresScaled,1,256));
-0038 cmap = jet();
-0039 <span class="keyword">for</span> c = 1:3
-0040     thisChan = img(:,:,c);
-0041     thisChan(inds) = cmap(scoresScaled,c);
-0042     img(:,:,c) = thisChan;
-0043 <span class="keyword">end</span>
-0044 
-0045 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<div class="fragment"><pre>0001 
+0002 <a name="_sub0" href="#_subfunctions" class="code">function img = renderMATproperty(skeletonImageWithRating,vecLD)</a>
+0003 
+0004 <span class="keyword">if</span> nargin == 2
+0005     img = <a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>(vecLD);
+0006 <span class="keyword">else</span>
+0007     img = ones([size(skeltonImageWithRating),3]);
+0008 <span class="keyword">end</span>
+0009 
+0010 inds = find(skeletonImageWithRating~=0);
+0011 imsize = size(skeletonImageWithRating);
+0012 scores = skeletonImageWithRating(inds);
+0013 sortedScores = sort(scores);
+0014 cutOffInd = max(round(0.05*(length(sortedScores))),1);
+0015 thresh = sortedScores(cutOffInd);
+0016 scoresScaled = scores;
+0017 scoresScaled(scores&lt; thresh) = thresh;
+0018 scoresScaled = round(rescale(scoresScaled,1,256));
+0019 cmap = jet();
+0020 <span class="keyword">for</span> c = 1:3
+0021     thisChan = img(:,:,c);
+0022     thisChan(inds) = cmap(scoresScaled,c);
+0023     img(:,:,c) = thisChan;
+0024 <span class="keyword">end</span>
+0025 
+0026 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

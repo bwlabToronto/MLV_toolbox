@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of MATpropertiesToContours</title>
+  <meta name="keywords" content="MATpropertiesToContours">
+  <meta name="description" content="define a evctor for scaling the coordinates up or down as needed">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; MATpropertiesToContours.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>MATpropertiesToContours
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>define a evctor for scaling the coordinates up or down as needed</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> define a evctor for scaling the coordinates up or down as needed
+ MATpropertyImage = MATpropertyImage';</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)</a>
+0002 
+0003 
+0004 <span class="comment">% define a evctor for scaling the coordinates up or down as needed</span>
+0005 <span class="comment">% MATpropertyImage = MATpropertyImage';</span>
+0006 imsize = size(MATpropertyImage);
+0007 scaleVec = imsize([2,1]) ./ vecLD.imsize;
+0008 scaleVec = [scaleVec,scaleVec];
+0009 
+0010 vecLD.(property) = cell(1,vecLD.numContours);
+0011 
+0012 allMeans = NaN(1,vecLD.numContours);
+0013 
+0014 <span class="keyword">for</span> c = 1:vecLD.numContours
+0015     img = zeros(imsize);    
+0016     scaledCoords = vecLD.contours{c} .* repmat(scaleVec,size(vecLD.contours{c},1),1);
+0017     img = insertShape(img,<span class="string">'Line'</span>,scaledCoords,<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'LineWidth'</span>,1,<span class="string">'SmoothEdges'</span>,false);
+0018     img = squeeze(img(:,:,1));
+0019     
+0020        
+0021     thisProp = MATpropertyImage(img &gt; 0);
+0022     allMeans(c) = mean(thisProp(thisProp~=0));
+0023     thisProp(thisProp==0) = NaN;
+0024     vecLD.(property){c} = thisProp;
+0025 <span class="keyword">end</span>
+0026 
+0027 vecLD.([<span class="string">'means_'</span>,property]) = allMeans;
+0028 
+0029 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

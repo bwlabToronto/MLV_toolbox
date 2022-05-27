@@ -75,77 +75,67 @@ This function is called by:
 0016 <span class="comment">%   bins: a vector with the bin centers</span>
 0017 <span class="comment">%   shortNames: {'juncType','juncAngle'}</span>
 0018 
-0019 <span class="comment">% -----------------------------------------------------</span>
-0020 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0021 <span class="comment">% http://www.mlvtoolbox.org</span>
-0022 <span class="comment">%</span>
-0023 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0024 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0025 <span class="comment">%</span>
-0026 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0027 <span class="comment">%------------------------------------------------------</span>
-0028 
-0029 <span class="keyword">if</span> nargin &lt; 3
-0030     junctionTypes = {<span class="string">'T'</span>,<span class="string">'Y'</span>,<span class="string">'X'</span>,<span class="string">'Arrow'</span>,<span class="string">'Star'</span>};
-0031 <span class="keyword">end</span>
-0032 
-0033 <span class="keyword">if</span> nargin &lt; 2
-0034     numAngleBins = 8;
-0035 <span class="keyword">end</span>
-0036 
-0037 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'junctions'</span>)
-0038     vecLD = <a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>(vecLD);
-0039 <span class="keyword">end</span>
-0040 
-0041 <span class="comment">% no junctions? return empty arrays for everything</span>
-0042 <span class="keyword">if</span> isempty(vecLD.junctions)
-0043     vecLD.junctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
-0044     vecLD.normJunctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
-0045     vecLD.junctionTypeHistogram = zeros(1,length(junctionTypes));
-0046     vecLD.normJunctionTypeHistogram = zeros(1,length(junctionTypes));
-0047 <span class="keyword">else</span>
-0048 
-0049     <span class="comment">% junction types</span>
-0050     theseTypes = {vecLD.junctions(:).type};
-0051     typeHist = zeros(1,numel(junctionTypes));
-0052     
-0053     <span class="comment">% prepare the counts of junctions that each contour participates in</span>
-0054     vecLD.junctionContourHistograms = zeros(vecLD.numContours,numel(junctionTypes));
-0055     
-0056     <span class="comment">% count it all up</span>
-0057     <span class="keyword">for</span> t = 1:numel(junctionTypes)
-0058         thisJ = strcmp(junctionTypes{t},theseTypes);
-0059         typeHist(t) = sum(thisJ);
-0060         contours = [vecLD.junctions(thisJ).contourIDs];
-0061         <span class="keyword">for</span> c = unique(contours)
-0062             vecLD.junctionContourHistograms(c,t) = sum(contours == c);
-0063         <span class="keyword">end</span>
-0064     <span class="keyword">end</span>
-0065     vecLD.normJunctionContourHistograms = vecLD.junctionContourHistograms ./ repmat(vecLD.contourLengths,1,numel(junctionTypes)) * 10000;
-0066     vecLD.junctionTypeHistogram = typeHist;
-0067     vecLD.normJunctionTypeHistogram = typeHist / sum(vecLD.contourLengths) * 10000;
-0068 <span class="keyword">end</span>
-0069 vecLD.junctionTypeBins = junctionTypes;
-0070 
-0071 <span class="comment">% junctionAngles</span>
-0072 maxAngle = 120;
-0073 binStep = maxAngle/numAngleBins;
-0074 angleBins = [binStep/2:binStep:maxAngle-binStep/2];
-0075 <span class="keyword">if</span> isempty(vecLD.junctions)
-0076     vecLD.junctionAngleHistogram = zeros(1,length(junctionTypes));
-0077     vecLD.normJunctionAngleHistogram = zeros(1,length(junctionTypes));
-0078     histograms = {[],[]};
-0079 <span class="keyword">else</span>
-0080     angles = [vecLD.junctions(:).minAngle];
-0081     angleHist = hist(angles,angleBins);
-0082     vecLD.junctionAngleHistogram = angleHist;
-0083     vecLD.normJunctionAngleHistogram = angleHist / sum(vecLD.contourLengths) * 10000;
-0084     histograms = {typeHist,angleHist};
-0085 <span class="keyword">end</span>
-0086 vecLD.junctionAngleBins = angleBins;
-0087 
-0088 bins = {junctionTypes,angleBins};
-0089 shortNames = {<span class="string">'juncType'</span>,<span class="string">'juncAngle'</span>};</pre></div>
-<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0019 <span class="keyword">if</span> nargin &lt; 3
+0020     junctionTypes = {<span class="string">'T'</span>,<span class="string">'Y'</span>,<span class="string">'X'</span>,<span class="string">'Arrow'</span>,<span class="string">'Star'</span>};
+0021 <span class="keyword">end</span>
+0022 
+0023 <span class="keyword">if</span> nargin &lt; 2
+0024     numAngleBins = 8;
+0025 <span class="keyword">end</span>
+0026 
+0027 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'junctions'</span>)
+0028     vecLD = <a href="computeJunctions.html" class="code" title="function vecLD = computeJunctions(vecLD)">computeJunctions</a>(vecLD);
+0029 <span class="keyword">end</span>
+0030 
+0031 <span class="comment">% no junctions? return empty arrays for everything</span>
+0032 <span class="keyword">if</span> isempty(vecLD.junctions)
+0033     vecLD.junctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
+0034     vecLD.normJunctionContourHistograms = zeros(vecLD.numContours,length(junctionTypes));
+0035     vecLD.junctionTypeHistogram = zeros(1,length(junctionTypes));
+0036     vecLD.normJunctionTypeHistogram = zeros(1,length(junctionTypes));
+0037 <span class="keyword">else</span>
+0038 
+0039     <span class="comment">% junction types</span>
+0040     theseTypes = {vecLD.junctions(:).type};
+0041     typeHist = zeros(1,numel(junctionTypes));
+0042     
+0043     <span class="comment">% prepare the counts of junctions that each contour participates in</span>
+0044     vecLD.junctionContourHistograms = zeros(vecLD.numContours,numel(junctionTypes));
+0045     
+0046     <span class="comment">% count it all up</span>
+0047     <span class="keyword">for</span> t = 1:numel(junctionTypes)
+0048         thisJ = strcmp(junctionTypes{t},theseTypes);
+0049         typeHist(t) = sum(thisJ);
+0050         contours = [vecLD.junctions(thisJ).contourIDs];
+0051         <span class="keyword">for</span> c = unique(contours)
+0052             vecLD.junctionContourHistograms(c,t) = sum(contours == c);
+0053         <span class="keyword">end</span>
+0054     <span class="keyword">end</span>
+0055     vecLD.normJunctionContourHistograms = vecLD.junctionContourHistograms ./ repmat(vecLD.contourLengths,1,numel(junctionTypes)) * 10000;
+0056     vecLD.junctionTypeHistogram = typeHist;
+0057     vecLD.normJunctionTypeHistogram = typeHist / sum(vecLD.contourLengths) * 10000;
+0058 <span class="keyword">end</span>
+0059 vecLD.junctionTypeBins = junctionTypes;
+0060 
+0061 <span class="comment">% junctionAngles</span>
+0062 maxAngle = 120;
+0063 binStep = maxAngle/numAngleBins;
+0064 angleBins = [binStep/2:binStep:maxAngle-binStep/2];
+0065 <span class="keyword">if</span> isempty(vecLD.junctions)
+0066     vecLD.junctionAngleHistogram = zeros(1,length(junctionTypes));
+0067     vecLD.normJunctionAngleHistogram = zeros(1,length(junctionTypes));
+0068     histograms = {[],[]};
+0069 <span class="keyword">else</span>
+0070     angles = [vecLD.junctions(:).minAngle];
+0071     angleHist = hist(angles,angleBins);
+0072     vecLD.junctionAngleHistogram = angleHist;
+0073     vecLD.normJunctionAngleHistogram = angleHist / sum(vecLD.contourLengths) * 10000;
+0074     histograms = {typeHist,angleHist};
+0075 <span class="keyword">end</span>
+0076 vecLD.junctionAngleBins = angleBins;
+0077 
+0078 bins = {junctionTypes,angleBins};
+0079 shortNames = {<span class="string">'juncType'</span>,<span class="string">'juncAngle'</span>};</pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

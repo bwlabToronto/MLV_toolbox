@@ -23,21 +23,13 @@ function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATprop
 %   skeletalBranches - The set of skeletal branches traced from medial axis
 %   transform
 
-% -----------------------------------------------------
-% This file is part of the Mid Level Vision Toolbox: 
-% http://www.mlvtoolbox.org
-%
-% Copyright Morteza Rezanejad
-% University of Toronto, Toronto, Ontario, Canada, 2022
-%
-% Contact: Morteza.Rezanejad@gmail.com
-%------------------------------------------------------
-
 skeletalBranches = traceSkeleton(MAT);
 
 if nargin < 3
     properties = {'parallelism', 'separation', 'mirror'} ;
 end
+
+
 
 for propertyInd = 1:length(properties)
     property = properties{propertyInd};      

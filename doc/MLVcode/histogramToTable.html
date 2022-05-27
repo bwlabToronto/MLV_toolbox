@@ -50,7 +50,7 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="allLDHistogramsToTable.html" class="code" title="function histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)">allLDHistogramsToTable</a>	histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)</li><li><a href="splitLDbyStatsModel.html" class="code" title="function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)">splitLDbyStatsModel</a>	[topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)</li></ul>
+<li><a href="allLDHistogramsToTable.html" class="code" title="function histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)">allLDHistogramsToTable</a>	histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)</li><li><a href="splitLDbyStatsModel.html" class="code" title="function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)">splitLDbyStatsModel</a>	[topLD, bottomLD] = splitLDbyStatsModel(vecLD,properties,fraction)</li></ul>
 <!-- crossreference -->
 
 
@@ -73,42 +73,32 @@ This function is called by:
 0015 <span class="comment">% Output:</span>
 0016 <span class="comment">%   histTable: The histogram converted into a table of size N x M.</span>
 0017 
-0018 <span class="comment">% -----------------------------------------------------</span>
-0019 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0020 <span class="comment">% http://www.mlvtoolbox.org</span>
-0021 <span class="comment">%</span>
-0022 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0023 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0024 <span class="comment">%</span>
-0025 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0026 <span class="comment">%------------------------------------------------------</span>
-0027 
-0028 <span class="keyword">if</span> nargin &lt; 3
-0029     bins = [];
-0030 <span class="keyword">end</span>
-0031 
-0032 numVar = size(histogram,2);
-0033 varNames = cell(1,numVar);
-0034 
-0035 <span class="keyword">for</span> v = 1:numVar
-0036     <span class="keyword">if</span> isempty(bins)
-0037         varNames{v} = sprintf(<span class="string">'%s_%d'</span>,shortName,v);
-0038     <span class="keyword">else</span>
-0039         <span class="keyword">switch</span> class(bins)
-0040             <span class="keyword">case</span> <span class="string">'double'</span>
-0041                 varNames{v} = sprintf(<span class="string">'%s_%g'</span>,shortName,bins(v));
-0042             <span class="keyword">case</span> {<span class="string">'char'</span>,<span class="string">'cell'</span>}
-0043                 varNames{v} = sprintf(<span class="string">'%s_%s'</span>,shortName,bins{v});
-0044             <span class="keyword">otherwise</span>
-0045                 error([<span class="string">'Don''t know how to handle bin names of type: '</span>,class(bins{p}(b))]);
-0046         <span class="keyword">end</span>
-0047     <span class="keyword">end</span>
-0048 <span class="keyword">end</span>
-0049 
-0050 histTable = array2table(histogram,<span class="string">'VariableNames'</span>,varNames);
-0051 
-0052 
-0053</pre></div>
-<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0018 <span class="keyword">if</span> nargin &lt; 3
+0019     bins = [];
+0020 <span class="keyword">end</span>
+0021 
+0022 numVar = size(histogram,2);
+0023 varNames = cell(1,numVar);
+0024 
+0025 <span class="keyword">for</span> v = 1:numVar
+0026     <span class="keyword">if</span> isempty(bins)
+0027         varNames{v} = sprintf(<span class="string">'%s_%d'</span>,shortName,v);
+0028     <span class="keyword">else</span>
+0029         <span class="keyword">switch</span> class(bins)
+0030             <span class="keyword">case</span> <span class="string">'double'</span>
+0031                 varNames{v} = sprintf(<span class="string">'%s_%g'</span>,shortName,bins(v));
+0032             <span class="keyword">case</span> {<span class="string">'char'</span>,<span class="string">'cell'</span>}
+0033                 varNames{v} = sprintf(<span class="string">'%s_%s'</span>,shortName,bins{v});
+0034             <span class="keyword">otherwise</span>
+0035                 error([<span class="string">'Don''t know how to handle bin names of type: '</span>,class(bins{p}(b))]);
+0036         <span class="keyword">end</span>
+0037     <span class="keyword">end</span>
+0038 <span class="keyword">end</span>
+0039 
+0040 histTable = array2table(histogram,<span class="string">'VariableNames'</span>,varNames);
+0041 
+0042 
+0043</pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

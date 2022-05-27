@@ -1,24 +1,5 @@
-function img = renderMATproperty(skeletonImageWithRating,vecLD)
-% img = renderMATproperty(skeletonImageWithRating,vecLD)
-%   Draws the MAT property scores on top of the line drawing.
-%
-% Input:
-%   skeletonImageWithRating - the 2D matrix of skeleton image with MAT-based scores
-%   vecLD - the vectorized line drawing
-%
-% Output:
-%   img - the image with the MAT scores drawn in
 
-% -----------------------------------------------------
-% This file is part of the Mid Level Vision Toolbox: 
-% http://www.mlvtoolbox.org
-%
-% Copyright Dirk Bernhardt-Walther and Morteza Rezanejad
-% University of Toronto, Toronto, Ontario, Canada, 2022
-%
-% Contact: dirk.walther@gmail.com
-% Contact: Morteza.Rezanejad@gmail.com
-%------------------------------------------------------
+function img = renderMATproperty(skeletonImageWithRating,vecLD)
 
 if nargin == 2
     img = renderLinedrawing(vecLD);

@@ -75,53 +75,43 @@ This function is called by:
 0016 <span class="comment">%   bins: a vector with the bin centers</span>
 0017 <span class="comment">%   shortName: 'curv'</span>
 0018 
-0019 <span class="comment">% -----------------------------------------------------</span>
-0020 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0021 <span class="comment">% http://www.mlvtoolbox.org</span>
-0022 <span class="comment">%</span>
-0023 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0024 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0025 <span class="comment">%</span>
-0026 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0027 <span class="comment">%------------------------------------------------------</span>
+0019 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'curvatures'</span>)
+0020     vecLD = <a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>(vecLD);
+0021 <span class="keyword">end</span>
+0022 <span class="keyword">if</span> nargin &lt; 3
+0023     minmaxCurvature = [0,90];
+0024 <span class="keyword">end</span>
+0025 <span class="keyword">if</span> nargin &lt; 2
+0026     numBins = 8;
+0027 <span class="keyword">end</span>
 0028 
-0029 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'curvatures'</span>)
-0030     vecLD = <a href="computeCurvature.html" class="code" title="function vecLD = computeCurvature(vecLD)">computeCurvature</a>(vecLD);
-0031 <span class="keyword">end</span>
-0032 <span class="keyword">if</span> nargin &lt; 3
-0033     minmaxCurvature = [0,90];
-0034 <span class="keyword">end</span>
-0035 <span class="keyword">if</span> nargin &lt; 2
-0036     numBins = 8;
-0037 <span class="keyword">end</span>
-0038 
-0039 logMinMax = log10(minmaxCurvature + 1);
-0040 binWidth = (logMinMax(2)-logMinMax(1)) / numBins; <span class="comment">%the range of the original length is from max to min length value</span>
-0041 binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
-0042 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
-0043 
-0044 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);
-0045 vecLD.normCurvatureHistograms = zeros(vecLD.numContours,numBins);
-0046 <span class="keyword">for</span> c = 1:vecLD.numContours
-0047     logCurvatures = log10(vecLD.curvatures{c}+1);
-0048     <span class="keyword">for</span> s = 1:numel(logCurvatures)
-0049         <span class="keyword">for</span> b = 1:numBins
-0050             <span class="keyword">if</span> logCurvatures(s) &lt; binBoundary(b+1) || (b == numBins)
-0051                 vecLD.curvatureHistograms(c,b) = vecLD.curvatureHistograms(c,b) + vecLD.lengths{c}(s);
-0052                 <span class="keyword">break</span>;
-0053             <span class="keyword">end</span>
-0054         <span class="keyword">end</span>
-0055     <span class="keyword">end</span>
-0056     vecLD.normCurvatureHistograms(c,:) = vecLD.curvatureHistograms(c,:) / vecLD.contourLengths(c) * 10000;
-0057 <span class="keyword">end</span>
-0058 
-0059 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
-0060 vecLD.normSumCurvatureHistogram = vecLD.sumCurvatureHistogram / sum(vecLD.contourLengths) * 10000;
-0061 curvatureHistogram = vecLD.sumCurvatureHistogram;
-0062 vecLD.curvatureBins = bins;
-0063 shortName = <span class="string">'curv'</span>;
-0064 
-0065</pre></div>
-<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0029 logMinMax = log10(minmaxCurvature + 1);
+0030 binWidth = (logMinMax(2)-logMinMax(1)) / numBins; <span class="comment">%the range of the original length is from max to min length value</span>
+0031 binBoundary = [logMinMax(1) : binWidth : logMinMax(2)];
+0032 bins = 10.^(binBoundary(2:end) - binWidth/2) - 1;
+0033 
+0034 vecLD.curvatureHistograms = zeros(vecLD.numContours,numBins);
+0035 vecLD.normCurvatureHistograms = zeros(vecLD.numContours,numBins);
+0036 <span class="keyword">for</span> c = 1:vecLD.numContours
+0037     logCurvatures = log10(vecLD.curvatures{c}+1);
+0038     <span class="keyword">for</span> s = 1:numel(logCurvatures)
+0039         <span class="keyword">for</span> b = 1:numBins
+0040             <span class="keyword">if</span> logCurvatures(s) &lt; binBoundary(b+1) || (b == numBins)
+0041                 vecLD.curvatureHistograms(c,b) = vecLD.curvatureHistograms(c,b) + vecLD.lengths{c}(s);
+0042                 <span class="keyword">break</span>;
+0043             <span class="keyword">end</span>
+0044         <span class="keyword">end</span>
+0045     <span class="keyword">end</span>
+0046     vecLD.normCurvatureHistograms(c,:) = vecLD.curvatureHistograms(c,:) / vecLD.contourLengths(c) * 10000;
+0047 <span class="keyword">end</span>
+0048 
+0049 vecLD.sumCurvatureHistogram = sum(vecLD.curvatureHistograms,1);
+0050 vecLD.normSumCurvatureHistogram = vecLD.sumCurvatureHistogram / sum(vecLD.contourLengths) * 10000;
+0051 curvatureHistogram = vecLD.sumCurvatureHistogram;
+0052 vecLD.curvatureBins = bins;
+0053 shortName = <span class="string">'curv'</span>;
+0054 
+0055</pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

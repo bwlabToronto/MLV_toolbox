@@ -4,7 +4,7 @@
 <head>
   <title>Description of computeMAT</title>
   <meta name="keywords" content="computeMAT">
-  <meta name="description" content="MAT = computeMAT(imgLD, threshold_angle)">
+  <meta name="description" content="MAT = computeMAT(imgLD, parameters)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,33 +21,34 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>MAT = computeMAT(imgLD, threshold_angle)</strong></div>
+<div class="box"><strong>MAT = computeMAT(imgLD, parameters)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function MAT = computeMAT(imgLD,threshold_angle) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> MAT = computeMAT(imgLD, threshold_angle)
+<div class="fragment"><pre class="comment"> MAT = computeMAT(imgLD, parameters)
    Extracts the Medial Axis Transform from a given line drawing image (imgLD) and 
    returns its distance map, its average out flux (AOF) map and the skeleton.
  
  Input: 
-   imgLD - a line drawing image
-   threshold_angle - threshold on the object angle
-                    default: 28 degrees
+   imgLD: a line drawing image
+   threshold_angle: threshold on the object angle, the default is 28
+   degrees.
 
  Output:
-   MAT - a matlab struct with the following fields:
-       skeleton - a binary image the same size as imgLD. 1s
-                  represent where skeleton appears
-       distance_map - a distance transformed image as the same size as imgLD
-       AOF - average outward flux image computed from the distance transform</pre></div>
+   MAT: a matlab struct with the following fields:
+   skeleton: skeleton is a binary image the same size as imgLD and 1s
+   represents where skeleton appears and 0s represents other pixels
+   image where 
+   distance_map: a distance transform image the same size as imgLD
+   AOF: average outward flux image computed from the distance transform</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="extract2DSkeletonFromBinaryImage.html" class="code" title="function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)">extract2DSkeletonFromBinaryImage</a>	[fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)</li></ul>
+<li><a href="extract2DSkeletonFromBinaryImage.html" class="code" title="function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)">extract2DSkeletonFromBinaryImage</a>	Copyright Morteza Rezanejad</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
@@ -57,60 +58,51 @@ This function is called by:
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function MAT = computeMAT(imgLD,threshold_angle)</a>
-0002 <span class="comment">% MAT = computeMAT(imgLD, threshold_angle)</span>
+0002 <span class="comment">% MAT = computeMAT(imgLD, parameters)</span>
 0003 <span class="comment">%   Extracts the Medial Axis Transform from a given line drawing image (imgLD) and</span>
 0004 <span class="comment">%   returns its distance map, its average out flux (AOF) map and the skeleton.</span>
 0005 <span class="comment">%</span>
 0006 <span class="comment">% Input:</span>
-0007 <span class="comment">%   imgLD - a line drawing image</span>
-0008 <span class="comment">%   threshold_angle - threshold on the object angle</span>
-0009 <span class="comment">%                    default: 28 degrees</span>
+0007 <span class="comment">%   imgLD: a line drawing image</span>
+0008 <span class="comment">%   threshold_angle: threshold on the object angle, the default is 28</span>
+0009 <span class="comment">%   degrees.</span>
 0010 <span class="comment">%</span>
 0011 <span class="comment">% Output:</span>
-0012 <span class="comment">%   MAT - a matlab struct with the following fields:</span>
-0013 <span class="comment">%       skeleton - a binary image the same size as imgLD. 1s</span>
-0014 <span class="comment">%                  represent where skeleton appears</span>
-0015 <span class="comment">%       distance_map - a distance transformed image as the same size as imgLD</span>
-0016 <span class="comment">%       AOF - average outward flux image computed from the distance transform</span>
-0017 
-0018 <span class="comment">% -----------------------------------------------------</span>
-0019 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0020 <span class="comment">% http://www.mlvtoolbox.org</span>
-0021 <span class="comment">%</span>
-0022 <span class="comment">% Copyright Morteza Rezanejad</span>
-0023 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0024 <span class="comment">%</span>
-0025 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
-0026 <span class="comment">%------------------------------------------------------</span>
-0027 
-0028 binaryImage = imgLD;
+0012 <span class="comment">%   MAT: a matlab struct with the following fields:</span>
+0013 <span class="comment">%   skeleton: skeleton is a binary image the same size as imgLD and 1s</span>
+0014 <span class="comment">%   represents where skeleton appears and 0s represents other pixels</span>
+0015 <span class="comment">%   image where</span>
+0016 <span class="comment">%   distance_map: a distance transform image the same size as imgLD</span>
+0017 <span class="comment">%   AOF: average outward flux image computed from the distance transform</span>
+0018 
+0019 binaryImage = imgLD;
+0020 
+0021 
+0022 <span class="comment">% aof = 2/pi * sin(Object_Angle)</span>
+0023 <span class="keyword">if</span> nargin &lt; 2
+0024     <span class="comment">% 28 degrees</span>
+0025     threshold = 0.3; 
+0026 <span class="keyword">else</span>
+0027     threshold = 2/pi*sind(threshold_angle);
+0028 <span class="keyword">end</span>
 0029 
-0030 
-0031 <span class="comment">% aof = 2/pi * sin(Object_Angle)</span>
-0032 <span class="keyword">if</span> nargin &lt; 2
-0033     <span class="comment">% 28 degrees</span>
-0034     threshold = 0.3; 
-0035 <span class="keyword">else</span>
-0036     threshold = 2/pi*sind(threshold_angle);
-0037 <span class="keyword">end</span>
-0038 
-0039 <span class="comment">% in case the input image has three channels</span>
-0040 <span class="keyword">if</span>(length(size(binaryImage))==3)
-0041     binaryImage = rgb2gray(binaryImage);
-0042 <span class="keyword">end</span>
-0043 
-0044 [fluxImage,skeletonImage,distImage,~]=<a href="extract2DSkeletonFromBinaryImage.html" class="code" title="function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)">extract2DSkeletonFromBinaryImage</a>(binaryImage,threshold);
+0030 <span class="comment">% in case the input image has three channels</span>
+0031 <span class="keyword">if</span>(length(size(binaryImage))==3)
+0032     binaryImage = rgb2gray(binaryImage);
+0033 <span class="keyword">end</span>
+0034 
+0035 [fluxImage,skeletonImage,distImage,~]=<a href="extract2DSkeletonFromBinaryImage.html" class="code" title="function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)">extract2DSkeletonFromBinaryImage</a>(binaryImage,threshold);
+0036 
+0037 <span class="comment">% skeleton</span>
+0038 MAT.skeleton = skeletonImage;
+0039 
+0040 <span class="comment">% distance map</span>
+0041 MAT.distance_map = distImage;
+0042 
+0043 <span class="comment">% average outward flux map</span>
+0044 MAT.AOF = fluxImage;
 0045 
-0046 <span class="comment">% skeleton</span>
-0047 MAT.skeleton = skeletonImage;
-0048 
-0049 <span class="comment">% distance map</span>
-0050 MAT.distance_map = distImage;
-0051 
-0052 <span class="comment">% average outward flux map</span>
-0053 MAT.AOF = fluxImage;
-0054 
-0055 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0046 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

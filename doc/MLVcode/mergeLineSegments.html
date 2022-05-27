@@ -4,7 +4,7 @@
 <head>
   <title>Description of mergeLineSegments</title>
   <meta name="keywords" content="mergeLineSegments">
-  <meta name="description" content="vecLD = mergeLineSegments(vecLD,threshParam)">
+  <meta name="description" content="">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,150 +21,79 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>vecLD = mergeLineSegments(vecLD,threshParam)</strong></div>
+<div class="box"><strong></strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function vecLD = mergeLineSegments(vecLD,threshParam) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> vecLD = mergeLineSegments(vecLD,threshParam)
- Merge individual line segments into longer line segments.
- Think of it smoothing along line segments.
-
- Input:
-   vecLD - vectorized line drawing with contours that contain many short
-           segments. Segments will be combined if they are collinear. 
-   threshParam - maximum distance (in pixels) for two line segments to merge.
-   
- Output:
-   vecLD - vectorized line drawing with the merged contours.</pre></div>
+<div class="fragment"><pre class="comment"></pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>	vecLD = computeLength(vecLD)</li><li><a href="getDistanceFromLineSegment.html" class="code" title="function d = getDistanceFromLineSegment(XY)">getDistanceFromLineSegment</a>	d = getDistanceFromLineSegment(XY)</li></ul>
+<li><a href="getDistanceFromLineSegment.html" class="code" title="function d = getDistanceFromLineSegment(XY)">getDistanceFromLineSegment</a>	</li><li><a href="removeDuplicatedContours.html" class="code" title="function vecLD = removeDuplicatedContours(vecLD)">removeDuplicatedContours</a>	curVecLD = vecLD;</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="lineDrawingTracing.html" class="code" title="function vecLD = lineDrawingTracing(fileName)">lineDrawingTracing</a>	vecLD = lineDrawingTracing(fileName)</li><li><a href="traceDrawing.html" class="code" title="function vecLD = traceDrawing(fileName)">traceDrawing</a>	vecLD = traceDrawings(fileName)</li></ul>
+<li><a href="lineDrawingTracing.html" class="code" title="function vecLD = lineDrawingTracing(fileName)">lineDrawingTracing</a>	</li></ul>
 <!-- crossreference -->
 
-<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="#_sub1" class="code">function vecLD = removeDuplicatedContours(vecLD)</a></li></ul>
+
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = mergeLineSegments(vecLD,threshParam)</a>
-0002 <span class="comment">% vecLD = mergeLineSegments(vecLD,threshParam)</span>
-0003 <span class="comment">% Merge individual line segments into longer line segments.</span>
-0004 <span class="comment">% Think of it smoothing along line segments.</span>
-0005 <span class="comment">%</span>
-0006 <span class="comment">% Input:</span>
-0007 <span class="comment">%   vecLD - vectorized line drawing with contours that contain many short</span>
-0008 <span class="comment">%           segments. Segments will be combined if they are collinear.</span>
-0009 <span class="comment">%   threshParam - maximum distance (in pixels) for two line segments to merge.</span>
-0010 <span class="comment">%</span>
-0011 <span class="comment">% Output:</span>
-0012 <span class="comment">%   vecLD - vectorized line drawing with the merged contours.</span>
-0013 
-0014 <span class="comment">% -----------------------------------------------------</span>
-0015 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0016 <span class="comment">% http://www.mlvtoolbox.org</span>
-0017 <span class="comment">%</span>
-0018 <span class="comment">% Copyright Morteza Rezanejad</span>
-0019 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0020 <span class="comment">%</span>
-0021 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
-0022 <span class="comment">%------------------------------------------------------</span>
-0023 
-0024 <span class="keyword">for</span> cc = 1 : vecLD.numContours
-0025     curContour = vecLD.contours{cc};
-0026     X = [curContour(:,1); curContour(<span class="keyword">end</span>,3)];
-0027     Y = [curContour(:,2); curContour(<span class="keyword">end</span>,4)];
-0028     XY = [X,Y];
-0029     
-0030     counter = 1;
-0031     start = 1;
-0032     n = size(XY,1);
-0033     t = start+2;
-0034     toBeRemoved = [];
-0035     lineSegs = {};
-0036     <span class="keyword">while</span> t&lt;=n
-0037         t = start+2;
-0038 
-0039         stillStraight = true;
-0040         <span class="keyword">while</span>(stillStraight)
-0041             segXY = XY(start:t,:);
-0042             d = <a href="getDistanceFromLineSegment.html" class="code" title="function d = getDistanceFromLineSegment(XY)">getDistanceFromLineSegment</a>(segXY);
-0043             <span class="keyword">if</span> d &gt; threshParam || t &gt;= n
-0044                 stillStraight = false;
-0045                 <span class="keyword">if</span> n - t  &lt;= 1
-0046                     t = n+1;
-0047                 <span class="keyword">end</span>
-0048                 <span class="comment">%fprintf('start = %d, end = %d\n',start,t-1);</span>
-0049                 lineSegs{counter} = XY(start:t-1,:);
-0050                 toBeRemoved = [toBeRemoved,start:t-1];
-0051                 counter = counter+1;
-0052                 start = t-1;
-0053             <span class="keyword">else</span>
-0054                 t = t+1;
-0055             <span class="keyword">end</span>
-0056 
-0057         <span class="keyword">end</span>
-0058     <span class="keyword">end</span>
-0059     startXY = zeros(length(lineSegs),2);
-0060     endXY = zeros(length(lineSegs),2);
-0061     <span class="keyword">for</span> i = 1 : length(lineSegs)
-0062         curLineSeg = lineSegs{i};
-0063         startXY(i,:) = curLineSeg(1,:);
-0064         endXY(i,:) = curLineSeg(<span class="keyword">end</span>,:);
-0065     <span class="keyword">end</span>
-0066     curSeg = [startXY,endXY];
-0067     <span class="keyword">if</span> ~isempty(curSeg)
-0068         vecLD.contours{cc} = [startXY,endXY];      
-0069     <span class="keyword">end</span>
-0070 <span class="keyword">end</span>
-0071 
-0072  vecLD = <a href="#_sub1" class="code" title="subfunction vecLD = removeDuplicatedContours(vecLD)">removeDuplicatedContours</a>(vecLD);
-0073 <span class="keyword">end</span>
-0074 
-0075 <a name="_sub1" href="#_subfunctions" class="code">function vecLD = removeDuplicatedContours(vecLD)</a>
-0076 <span class="comment">% vecLD = removeDuplicatedContours(vecLD)</span>
-0077 <span class="comment">% Remove contours that are overlapping.</span>
-0078 <span class="comment">%</span>
-0079 <span class="comment">% Input:</span>
-0080 <span class="comment">%   vecLD - vectorized line drawing data structure</span>
-0081 <span class="comment">% Output:</span>
-0082 <span class="comment">%   vecLD - vectorized line drawing data structure with overlapping</span>
-0083 <span class="comment">%   contours removed</span>
-0084 
-0085 vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
-0086 finalToBeRemoved = [];
-0087 <span class="keyword">for</span> i = 1 : vecLD.numContours
-0088     contour_i = vecLD.contours{i};
-0089     XY_i = [contour_i(:,1:2);contour_i(<span class="keyword">end</span>,3:4)];
-0090     toBeRemoved = [];
-0091     <span class="keyword">for</span> j = i+1 : vecLD.numContours
-0092         contour_j = vecLD.contours{j};
-0093         XY_j = [contour_j(:,1:2);contour_j(<span class="keyword">end</span>,3:4)];
-0094         [~,d_j]=knnsearch(XY_i,XY_j);
-0095         [~,d_i]=knnsearch(XY_j,XY_i);
-0096         d = max(max(d_i),max(d_j));
-0097         <span class="keyword">if</span> d &lt; 1
-0098             toBeRemoved = [toBeRemoved;j];
-0099         <span class="keyword">end</span>
-0100     <span class="keyword">end</span>
-0101     <span class="keyword">if</span> ~isempty(toBeRemoved)
-0102         toBeRemoved = [toBeRemoved;i];
-0103         [~,maxInd]=max(vecLD.contourLengths(toBeRemoved));
-0104         finalToBeRemoved = [finalToBeRemoved;setdiff(toBeRemoved,toBeRemoved(maxInd))];
-0105     <span class="keyword">end</span>       
-0106 <span class="keyword">end</span>
-0107 
-0108 vecLD.contours(finalToBeRemoved) = [];
-0109 vecLD.numContours = length(vecLD.contours);
-0110 
-0111 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0002 
+0003 <span class="keyword">for</span> cc = 1 : vecLD.numContours
+0004     curContour = vecLD.contours{cc};
+0005     X = [curContour(:,1); curContour(<span class="keyword">end</span>,3)];
+0006     Y = [curContour(:,2); curContour(<span class="keyword">end</span>,4)];
+0007     XY = [X,Y];
+0008     
+0009     counter = 1;
+0010     start = 1;
+0011     n = size(XY,1);
+0012     t = start+2;
+0013     toBeRemoved = [];
+0014     lineSegs = {};
+0015     <span class="keyword">while</span> t&lt;=n
+0016         t = start+2;
+0017 
+0018         stillStraight = true;
+0019         <span class="keyword">while</span>(stillStraight)
+0020             segXY = XY(start:t,:);
+0021             d = <a href="getDistanceFromLineSegment.html" class="code" title="function d = getDistanceFromLineSegment(XY)">getDistanceFromLineSegment</a>(segXY);
+0022             <span class="keyword">if</span> d &gt; threshParam || t &gt;= n
+0023                 stillStraight = false;
+0024                 <span class="keyword">if</span> n - t  &lt;= 1
+0025                     t = n+1;
+0026                 <span class="keyword">end</span>
+0027                 <span class="comment">%fprintf('start = %d, end = %d\n',start,t-1);</span>
+0028                 lineSegs{counter} = XY(start:t-1,:);
+0029                 toBeRemoved = [toBeRemoved,start:t-1];
+0030                 counter = counter+1;
+0031                 start = t-1;
+0032             <span class="keyword">else</span>
+0033                 t = t+1;
+0034             <span class="keyword">end</span>
+0035 
+0036         <span class="keyword">end</span>
+0037     <span class="keyword">end</span>
+0038     startXY = zeros(length(lineSegs),2);
+0039     endXY = zeros(length(lineSegs),2);
+0040     <span class="keyword">for</span> i = 1 : length(lineSegs)
+0041         curLineSeg = lineSegs{i};
+0042         startXY(i,:) = curLineSeg(1,:);
+0043         endXY(i,:) = curLineSeg(<span class="keyword">end</span>,:);
+0044     <span class="keyword">end</span>
+0045     curSeg = [startXY,endXY];
+0046     <span class="keyword">if</span> ~isempty(curSeg)
+0047         vecLD.contours{cc} = [startXY,endXY];      
+0048     <span class="keyword">end</span>
+0049 <span class="keyword">end</span>
+0050 
+0051  vecLD = <a href="removeDuplicatedContours.html" class="code" title="function vecLD = removeDuplicatedContours(vecLD)">removeDuplicatedContours</a>(vecLD);
+0052 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

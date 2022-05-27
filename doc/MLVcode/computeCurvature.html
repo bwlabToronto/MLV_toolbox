@@ -57,48 +57,39 @@ This function is called by:
 0007 <span class="comment">% Output:</span>
 0008 <span class="comment">%   vecLD- a vector LD of structs with curvature information added</span>
 0009 
-0010 <span class="comment">% -----------------------------------------------------</span>
-0011 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0012 <span class="comment">% http://www.mlvtoolbox.org</span>
-0013 <span class="comment">%</span>
-0014 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0015 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0016 <span class="comment">%</span>
-0017 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0018 <span class="comment">%------------------------------------------------------</span>
-0019 
-0020 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'orientations'</span>)
-0021     vecLD = <a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>(vecLD);
-0022 <span class="keyword">end</span>
-0023 
-0024 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'lengths'</span>)
-0025     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
-0026 <span class="keyword">end</span>
-0027 
-0028 vecLD.curvatures = {};
-0029 <span class="keyword">for</span> c = 1:vecLD.numContours
-0030     thisCon = vecLD.contours{c};
-0031     numSegments = size(thisCon,1);
-0032     vecLD.curvatures{c} = [];
-0033     <span class="keyword">if</span> numSegments == 1
-0034         vecLD.curvatures{c} = 0; <span class="comment">% special case of only one straight segment</span>
-0035         <span class="keyword">continue</span>;
-0036     <span class="keyword">end</span>
-0037     <span class="keyword">for</span> s = 1:numSegments
-0038         <span class="keyword">if</span> s == numSegments
-0039             s2 = s-1; <span class="comment">% for the last segment, we refer to the previous segment</span>
-0040         <span class="keyword">else</span>
-0041             s2 = s+1; <span class="comment">% for all other semgents, we refer to the next segment</span>
-0042         <span class="keyword">end</span>
-0043         angleDiff = abs(vecLD.orientations{c}(s) - vecLD.orientations{c}(s2));
-0044         <span class="keyword">if</span> angleDiff &gt; 180
-0045             angleDiff = 360 - angleDiff; <span class="comment">% for angles &gt; 180 we use the opposite angle</span>
-0046         <span class="keyword">end</span>
-0047         vecLD.curvatures{c}(s) = angleDiff / vecLD.lengths{c}(s);
-0048     <span class="keyword">end</span>
-0049 <span class="keyword">end</span>
-0050 
-0051</pre></div>
-<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0010 
+0011 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'orientations'</span>)
+0012     vecLD = <a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>(vecLD);
+0013 <span class="keyword">end</span>
+0014 
+0015 <span class="keyword">if</span> ~isfield(vecLD,<span class="string">'lengths'</span>)
+0016     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
+0017 <span class="keyword">end</span>
+0018 
+0019 vecLD.curvatures = {};
+0020 <span class="keyword">for</span> c = 1:vecLD.numContours
+0021     thisCon = vecLD.contours{c};
+0022     numSegments = size(thisCon,1);
+0023     vecLD.curvatures{c} = [];
+0024     <span class="keyword">if</span> numSegments == 1
+0025         vecLD.curvatures{c} = 0; <span class="comment">% special case of only one straight segment</span>
+0026         <span class="keyword">continue</span>;
+0027     <span class="keyword">end</span>
+0028     <span class="keyword">for</span> s = 1:numSegments
+0029         <span class="keyword">if</span> s == numSegments
+0030             s2 = s-1; <span class="comment">% for the last segment, we refer to the previous segment</span>
+0031         <span class="keyword">else</span>
+0032             s2 = s+1; <span class="comment">% for all other semgents, we refer to the next segment</span>
+0033         <span class="keyword">end</span>
+0034         angleDiff = abs(vecLD.orientations{c}(s) - vecLD.orientations{c}(s2));
+0035         <span class="keyword">if</span> angleDiff &gt; 180
+0036             angleDiff = 360 - angleDiff; <span class="comment">% for angles &gt; 180 we use the opposite angle</span>
+0037         <span class="keyword">end</span>
+0038         vecLD.curvatures{c}(s) = angleDiff / vecLD.lengths{c}(s);
+0039     <span class="keyword">end</span>
+0040 <span class="keyword">end</span>
+0041 
+0042</pre></div>
+<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
