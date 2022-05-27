@@ -4,7 +4,7 @@
 <head>
   <title>Description of traceSkeleton</title>
   <meta name="keywords" content="traceSkeleton">
-  <meta name="description" content="Copyright Morteza Rezanejad">
+  <meta name="description" content="allBranches = traceSkeleton(MAT)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,30 +21,23 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>Copyright Morteza Rezanejad</strong></div>
+<div class="box"><strong>allBranches = traceSkeleton(MAT)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function allBranches = traceSkeleton(MAT) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> Copyright Morteza Rezanejad
- McGill University, Montreal, QC 2019
+<div class="fragment"><pre class="comment"> allBranches = traceSkeleton(MAT)
+   This function traces all branches of Medial Axis Transform (MAT) data structure.
 
- Contact: morteza [at] cim [dot] mcgill [dot] ca 
- -------------------------------------------------------------------------
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
- 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- 
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.
- -------------------------------------------------------------------------</pre></div>
+ Input:
+   MAT - a given MAT data structure ,
+   
+ Output:
+   allBranches - a struct that includes all branches computed from MAT,
+   this includes X and Y position of each each branch point as well as the
+   Radius value (radius function) and the average
+   outward flux value (AOF) along each branch</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -53,60 +46,51 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a>	</li><li><a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>	[skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)</li></ul>
+<li><a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a>	[MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)</li><li><a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>	[skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)</li></ul>
 <!-- crossreference -->
 
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <span class="comment">% Copyright Morteza Rezanejad</span>
-0002 <span class="comment">% McGill University, Montreal, QC 2019</span>
-0003 <span class="comment">%</span>
-0004 <span class="comment">% Contact: morteza [at] cim [dot] mcgill [dot] ca</span>
-0005 <span class="comment">% -------------------------------------------------------------------------</span>
-0006 <span class="comment">% This program is free software: you can redistribute it and/or modify</span>
-0007 <span class="comment">% it under the terms of the GNU General Public License as published by</span>
-0008 <span class="comment">% the Free Software Foundation, either version 3 of the License, or</span>
-0009 <span class="comment">% (at your option) any later version.</span>
-0010 <span class="comment">%</span>
-0011 <span class="comment">% This program is distributed in the hope that it will be useful,</span>
-0012 <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-0013 <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-0014 <span class="comment">% GNU General Public License for more details.</span>
-0015 <span class="comment">%</span>
-0016 <span class="comment">% You should have received a copy of the GNU General Public License</span>
-0017 <span class="comment">% along with this program.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
-0018 <span class="comment">% -------------------------------------------------------------------------</span>
-0019 
-0020 <a name="_sub0" href="#_subfunctions" class="code">function allBranches = traceSkeleton(MAT)</a>
-0021 
-0022 
-0023 SegList  = GetConSeg(MAT.skeleton);
-0024 <span class="comment">% allBranches = cell(size(SegList));</span>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function allBranches = traceSkeleton(MAT)</a>
+0002 <span class="comment">% allBranches = traceSkeleton(MAT)</span>
+0003 <span class="comment">%   This function traces all branches of Medial Axis Transform (MAT) data structure.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   MAT - a given MAT data structure ,</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Output:</span>
+0009 <span class="comment">%   allBranches - a struct that includes all branches computed from MAT,</span>
+0010 <span class="comment">%   this includes X and Y position of each each branch point as well as the</span>
+0011 <span class="comment">%   Radius value (radius function) and the average</span>
+0012 <span class="comment">%   outward flux value (AOF) along each branch</span>
+0013 
+0014 <span class="comment">% -----------------------------------------------------</span>
+0015 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0016 <span class="comment">% http://www.mlvtoolbox.org</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Copyright Morteza Rezanejad</span>
+0019 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
+0022 <span class="comment">%------------------------------------------------------</span>
+0023 
+0024 SegList  = GetConSeg(MAT.skeleton);
 0025 allBranches = [];
 0026 
-0027 <span class="comment">% branch = [];</span>
-0028 <span class="keyword">for</span> i = 1 : length(SegList)
-0029     
-0030     
-0031     
+0027 <span class="keyword">for</span> i = 1 : length(SegList)
+0028     XY = SegList{i};
+0029     X = XY(:,1);
+0030     Y = XY(:,2);
+0031     C = sub2ind(size(MAT.skeleton),X,Y);
 0032     
-0033     XY = SegList{i};
-0034     X = XY(:,1);
-0035     Y = XY(:,2);
-0036     C = sub2ind(size(MAT.skeleton),X,Y);
-0037     
-0038     R = MAT.distance_map(C);
-0039     F = MAT.AOF(C);
-0040 <span class="comment">%     CC = [X,Y,R,F];</span>
-0041     branch = struct(<span class="string">'X'</span>,X,<span class="string">'Y'</span>,Y,<span class="string">'Radius'</span>,R,<span class="string">'AOF'</span>,F);
-0042     allBranches = [allBranches;branch];
-0043 <span class="comment">%     allBranches{i} = CC;</span>
-0044 <span class="keyword">end</span>
-0045 
-0046 <span class="comment">% allBranches = allBranches(~cellfun('isempty',allBranches));</span>
-0047 
-0048 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0033     R = MAT.distance_map(C);
+0034     F = MAT.AOF(C);
+0035     branch = struct(<span class="string">'X'</span>,X,<span class="string">'Y'</span>,Y,<span class="string">'Radius'</span>,R,<span class="string">'AOF'</span>,F);
+0036     allBranches = [allBranches;branch];
+0037 <span class="keyword">end</span>
+0038 
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

@@ -69,30 +69,40 @@ This function is called by:
 0017 <span class="comment">% Neuroimage, 135, 32-44. https://doi.org/10.1016/j.neuroimage.2016.04.021</span>
 0018 <span class="comment">%</span>
 0019 
-0020 rotatedLD.originalImage = vecLD.originalImage;
-0021 rotatedLD.imsize = vecLD.imsize;
-0022 rotatedLD.lineMethod = vecLD.lineMethod;
-0023 rotatedLD.numContours = vecLD.numContours;
-0024 rotatedLD.contours = {};
-0025 
-0026 centerPoint = vecLD.imsize([1,2,1,2])/2;
-0027 
-0028 sinAngle = sind(angle);
-0029 cosAngle = cosd(angle);
-0030 
-0031 <span class="keyword">for</span> c = 1:vecLD.numContours
-0032     offset = repmat(centerPoint,size(vecLD.contours{c},1),1);
-0033     con = vecLD.contours{c} - offset;
-0034     rot = NaN(size(con));
-0035     rot(:,1) = cosAngle * con(:,1) - sinAngle * con(:,2);
-0036     rot(:,2) = sinAngle * con(:,1) + cosAngle * con(:,2);
-0037     rot(:,3) = cosAngle * con(:,3) - sinAngle * con(:,4);
-0038     rot(:,4) = sinAngle * con(:,3) + cosAngle * con(:,4);
-0039     rotatedLD.contours{c} = rot + offset;
-0040 <span class="keyword">end</span>
-0041 
-0042 
-0043</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0020 <span class="comment">% -----------------------------------------------------</span>
+0021 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0022 <span class="comment">% http://www.mlvtoolbox.org</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0025 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0028 <span class="comment">%------------------------------------------------------</span>
+0029 
+0030 rotatedLD.originalImage = vecLD.originalImage;
+0031 rotatedLD.imsize = vecLD.imsize;
+0032 rotatedLD.lineMethod = vecLD.lineMethod;
+0033 rotatedLD.numContours = vecLD.numContours;
+0034 rotatedLD.contours = {};
+0035 
+0036 centerPoint = vecLD.imsize([1,2,1,2])/2;
+0037 
+0038 sinAngle = sind(angle);
+0039 cosAngle = cosd(angle);
+0040 
+0041 <span class="keyword">for</span> c = 1:vecLD.numContours
+0042     offset = repmat(centerPoint,size(vecLD.contours{c},1),1);
+0043     con = vecLD.contours{c} - offset;
+0044     rot = NaN(size(con));
+0045     rot(:,1) = cosAngle * con(:,1) - sinAngle * con(:,2);
+0046     rot(:,2) = sinAngle * con(:,1) + cosAngle * con(:,2);
+0047     rot(:,3) = cosAngle * con(:,3) - sinAngle * con(:,4);
+0048     rot(:,4) = sinAngle * con(:,3) + cosAngle * con(:,4);
+0049     rotatedLD.contours{c} = rot + offset;
+0050 <span class="keyword">end</span>
+0051 
+0052 
+0053</pre></div>
+<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

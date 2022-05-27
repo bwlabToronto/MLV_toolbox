@@ -82,8 +82,7 @@ end
 end
 
 function [result,result2] = getOuterBoundary(binaryImage,background)
-m_Neighbors8 = InitializeNeighborhoods();
-
+m_Neighbors8 = [-1,-1; -1,0; -1,1; 0,-1; 0,1; 1,-1; 1,0; 1,1];
 result2 = zeros(size(binaryImage));
 
 [m,n] = size(binaryImage);

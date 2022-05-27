@@ -4,7 +4,7 @@
 <head>
   <title>Description of lineDrawingTracing</title>
   <meta name="keywords" content="lineDrawingTracing">
-  <meta name="description" content="">
+  <meta name="description" content="vecLD = lineDrawingTracing(fileName)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,19 +21,25 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong></strong></div>
+<div class="box"><strong>vecLD = lineDrawingTracing(fileName)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function vecLD = lineDrawingTracing(fileName) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"></pre></div>
+<div class="fragment"><pre class="comment"> vecLD = lineDrawingTracing(fileName)
+ Converts a photograph into a line drawing image
+
+ Input:
+   fileName - photograph image file
+ Output:
+   vecLD - vectorized line drawing</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="mergeLineSegments.html" class="code" title="function vecLD = mergeLineSegments(vecLD,threshParam)">mergeLineSegments</a>	</li></ul>
+<li><a href="mergeLineSegments.html" class="code" title="function vecLD = mergeLineSegments(vecLD,threshParam)">mergeLineSegments</a>	vecLD = mergeLineSegments(vecLD,threshParam)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
@@ -43,63 +49,80 @@ This function is called by:
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = lineDrawingTracing(fileName)</a>
-0002 
-0003 threshold_edge_strength = 0.85;
-0004 
-0005 I = imread(fileName);
-0006 imsize = size(I);
-0007 vecLD.originalImage = fileName;
-0008 vecLD.imsize = [imsize(2),imsize(1)];
-0009 vecLD.lineMethod = mfilename;
-0010 
-0011 model=load(<span class="string">'edges-master/models/forest/modelBsds'</span>); model=model.model;
-0012 model.opts.nms=-1; model.opts.nThreads=4;
-0013 model.opts.multiscale=0; model.opts.sharpen=2;
-0014 
-0015 <span class="comment">% set up opts for spDetect (see spDetect.m)</span>
-0016 opts = spDetect;
-0017 opts.nThreads = 4;  <span class="comment">% number of computation threads</span>
-0018 opts.k = 512;       <span class="comment">% controls scale of superpixels (big k -&gt; big sp)</span>
-0019 opts.alpha = .5;    <span class="comment">% relative importance of regularity versus data terms</span>
-0020 opts.beta = .9;     <span class="comment">% relative importance of edge versus color terms</span>
-0021 opts.merge = 0;     <span class="comment">% set to small value to merge nearby superpixels at end</span>
-0022 
-0023 <span class="comment">%detect and display superpixels (see spDetect.m)</span>
-0024 [E,~,~,segs]=edgesDetect(I,model);
-0025 [S,~] = spDetect(I,E,opts);
-0026 [~,~,U]=spAffinities(S,E,segs,opts.nThreads);
-0027 coverage = 0;
-0028 <span class="keyword">while</span>(coverage &lt;0.01 &amp;&amp; threshold_edge_strength ~=1)
-0029     
-0030     F = 1-U;
-0031     F(F &lt; threshold_edge_strength) = 0;
-0032     F(F &gt;= threshold_edge_strength) = 1;
-0033     T = bwareaopen(~F,30);
-0034     F = ~T;
-0035     coverage = size(find(F~=1),1)/(size(F,1)*size(F,2));
-0036     threshold_edge_strength = threshold_edge_strength+0.01;
-0037     
-0038 <span class="keyword">end</span>
+0002 <span class="comment">% vecLD = lineDrawingTracing(fileName)</span>
+0003 <span class="comment">% Converts a photograph into a line drawing image</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   fileName - photograph image file</span>
+0007 <span class="comment">% Output:</span>
+0008 <span class="comment">%   vecLD - vectorized line drawing</span>
+0009 
+0010 <span class="comment">% -----------------------------------------------------</span>
+0011 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0012 <span class="comment">% http://www.mlvtoolbox.org</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Copyright Morteza Rezanejad</span>
+0015 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
+0018 <span class="comment">%------------------------------------------------------</span>
+0019 
+0020 threshold_edge_strength = 0.85;
+0021 
+0022 I = imread(fileName);
+0023 imsize = size(I);
+0024 vecLD.originalImage = fileName;
+0025 vecLD.imsize = [imsize(2),imsize(1)];
+0026 vecLD.lineMethod = mfilename;
+0027 
+0028 model=load(<span class="string">'edges-master/models/forest/modelBsds'</span>); model=model.model;
+0029 model.opts.nms=-1; model.opts.nThreads=4;
+0030 model.opts.multiscale=0; model.opts.sharpen=2;
+0031 
+0032 <span class="comment">% set up opts for spDetect (see spDetect.m)</span>
+0033 opts = spDetect;
+0034 opts.nThreads = 4;  <span class="comment">% number of computation threads</span>
+0035 opts.k = 512;       <span class="comment">% controls scale of superpixels (big k -&gt; big sp)</span>
+0036 opts.alpha = .5;    <span class="comment">% relative importance of regularity versus data terms</span>
+0037 opts.beta = .9;     <span class="comment">% relative importance of edge versus color terms</span>
+0038 opts.merge = 0;     <span class="comment">% set to small value to merge nearby superpixels at end</span>
 0039 
-0040 image = ~F;
-0041 SegList  = GetConSeg(image);
-0042 all_boundary_points = find(image~=0);
-0043 
-0044 vecLD.numContours = length(SegList);
-0045 vecLD.contours = {};
-0046 <span class="keyword">for</span> i = 1 : length(SegList)
-0047     contour = SegList{i};
-0048     
-0049     indices = sub2ind(size(image),contour(:,1),contour(:,2));
-0050     all_boundary_points = setdiff(all_boundary_points,indices);
-0051     Ys = contour(:,1);
-0052     Xs = contour(:,2);    
-0053     vecLD.contours{i} = [Xs(1:end-1),Ys(1:end-1),Xs(2:end),Ys(2:end)];   
-0054 <span class="keyword">end</span>
-0055 vecLD = <a href="mergeLineSegments.html" class="code" title="function vecLD = mergeLineSegments(vecLD,threshParam)">mergeLineSegments</a>(vecLD,1);
+0040 <span class="comment">%detect and display superpixels (see spDetect.m)</span>
+0041 [E,~,~,segs]=edgesDetect(I,model);
+0042 [S,~] = spDetect(I,E,opts);
+0043 [~,~,U]=spAffinities(S,E,segs,opts.nThreads);
+0044 coverage = 0;
+0045 <span class="keyword">while</span>(coverage &lt;0.01 &amp;&amp; threshold_edge_strength ~=1)
+0046     
+0047     F = 1-U;
+0048     F(F &lt; threshold_edge_strength) = 0;
+0049     F(F &gt;= threshold_edge_strength) = 1;
+0050     T = bwareaopen(~F,30);
+0051     F = ~T;
+0052     coverage = size(find(F~=1),1)/(size(F,1)*size(F,2));
+0053     threshold_edge_strength = threshold_edge_strength+0.01;
+0054     
+0055 <span class="keyword">end</span>
 0056 
-0057 
-0058 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0057 image = ~F;
+0058 SegList  = GetConSeg(image);
+0059 all_boundary_points = find(image~=0);
+0060 
+0061 vecLD.numContours = length(SegList);
+0062 vecLD.contours = {};
+0063 <span class="keyword">for</span> i = 1 : length(SegList)
+0064     contour = SegList{i};
+0065     
+0066     indices = sub2ind(size(image),contour(:,1),contour(:,2));
+0067     all_boundary_points = setdiff(all_boundary_points,indices);
+0068     Ys = contour(:,1);
+0069     Xs = contour(:,2);    
+0070     vecLD.contours{i} = [Xs(1:end-1),Ys(1:end-1),Xs(2:end),Ys(2:end)];   
+0071 <span class="keyword">end</span>
+0072 vecLD = <a href="mergeLineSegments.html" class="code" title="function vecLD = mergeLineSegments(vecLD,threshParam)">mergeLineSegments</a>(vecLD,1);
+0073 
+0074 
+0075 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <head>
   <title>Description of splitLDbyStatsModel</title>
   <meta name="keywords" content="splitLDbyStatsModel">
-  <meta name="description" content="[topLD, bottomLD] = splitLDbyStatsModel(vecLD,properties,fraction)">
+  <meta name="description" content="[topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>[topLD, bottomLD] = splitLDbyStatsModel(vecLD,properties,fraction)</strong></div>
+<div class="box"><strong>[topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> [topLD, bottomLD] = splitLDbyStatsModel(vecLD,properties,fraction)
+<div class="fragment"><pre class="comment"> [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)
    Splits up the contours in the line drawing vecLD according to a
    pre-trained regression model.
 
@@ -68,7 +68,7 @@ This function is called by:
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)</a>
-0002 <span class="comment">% [topLD, bottomLD] = splitLDbyStatsModel(vecLD,properties,fraction)</span>
+0002 <span class="comment">% [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)</span>
 0003 <span class="comment">%   Splits up the contours in the line drawing vecLD according to a</span>
 0004 <span class="comment">%   pre-trained regression model.</span>
 0005 <span class="comment">%</span>
@@ -95,40 +95,50 @@ This function is called by:
 0026 <span class="comment">%   topLD - line drawing strcture with the top-ranked contours</span>
 0027 <span class="comment">%   bottomLD - line drawing structure with the bottom-ranked contours</span>
 0028 
-0029 <span class="comment">% construct properties table</span>
-0030 numVar = length(Mdl.PredictorNames);
-0031 propTable = table(<span class="string">'Size'</span>,[vecLD.numContours,numVar],<span class="string">'VariableTypes'</span>,repmat({<span class="string">'double'</span>},1,numVar),<span class="string">'VariableNames'</span>,Mdl.PredictorNames);
-0032 
-0033 <span class="comment">% Now fill the table with the actual values</span>
-0034 
-0035 propTable = [<a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normLengthHistograms, <span class="string">'len'</span>),<span class="keyword">...</span>
-0036              <a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normOrientationHistograms,<span class="string">'ori'</span>),<span class="keyword">...</span>
-0037              <a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normCurvatureHistograms, <span class="string">'curv'</span>),<span class="keyword">...</span>
-0038              <a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normJunctionContourHistograms, <span class="string">'juncType'</span>, vecLD.junctionTypeBins)];
-0039 
-0040 
-0041 <span class="comment">% Now get the predictions from the stats model</span>
-0042 scores = predict(Mdl,propTable);
-0043 
-0044 <span class="comment">% rank the prop table and split the line drawings</span>
-0045 [~,totalIdx] = sort(scores,<span class="string">'ascend'</span>);
-0046 sumLen = cumsum(vecLD.contourLengths(totalIdx) / sum(vecLD.contourLengths));
-0047 bottomIdx = totalIdx(find(sumLen &lt;= fraction));
-0048 topIdx = totalIdx(find(sumLen &gt;= (1-fraction)));
+0029 <span class="comment">% -----------------------------------------------------</span>
+0030 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0031 <span class="comment">% http://www.mlvtoolbox.org</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0034 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0037 <span class="comment">%------------------------------------------------------</span>
+0038 
+0039 <span class="comment">% construct properties table</span>
+0040 numVar = length(Mdl.PredictorNames);
+0041 propTable = table(<span class="string">'Size'</span>,[vecLD.numContours,numVar],<span class="string">'VariableTypes'</span>,repmat({<span class="string">'double'</span>},1,numVar),<span class="string">'VariableNames'</span>,Mdl.PredictorNames);
+0042 
+0043 <span class="comment">% Now fill the table with the actual values</span>
+0044 
+0045 propTable = [<a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normLengthHistograms, <span class="string">'len'</span>),<span class="keyword">...</span>
+0046              <a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normOrientationHistograms,<span class="string">'ori'</span>),<span class="keyword">...</span>
+0047              <a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normCurvatureHistograms, <span class="string">'curv'</span>),<span class="keyword">...</span>
+0048              <a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normJunctionContourHistograms, <span class="string">'juncType'</span>, vecLD.junctionTypeBins)];
 0049 
-0050 bottomLD.originalImage = vecLD.originalImage;
-0051 bottomLD.imsize = vecLD.imsize;
-0052 bottomLD.lineMethod = sprintf(<span class="string">'%s - split bottom %g'</span>,vecLD.lineMethod,fraction);
-0053 bottomLD.numContours = numel(bottomIdx);
-0054 bottomLD.contours = vecLD.contours(bottomIdx);
-0055 bottomLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(bottomLD);
-0056 
-0057 topLD.originalImage = vecLD.originalImage;
-0058 topLD.imsize = vecLD.imsize;
-0059 topLD.lineMethod = sprintf(<span class="string">'%s - split top %g'</span>,vecLD.lineMethod,fraction);
-0060 topLD.numContours = numel(topIdx);
-0061 topLD.contours = vecLD.contours(topIdx);
-0062 topLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(topLD);</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0050 
+0051 <span class="comment">% Now get the predictions from the stats model</span>
+0052 scores = predict(Mdl,propTable);
+0053 
+0054 <span class="comment">% rank the prop table and split the line drawings</span>
+0055 [~,totalIdx] = sort(scores,<span class="string">'ascend'</span>);
+0056 sumLen = cumsum(vecLD.contourLengths(totalIdx) / sum(vecLD.contourLengths));
+0057 bottomIdx = totalIdx(find(sumLen &lt;= fraction));
+0058 topIdx = totalIdx(find(sumLen &gt;= (1-fraction)));
+0059 
+0060 bottomLD.originalImage = vecLD.originalImage;
+0061 bottomLD.imsize = vecLD.imsize;
+0062 bottomLD.lineMethod = sprintf(<span class="string">'%s - split bottom %g'</span>,vecLD.lineMethod,fraction);
+0063 bottomLD.numContours = numel(bottomIdx);
+0064 bottomLD.contours = vecLD.contours(bottomIdx);
+0065 bottomLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(bottomLD);
+0066 
+0067 topLD.originalImage = vecLD.originalImage;
+0068 topLD.imsize = vecLD.imsize;
+0069 topLD.lineMethod = sprintf(<span class="string">'%s - split top %g'</span>,vecLD.lineMethod,fraction);
+0070 topLD.numContours = numel(topIdx);
+0071 topLD.contours = vecLD.contours(topIdx);
+0072 topLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(topLD);</pre></div>
+<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

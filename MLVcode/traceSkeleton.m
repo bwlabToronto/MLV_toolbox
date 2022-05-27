@@ -11,14 +11,20 @@ function allBranches = traceSkeleton(MAT)
 %   Radius value (radius function) and the average
 %   outward flux value (AOF) along each branch
 
+% -----------------------------------------------------
+% This file is part of the Mid Level Vision Toolbox: 
+% http://www.mlvtoolbox.org
+%
+% Copyright Morteza Rezanejad
+% University of Toronto, Toronto, Ontario, Canada, 2022
+%
+% Contact: Morteza.Rezanejad@gmail.com
+%------------------------------------------------------
+
 SegList  = GetConSeg(MAT.skeleton);
 allBranches = [];
 
 for i = 1 : length(SegList)
-    
-    
-    
-    
     XY = SegList{i};
     X = XY(:,1);
     Y = XY(:,2);

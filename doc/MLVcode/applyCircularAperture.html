@@ -66,102 +66,105 @@ This function is called by:
 0016 <span class="comment">%</span>
 0017 
 0018 <span class="comment">% -----------------------------------------------------</span>
-0019 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0020 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0019 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0020 <span class="comment">% http://www.mlvtoolbox.org</span>
 0021 <span class="comment">%</span>
-0022 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0023 <span class="comment">%------------------------------------------------------</span>
-0024 
-0025 <span class="keyword">if</span> nargin &lt; 2
-0026     radius = min(vecLD.imsize)/2;
-0027 <span class="keyword">end</span>
-0028 
-0029 <span class="comment">% prep the new data structure</span>
-0030 maskedLD.originalImage = vecLD.originalImage;
-0031 maskedLD.imsize = vecLD.imsize;
-0032 maskedLD.lineMethod = vecLD.lineMethod;
-0033 maskedLD.numContours = 0;
-0034 maskedLD.contours = {};
-0035 
-0036 center = vecLD.imsize / 2;
-0037 
-0038 <span class="keyword">for</span> c = 1:vecLD.numContours
-0039 
-0040     <span class="comment">% compute distances of all contour points from the center</span>
-0041     A = vecLD.contours{c}(:,1:2);
-0042     B = vecLD.contours{c}(:,3:4);
-0043     rA = sqrt(sum((A-center).^2,2));
-0044     rB = sqrt(sum((B-center).^2,2));
-0045 
-0046     prevInside = (rA(1) &lt;= radius);
-0047     currContour = [];
-0048     <span class="keyword">for</span> s = 1:size(vecLD.contours{c},1)
-0049         currInside = (rB(s) &lt;= radius);
-0050 
-0051         <span class="comment">% if end points are on different sides, compute the intersection point with the circle</span>
-0052         <span class="keyword">if</span> xor(currInside,prevInside)
-0053             <span class="comment">% length of this segment</span>
-0054             d = sqrt(sum((B(s,:)-A(s,:)).^2));
-0055 
-0056             <span class="comment">% solve the quadratic equation</span>
-0057             p = -d - (rA(s)^2 - rB(s)^2) / d;
-0058             q = rA(s)^2 - radius^2;
-0059             QQ = sqrt((p/2)^2 - q);
-0060             dA1 = -p/2 + QQ;
-0061             dA2 = -p/2 - QQ;
-0062 
-0063             <span class="comment">% make sure we pick the right solution</span>
-0064             dA1valid = (0 &lt;= dA1) &amp; (dA1 &lt;= d);
-0065             dA2valid = (0 &lt;= dA2) &amp; (dA2 &lt;= d);
-0066             <span class="keyword">if</span> dA1valid
-0067                 dA = dA1;
-0068                 <span class="keyword">if</span> dA2valid
-0069                     error(<span class="string">'Two valid solution - don''t know which one to pick.'</span>);
-0070                 <span class="keyword">end</span>
-0071             <span class="keyword">elseif</span> dA2valid
-0072                 dA = dA2;
-0073             <span class="keyword">else</span>
-0074                 error(<span class="string">'No valid solution - don''t know what to do.'</span>);
-0075             <span class="keyword">end</span>
-0076 
-0077             <span class="comment">% compute the intersection point</span>
-0078             C = A(s,:) + dA/d * (B(s,:)-A(s,:));
-0079         <span class="keyword">end</span>
-0080 
-0081         <span class="comment">% consider all 4 cases</span>
-0082         <span class="keyword">if</span> prevInside
-0083             <span class="keyword">if</span> currInside
-0084                 <span class="comment">% we are completely inside the circle - just keep the segment</span>
-0085                 currContour = [currContour;vecLD.contours{c}(s,:)];
-0086             <span class="keyword">else</span>
-0087                 <span class="comment">% going from inside to outside the circle</span>
-0088                 <span class="comment">% break the segment and terminate this contour</span>
-0089                 currContour = [currContour;[A(s,:),C]];
-0090                 maskedLD.numContours = maskedLD.numContours + 1;
-0091                 maskedLD.contours{maskedLD.numContours} = currContour;
-0092                 currContour = [];
-0093             <span class="keyword">end</span>
-0094         <span class="keyword">else</span>
-0095             <span class="keyword">if</span> currInside
-0096                 <span class="comment">% going from outside to inside</span>
-0097                 <span class="comment">% break the segment and start a new contour</span>
-0098                 currContour = [C,B(s,:)];
-0099                 maskedLD.numContours = maskedLD.numContours + 1;
-0100                 maskedLD.contours{maskedLD.numContours} = currContour;
-0101                 currContour = [];
-0102             <span class="keyword">else</span>
-0103                 <span class="comment">% completely outside - do nothing</span>
-0104             <span class="keyword">end</span>
-0105         <span class="keyword">end</span>
-0106         prevInside = currInside;
-0107     <span class="keyword">end</span>
-0108 
-0109     <span class="comment">% save the contour if it is non-empty</span>
-0110     <span class="keyword">if</span> ~isempty(currContour)
-0111         maskedLD.numContours = maskedLD.numContours + 1;
-0112         maskedLD.contours{maskedLD.numContours} = currContour;
-0113     <span class="keyword">end</span>
-0114 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0022 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0023 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0026 <span class="comment">%------------------------------------------------------</span>
+0027 
+0028 <span class="keyword">if</span> nargin &lt; 2
+0029     radius = min(vecLD.imsize)/2;
+0030 <span class="keyword">end</span>
+0031 
+0032 <span class="comment">% prep the new data structure</span>
+0033 maskedLD.originalImage = vecLD.originalImage;
+0034 maskedLD.imsize = vecLD.imsize;
+0035 maskedLD.lineMethod = vecLD.lineMethod;
+0036 maskedLD.numContours = 0;
+0037 maskedLD.contours = {};
+0038 
+0039 center = vecLD.imsize / 2;
+0040 
+0041 <span class="keyword">for</span> c = 1:vecLD.numContours
+0042 
+0043     <span class="comment">% compute distances of all contour points from the center</span>
+0044     A = vecLD.contours{c}(:,1:2);
+0045     B = vecLD.contours{c}(:,3:4);
+0046     rA = sqrt(sum((A-center).^2,2));
+0047     rB = sqrt(sum((B-center).^2,2));
+0048 
+0049     prevInside = (rA(1) &lt;= radius);
+0050     currContour = [];
+0051     <span class="keyword">for</span> s = 1:size(vecLD.contours{c},1)
+0052         currInside = (rB(s) &lt;= radius);
+0053 
+0054         <span class="comment">% if end points are on different sides, compute the intersection point with the circle</span>
+0055         <span class="keyword">if</span> xor(currInside,prevInside)
+0056             <span class="comment">% length of this segment</span>
+0057             d = sqrt(sum((B(s,:)-A(s,:)).^2));
+0058 
+0059             <span class="comment">% solve the quadratic equation</span>
+0060             p = -d - (rA(s)^2 - rB(s)^2) / d;
+0061             q = rA(s)^2 - radius^2;
+0062             QQ = sqrt((p/2)^2 - q);
+0063             dA1 = -p/2 + QQ;
+0064             dA2 = -p/2 - QQ;
+0065 
+0066             <span class="comment">% make sure we pick the right solution</span>
+0067             dA1valid = (0 &lt;= dA1) &amp; (dA1 &lt;= d);
+0068             dA2valid = (0 &lt;= dA2) &amp; (dA2 &lt;= d);
+0069             <span class="keyword">if</span> dA1valid
+0070                 dA = dA1;
+0071                 <span class="keyword">if</span> dA2valid
+0072                     error(<span class="string">'Two valid solution - don''t know which one to pick.'</span>);
+0073                 <span class="keyword">end</span>
+0074             <span class="keyword">elseif</span> dA2valid
+0075                 dA = dA2;
+0076             <span class="keyword">else</span>
+0077                 error(<span class="string">'No valid solution - don''t know what to do.'</span>);
+0078             <span class="keyword">end</span>
+0079 
+0080             <span class="comment">% compute the intersection point</span>
+0081             C = A(s,:) + dA/d * (B(s,:)-A(s,:));
+0082         <span class="keyword">end</span>
+0083 
+0084         <span class="comment">% consider all 4 cases</span>
+0085         <span class="keyword">if</span> prevInside
+0086             <span class="keyword">if</span> currInside
+0087                 <span class="comment">% we are completely inside the circle - just keep the segment</span>
+0088                 currContour = [currContour;vecLD.contours{c}(s,:)];
+0089             <span class="keyword">else</span>
+0090                 <span class="comment">% going from inside to outside the circle</span>
+0091                 <span class="comment">% break the segment and terminate this contour</span>
+0092                 currContour = [currContour;[A(s,:),C]];
+0093                 maskedLD.numContours = maskedLD.numContours + 1;
+0094                 maskedLD.contours{maskedLD.numContours} = currContour;
+0095                 currContour = [];
+0096             <span class="keyword">end</span>
+0097         <span class="keyword">else</span>
+0098             <span class="keyword">if</span> currInside
+0099                 <span class="comment">% going from outside to inside</span>
+0100                 <span class="comment">% break the segment and start a new contour</span>
+0101                 currContour = [C,B(s,:)];
+0102                 maskedLD.numContours = maskedLD.numContours + 1;
+0103                 maskedLD.contours{maskedLD.numContours} = currContour;
+0104                 currContour = [];
+0105             <span class="keyword">else</span>
+0106                 <span class="comment">% completely outside - do nothing</span>
+0107             <span class="keyword">end</span>
+0108         <span class="keyword">end</span>
+0109         prevInside = currInside;
+0110     <span class="keyword">end</span>
+0111 
+0112     <span class="comment">% save the contour if it is non-empty</span>
+0113     <span class="keyword">if</span> ~isempty(currContour)
+0114         maskedLD.numContours = maskedLD.numContours + 1;
+0115         maskedLD.contours{maskedLD.numContours} = currContour;
+0116     <span class="keyword">end</span>
+0117 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
