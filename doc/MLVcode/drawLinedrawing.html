@@ -44,7 +44,7 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="drawAllProperties.html" class="code" title="function figIDs = drawAllProperties(vecLD,mode,properties)">drawAllProperties</a>	figIDs = drawAllProperties(vecLD,mode,properties)</li><li><a href="drawJunctions.html" class="code" title="function drawJunctions(Junctions,types,MarkerSize,colors)">drawJunctions</a>	drawJunctions(Junctions,types,MarkerSize,colors)</li><li><a href="drawLinedrawingProperty.html" class="code" title="function drawLinedrawingProperty(vecLD,property,lineWidth)">drawLinedrawingProperty</a>	drawLinedrawingProperty(vecLD,property,lineWidth)</li><li><a href="drawMATproperty.html" class="code" title="function drawMATproperty(skeltonImageWithRating,vecLD)">drawMATproperty</a>	</li></ul>
+<li><a href="drawAllProperties.html" class="code" title="function figIDs = drawAllProperties(vecLD,mode,properties)">drawAllProperties</a>	figIDs = drawAllProperties(vecLD,mode,properties)</li><li><a href="drawJunctions.html" class="code" title="function drawJunctions(Junctions,types,MarkerSize,colors)">drawJunctions</a>	drawJunctions(Junctions,types,MarkerSize,colors)</li><li><a href="drawLinedrawingProperty.html" class="code" title="function drawLinedrawingProperty(vecLD,property,lineWidth)">drawLinedrawingProperty</a>	drawLinedrawingProperty(vecLD,property,lineWidth)</li><li><a href="drawMATproperty.html" class="code" title="function drawMATproperty(skeletonImageWithRating,vecLD)">drawMATproperty</a>	drawMATproperty(skeletonImageWithRating,vecLD)</li></ul>
 <!-- crossreference -->
 
 
@@ -62,31 +62,34 @@ This function is called by:
 0010 <span class="comment">%           default: [0,0,0] (black)</span>
 0011 
 0012 <span class="comment">% -----------------------------------------------------</span>
-0013 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0014 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0013 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0014 <span class="comment">% http://www.mlvtoolbox.org</span>
 0015 <span class="comment">%</span>
-0016 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0017 <span class="comment">%------------------------------------------------------</span>
-0018 
-0019 <span class="keyword">if</span> nargin &lt; 3
-0020     color = [0,0,0];
-0021 <span class="keyword">end</span>
-0022 <span class="keyword">if</span> nargin &lt; 2
-0023     lineWidth = 1;
+0016 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0017 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0020 <span class="comment">%------------------------------------------------------</span>
+0021 
+0022 <span class="keyword">if</span> nargin &lt; 3
+0023     color = [0,0,0];
 0024 <span class="keyword">end</span>
-0025 
-0026 <span class="keyword">for</span> c = 1:vecLD.numContours
-0027     thisC = vecLD.contours{c};
-0028     X = [thisC(:,1);thisC(<span class="keyword">end</span>,3)];
-0029     Y = [thisC(:,2);thisC(<span class="keyword">end</span>,4)];
-0030     plot(X,Y,<span class="string">'-'</span>,<span class="string">'Color'</span>,color,<span class="string">'LineWidth'</span>,lineWidth);
-0031     hold on;
-0032 <span class="keyword">end</span>
-0033 
-0034 set(gca,<span class="string">'TickLength'</span>,[0,0]);
-0035 axis ij image;
-0036 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
-0037</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0025 <span class="keyword">if</span> nargin &lt; 2
+0026     lineWidth = 1;
+0027 <span class="keyword">end</span>
+0028 
+0029 <span class="keyword">for</span> c = 1:vecLD.numContours
+0030     thisC = vecLD.contours{c};
+0031     X = [thisC(:,1);thisC(<span class="keyword">end</span>,3)];
+0032     Y = [thisC(:,2);thisC(<span class="keyword">end</span>,4)];
+0033     plot(X,Y,<span class="string">'-'</span>,<span class="string">'Color'</span>,color,<span class="string">'LineWidth'</span>,lineWidth);
+0034     hold on;
+0035 <span class="keyword">end</span>
+0036 
+0037 set(gca,<span class="string">'TickLength'</span>,[0,0]);
+0038 axis ij image;
+0039 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
+0040</pre></div>
+<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

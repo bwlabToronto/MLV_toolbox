@@ -30,6 +30,15 @@
 <div class="fragment"><pre class="comment"> cleanedJunctions = cleanupJunctions(Junctions, Thresh)
        cleans up junctions by merging junctions that are within Thresh pixels of
        each other.
+ -----------------------------------------------------
+ This file is part of the Mid Level Vision Toolbox: 
+ http://www.mlvtoolbox.org
+
+ Copyright Dirk Bernhardt-Walther
+ University of Toronto, Toronto, Ontario, Canada, 2022
+
+ Contact: dirk.walther@gmail.com
+------------------------------------------------------
 
  Input:
    Junctions - as computed by detectJunctions
@@ -57,90 +66,110 @@ This function is called by:
 0002 <span class="comment">% cleanedJunctions = cleanupJunctions(Junctions, Thresh)</span>
 0003 <span class="comment">%       cleans up junctions by merging junctions that are within Thresh pixels of</span>
 0004 <span class="comment">%       each other.</span>
-0005 <span class="comment">%</span>
-0006 <span class="comment">% Input:</span>
-0007 <span class="comment">%   Junctions - as computed by detectJunctions</span>
-0008 <span class="comment">%   Thresh - the threshold for merging junctions (in pixels) default: 2</span>
-0009 <span class="comment">%</span>
-0010 <span class="comment">% Output:</span>
-0011 <span class="comment">%   cleanedJunctions - cleaned up and merged.</span>
-0012 
-0013 <span class="keyword">if</span> nargin &lt; 2
-0014     Thresh=2;
-0015 <span class="keyword">end</span>
-0016 Thresh2 = Thresh*Thresh;
-0017 
-0018 <span class="comment">% determine which junctions need to be merged</span>
-0019 mergeMatrix = false(length(Junctions));
-0020 <span class="keyword">for</span> j1 = 1:length(Junctions)
-0021     <span class="keyword">for</span> j2 = j1+1:length(Junctions)
-0022         mergeMatrix(j1,j2) = (sum((Junctions(j1).position - Junctions(j2).position).^2) &lt;= Thresh2);
-0023     <span class="keyword">end</span>
-0024 <span class="keyword">end</span>
-0025 
-0026 <span class="comment">% determine equivalence classes</span>
-0027 equivalenceClasses = {};
-0028 isJunctionAvailable = true(1,length(Junctions));
-0029 <span class="keyword">while</span> any(mergeMatrix(:))
-0030     [j1,~] = ind2sub(size(mergeMatrix),find(mergeMatrix,1));
-0031     [equivalenceClasses{end+1},mergeMatrix,isJunctionAvailable] = <a href="#_sub1" class="code" title="subfunction [allJs,mergeMatrix,isJunctionAvailable] = recursiveClasses(J,mergeMatrix,isJunctionAvailable)">recursiveClasses</a>(j1,mergeMatrix,isJunctionAvailable);
-0032 <span class="keyword">end</span>
-0033 
-0034 <span class="comment">% double check that they are all disjoint</span>
-0035 equJuncts = [equivalenceClasses{:}];
-0036 uniqueEquJuncts = unique(equJuncts);
-0037 <span class="keyword">if</span> numel(uniqueEquJuncts) &lt; numel(equJuncts)
-0038     error(<span class="string">'Equivalence classes of junctions are not disjoint.'</span>);
-0039 <span class="keyword">end</span>
-0040 
-0041 <span class="comment">% initialize the resulting junctions with all jucntions that do not have neighbors</span>
-0042 cleanedJunctions = Junctions(isJunctionAvailable);
-0043 
-0044 <span class="comment">% now actually merge junctions that are in equivalence classes</span>
-0045 <span class="keyword">for</span> cl = 1:length(equivalenceClasses)
-0046     thisClass = equivalenceClasses{cl};
-0047     allPos = reshape([Junctions(thisClass).position],2,numel(thisClass))';
-0048     thisJunct.position = mean(allPos,1); <span class="comment">% use the center of mass between the junction points</span>
-0049 
-0050     <span class="comment">% combine contour segments</span>
-0051     thisJunct.contourIDs = [];
-0052     thisJunct.segmentIDs = [];
-0053     <span class="keyword">for</span> j = 1:numel(thisClass)
-0054         thisCont = Junctions(thisClass(j)).contourIDs;
-0055         thisSegm = Junctions(thisClass(j)).segmentIDs;
-0056         <span class="keyword">for</span> s = 1:numel(thisCont)
-0057             <span class="comment">% make sure we don't already have this contour-segment combination</span>
-0058             <span class="keyword">if</span> ~any((thisJunct.contourIDs == thisCont(s)) &amp; (thisJunct.segmentIDs == thisSegm(s)))
-0059                 thisJunct.contourIDs(end+1) = thisCont(s);
-0060                 thisJunct.segmentIDs(end+1) = thisSegm(s);
-0061             <span class="keyword">end</span>
-0062         <span class="keyword">end</span>
-0063     <span class="keyword">end</span>
-0064     cleanedJunctions(end+1) = thisJunct;
-0065 <span class="keyword">end</span>
-0066 <span class="keyword">end</span>
-0067 
-0068 
-0069 <a name="_sub1" href="#_subfunctions" class="code">function [allJs,mergeMatrix,isJunctionAvailable] = recursiveClasses(J,mergeMatrix,isJunctionAvailable)</a>
-0070 <span class="keyword">if</span> isJunctionAvailable(J)
-0071     allJs = J;
-0072     isJunctionAvailable(J) = false;
-0073 <span class="keyword">else</span>
-0074     allJs = [];
-0075     <span class="keyword">return</span>;
-0076 <span class="keyword">end</span>
-0077 newJs = find(mergeMatrix(J,:));
-0078 mergeMatrix(J,:) = false;
-0079 mergeMatrix(:,J) = false;
-0080 <span class="keyword">for</span> i = 1:numel(newJs)
-0081     [thisJs,mergeMatrix] = <a href="#_sub1" class="code" title="subfunction [allJs,mergeMatrix,isJunctionAvailable] = recursiveClasses(J,mergeMatrix,isJunctionAvailable)">recursiveClasses</a>(newJs(i),mergeMatrix,isJunctionAvailable);
-0082     isJunctionAvailable(thisJs) = false;
-0083     allJs = [allJs,thisJs];
-0084 <span class="keyword">end</span>
+0005 <span class="comment">% -----------------------------------------------------</span>
+0006 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0007 <span class="comment">% http://www.mlvtoolbox.org</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0010 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0013 <span class="comment">%------------------------------------------------------</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Input:</span>
+0016 <span class="comment">%   Junctions - as computed by detectJunctions</span>
+0017 <span class="comment">%   Thresh - the threshold for merging junctions (in pixels) default: 2</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Output:</span>
+0020 <span class="comment">%   cleanedJunctions - cleaned up and merged.</span>
+0021 
+0022 <span class="comment">% -----------------------------------------------------</span>
+0023 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0024 <span class="comment">% http://www.mlvtoolbox.org</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0027 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0030 <span class="comment">%------------------------------------------------------</span>
+0031 
+0032 
+0033 <span class="keyword">if</span> nargin &lt; 2
+0034     Thresh=2;
+0035 <span class="keyword">end</span>
+0036 Thresh2 = Thresh*Thresh;
+0037 
+0038 <span class="comment">% determine which junctions need to be merged</span>
+0039 mergeMatrix = false(length(Junctions));
+0040 <span class="keyword">for</span> j1 = 1:length(Junctions)
+0041     <span class="keyword">for</span> j2 = j1+1:length(Junctions)
+0042         mergeMatrix(j1,j2) = (sum((Junctions(j1).position - Junctions(j2).position).^2) &lt;= Thresh2);
+0043     <span class="keyword">end</span>
+0044 <span class="keyword">end</span>
+0045 
+0046 <span class="comment">% determine equivalence classes</span>
+0047 equivalenceClasses = {};
+0048 isJunctionAvailable = true(1,length(Junctions));
+0049 <span class="keyword">while</span> any(mergeMatrix(:))
+0050     [j1,~] = ind2sub(size(mergeMatrix),find(mergeMatrix,1));
+0051     [equivalenceClasses{end+1},mergeMatrix,isJunctionAvailable] = <a href="#_sub1" class="code" title="subfunction [allJs,mergeMatrix,isJunctionAvailable] = recursiveClasses(J,mergeMatrix,isJunctionAvailable)">recursiveClasses</a>(j1,mergeMatrix,isJunctionAvailable);
+0052 <span class="keyword">end</span>
+0053 
+0054 <span class="comment">% double check that they are all disjoint</span>
+0055 equJuncts = [equivalenceClasses{:}];
+0056 uniqueEquJuncts = unique(equJuncts);
+0057 <span class="keyword">if</span> numel(uniqueEquJuncts) &lt; numel(equJuncts)
+0058     error(<span class="string">'Equivalence classes of junctions are not disjoint.'</span>);
+0059 <span class="keyword">end</span>
+0060 
+0061 <span class="comment">% initialize the resulting junctions with all jucntions that do not have neighbors</span>
+0062 cleanedJunctions = Junctions(isJunctionAvailable);
+0063 
+0064 <span class="comment">% now actually merge junctions that are in equivalence classes</span>
+0065 <span class="keyword">for</span> cl = 1:length(equivalenceClasses)
+0066     thisClass = equivalenceClasses{cl};
+0067     allPos = reshape([Junctions(thisClass).position],2,numel(thisClass))';
+0068     thisJunct.position = mean(allPos,1); <span class="comment">% use the center of mass between the junction points</span>
+0069 
+0070     <span class="comment">% combine contour segments</span>
+0071     thisJunct.contourIDs = [];
+0072     thisJunct.segmentIDs = [];
+0073     <span class="keyword">for</span> j = 1:numel(thisClass)
+0074         thisCont = Junctions(thisClass(j)).contourIDs;
+0075         thisSegm = Junctions(thisClass(j)).segmentIDs;
+0076         <span class="keyword">for</span> s = 1:numel(thisCont)
+0077             <span class="comment">% make sure we don't already have this contour-segment combination</span>
+0078             <span class="keyword">if</span> ~any((thisJunct.contourIDs == thisCont(s)) &amp; (thisJunct.segmentIDs == thisSegm(s)))
+0079                 thisJunct.contourIDs(end+1) = thisCont(s);
+0080                 thisJunct.segmentIDs(end+1) = thisSegm(s);
+0081             <span class="keyword">end</span>
+0082         <span class="keyword">end</span>
+0083     <span class="keyword">end</span>
+0084     cleanedJunctions(end+1) = thisJunct;
 0085 <span class="keyword">end</span>
-0086 
+0086 <span class="keyword">end</span>
 0087 
-0088</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0088 
+0089 <a name="_sub1" href="#_subfunctions" class="code">function [allJs,mergeMatrix,isJunctionAvailable] = recursiveClasses(J,mergeMatrix,isJunctionAvailable)</a>
+0090 <span class="keyword">if</span> isJunctionAvailable(J)
+0091     allJs = J;
+0092     isJunctionAvailable(J) = false;
+0093 <span class="keyword">else</span>
+0094     allJs = [];
+0095     <span class="keyword">return</span>;
+0096 <span class="keyword">end</span>
+0097 newJs = find(mergeMatrix(J,:));
+0098 mergeMatrix(J,:) = false;
+0099 mergeMatrix(:,J) = false;
+0100 <span class="keyword">for</span> i = 1:numel(newJs)
+0101     [thisJs,mergeMatrix] = <a href="#_sub1" class="code" title="subfunction [allJs,mergeMatrix,isJunctionAvailable] = recursiveClasses(J,mergeMatrix,isJunctionAvailable)">recursiveClasses</a>(newJs(i),mergeMatrix,isJunctionAvailable);
+0102     isJunctionAvailable(thisJs) = false;
+0103     allJs = [allJs,thisJs];
+0104 <span class="keyword">end</span>
+0105 <span class="keyword">end</span>
+0106 
+0107 
+0108</pre></div>
+<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

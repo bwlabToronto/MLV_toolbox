@@ -26,14 +26,13 @@ markerSize = floor(0.05*max(size(skeletonImageWithRating)));
 inds = find(skeletonImageWithRating~=0);
 imsize = size(skeletonImageWithRating);
 scores = skeletonImageWithRating(inds);
-sortedScores = sort(scores);
-cutOffInd = max(round(0.05*(length(sortedScores))),1);
 [X,Y] = ind2sub(imsize,inds);
-scatter(Y,X,markerSize,scoresScaled,'Marker','.');
+scatter(Y,X,markerSize,scores,'Marker','.');
 colormap(jet)
-axis ij image
 box on
 set(gcf,'color','w');
 colorbar('Limits',[0,1],'Ticks',[0,0.5,1],'TickLabels',{'lowest','intermediate','highest'},'FontSize',16);
+axis ij image;
+axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
 
 end

@@ -75,46 +75,56 @@ This function is called by:
 0016 <span class="comment">%   bins: a vector with the bin centers</span>
 0017 <span class="comment">%   shortName: 'horver'</span>
 0018 
-0019 <span class="keyword">if</span> nargin &lt; 2
-0020     numBins = 8;
-0021 <span class="keyword">end</span>
-0022 
-0023 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'orientations'</span>)
-0024     vecLD = <a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>(vecLD);
-0025 <span class="keyword">end</span>
-0026 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'lengths'</span>)
-0027     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
-0028 <span class="keyword">end</span>
-0029 
-0030 bwidth = 2 / numBins;
-0031 binEdges = [-1+bwidth : bwidth : 1];
-0032 bins = binEdges - bwidth/2; <span class="comment">% bin centers</span>
-0033 vecLD.HorVerHistograms = NaN(vecLD.numContours,numBins);
-0034 
-0035 <span class="keyword">for</span> c = 1:vecLD.numContours
-0036     thisHist = zeros(1,numBins);
-0037     thisCon = vecLD.contours{c};
-0038     numSegments = size(thisCon,1);
-0039     <span class="keyword">for</span> s = 1:numSegments
-0040         thisOri = mod(vecLD.orientations{c}(s),180);
-0041         thisHV = abs(cosd(thisOri)) - abs(sind(thisOri));
-0042         <span class="keyword">for</span> b = 1:numBins
-0043             <span class="keyword">if</span> thisHV &lt; binEdges(b)
-0044                 thisHist(b) = thisHist(b) + vecLD.lengths{c}(s);
-0045                 <span class="keyword">break</span>;
-0046             <span class="keyword">end</span>
-0047         <span class="keyword">end</span>
-0048     <span class="keyword">end</span>
-0049     vecLD.HorVerHistograms(c,:) = thisHist;
-0050 <span class="keyword">end</span>
-0051 vecLD.sumHorVerHistogram = sum(vecLD.HorVerHistograms,1);
-0052 HorVerHistogram = vecLD.sumHorVerHistogram;
-0053 vecLD.HorVerBins = bins;
-0054 shortName = <span class="string">'horver'</span>;
-0055 
-0056 
-0057 
-0058</pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0019 <span class="comment">% -----------------------------------------------------</span>
+0020 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0021 <span class="comment">% http://www.mlvtoolbox.org</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0024 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0027 <span class="comment">%------------------------------------------------------</span>
+0028 
+0029 <span class="keyword">if</span> nargin &lt; 2
+0030     numBins = 8;
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'orientations'</span>)
+0034     vecLD = <a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>(vecLD);
+0035 <span class="keyword">end</span>
+0036 <span class="keyword">if</span> ~isfield(vecLD, <span class="string">'lengths'</span>)
+0037     vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
+0038 <span class="keyword">end</span>
+0039 
+0040 bwidth = 2 / numBins;
+0041 binEdges = [-1+bwidth : bwidth : 1];
+0042 bins = binEdges - bwidth/2; <span class="comment">% bin centers</span>
+0043 vecLD.HorVerHistograms = NaN(vecLD.numContours,numBins);
+0044 
+0045 <span class="keyword">for</span> c = 1:vecLD.numContours
+0046     thisHist = zeros(1,numBins);
+0047     thisCon = vecLD.contours{c};
+0048     numSegments = size(thisCon,1);
+0049     <span class="keyword">for</span> s = 1:numSegments
+0050         thisOri = mod(vecLD.orientations{c}(s),180);
+0051         thisHV = abs(cosd(thisOri)) - abs(sind(thisOri));
+0052         <span class="keyword">for</span> b = 1:numBins
+0053             <span class="keyword">if</span> thisHV &lt; binEdges(b)
+0054                 thisHist(b) = thisHist(b) + vecLD.lengths{c}(s);
+0055                 <span class="keyword">break</span>;
+0056             <span class="keyword">end</span>
+0057         <span class="keyword">end</span>
+0058     <span class="keyword">end</span>
+0059     vecLD.HorVerHistograms(c,:) = thisHist;
+0060 <span class="keyword">end</span>
+0061 vecLD.sumHorVerHistogram = sum(vecLD.HorVerHistograms,1);
+0062 HorVerHistogram = vecLD.sumHorVerHistogram;
+0063 vecLD.HorVerBins = bins;
+0064 shortName = <span class="string">'horver'</span>;
+0065 
+0066 
+0067 
+0068</pre></div>
+<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
