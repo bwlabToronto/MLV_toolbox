@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getMATpropertyStats</title>
+  <meta name="keywords" content="getMATpropertyStats">
+  <meta name="description" content="vecLD = getMATpropertyStats(vecLD,property)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; getMATpropertyStats.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>getMATpropertyStats
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>vecLD = getMATpropertyStats(vecLD,property)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [vecLD,histogram,bins,shortName] = getMATpropertyStats(vecLD,property,numBins) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> vecLD = getMATpropertyStats(vecLD,property)
+   Computes the histogram for a MAT property.
+
+ Input:
+   vecLD - the vectorized line drawing structure with the MAT property
+           already computed
+   property - the name of the property, used to read the property from vecLD
+   numBins - the number of bins for the histogram - default: 8
+
+ Output:
+   vecLD: the line drawing structure with property histogram added for each contour
+   histogram: the summary histogram of property for the entire drawing
+   bins: a vector with the bin centers
+   shortName: a shortened name of property (first 3 letters)
+
+ See also: <a href="computeMATproperty.html" class="code" title="function [skeletonImageWithRating,skeletalBranches] = computeMATproperty(MAT,property,skeletalBranches,K)">computeMATproperty</a>, <a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="computeAllMATfromVecLD.html" class="code" title="function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)">computeAllMATfromVecLD</a>	[vecLD,MAT] = computeAllMATfromVecLD(vecLD)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,histogram,bins,shortName] = getMATpropertyStats(vecLD,property,numBins)</a>
+0002 <span class="comment">% vecLD = getMATpropertyStats(vecLD,property)</span>
+0003 <span class="comment">%   Computes the histogram for a MAT property.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   vecLD - the vectorized line drawing structure with the MAT property</span>
+0007 <span class="comment">%           already computed</span>
+0008 <span class="comment">%   property - the name of the property, used to read the property from vecLD</span>
+0009 <span class="comment">%   numBins - the number of bins for the histogram - default: 8</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Output:</span>
+0012 <span class="comment">%   vecLD: the line drawing structure with property histogram added for each contour</span>
+0013 <span class="comment">%   histogram: the summary histogram of property for the entire drawing</span>
+0014 <span class="comment">%   bins: a vector with the bin centers</span>
+0015 <span class="comment">%   shortName: a shortened name of property (first 3 letters)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% See also: computeMATproperty, computeAllMATproperties</span>
+0018 
+0019 <span class="comment">% -----------------------------------------------------</span>
+0020 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0021 <span class="comment">% http://www.mlvtoolbox.org</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0024 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0027 <span class="comment">%------------------------------------------------------</span>
+0028 
+0029 <span class="keyword">if</span> nargin &lt; 3
+0030     numBins = 8;
+0031 <span class="keyword">end</span>
+0032 
+0033 binWidth = 1/numBins;
+0034 bins = [binWidth:binWidth:1] - binWidth/2;
+0035 vecLD.([property,<span class="string">'Bins'</span>]) = bins;
+0036 vecLD.([property,<span class="string">'Histograms'</span>]) = zeros(vecLD.numContours,numBins);
+0037 vecLD.([property,<span class="string">'NormHistograms'</span>]) = zeros(vecLD.numContours,numBins);
+0038 
+0039 <span class="keyword">for</span> c = 1:vecLD.numContours
+0040     thisProp = vecLD.(property){c};
+0041     thisProp = thisProp(~isnan(thisProp));
+0042     thisHist = hist(thisProp,bins);
+0043     vecLD.([property,<span class="string">'Histograms'</span>])(c,:) = thisHist;
+0044     vecLD.([property,<span class="string">'NormHistograms'</span>])(c,:) = thisHist / vecLD.contourLengths(c) * 10000;
+0045 <span class="keyword">end</span>
+0046 
+0047 histogram = sum(vecLD.([property,<span class="string">'Histograms'</span>]),1);
+0048 vecLD.([property,<span class="string">'SumHistogram'</span>]) = histogram;
+0049 vecLD.([property,<span class="string">'NormSumHistogram'</span>]) = histogram / sum(vecLD.contourLengths) * 10000;
+0050 
+0051 shortName = property(1:3);
+0052 
+0053 
+0054 
+0055</pre></div>
+<hr><address>Generated on Fri 27-May-2022 15:16:54 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <head>
   <title>Description of MATpropertiesToContours</title>
   <meta name="keywords" content="MATpropertiesToContours">
-  <meta name="description" content="define a evctor for scaling the coordinates up or down as needed">
+  <meta name="description" content="vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,14 +21,24 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>define a evctor for scaling the coordinates up or down as needed</strong></div>
+<div class="box"><strong>vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>function vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> define a evctor for scaling the coordinates up or down as needed
- MATpropertyImage = MATpropertyImage';</pre></div>
+<div class="fragment"><pre class="comment"> vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)
+   Maps the MAT properties from the MATpropertyImage back onto the
+   contours given by vecLD and stores the results for each contour in the
+   vecLD data structure.
+
+ Input:
+   vecLD - the vectorized line drawings data structure
+   MATpropertyImage - image with the MAT properties as obtained from mapMATtoContour
+   property - string with the name of the property. This string will be
+              used to name the field inside the vecLD data structure.
+
+ See also: <a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a></pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -37,41 +47,63 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-</ul>
+<li><a href="computeAllMATfromVecLD.html" class="code" title="function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)">computeAllMATfromVecLD</a>	[vecLD,MAT] = computeAllMATfromVecLD(vecLD)</li></ul>
 <!-- crossreference -->
 
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)</a>
-0002 
-0003 
-0004 <span class="comment">% define a evctor for scaling the coordinates up or down as needed</span>
-0005 <span class="comment">% MATpropertyImage = MATpropertyImage';</span>
-0006 imsize = size(MATpropertyImage);
-0007 scaleVec = imsize([2,1]) ./ vecLD.imsize;
-0008 scaleVec = [scaleVec,scaleVec];
-0009 
-0010 vecLD.(property) = cell(1,vecLD.numContours);
-0011 
-0012 allMeans = NaN(1,vecLD.numContours);
-0013 
-0014 <span class="keyword">for</span> c = 1:vecLD.numContours
-0015     img = zeros(imsize);    
-0016     scaledCoords = vecLD.contours{c} .* repmat(scaleVec,size(vecLD.contours{c},1),1);
-0017     img = insertShape(img,<span class="string">'Line'</span>,scaledCoords,<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'LineWidth'</span>,1,<span class="string">'SmoothEdges'</span>,false);
-0018     img = squeeze(img(:,:,1));
-0019     
-0020        
-0021     thisProp = MATpropertyImage(img &gt; 0);
-0022     allMeans(c) = mean(thisProp(thisProp~=0));
-0023     thisProp(thisProp==0) = NaN;
-0024     vecLD.(property){c} = thisProp;
-0025 <span class="keyword">end</span>
-0026 
-0027 vecLD.([<span class="string">'means_'</span>,property]) = allMeans;
-0028 
-0029 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0002 <span class="comment">% vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)</span>
+0003 <span class="comment">%   Maps the MAT properties from the MATpropertyImage back onto the</span>
+0004 <span class="comment">%   contours given by vecLD and stores the results for each contour in the</span>
+0005 <span class="comment">%   vecLD data structure.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Input:</span>
+0008 <span class="comment">%   vecLD - the vectorized line drawings data structure</span>
+0009 <span class="comment">%   MATpropertyImage - image with the MAT properties as obtained from mapMATtoContour</span>
+0010 <span class="comment">%   property - string with the name of the property. This string will be</span>
+0011 <span class="comment">%              used to name the field inside the vecLD data structure.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% See also: mapMATtoContour</span>
+0014 
+0015 <span class="comment">% -----------------------------------------------------</span>
+0016 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0017 <span class="comment">% http://www.mlvtoolbox.org</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0020 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0023 <span class="comment">%------------------------------------------------------</span>
+0024 
+0025 
+0026 <span class="comment">% define a vector for scaling the coordinates up or down as needed</span>
+0027 <span class="comment">% MATpropertyImage = MATpropertyImage';</span>
+0028 imsize = size(MATpropertyImage);
+0029 scaleVec = imsize([2,1]) ./ vecLD.imsize;
+0030 scaleVec = [scaleVec,scaleVec];
+0031 
+0032 vecLD.(property) = cell(1,vecLD.numContours);
+0033 
+0034 allMeans = NaN(1,vecLD.numContours);
+0035 
+0036 <span class="keyword">for</span> c = 1:vecLD.numContours
+0037     img = zeros(imsize);    
+0038     scaledCoords = vecLD.contours{c} .* repmat(scaleVec,size(vecLD.contours{c},1),1);
+0039     img = insertShape(img,<span class="string">'Line'</span>,scaledCoords,<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'LineWidth'</span>,1,<span class="string">'SmoothEdges'</span>,false);
+0040     img = squeeze(img(:,:,1));
+0041     
+0042        
+0043     thisProp = MATpropertyImage(img &gt; 0)';
+0044     allMeans(c) = mean(thisProp(thisProp~=0));
+0045     thisProp(thisProp==0) = NaN;
+0046     vecLD.(property){c} = thisProp;
+0047 <span class="keyword">end</span>
+0048 
+0049 vecLD.([<span class="string">'means_'</span>,property]) = allMeans;
+0050 
+0051 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 27-May-2022 15:16:54 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
