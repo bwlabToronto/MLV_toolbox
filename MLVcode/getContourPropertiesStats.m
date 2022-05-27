@@ -65,13 +65,13 @@ for s = 1:length(whichStats)
             if isempty(minmaxLen)
                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getLengthStats(vecLD,numBins);
             else
-                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getLengthStats(vecLD,numBins,minmaxLen(1),minmaxLen(2));
+                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getLengthStats(vecLD,numBins,minmaxLen);
             end                
         case 'curvature'
             if isempty(minmaxCurv)
                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getCurvatureStats(vecLD,numBins);
             else
-                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getCurvatureStats(vecLD,numBins,minmaxCurv(1),minmaxCurv(2));
+                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getCurvatureStats(vecLD,numBins,minmaxCurv);
             end
         case 'junctions'
             if isempty(junctionTypes)
