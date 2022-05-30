@@ -1,5 +1,5 @@
-function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)
-% [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
+function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minmaxLength)
+% [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minmaxLength)
 %       computes the length histogram with logarithmically scaled bins, weighted by segment length
 %
 % Input: 
