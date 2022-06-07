@@ -33,7 +33,7 @@ histTable = table();
 % Deal with the case of a vector of vecLD structures
 if numel(vecLD) > 1
     for l = 1:numel(vecLD)
-        histTable = [histTable;allLdHistogramsToTable(vecLD(l),imageFeatures,shortNames)];
+        histTable = [histTable;allLDHistogramsToTable(vecLD(l),imageFeatures,shortNames)];
         fprintf('Processing %s (%d of %d)...\n',vecLD(l).originalImage,l,numel(vecLD));
     end
     return;
