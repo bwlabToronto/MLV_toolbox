@@ -1,7 +1,7 @@
 function histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)
 % histTable = allLDHistogramsToTable(vecLD,imageFeatures,shortNames)
 %
-% Converts the histograms descrbed in imageFeatures into a table.
+% Converts the histograms described in imageFeatures into a table.
 % If this is used for the sum histograms for the drawing, it results in a
 % table with one row. if it is used for the histograms for the inividual
 % contours, the table will have as many rows as vecLD has contours.
