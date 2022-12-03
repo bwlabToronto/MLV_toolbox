@@ -28,29 +28,24 @@
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
-   Computes the medial axis properties for a line drawing structure.
+   Copmutes the medial axis properties for a line drawing structure.
 
  Input:
    vecLD - the vectorized line drawing structure. This drawing will be
    rendered into an image in order to compute the medial axis properties.
-   If vecLD is an entire vector of line drawings, the properties are
-   computed for each of them in turn.
 
  Output:
    vecLD - the line drawing structure with the medial axis properties added.
-           If the input vecLD is a vector of line drawing structures, so
-           will be the result vecLD.
-   MAT - the medial axis
-         In case of multiple vecLD as input, this will be a vector of MATs.</pre></div>
+   MAT - the medial axis</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="MATpropertiesToContours.html" class="code" title="function vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)">MATpropertiesToContours</a>	vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)</li><li><a href="computeAllMATfromVecLD.html" class="code" title="function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)">computeAllMATfromVecLD</a>	[vecLD,MAT] = computeAllMATfromVecLD(vecLD)</li><li><a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a>	[MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)</li><li><a href="computeMAT.html" class="code" title="function MAT = computeMAT(imgLD,threshold_angle)">computeMAT</a>	MAT = computeMAT(imgLD, threshold_angle)</li><li><a href="getMATpropertyStats.html" class="code" title="function [vecLD,histogram,bins,shortName] = getMATpropertyStats(vecLD,property,numBins)">getMATpropertyStats</a>	vecLD = getMATpropertyStats(vecLD,property)</li><li><a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>	contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)</li><li><a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>	img = renderLinedrawing(vecLD,img,imSize,lineWidth,color)</li></ul>
+<li><a href="MATpropertiesToContours.html" class="code" title="function vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)">MATpropertiesToContours</a>	vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)</li><li><a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a>	[MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)</li><li><a href="computeMAT.html" class="code" title="function MAT = computeMAT(imgLD,threshold_angle)">computeMAT</a>	MAT = computeMAT(imgLD, threshold_angle)</li><li><a href="getMATpropertyStats.html" class="code" title="function [vecLD,histogram,bins,shortName] = getMATpropertyStats(vecLD,property,numBins)">getMATpropertyStats</a>	vecLD = getMATpropertyStats(vecLD,property)</li><li><a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>	contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)</li><li><a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>	img = renderLinedrawing(vecLD,img,imSize,lineWidth,color)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="computeAllMATfromVecLD.html" class="code" title="function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)">computeAllMATfromVecLD</a>	[vecLD,MAT] = computeAllMATfromVecLD(vecLD)</li></ul>
+</ul>
 <!-- crossreference -->
 
 
@@ -58,57 +53,36 @@ This function is called by:
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)</a>
 0002 <span class="comment">% [vecLD,MAT] = computeAllMATfromVecLD(vecLD)</span>
-0003 <span class="comment">%   Computes the medial axis properties for a line drawing structure.</span>
+0003 <span class="comment">%   Copmutes the medial axis properties for a line drawing structure.</span>
 0004 <span class="comment">%</span>
 0005 <span class="comment">% Input:</span>
 0006 <span class="comment">%   vecLD - the vectorized line drawing structure. This drawing will be</span>
 0007 <span class="comment">%   rendered into an image in order to compute the medial axis properties.</span>
-0008 <span class="comment">%   If vecLD is an entire vector of line drawings, the properties are</span>
-0009 <span class="comment">%   computed for each of them in turn.</span>
-0010 <span class="comment">%</span>
-0011 <span class="comment">% Output:</span>
-0012 <span class="comment">%   vecLD - the line drawing structure with the medial axis properties added.</span>
-0013 <span class="comment">%           If the input vecLD is a vector of line drawing structures, so</span>
-0014 <span class="comment">%           will be the result vecLD.</span>
-0015 <span class="comment">%   MAT - the medial axis</span>
-0016 <span class="comment">%         In case of multiple vecLD as input, this will be a vector of MATs.</span>
-0017 
-0018 <span class="comment">% -----------------------------------------------------</span>
-0019 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0020 <span class="comment">% http://www.mlvtoolbox.org</span>
-0021 <span class="comment">%</span>
-0022 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0023 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0024 <span class="comment">%</span>
-0025 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0026 <span class="comment">%------------------------------------------------------</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Output:</span>
+0010 <span class="comment">%   vecLD - the line drawing structure with the medial axis properties added.</span>
+0011 <span class="comment">%   MAT - the medial axis</span>
+0012 
+0013 <span class="comment">% -----------------------------------------------------</span>
+0014 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0015 <span class="comment">% http://www.mlvtoolbox.org</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0018 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0021 <span class="comment">%------------------------------------------------------</span>
+0022 
+0023 img = <a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>(vecLD);
+0024 MAT = <a href="computeMAT.html" class="code" title="function MAT = computeMAT(imgLD,threshold_angle)">computeMAT</a>(img);
+0025 [MATimg,MATskel,branches] = <a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a>(MAT,img);
+0026 properties = fieldnames(MATimg);
 0027 
-0028 <span class="comment">% Deal with the case of a vector of vecLD structures</span>
-0029 <span class="keyword">if</span> numel(vecLD) &gt; 1
-0030     resLD = [];
-0031     MAT = [];
-0032     <span class="keyword">for</span> l = 1:numel(vecLD)
-0033         fprintf(<span class="string">'Processing %s (%d of %d)...\n'</span>,vecLD(l).originalImage,l,numel(vecLD));
-0034         [thisLD,thisMAT] = <a href="computeAllMATfromVecLD.html" class="code" title="function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)">computeAllMATfromVecLD</a>(vecLD(l));
-0035         resLD = [resLD,thisLD];
-0036         MAT = [MAT,thisMAT];
-0037     <span class="keyword">end</span>
-0038     vecLD = resLD;
-0039     fprintf(<span class="string">'Done.\n'</span>);
-0040     <span class="keyword">return</span>;
-0041 <span class="keyword">end</span>
-0042 
-0043 <span class="comment">% This is the actual process for a single vecLD</span>
-0044 img = <a href="renderLinedrawing.html" class="code" title="function img = renderLinedrawing(vecLD,img,imsize,lineWidth,color)">renderLinedrawing</a>(vecLD);
-0045 MAT = <a href="computeMAT.html" class="code" title="function MAT = computeMAT(imgLD,threshold_angle)">computeMAT</a>(img);
-0046 [MATimg,MATskel,branches] = <a href="computeAllMATproperties.html" class="code" title="function [MATcontourImages,MATskeletonImages,skeletalBranches]=computeAllMATproperties(MAT,imgLD,properties)">computeAllMATproperties</a>(MAT,img);
-0047 properties = fieldnames(MATimg);
-0048 
-0049 <span class="keyword">for</span> p = 1:length(properties)
-0050     thisPropImg = <a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>(branches,img,MATskel.(properties{p}));
-0051     vecLD = <a href="MATpropertiesToContours.html" class="code" title="function vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)">MATpropertiesToContours</a>(vecLD,thisPropImg,properties{p});
-0052     vecLD = <a href="getMATpropertyStats.html" class="code" title="function [vecLD,histogram,bins,shortName] = getMATpropertyStats(vecLD,property,numBins)">getMATpropertyStats</a>(vecLD,properties{p});
-0053 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Sat 03-Dec-2022 16:10:13 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0028 <span class="keyword">for</span> p = 1:length(properties)
+0029     thisPropImg = <a href="mapMATtoContour.html" class="code" title="function contourImageWithRating = mapMATtoContour(skeletalBranches,imgLD,skeletonImageWithRating)">mapMATtoContour</a>(branches,img,MATskel.(properties{p}));
+0030     vecLD = <a href="MATpropertiesToContours.html" class="code" title="function vecLD = MATpropertiesToContours(vecLD,MATpropertyImage,property)">MATpropertiesToContours</a>(vecLD,thisPropImg,properties{p});
+0031     vecLD = <a href="getMATpropertyStats.html" class="code" title="function [vecLD,histogram,bins,shortName] = getMATpropertyStats(vecLD,property,numBins)">getMATpropertyStats</a>(vecLD,properties{p});
+0032 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 27-May-2022 15:16:54 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

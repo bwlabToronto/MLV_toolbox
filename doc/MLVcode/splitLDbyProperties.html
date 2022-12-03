@@ -38,7 +38,7 @@
 
    properties - the property or properties to be considered.
                 These properties are implemented:
-                'Length','Orientation','Curvature','Junctions','Random'
+                'Length','Orientation','Curvature','Junctions'
                 properties can either be one of these strings
                 or a cell array of more than one. If more than one
                 property is included, the rankings according to the
@@ -53,7 +53,6 @@
                   'Junctions': weighted by the total number of junctions
                                that the contour participates in.
                                topLD: most junctions; bottomLD: least junctions
-                  'Random': a random split of the contours
 
    fraction - the fraction of pixels to preserve. default: 0.5
               Only whole contours will be assigned. The splitting is
@@ -94,7 +93,7 @@ This function is called by:
 0010 <span class="comment">%</span>
 0011 <span class="comment">%   properties - the property or properties to be considered.</span>
 0012 <span class="comment">%                These properties are implemented:</span>
-0013 <span class="comment">%                'Length','Orientation','Curvature','Junctions','Random'</span>
+0013 <span class="comment">%                'Length','Orientation','Curvature','Junctions'</span>
 0014 <span class="comment">%                properties can either be one of these strings</span>
 0015 <span class="comment">%                or a cell array of more than one. If more than one</span>
 0016 <span class="comment">%                property is included, the rankings according to the</span>
@@ -109,102 +108,98 @@ This function is called by:
 0025 <span class="comment">%                  'Junctions': weighted by the total number of junctions</span>
 0026 <span class="comment">%                               that the contour participates in.</span>
 0027 <span class="comment">%                               topLD: most junctions; bottomLD: least junctions</span>
-0028 <span class="comment">%                  'Random': a random split of the contours</span>
-0029 <span class="comment">%</span>
-0030 <span class="comment">%   fraction - the fraction of pixels to preserve. default: 0.5</span>
-0031 <span class="comment">%              Only whole contours will be assigned. The splitting is</span>
-0032 <span class="comment">%              conservative such that *at most* fraction pixels are</span>
-0033 <span class="comment">%              preserved. This means that it could happen that one contour</span>
-0034 <span class="comment">%              in the middle of the distribution does not get assigned to</span>
-0035 <span class="comment">%              either topLD or bottomLD.</span>
-0036 <span class="comment">%</span>
-0037 <span class="comment">%   weights - Array of weigths of the same size as properties.</span>
-0038 <span class="comment">%             default: [] - all properties are weighted equally, same as ones(1,N)</span>
-0039 <span class="comment">%</span>
-0040 <span class="comment">% Return:</span>
-0041 <span class="comment">%   topLD - line drawing strcture with the top-ranked contours</span>
-0042 <span class="comment">%   bottomLD - line drawing structure with the bottom-ranked contours</span>
-0043 
-0044 <span class="comment">% -----------------------------------------------------</span>
-0045 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0046 <span class="comment">% http://www.mlvtoolbox.org</span>
-0047 <span class="comment">%</span>
-0048 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0049 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0050 <span class="comment">%</span>
-0051 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0052 <span class="comment">%------------------------------------------------------</span>
-0053 
-0054 <span class="keyword">if</span> ~iscell(properties)
-0055     properties = {properties};
-0056 <span class="keyword">end</span>
-0057 <span class="keyword">if</span> nargin &lt; 4
-0058     weights = [];
-0059 <span class="keyword">end</span>
-0060 <span class="keyword">if</span> isempty(weights)
-0061     weights = ones(size(properties));
-0062 <span class="keyword">end</span>
-0063 <span class="keyword">if</span> nargin &lt; 3
-0064     fraction = 0.5;
-0065 <span class="keyword">end</span>
-0066 <span class="keyword">if</span> isempty(fraction)
-0067     fraction = 0.5;
-0068 <span class="keyword">end</span>
-0069 
-0070 totalRank = zeros(1,vecLD.numContours);
-0071 <span class="keyword">for</span> p = 1:length(properties)
-0072     <span class="keyword">switch</span> lower(properties{p})
-0073         <span class="keyword">case</span> <span class="string">'length'</span>
-0074             thisCriterion = vecLD.contourLengths;
-0075 
-0076         <span class="keyword">case</span> <span class="string">'curvature'</span>
-0077             <span class="comment">% compute weighted average curvature</span>
-0078             thisCriterion = NaN(1,vecLD.numContours);
-0079             <span class="keyword">for</span> c = 1:vecLD.numContours
-0080                 thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2);
-0081             <span class="keyword">end</span>
-0082 
-0083         <span class="keyword">case</span> <span class="string">'orientation'</span>
-0084             <span class="keyword">for</span> c = 1:vecLD.numContours
-0085                 <span class="comment">% project angles onto the main axes to get horizontal - vertical</span>
-0086                 thisCriterion(c) = sum((abs(cosd(vecLD.orientations{c})) - abs(sind(vecLD.orientations{c}))).*vecLD.lengths{c}',2);
-0087             <span class="keyword">end</span>
-0088 
-0089         <span class="keyword">case</span> <span class="string">'junctions'</span>
-0090             <span class="comment">% just use the sum of all junctions</span>
-0091             thisCriterion = sum(vecLD.junctionContourHistograms,2);
-0092 
-0093         <span class="keyword">case</span> <span class="string">'random'</span>
-0094             thisCriterion = randperm(vecLD.numContours);
-0095 
-0096         <span class="keyword">otherwise</span>
-0097             error([<span class="string">'Unknown property: '</span>,properties{p}]);        
-0098     <span class="keyword">end</span>
-0099     [~,thisIdx] = sort(thisCriterion,<span class="string">'ascend'</span>);
-0100     thisRank(thisIdx) = [1:numel(thisIdx)];
-0101     totalRank = totalRank + weights(p) * thisRank;
-0102 <span class="keyword">end</span>
-0103 
-0104 <span class="comment">% split by totalRank</span>
-0105 [~,totalIdx] = sort(totalRank,<span class="string">'ascend'</span>);
-0106 sumLen = cumsum(vecLD.contourLengths(totalIdx) / sum(vecLD.contourLengths));
-0107 bottomIdx = totalIdx(find(sumLen &lt;= fraction));
-0108 topIdx = totalIdx(find(sumLen &gt;= (1-fraction)));
-0109 
-0110 bottomLD.originalImage = vecLD.originalImage;
-0111 bottomLD.imsize = vecLD.imsize;
-0112 bottomLD.lineMethod = sprintf(<span class="string">'%s - split bottom %g'</span>,vecLD.lineMethod,fraction);
-0113 bottomLD.numContours = numel(bottomIdx);
-0114 bottomLD.contours = vecLD.contours(bottomIdx);
-0115 bottomLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(bottomLD);
-0116 
-0117 topLD.originalImage = vecLD.originalImage;
-0118 topLD.imsize = vecLD.imsize;
-0119 topLD.lineMethod = sprintf(<span class="string">'%s - split top %g'</span>,vecLD.lineMethod,fraction);
-0120 topLD.numContours = numel(topIdx);
-0121 topLD.contours = vecLD.contours(topIdx);
-0122 topLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(topLD);
-0123</pre></div>
-<hr><address>Generated on Sat 03-Dec-2022 16:10:13 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%   fraction - the fraction of pixels to preserve. default: 0.5</span>
+0030 <span class="comment">%              Only whole contours will be assigned. The splitting is</span>
+0031 <span class="comment">%              conservative such that *at most* fraction pixels are</span>
+0032 <span class="comment">%              preserved. This means that it could happen that one contour</span>
+0033 <span class="comment">%              in the middle of the distribution does not get assigned to</span>
+0034 <span class="comment">%              either topLD or bottomLD.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%   weights - Array of weigths of the same size as properties.</span>
+0037 <span class="comment">%             default: [] - all properties are weighted equally, same as ones(1,N)</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% Return:</span>
+0040 <span class="comment">%   topLD - line drawing strcture with the top-ranked contours</span>
+0041 <span class="comment">%   bottomLD - line drawing structure with the bottom-ranked contours</span>
+0042 
+0043 <span class="comment">% -----------------------------------------------------</span>
+0044 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0045 <span class="comment">% http://www.mlvtoolbox.org</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0048 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0051 <span class="comment">%------------------------------------------------------</span>
+0052 
+0053 <span class="keyword">if</span> ~iscell(properties)
+0054     properties = {properties};
+0055 <span class="keyword">end</span>
+0056 <span class="keyword">if</span> nargin &lt; 4
+0057     weights = [];
+0058 <span class="keyword">end</span>
+0059 <span class="keyword">if</span> isempty(weights)
+0060     weights = ones(size(properties));
+0061 <span class="keyword">end</span>
+0062 <span class="keyword">if</span> nargin &lt; 3
+0063     fraction = 0.5;
+0064 <span class="keyword">end</span>
+0065 <span class="keyword">if</span> isempty(fraction)
+0066     fraction = 0.5;
+0067 <span class="keyword">end</span>
+0068 
+0069 totalRank = zeros(1,vecLD.numContours);
+0070 <span class="keyword">for</span> p = 1:length(properties)
+0071     <span class="keyword">switch</span> lower(properties{p})
+0072         <span class="keyword">case</span> <span class="string">'length'</span>
+0073             thisCriterion = vecLD.contourLengths;
+0074 
+0075         <span class="keyword">case</span> <span class="string">'curvature'</span>
+0076             <span class="comment">% compute weighted average curvature</span>
+0077             thisCriterion = NaN(1,vecLD.numContours);
+0078             <span class="keyword">for</span> c = 1:vecLD.numContours
+0079                 thisCriterion(c) = sum(vecLD.curvatures{c} .* vecLD.lengths{c}',2);
+0080             <span class="keyword">end</span>
+0081 
+0082         <span class="keyword">case</span> <span class="string">'orientation'</span>
+0083             <span class="keyword">for</span> c = 1:vecLD.numContours
+0084                 <span class="comment">% project angles onto the main axes to get horizontal - vertical</span>
+0085                 thisCriterion(c) = sum((abs(cosd(vecLD.orientations{c})) - abs(sind(vecLD.orientations{c}))).*vecLD.lengths{c}',2);
+0086             <span class="keyword">end</span>
+0087 
+0088         <span class="keyword">case</span> <span class="string">'junctions'</span>
+0089             <span class="comment">% just use the sum of all junctions</span>
+0090             thisCriterion = sum(vecLD.junctionContourHistograms,2);
+0091 
+0092         <span class="keyword">otherwise</span>
+0093             error([<span class="string">'Unknown property: '</span>,properties{p}]);        
+0094     <span class="keyword">end</span>
+0095     [~,thisIdx] = sort(thisCriterion,<span class="string">'ascend'</span>);
+0096     thisRank(thisIdx) = [1:numel(thisIdx)];
+0097     totalRank = totalRank + weights(p) * thisRank;
+0098 <span class="keyword">end</span>
+0099 
+0100 <span class="comment">% split by totalRank</span>
+0101 [~,totalIdx] = sort(totalRank,<span class="string">'ascend'</span>);
+0102 sumLen = cumsum(vecLD.contourLengths(totalIdx) / sum(vecLD.contourLengths));
+0103 bottomIdx = totalIdx(find(sumLen &lt;= fraction));
+0104 topIdx = totalIdx(find(sumLen &gt;= (1-fraction)));
+0105 
+0106 bottomLD.originalImage = vecLD.originalImage;
+0107 bottomLD.imsize = vecLD.imsize;
+0108 bottomLD.lineMethod = sprintf(<span class="string">'%s - split bottom %g'</span>,vecLD.lineMethod,fraction);
+0109 bottomLD.numContours = numel(bottomIdx);
+0110 bottomLD.contours = vecLD.contours(bottomIdx);
+0111 bottomLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(bottomLD);
+0112 
+0113 topLD.originalImage = vecLD.originalImage;
+0114 topLD.imsize = vecLD.imsize;
+0115 topLD.lineMethod = sprintf(<span class="string">'%s - split top %g'</span>,vecLD.lineMethod,fraction);
+0116 topLD.numContours = numel(topIdx);
+0117 topLD.contours = vecLD.contours(topIdx);
+0118 topLD = <a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>(topLD);
+0119</pre></div>
+<hr><address>Generated on Fri 27-May-2022 15:16:54 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
