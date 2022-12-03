@@ -1,5 +1,6 @@
 function vecLD = traceLinedrawingFromEdgeMap(fileName)
-% vecLD = traceDrawings(fileName)
+% vecLD = traceLinedrawingFromEdgeMap(fileName)
+%
 % Converts a drawing image (we assume a black pencil like drawing on a white background)
 % into a vectorized line drawing data structure.
 %

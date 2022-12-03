@@ -1,9 +1,9 @@
 function [vecLD,img] = traceLineDrawingFromRGB(fileName)
-% vecLD = lineDrawingTracing(fileName)
-% Converts a photograph into a line drawing image
+% vecLD = traceLineDrawingFromRGB(fileName)
+% Converts an RGB image into a vectorized line drawing
 %
 % Input:
-%   fileName - photograph image file
+%   fileName - RGB image file
 % Output:
 %   vecLD - vectorized line drawing
 %   img - the RGB image
