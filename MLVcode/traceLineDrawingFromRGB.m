@@ -1,4 +1,4 @@
-function [vecLD,img] = lineDrawingTracing(fileName)
+function [vecLD,img] = traceLineDrawingFromRGB(fileName)
 % vecLD = lineDrawingTracing(fileName)
 % Converts a photograph into a line drawing image
 %
