@@ -82,7 +82,7 @@ function vecLD = removeDuplicatedContours(vecLD)
 %   vecLD - vectorized line drawing data structure with overlapping
 %   contours removed
 
-vecLD = computeLength(vecLD);
+tempLD = computeLength(vecLD);
 finalToBeRemoved = [];
 for i = 1 : vecLD.numContours
     contour_i = vecLD.contours{i};
@@ -100,7 +100,7 @@ for i = 1 : vecLD.numContours
     end
     if ~isempty(toBeRemoved)
         toBeRemoved = [toBeRemoved;i];
-        [~,maxInd]=max(vecLD.contourLengths(toBeRemoved));
+        [~,maxInd]=max(tempLD.contourLengths(toBeRemoved));
         finalToBeRemoved = [finalToBeRemoved;setdiff(toBeRemoved,toBeRemoved(maxInd))];
     end       
 end

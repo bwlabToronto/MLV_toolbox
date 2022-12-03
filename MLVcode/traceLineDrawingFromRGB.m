@@ -1,4 +1,4 @@
-function vecLD = lineDrawingTracing(fileName)
+function [vecLD,img] = traceLineDrawingFromRGB(fileName)
 % vecLD = lineDrawingTracing(fileName)
 % Converts a photograph into a line drawing image
 %
@@ -6,6 +6,7 @@ function vecLD = lineDrawingTracing(fileName)
 %   fileName - photograph image file
 % Output:
 %   vecLD - vectorized line drawing
+%   img - the RGB image
 
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
@@ -19,8 +20,8 @@ function vecLD = lineDrawingTracing(fileName)
 
 threshold_edge_strength = 0.85;
 
-I = imread(fileName);
-imsize = size(I);
+img = imread(fileName);
+imsize = size(img);
 vecLD.originalImage = fileName;
 vecLD.imsize = [imsize(2),imsize(1)];
 vecLD.lineMethod = mfilename;
@@ -38,8 +39,8 @@ opts.beta = .9;     % relative importance of edge versus color terms
 opts.merge = 0;     % set to small value to merge nearby superpixels at end
 
 %detect and display superpixels (see spDetect.m)
-[E,~,~,segs]=edgesDetect(I,model);
-[S,~] = spDetect(I,E,opts);
+[E,~,~,segs]=edgesDetect(img,model);
+[S,~] = spDetect(img,E,opts);
 [~,~,U]=spAffinities(S,E,segs,opts.nThreads);
 coverage = 0;
 while(coverage <0.01 && threshold_edge_strength ~=1)

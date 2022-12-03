@@ -1,6 +1,6 @@
 function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
 % [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
-%   Copmutes the medial axis properties for a line drawing structure.
+%   Computes the medial axis properties for a line drawing structure.
 %
 % Input:
 %   vecLD - the vectorized line drawing structure. This drawing will be
@@ -13,8 +13,7 @@ function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
 %           If the input vecLD is a vector of line drawing structures, so
 %           will be the result vecLD.
 %   MAT - the medial axis
-%         In case of multiple vecLD as input, this will be a cell array of
-%         MATs
+%         In case of multiple vecLD as input, this will be a vector of MATs.
 
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
@@ -28,12 +27,13 @@ function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
 
 % Deal with the case of a vector of vecLD structures
 if numel(vecLD) > 1
-    MAT = cell(1,numel(vecLD));
     resLD = [];
+    MAT = [];
     for l = 1:numel(vecLD)
         fprintf('Processing %s (%d of %d)...\n',vecLD(l).originalImage,l,numel(vecLD));
-        [thisLD,MAT{l}] = computeAllMATfromVecLD(vecLD(l));
+        [thisLD,thisMAT] = computeAllMATfromVecLD(vecLD(l));
         resLD = [resLD,thisLD];
+        MAT = [MAT,thisMAT];
     end
     vecLD = resLD;
     fprintf('Done.\n');

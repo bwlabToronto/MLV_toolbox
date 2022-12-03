@@ -46,7 +46,7 @@ This function calls:
 <li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>	vecLD = computeLength(vecLD)</li><li><a href="getDistanceFromLineSegment.html" class="code" title="function d = getDistanceFromLineSegment(XY)">getDistanceFromLineSegment</a>	d = getDistanceFromLineSegment(XY)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="lineDrawingTracing.html" class="code" title="function vecLD = lineDrawingTracing(fileName)">lineDrawingTracing</a>	vecLD = lineDrawingTracing(fileName)</li><li><a href="traceDrawing.html" class="code" title="function vecLD = traceDrawing(fileName)">traceDrawing</a>	vecLD = traceDrawings(fileName)</li></ul>
+<li><a href="traceLineDrawingFromRGB.html" class="code" title="function [vecLD,img] = traceLineDrawingFromRGB(fileName)">traceLineDrawingFromRGB</a>	vecLD = lineDrawingTracing(fileName)</li><li><a href="traceLinedrawingFromEdgeMap.html" class="code" title="function vecLD = traceLinedrawingFromEdgeMap(fileName)">traceLinedrawingFromEdgeMap</a>	vecLD = traceDrawings(fileName)</li></ul>
 <!-- crossreference -->
 
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -138,7 +138,7 @@ This function is called by:
 0082 <span class="comment">%   vecLD - vectorized line drawing data structure with overlapping</span>
 0083 <span class="comment">%   contours removed</span>
 0084 
-0085 vecLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
+0085 tempLD = <a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>(vecLD);
 0086 finalToBeRemoved = [];
 0087 <span class="keyword">for</span> i = 1 : vecLD.numContours
 0088     contour_i = vecLD.contours{i};
@@ -156,7 +156,7 @@ This function is called by:
 0100     <span class="keyword">end</span>
 0101     <span class="keyword">if</span> ~isempty(toBeRemoved)
 0102         toBeRemoved = [toBeRemoved;i];
-0103         [~,maxInd]=max(vecLD.contourLengths(toBeRemoved));
+0103         [~,maxInd]=max(tempLD.contourLengths(toBeRemoved));
 0104         finalToBeRemoved = [finalToBeRemoved;setdiff(toBeRemoved,toBeRemoved(maxInd))];
 0105     <span class="keyword">end</span>       
 0106 <span class="keyword">end</span>
@@ -165,6 +165,6 @@ This function is called by:
 0109 vecLD.numContours = length(vecLD.contours);
 0110 
 0111 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Sat 03-Dec-2022 16:10:13 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
