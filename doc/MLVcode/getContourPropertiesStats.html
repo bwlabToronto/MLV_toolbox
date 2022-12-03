@@ -55,7 +55,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>	[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minmaxCurvature)</li><li><a href="getHorizontalVerticalStats.html" class="code" title="function [vecLD,HorVerHistogram,bins,shortName] = getHorizontalVerticalStats(vecLD,numBins)">getHorizontalVerticalStats</a>	[vecLD,HorVerHistogram,bins] = getOrientationStats(vecLD,numBins)</li><li><a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>	vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</li><li><a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>	[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)</li></ul>
+<li><a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>	[vecLD,curvatureHistogram,bins] = getCurvatureStats(vecLD,numBins,minmaxCurvature)</li><li><a href="getHorizontalVerticalStats.html" class="code" title="function [vecLD,HorVerHistogram,bins,shortName] = getHorizontalVerticalStats(vecLD,numBins)">getHorizontalVerticalStats</a>	[vecLD,HorVerHistogram,bins] = getOrientationStats(vecLD,numBins)</li><li><a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>	vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</li><li><a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minmaxLength)">getLengthStats</a>	[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minmaxLength)</li><li><a href="getOrientationStats.html" class="code" title="function [vecLD,oriHistogram,bins,shortName] = getOrientationStats(vecLD,numBins)">getOrientationStats</a>	[vecLD,oriHistogram,bins] = getOrientationStats(vecLD,numBins)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="saveSceneLDsToTable.html" class="code" title="function [resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)">saveSceneLDsToTable</a>	[resultsTable,statsLD] = saveSceneLDsToTable(csvFileName)</li></ul>
@@ -129,15 +129,15 @@ This function is called by:
 0063             [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getHorizontalVerticalStats.html" class="code" title="function [vecLD,HorVerHistogram,bins,shortName] = getHorizontalVerticalStats(vecLD,numBins)">getHorizontalVerticalStats</a>(vecLD,numBins);            
 0064         <span class="keyword">case</span> <span class="string">'length'</span>
 0065             <span class="keyword">if</span> isempty(minmaxLen)
-0066                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>(vecLD,numBins);
+0066                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minmaxLength)">getLengthStats</a>(vecLD,numBins);
 0067             <span class="keyword">else</span>
-0068                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)">getLengthStats</a>(vecLD,numBins,minmaxLen(1),minmaxLen(2));
+0068                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getLengthStats.html" class="code" title="function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minmaxLength)">getLengthStats</a>(vecLD,numBins,minmaxLen);
 0069             <span class="keyword">end</span>                
 0070         <span class="keyword">case</span> <span class="string">'curvature'</span>
 0071             <span class="keyword">if</span> isempty(minmaxCurv)
 0072                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>(vecLD,numBins);
 0073             <span class="keyword">else</span>
-0074                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>(vecLD,numBins,minmaxCurv(1),minmaxCurv(2));
+0074                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = <a href="getCurvatureStats.html" class="code" title="function [vecLD,curvatureHistogram,bins,shortName] = getCurvatureStats(vecLD,numBins,minmaxCurvature)">getCurvatureStats</a>(vecLD,numBins,minmaxCurv);
 0075             <span class="keyword">end</span>
 0076         <span class="keyword">case</span> <span class="string">'junctions'</span>
 0077             <span class="keyword">if</span> isempty(junctionTypes)
@@ -153,6 +153,6 @@ This function is called by:
 0087     <span class="keyword">end</span>
 0088 <span class="keyword">end</span>
 0089</pre></div>
-<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Sat 03-Dec-2022 16:10:13 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
