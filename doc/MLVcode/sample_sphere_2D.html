@@ -2,8 +2,8 @@
                 "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-  <title>Description of InitializeNeighborhoods</title>
-  <meta name="keywords" content="InitializeNeighborhoods">
+  <title>Description of sample_sphere_2D</title>
+  <meta name="keywords" content="sample_sphere_2D">
   <meta name="description" content="Copyright Morteza Rezanejad">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
@@ -12,19 +12,19 @@
 </head>
 <body>
 <a name="_top"></a>
-<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; InitializeNeighborhoods.m</div>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; sample_sphere_2D.m</div>
 
 <!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
 <td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
 
-<h1>InitializeNeighborhoods
+<h1>sample_sphere_2D
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="box"><strong>Copyright Morteza Rezanejad</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function m_Neighbors8 = InitializeNeighborhoods() </strong></div>
+<div class="box"><strong>function sphere_points = sample_sphere_2D(number_of_samples) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> Copyright Morteza Rezanejad
@@ -55,7 +55,7 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="getOuterBoundary.html" class="code" title="function [result,result2] = getOuterBoundary(binaryImage,background)">getOuterBoundary</a>	Copyright Morteza Rezanejad</li></ul>
+<li><a href="extract2DSkeletonFromBinaryImage.html" class="code" title="function [fluxImage,skeletonImage,distImage,thin_boundary]=extract2DSkeletonFromBinaryImage(binaryImage,threshold)">extract2DSkeletonFromBinaryImage</a>	Copyright Morteza Rezanejad</li></ul>
 <!-- crossreference -->
 
 
@@ -81,12 +81,26 @@ This function is called by:
 0018 <span class="comment">% -------------------------------------------------------------------------</span>
 0019 <span class="comment">% Skeletonization package from earlier work of Morteza Rezanejad</span>
 0020 <span class="comment">% Check the https://github.com/mrezanejad/AOFSkeletons</span>
-0021 <a name="_sub0" href="#_subfunctions" class="code">function m_Neighbors8 = InitializeNeighborhoods()</a>
+0021 <a name="_sub0" href="#_subfunctions" class="code">function sphere_points = sample_sphere_2D(number_of_samples)</a>
 0022 
-0023 
-0024 m_Neighbors8 = [-1,-1; -1,0; -1,1; 0,-1; 0,1; 1,-1; 1,0; 1,1];
-0025 
-0026 <span class="keyword">end</span></pre></div>
+0023 sphere_points = zeros(number_of_samples,2);
+0024 
+0025 alpha = (2*pi)/(number_of_samples);
+0026 
+0027 
+0028 
+0029 
+0030 <span class="keyword">for</span> i = 1 : number_of_samples
+0031     
+0032     sphere_points(i,1) = cos(alpha*(i-1));
+0033     sphere_points(i,2) = sin(alpha*(i-1));
+0034     
+0035 <span class="keyword">end</span>
+0036 
+0037 
+0038 
+0039 
+0040 <span class="keyword">end</span></pre></div>
 <hr><address>Generated on Wed 11-May-2022 01:17:08 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

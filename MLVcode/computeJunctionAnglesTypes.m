@@ -15,6 +15,7 @@ function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)
 %                'Arrow': arrow juctions - three segments: a > 200
 %                'Y': Y junctions - three segments: a < 160
 %                'X': X junctions - four segments.
+%                'L': L junctions - two segments
 %                'Star': Star junctions - more than four segments
 %
 % See also computeJunctions

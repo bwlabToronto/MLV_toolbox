@@ -10,7 +10,7 @@ function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weigh
 %
 %   properties - the property or properties to be considered.
 %                These properties are implemented:
-%                'Length','Orientation','Curvature','Junctions','Random'
+%                'Length','Orientation','Curvature','Junctions'
 %                properties can either be one of these strings
 %                or a cell array of more than one. If more than one
 %                property is included, the rankings according to the
@@ -25,7 +25,6 @@ function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weigh
 %                  'Junctions': weighted by the total number of junctions
 %                               that the contour participates in.
 %                               topLD: most junctions; bottomLD: least junctions
-%                  'Random': a random split of the contours
 %
 %   fraction - the fraction of pixels to preserve. default: 0.5
 %              Only whole contours will be assigned. The splitting is
@@ -89,9 +88,6 @@ for p = 1:length(properties)
         case 'junctions'
             % just use the sum of all junctions
             thisCriterion = sum(vecLD.junctionContourHistograms,2);
-
-        case 'random'
-            thisCriterion = randperm(vecLD.numContours);
 
         otherwise
             error(['Unknown property: ',properties{p}]);        

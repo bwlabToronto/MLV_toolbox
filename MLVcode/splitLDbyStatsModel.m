@@ -41,21 +41,12 @@ numVar = length(Mdl.PredictorNames);
 propTable = table('Size',[vecLD.numContours,numVar],'VariableTypes',repmat({'double'},1,numVar),'VariableNames',Mdl.PredictorNames);
 
 % Now fill the table with the actual values
-shortNames = {'par','mir','sep','len','ori','curv','juncType'};
-histNames = {'parallelismNormHistograms','mirrorNormHistograms','separationNormHistograms',...
-             'normLengthHistograms','normOrientationHistograms','normCurvatureHistograms',...
-             'normJunctionContourHistograms'};
-predictors = Mdl.PredictorNames;
-propTable = table();
-for h = 1:length(histNames)
-    if ~isempty(strmatch(shortNames{h},predictors))
-        if strcmp(shortNames{h},'juncType')
-            propTable = [propTable,histogramToTable(vecLD.normJunctionContourHistograms, 'juncType', vecLD.junctionTypeBins)];
-        else
-            propTable = [propTable,histogramToTable(getfield(vecLD,histNames{h}),shortNames{h})];
-        end
-    end
-end
+
+propTable = [histogramToTable(vecLD.normLengthHistograms, 'len'),...
+             histogramToTable(vecLD.normOrientationHistograms,'ori'),...
+             histogramToTable(vecLD.normCurvatureHistograms, 'curv'),...
+             histogramToTable(vecLD.normJunctionContourHistograms, 'juncType', vecLD.junctionTypeBins)];
+
 
 % Now get the predictions from the stats model
 scores = predict(Mdl,propTable);

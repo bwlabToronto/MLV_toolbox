@@ -4,7 +4,7 @@
 <head>
   <title>Description of getLengthStats</title>
   <meta name="keywords" content="getLengthStats">
-  <meta name="description" content="[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minmaxLength)">
+  <meta name="description" content="[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,13 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minmaxLength)</strong></div>
+<div class="box"><strong>[vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minmaxLength) </strong></div>
+<div class="box"><strong>function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minmaxLength)
+<div class="fragment"><pre class="comment"> [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)
        computes the length histogram with logarithmically scaled bins, weighted by segment length
 
  Input: 
@@ -56,8 +56,8 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minmaxLength)</a>
-0002 <span class="comment">% [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minmaxLength)</span>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,lengthHistogram,bins,shortName] = getLengthStats(vecLD,numBins,minLmaxength)</a>
+0002 <span class="comment">% [vecLD,lengthHistogram,bins] = getLengthStats(vecLD,numBins,minLength,maxLength)</span>
 0003 <span class="comment">%       computes the length histogram with logarithmically scaled bins, weighted by segment length</span>
 0004 <span class="comment">%</span>
 0005 <span class="comment">% Input:</span>
@@ -119,6 +119,6 @@ This function is called by:
 0061 lengthHistogram = vecLD.sumLengthHistogram;
 0062 vecLD.lengthBins = bins;
 0063 shortName = <span class="string">'len'</span>;</pre></div>
-<hr><address>Generated on Sat 03-Dec-2022 16:10:13 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Tue 17-May-2022 10:42:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
