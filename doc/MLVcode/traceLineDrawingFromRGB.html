@@ -2,9 +2,9 @@
                 "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-  <title>Description of lineDrawingTracing</title>
-  <meta name="keywords" content="lineDrawingTracing">
-  <meta name="description" content="vecLD = lineDrawingTracing(fileName)">
+  <title>Description of traceLineDrawingFromRGB</title>
+  <meta name="keywords" content="traceLineDrawingFromRGB">
+  <meta name="description" content="vecLD = traceLineDrawingFromRGB(fileName)">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -12,28 +12,29 @@
 </head>
 <body>
 <a name="_top"></a>
-<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; lineDrawingTracing.m</div>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; traceLineDrawingFromRGB.m</div>
 
 <!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
 <td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
 
-<h1>lineDrawingTracing
+<h1>traceLineDrawingFromRGB
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>vecLD = lineDrawingTracing(fileName)</strong></div>
+<div class="box"><strong>vecLD = traceLineDrawingFromRGB(fileName)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function vecLD = lineDrawingTracing(fileName) </strong></div>
+<div class="box"><strong>function [vecLD,img] = traceLineDrawingFromRGB(fileName) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre class="comment"> vecLD = lineDrawingTracing(fileName)
- Converts a photograph into a line drawing image
+<div class="fragment"><pre class="comment"> vecLD = traceLineDrawingFromRGB(fileName)
+ Converts an RGB image into a vectorized line drawing
 
  Input:
-   fileName - photograph image file
+   fileName - RGB image file
  Output:
-   vecLD - vectorized line drawing</pre></div>
+   vecLD - vectorized line drawing
+   img - the RGB image</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
@@ -48,81 +49,82 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = lineDrawingTracing(fileName)</a>
-0002 <span class="comment">% vecLD = lineDrawingTracing(fileName)</span>
-0003 <span class="comment">% Converts a photograph into a line drawing image</span>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [vecLD,img] = traceLineDrawingFromRGB(fileName)</a>
+0002 <span class="comment">% vecLD = traceLineDrawingFromRGB(fileName)</span>
+0003 <span class="comment">% Converts an RGB image into a vectorized line drawing</span>
 0004 <span class="comment">%</span>
 0005 <span class="comment">% Input:</span>
-0006 <span class="comment">%   fileName - photograph image file</span>
+0006 <span class="comment">%   fileName - RGB image file</span>
 0007 <span class="comment">% Output:</span>
 0008 <span class="comment">%   vecLD - vectorized line drawing</span>
-0009 
-0010 <span class="comment">% -----------------------------------------------------</span>
-0011 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0012 <span class="comment">% http://www.mlvtoolbox.org</span>
-0013 <span class="comment">%</span>
-0014 <span class="comment">% Copyright Morteza Rezanejad</span>
-0015 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0016 <span class="comment">%</span>
-0017 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
-0018 <span class="comment">%------------------------------------------------------</span>
-0019 
-0020 threshold_edge_strength = 0.85;
-0021 
-0022 I = imread(fileName);
-0023 imsize = size(I);
-0024 vecLD.originalImage = fileName;
-0025 vecLD.imsize = [imsize(2),imsize(1)];
-0026 vecLD.lineMethod = mfilename;
-0027 
-0028 model=load(<span class="string">'edges-master/models/forest/modelBsds'</span>); model=model.model;
-0029 model.opts.nms=-1; model.opts.nThreads=4;
-0030 model.opts.multiscale=0; model.opts.sharpen=2;
-0031 
-0032 <span class="comment">% set up opts for spDetect (see spDetect.m)</span>
-0033 opts = spDetect;
-0034 opts.nThreads = 4;  <span class="comment">% number of computation threads</span>
-0035 opts.k = 512;       <span class="comment">% controls scale of superpixels (big k -&gt; big sp)</span>
-0036 opts.alpha = .5;    <span class="comment">% relative importance of regularity versus data terms</span>
-0037 opts.beta = .9;     <span class="comment">% relative importance of edge versus color terms</span>
-0038 opts.merge = 0;     <span class="comment">% set to small value to merge nearby superpixels at end</span>
-0039 
-0040 <span class="comment">%detect and display superpixels (see spDetect.m)</span>
-0041 [E,~,~,segs]=edgesDetect(I,model);
-0042 [S,~] = spDetect(I,E,opts);
-0043 [~,~,U]=spAffinities(S,E,segs,opts.nThreads);
-0044 coverage = 0;
-0045 <span class="keyword">while</span>(coverage &lt;0.01 &amp;&amp; threshold_edge_strength ~=1)
-0046     
-0047     F = 1-U;
-0048     F(F &lt; threshold_edge_strength) = 0;
-0049     F(F &gt;= threshold_edge_strength) = 1;
-0050     T = bwareaopen(~F,30);
-0051     F = ~T;
-0052     coverage = size(find(F~=1),1)/(size(F,1)*size(F,2));
-0053     threshold_edge_strength = threshold_edge_strength+0.01;
-0054     
-0055 <span class="keyword">end</span>
-0056 
-0057 image = ~F;
-0058 SegList  = GetConSeg(image);
-0059 all_boundary_points = find(image~=0);
-0060 
-0061 vecLD.numContours = length(SegList);
-0062 vecLD.contours = {};
-0063 <span class="keyword">for</span> i = 1 : length(SegList)
-0064     contour = SegList{i};
-0065     
-0066     indices = sub2ind(size(image),contour(:,1),contour(:,2));
-0067     all_boundary_points = setdiff(all_boundary_points,indices);
-0068     Ys = contour(:,1);
-0069     Xs = contour(:,2);    
-0070     vecLD.contours{i} = [Xs(1:end-1),Ys(1:end-1),Xs(2:end),Ys(2:end)];   
-0071 <span class="keyword">end</span>
-0072 vecLD = <a href="mergeLineSegments.html" class="code" title="function vecLD = mergeLineSegments(vecLD,threshParam)">mergeLineSegments</a>(vecLD,1);
-0073 
+0009 <span class="comment">%   img - the RGB image</span>
+0010 
+0011 <span class="comment">% -----------------------------------------------------</span>
+0012 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0013 <span class="comment">% http://www.mlvtoolbox.org</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Copyright Morteza Rezanejad</span>
+0016 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Contact: Morteza.Rezanejad@gmail.com</span>
+0019 <span class="comment">%------------------------------------------------------</span>
+0020 
+0021 threshold_edge_strength = 0.85;
+0022 
+0023 img = imread(fileName);
+0024 imsize = size(img);
+0025 vecLD.originalImage = fileName;
+0026 vecLD.imsize = [imsize(2),imsize(1)];
+0027 vecLD.lineMethod = mfilename;
+0028 
+0029 model=load(<span class="string">'edges-master/models/forest/modelBsds'</span>); model=model.model;
+0030 model.opts.nms=-1; model.opts.nThreads=4;
+0031 model.opts.multiscale=0; model.opts.sharpen=2;
+0032 
+0033 <span class="comment">% set up opts for spDetect (see spDetect.m)</span>
+0034 opts = spDetect;
+0035 opts.nThreads = 4;  <span class="comment">% number of computation threads</span>
+0036 opts.k = 512;       <span class="comment">% controls scale of superpixels (big k -&gt; big sp)</span>
+0037 opts.alpha = .5;    <span class="comment">% relative importance of regularity versus data terms</span>
+0038 opts.beta = .9;     <span class="comment">% relative importance of edge versus color terms</span>
+0039 opts.merge = 0;     <span class="comment">% set to small value to merge nearby superpixels at end</span>
+0040 
+0041 <span class="comment">%detect and display superpixels (see spDetect.m)</span>
+0042 [E,~,~,segs]=edgesDetect(img,model);
+0043 [S,~] = spDetect(img,E,opts);
+0044 [~,~,U]=spAffinities(S,E,segs,opts.nThreads);
+0045 coverage = 0;
+0046 <span class="keyword">while</span>(coverage &lt;0.01 &amp;&amp; threshold_edge_strength ~=1)
+0047     
+0048     F = 1-U;
+0049     F(F &lt; threshold_edge_strength) = 0;
+0050     F(F &gt;= threshold_edge_strength) = 1;
+0051     T = bwareaopen(~F,30);
+0052     F = ~T;
+0053     coverage = size(find(F~=1),1)/(size(F,1)*size(F,2));
+0054     threshold_edge_strength = threshold_edge_strength+0.01;
+0055     
+0056 <span class="keyword">end</span>
+0057 
+0058 image = ~F;
+0059 SegList  = GetConSeg(image);
+0060 all_boundary_points = find(image~=0);
+0061 
+0062 vecLD.numContours = length(SegList);
+0063 vecLD.contours = {};
+0064 <span class="keyword">for</span> i = 1 : length(SegList)
+0065     contour = SegList{i};
+0066     
+0067     indices = sub2ind(size(image),contour(:,1),contour(:,2));
+0068     all_boundary_points = setdiff(all_boundary_points,indices);
+0069     Ys = contour(:,1);
+0070     Xs = contour(:,2);    
+0071     vecLD.contours{i} = [Xs(1:end-1),Ys(1:end-1),Xs(2:end),Ys(2:end)];   
+0072 <span class="keyword">end</span>
+0073 vecLD = <a href="mergeLineSegments.html" class="code" title="function vecLD = mergeLineSegments(vecLD,threshParam)">mergeLineSegments</a>(vecLD,1);
 0074 
-0075 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Fri 27-May-2022 15:16:54 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0075 
+0076 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sat 03-Dec-2022 16:55:46 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
