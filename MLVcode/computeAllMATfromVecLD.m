@@ -1,6 +1,6 @@
 function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
 % [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
-%   Copmutes the medial axis properties for a line drawing structure.
+%   Computes the medial axis properties for a line drawing structure.
 %
 % Input:
 %   vecLD - the vectorized line drawing structure. This drawing will be
