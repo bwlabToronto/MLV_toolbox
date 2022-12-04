@@ -57,7 +57,7 @@ scaleVec = [scaleVec,scaleVec];
 % loop over contours
 for c = 1:vecLD.numContours
     scaledCoords = vecLD.contours{c} .* repmat(scaleVec,size(vecLD.contours{c},1),1);
-    img = insertShape(img,'Line',scaledCoords,'Color',color,'LineWidth',lineWidth,'SmoothEdges',false);
+    img = insertShape(img,'Line',scaledCoords,'Color',color,'LineWidth',lineWidth,'Opacity',1,'SmoothEdges',false);
 end
 
 % That's it, we're done.
