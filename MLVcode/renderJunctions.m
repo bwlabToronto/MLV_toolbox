@@ -49,6 +49,6 @@ positions = reshape([Junctions(:).position],2,length(Junctions))';
 positions(:,3) = MarkerSize;
 for t = 1:length(types)
     typeIdx = strcmp(types{t},junctionTypes);
-    img = insertShape(img,'FilledCircle',positions(typeIdx,:),'Color',colors(t,:));
+    img = insertShape(img,'FilledCircle',positions(typeIdx,:),'Color',colors(t,:),'Opacity',1);
 end
 

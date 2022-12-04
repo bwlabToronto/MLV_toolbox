@@ -123,12 +123,12 @@ This function is called by:
 0064 <span class="keyword">for</span> c = 1:vecLD.numContours
 0065     scaledCoords = vecLD.contours{c} .* repmat(scaleVec,size(vecLD.contours{c},1),1);
 0066     <span class="keyword">for</span> s = 1:size(scaledCoords,1)
-0067         img = insertShape(img,<span class="string">'Line'</span>,scaledCoords(s,:),<span class="string">'Color'</span>,cmap(colorIdx{c}(s),:),<span class="string">'LineWidth'</span>,lineWidth,<span class="string">'SmoothEdges'</span>,false);
+0067         img = insertShape(img,<span class="string">'Line'</span>,scaledCoords(s,:),<span class="string">'Color'</span>,cmap(colorIdx{c}(s),:),<span class="string">'LineWidth'</span>,lineWidth,<span class="string">'Opacity'</span>,1,<span class="string">'SmoothEdges'</span>,false);
 0068     <span class="keyword">end</span>
 0069 <span class="keyword">end</span>
 0070 
 0071 <span class="comment">% That's it, we're done.</span>
 0072</pre></div>
-<hr><address>Generated on Fri 27-May-2022 15:16:54 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Sun 04-Dec-2022 07:55:27 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
