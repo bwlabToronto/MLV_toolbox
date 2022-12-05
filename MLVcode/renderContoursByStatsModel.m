@@ -53,11 +53,11 @@ end
 scores = predict(Mdl,propTable);
 
 % write the predictions into the contour locations
-scoreMap = zeros(vecLD.imageSize([2,1]));
+scoreMap = zeros(vecLD.imsize([2,1]));
 for c = 1:vecLD.numContours
-    thisContMap = zeros(vecLD.imageSize(2),vecLD.imageSize(1),3);
+    thisContMap = zeros(vecLD.imsize(2),vecLD.imsize(1),3);
     for s = 1:size(vecLD.contours{c},1)
-        thisContMap = insertShape(thisContMap,'Line',scaledCoords(s,:),'Color',[1,0,0],'LineWidth',lineWidth,'Opacity',1,'SmoothEdges',false);
+        thisContMap = insertShape(thisContMap,'Line',vecLD.contours{c}(s,:),'Color',[1,0,0],'LineWidth',1,'Opacity',1,'SmoothEdges',false);
     end
     thisContMap = thisContMap(:,:,1);
     scoreMap(thisContMap > 0) = scores(c);
