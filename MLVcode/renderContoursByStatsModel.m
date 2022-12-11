@@ -59,6 +59,7 @@ scores = predict(Mdl,propTable);
 
 % write the predictions into the contour locations
 scoreMap = zeros(vecLD.imsize([2,1])) + backgroundValue;
+
 for c = 1:vecLD.numContours
     thisContMap = zeros(vecLD.imsize(2),vecLD.imsize(1),3);
     for s = 1:size(vecLD.contours{c},1)
