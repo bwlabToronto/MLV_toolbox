@@ -10,10 +10,10 @@ function drawJunctions(Junctions,types,MarkerSize,colors)
 %   vecLD - the vectorized line drawing with the junctions included.
 %
 %   types - cell array with the types of junctions to be drawn in order
-%           any combination of 'T','X','Y','Arrow','Star
+%           any combination of 'T','Y','X','Arrow','Star
 %           default: {} - all junctions
 %   Markersize - the size of the marker for the junctions
-%                default: lines()
+%                default: 5
 %   colors - Nx3 array of RGB values to be used as colors
 %            default: Matlab's 'lines' color map - the regular order for line plots.
 %
@@ -34,7 +34,7 @@ if nargin < 3
 end
 
 if nargin < 2
-    types = {};
+    types = {'T','Y','X','Arrow','Star'};
 end
 
 if ~iscell(types)
@@ -53,9 +53,8 @@ if isempty(Junctions)
 end
 
 junctionTypes = {Junctions(:).type};
-if isempty(types)
-    types = unique(junctionTypes);
-end
+typeOccurs = ismember(types,unique(junctionTypes));
+types = types(typeOccurs);
 numTypes = length(types);
 
 if nargin < 4

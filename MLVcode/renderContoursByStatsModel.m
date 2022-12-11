@@ -1,4 +1,4 @@
-function scoreMap = renderContoursByStatsModel(vecLD,Mdl)
+function scoreMap = renderContoursByStatsModel(vecLD,Mdl,backgroundValue)
 % scoreMap = renderContoursByStatsModel(vecLD,Mdl)
 %   Writes the predictions of Mdl for each contour into a one-channel map.
 %
@@ -13,6 +13,7 @@ function scoreMap = renderContoursByStatsModel(vecLD,Mdl)
 %         https://www.mathworks.com/help/stats/fitlm.html
 %         or a random forest model created with fitrensemble:
 %         https://www.mathworks.com/help/stats/fitrensemble.html
+%   backgroundValue - the map value for non-contour pixels (default: 0)
 %
 % Return:
 %   scoreMap - one-channel map with the prediciton scores from Mdl written 
@@ -27,6 +28,10 @@ function scoreMap = renderContoursByStatsModel(vecLD,Mdl)
 %
 % Contact: dirk.walther@gmail.com
 %------------------------------------------------------
+
+if nargin < 3
+    backgroundValue = 0;
+end
 
 % construct properties table
 numVar = length(Mdl.PredictorNames);
@@ -53,7 +58,8 @@ end
 scores = predict(Mdl,propTable);
 
 % write the predictions into the contour locations
-scoreMap = zeros(vecLD.imsize([2,1]));
+scoreMap = zeros(vecLD.imsize([2,1])) + backgroundValue;
+
 for c = 1:vecLD.numContours
     thisContMap = zeros(vecLD.imsize(2),vecLD.imsize(1),3);
     for s = 1:size(vecLD.contours{c},1)

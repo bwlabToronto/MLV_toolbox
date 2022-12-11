@@ -1,4 +1,4 @@
-function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
+function [vecLD,MAT,MATskel] = computeAllMATfromVecLD(vecLD)
 % [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
 %   Computes the medial axis properties for a line drawing structure.
 %
@@ -14,6 +14,7 @@ function [vecLD,MAT] = computeAllMATfromVecLD(vecLD)
 %           will be the result vecLD.
 %   MAT - the medial axis
 %         In case of multiple vecLD as input, this will be a vector of MATs.
+%   MATskel - the MAT skelton image with ratings
 
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
