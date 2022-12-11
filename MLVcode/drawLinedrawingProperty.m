@@ -59,7 +59,8 @@ switch property
     case 'orientation'
         colorbar('Ticks',[0,0.5,1],'TickLabels',{'horizontal','vertical','horizontal'});
     otherwise
-        error(['Unknown property: ',property]);
+        warning(['Unknown property: ',property]);
+        return
 end
 
 axis ij image;

@@ -7,7 +7,7 @@ function figIDs = drawAllProperties(vecLD,mode,properties)
 %   mode - one of: 'subplot' - draw properties into one figure using subplot (default)
 %                  'separate' - draw properties into separate figures
 %   properties -  a cell array of text labels of the properteis to be drawn
-%               default: {'Original','Length','Orientation','Curvature','Junctions'}
+%               default: {'Original','Length','Orientation','Curvature','Junctions','mirror','parallelism','separation'}
 %
 % Return:
 %   figIDs -  a vector of the figure IDs of the individual figures.
@@ -26,7 +26,7 @@ function figIDs = drawAllProperties(vecLD,mode,properties)
 %------------------------------------------------------
 
 if nargin < 3
-    properties = {'Original','Length','Orientation','Curvature','Junctions'};
+    properties = {'Original','Length','Orientation','Curvature','Junctions','Mirror','Parallelism','Separation'};
 end
 if ~iscell(properties)
     properties = {properties};
@@ -39,33 +39,38 @@ end
 
 switch mode
     case 'subplot'
-        m = floor(sqrt(numProps));
+        m = ceil(sqrt(numProps));
         n = ceil(numProps / m);
         figIDs = figure;
         for p = 1:numProps
             subplot(m,n,p);
-            if strcmp(properties{p},'Original')
-                drawLinedrawing(vecLD);
-                title(['Original - ',vecLD.originalImage]);
-            else
-                drawLinedrawingProperty(vecLD,properties{p});
-                title(properties{p});
-            end
+            drawThisProperty(vecLD, properties{p});
         end
 
     case 'separate'
         figIDs = [];
         for p = 1:numProps
             figIDs(p) = figure;
-            if strcmp(properties{p},'Original')
-                drawLinedrawing(vecLD);
-                title(['Original - ',vecLD.originalImage]);
-            else
-                drawLinedrawingProperty(vecLD,properties{p});
-                title(properties{p});
-            end
+            drawThisProperty(vecLD, properties{p});
         end
         
     otherwise
         error(['Unknown mode: ',mode])
+end
+end
+
+function drawThisProperty(vecLD,property)
+switch lower(property)
+    case 'original'
+        drawLinedrawing(vecLD);
+        title(['Original - ',vecLD.originalImage],'interpreter','none');
+    case {'length','orientation','curvature','junctions'}
+        drawLinedrawingProperty(vecLD,property);
+        title(property);       
+    case {'mirror','parallelism','separation'}
+        drawMATproperty(vecLD,property);
+        title(property);
+    otherwise
+        error(['Unknown property: ',property]);
+end
 end
