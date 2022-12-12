@@ -36,31 +36,10 @@ function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)
 % Contact: dirk.walther@gmail.com
 %------------------------------------------------------
 
-% construct properties table
-numVar = length(Mdl.PredictorNames);
-propTable = table('Size',[vecLD.numContours,numVar],'VariableTypes',repmat({'double'},1,numVar),'VariableNames',Mdl.PredictorNames);
+% compute the predictions for the individual contours
+scores = predictContoursByStatsModel(vecLD,Mdl);
 
-% Now fill the table with the actual values
-shortNames = {'par','mir','sep','len','ori','curv','juncType'};
-histNames = {'parallelismNormHistograms','mirrorNormHistograms','separationNormHistograms',...
-             'normLengthHistograms','normOrientationHistograms','normCurvatureHistograms',...
-             'normJunctionContourHistograms'};
-predictors = Mdl.PredictorNames;
-propTable = table();
-for h = 1:length(histNames)
-    if ~isempty(strmatch(shortNames{h},predictors))
-        if strcmp(shortNames{h},'juncType')
-            propTable = [propTable,histogramToTable(vecLD.normJunctionContourHistograms, 'juncType', vecLD.junctionTypeBins)];
-        else
-            propTable = [propTable,histogramToTable(getfield(vecLD,histNames{h}),shortNames{h})];
-        end
-    end
-end
-
-% Now get the predictions from the stats model
-scores = predict(Mdl,propTable);
-
-% rank the prop table and split the line drawings
+% rank the scores and split the line drawings
 [~,totalIdx] = sort(scores,'ascend');
 sumLen = cumsum(vecLD.contourLengths(totalIdx) / sum(vecLD.contourLengths));
 bottomIdx = totalIdx(find(sumLen <= fraction));
