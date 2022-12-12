@@ -38,10 +38,10 @@
    vecLD - the vectorized line drawing with the junctions included.
 
    types - cell array with the types of junctions to be drawn in order
-           any combination of 'T','X','Y','Arrow','Star
+           any combination of 'T','Y','X','Arrow','Star
            default: {} - all junctions
    Markersize - the size of the marker for the junctions
-                default: lines()
+                default: 5
    colors - Nx3 array of RGB values to be used as colors
             default: Matlab's 'lines' color map - the regular order for line plots.
 
@@ -72,10 +72,10 @@ This function is called by:
 0010 <span class="comment">%   vecLD - the vectorized line drawing with the junctions included.</span>
 0011 <span class="comment">%</span>
 0012 <span class="comment">%   types - cell array with the types of junctions to be drawn in order</span>
-0013 <span class="comment">%           any combination of 'T','X','Y','Arrow','Star</span>
+0013 <span class="comment">%           any combination of 'T','Y','X','Arrow','Star</span>
 0014 <span class="comment">%           default: {} - all junctions</span>
 0015 <span class="comment">%   Markersize - the size of the marker for the junctions</span>
-0016 <span class="comment">%                default: lines()</span>
+0016 <span class="comment">%                default: 5</span>
 0017 <span class="comment">%   colors - Nx3 array of RGB values to be used as colors</span>
 0018 <span class="comment">%            default: Matlab's 'lines' color map - the regular order for line plots.</span>
 0019 <span class="comment">%</span>
@@ -96,7 +96,7 @@ This function is called by:
 0034 <span class="keyword">end</span>
 0035 
 0036 <span class="keyword">if</span> nargin &lt; 2
-0037     types = {};
+0037     types = {<span class="string">'T'</span>,<span class="string">'Y'</span>,<span class="string">'X'</span>,<span class="string">'Arrow'</span>,<span class="string">'Star'</span>};
 0038 <span class="keyword">end</span>
 0039 
 0040 <span class="keyword">if</span> ~iscell(types)
@@ -115,29 +115,28 @@ This function is called by:
 0053 <span class="keyword">end</span>
 0054 
 0055 junctionTypes = {Junctions(:).type};
-0056 <span class="keyword">if</span> isempty(types)
-0057     types = unique(junctionTypes);
-0058 <span class="keyword">end</span>
-0059 numTypes = length(types);
-0060 
-0061 <span class="keyword">if</span> nargin &lt; 4
-0062     colors = lines(numTypes);
-0063 <span class="keyword">end</span>
-0064 <span class="keyword">if</span> isempty(colors)
-0065     colors = lines(numTypes);
-0066 <span class="keyword">end</span>
-0067 
-0068 positions = reshape([Junctions(:).position],2,length(Junctions))';
-0069 hold on;
-0070 <span class="keyword">for</span> t = 1:length(types)
-0071     typeIdx = strcmp(types{t},junctionTypes);
-0072     h(t) = plot(positions(typeIdx,1),positions(typeIdx,2),<span class="string">'o'</span>,<span class="keyword">...</span>
-0073                 <span class="string">'MarkerFaceColor'</span>,colors(t,:),<span class="keyword">...</span>
-0074                 <span class="string">'MarkerEdgeColor'</span>,colors(t,:),<span class="keyword">...</span>
-0075                 <span class="string">'MarkerSize'</span>,MarkerSize);
-0076 <span class="keyword">end</span>
-0077 legend(h,types,<span class="string">'Location'</span>,<span class="string">'NorthEastOutside'</span>);
-0078 legend boxoff;</pre></div>
-<hr><address>Generated on Wed 07-Dec-2022 11:30:11 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0056 typeOccurs = ismember(types,unique(junctionTypes));
+0057 types = types(typeOccurs);
+0058 numTypes = length(types);
+0059 
+0060 <span class="keyword">if</span> nargin &lt; 4
+0061     colors = lines(numTypes);
+0062 <span class="keyword">end</span>
+0063 <span class="keyword">if</span> isempty(colors)
+0064     colors = lines(numTypes);
+0065 <span class="keyword">end</span>
+0066 
+0067 positions = reshape([Junctions(:).position],2,length(Junctions))';
+0068 hold on;
+0069 <span class="keyword">for</span> t = 1:length(types)
+0070     typeIdx = strcmp(types{t},junctionTypes);
+0071     h(t) = plot(positions(typeIdx,1),positions(typeIdx,2),<span class="string">'o'</span>,<span class="keyword">...</span>
+0072                 <span class="string">'MarkerFaceColor'</span>,colors(t,:),<span class="keyword">...</span>
+0073                 <span class="string">'MarkerEdgeColor'</span>,colors(t,:),<span class="keyword">...</span>
+0074                 <span class="string">'MarkerSize'</span>,MarkerSize);
+0075 <span class="keyword">end</span>
+0076 legend(h,types,<span class="string">'Location'</span>,<span class="string">'NorthEastOutside'</span>);
+0077 legend boxoff;</pre></div>
+<hr><address>Generated on Mon 12-Dec-2022 17:51:18 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

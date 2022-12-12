@@ -35,7 +35,7 @@
    mode - one of: 'subplot' - draw properties into one figure using subplot (default)
                   'separate' - draw properties into separate figures
    properties -  a cell array of text labels of the properteis to be drawn
-               default: {'Original','Length','Orientation','Curvature','Junctions'}
+               default: {'Original','Length','Orientation','Curvature','Junctions','mirror','parallelism','separation'}
 
  Return:
    figIDs -  a vector of the figure IDs of the individual figures.
@@ -47,13 +47,15 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,lineWidth,color)">drawLinedrawing</a>	drawLinedrawing(vecLD,lineWidth,color)</li><li><a href="drawLinedrawingProperty.html" class="code" title="function drawLinedrawingProperty(vecLD,property,lineWidth)">drawLinedrawingProperty</a>	drawLinedrawingProperty(vecLD,property,lineWidth)</li></ul>
+<li><a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,lineWidth,color)">drawLinedrawing</a>	drawLinedrawing(vecLD,lineWidth,color)</li><li><a href="drawLinedrawingProperty.html" class="code" title="function drawLinedrawingProperty(vecLD,property,lineWidth)">drawLinedrawingProperty</a>	drawLinedrawingProperty(vecLD,property,lineWidth)</li><li><a href="drawMATproperty.html" class="code" title="function drawMATproperty(vecLD,property,markerSize)">drawMATproperty</a>	drawMATproperty(vecLD,property,markerSize)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
 <!-- crossreference -->
 
-
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function drawThisProperty(vecLD,property)</a></li></ul>
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function figIDs = drawAllProperties(vecLD,mode,properties)</a>
@@ -65,7 +67,7 @@ This function is called by:
 0007 <span class="comment">%   mode - one of: 'subplot' - draw properties into one figure using subplot (default)</span>
 0008 <span class="comment">%                  'separate' - draw properties into separate figures</span>
 0009 <span class="comment">%   properties -  a cell array of text labels of the properteis to be drawn</span>
-0010 <span class="comment">%               default: {'Original','Length','Orientation','Curvature','Junctions'}</span>
+0010 <span class="comment">%               default: {'Original','Length','Orientation','Curvature','Junctions','mirror','parallelism','separation'}</span>
 0011 <span class="comment">%</span>
 0012 <span class="comment">% Return:</span>
 0013 <span class="comment">%   figIDs -  a vector of the figure IDs of the individual figures.</span>
@@ -84,7 +86,7 @@ This function is called by:
 0026 <span class="comment">%------------------------------------------------------</span>
 0027 
 0028 <span class="keyword">if</span> nargin &lt; 3
-0029     properties = {<span class="string">'Original'</span>,<span class="string">'Length'</span>,<span class="string">'Orientation'</span>,<span class="string">'Curvature'</span>,<span class="string">'Junctions'</span>};
+0029     properties = {<span class="string">'Original'</span>,<span class="string">'Length'</span>,<span class="string">'Orientation'</span>,<span class="string">'Curvature'</span>,<span class="string">'Junctions'</span>,<span class="string">'Mirror'</span>,<span class="string">'Parallelism'</span>,<span class="string">'Separation'</span>};
 0030 <span class="keyword">end</span>
 0031 <span class="keyword">if</span> ~iscell(properties)
 0032     properties = {properties};
@@ -97,36 +99,41 @@ This function is called by:
 0039 
 0040 <span class="keyword">switch</span> mode
 0041     <span class="keyword">case</span> <span class="string">'subplot'</span>
-0042         m = floor(sqrt(numProps));
+0042         m = ceil(sqrt(numProps));
 0043         n = ceil(numProps / m);
 0044         figIDs = figure;
 0045         <span class="keyword">for</span> p = 1:numProps
 0046             subplot(m,n,p);
-0047             <span class="keyword">if</span> strcmp(properties{p},<span class="string">'Original'</span>)
-0048                 <a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,lineWidth,color)">drawLinedrawing</a>(vecLD);
-0049                 title([<span class="string">'Original - '</span>,vecLD.originalImage]);
-0050             <span class="keyword">else</span>
-0051                 <a href="drawLinedrawingProperty.html" class="code" title="function drawLinedrawingProperty(vecLD,property,lineWidth)">drawLinedrawingProperty</a>(vecLD,properties{p});
-0052                 title(properties{p});
-0053             <span class="keyword">end</span>
-0054         <span class="keyword">end</span>
-0055 
-0056     <span class="keyword">case</span> <span class="string">'separate'</span>
-0057         figIDs = [];
-0058         <span class="keyword">for</span> p = 1:numProps
-0059             figIDs(p) = figure;
-0060             <span class="keyword">if</span> strcmp(properties{p},<span class="string">'Original'</span>)
-0061                 <a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,lineWidth,color)">drawLinedrawing</a>(vecLD);
-0062                 title([<span class="string">'Original - '</span>,vecLD.originalImage]);
-0063             <span class="keyword">else</span>
-0064                 <a href="drawLinedrawingProperty.html" class="code" title="function drawLinedrawingProperty(vecLD,property,lineWidth)">drawLinedrawingProperty</a>(vecLD,properties{p});
-0065                 title(properties{p});
-0066             <span class="keyword">end</span>
-0067         <span class="keyword">end</span>
-0068         
-0069     <span class="keyword">otherwise</span>
-0070         error([<span class="string">'Unknown mode: '</span>,mode])
-0071 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 07-Dec-2022 11:30:11 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0047             <a href="#_sub1" class="code" title="subfunction drawThisProperty(vecLD,property)">drawThisProperty</a>(vecLD, properties{p});
+0048         <span class="keyword">end</span>
+0049 
+0050     <span class="keyword">case</span> <span class="string">'separate'</span>
+0051         figIDs = [];
+0052         <span class="keyword">for</span> p = 1:numProps
+0053             figIDs(p) = figure;
+0054             <a href="#_sub1" class="code" title="subfunction drawThisProperty(vecLD,property)">drawThisProperty</a>(vecLD, properties{p});
+0055         <span class="keyword">end</span>
+0056         
+0057     <span class="keyword">otherwise</span>
+0058         error([<span class="string">'Unknown mode: '</span>,mode])
+0059 <span class="keyword">end</span>
+0060 <span class="keyword">end</span>
+0061 
+0062 <a name="_sub1" href="#_subfunctions" class="code">function drawThisProperty(vecLD,property)</a>
+0063 <span class="keyword">switch</span> lower(property)
+0064     <span class="keyword">case</span> <span class="string">'original'</span>
+0065         <a href="drawLinedrawing.html" class="code" title="function drawLinedrawing(vecLD,lineWidth,color)">drawLinedrawing</a>(vecLD);
+0066         title([<span class="string">'Original - '</span>,vecLD.originalImage],<span class="string">'interpreter'</span>,<span class="string">'none'</span>);
+0067     <span class="keyword">case</span> {<span class="string">'length'</span>,<span class="string">'orientation'</span>,<span class="string">'curvature'</span>,<span class="string">'junctions'</span>}
+0068         <a href="drawLinedrawingProperty.html" class="code" title="function drawLinedrawingProperty(vecLD,property,lineWidth)">drawLinedrawingProperty</a>(vecLD,property);
+0069         title(property);       
+0070     <span class="keyword">case</span> {<span class="string">'mirror'</span>,<span class="string">'parallelism'</span>,<span class="string">'separation'</span>}
+0071         <a href="drawMATproperty.html" class="code" title="function drawMATproperty(vecLD,property,markerSize)">drawMATproperty</a>(vecLD,property);
+0072         title(property);
+0073     <span class="keyword">otherwise</span>
+0074         error([<span class="string">'Unknown property: '</span>,property]);
+0075 <span class="keyword">end</span>
+0076 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 12-Dec-2022 17:51:18 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

@@ -102,7 +102,7 @@ This function is called by:
 0050 set(gca,<span class="string">'TickLength'</span>,[0,0]);
 0051 
 0052 <span class="comment">% add a colorbar</span>
-0053 colormap(cmap);
+0053 colormap(gca,cmap);
 0054 <span class="keyword">switch</span> property
 0055     <span class="keyword">case</span> <span class="string">'length'</span>
 0056         colorbar(<span class="string">'Ticks'</span>,[0,1],<span class="string">'TickLabels'</span>,{<span class="string">'short'</span>,<span class="string">'long'</span>});
@@ -111,12 +111,13 @@ This function is called by:
 0059     <span class="keyword">case</span> <span class="string">'orientation'</span>
 0060         colorbar(<span class="string">'Ticks'</span>,[0,0.5,1],<span class="string">'TickLabels'</span>,{<span class="string">'horizontal'</span>,<span class="string">'vertical'</span>,<span class="string">'horizontal'</span>});
 0061     <span class="keyword">otherwise</span>
-0062         error([<span class="string">'Unknown property: '</span>,property]);
-0063 <span class="keyword">end</span>
-0064 
-0065 axis ij image;
-0066 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
-0067</pre></div>
-<hr><address>Generated on Wed 07-Dec-2022 11:30:11 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0062         warning([<span class="string">'Unknown property: '</span>,property]);
+0063         <span class="keyword">return</span>
+0064 <span class="keyword">end</span>
+0065 
+0066 axis ij image;
+0067 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
+0068</pre></div>
+<hr><address>Generated on Mon 12-Dec-2022 17:51:18 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

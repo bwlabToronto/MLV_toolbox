@@ -24,7 +24,7 @@
 <div class="box"><strong>scoreMap = renderContoursByStatsModel(vecLD,Mdl)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function scoreMap = renderContoursByStatsModel(vecLD,Mdl) </strong></div>
+<div class="box"><strong>function scoreMap = renderContoursByStatsModel(vecLD,Mdl,backgroundValue) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> scoreMap = renderContoursByStatsModel(vecLD,Mdl)
@@ -41,6 +41,7 @@
          https://www.mathworks.com/help/stats/fitlm.html
          or a random forest model created with fitrensemble:
          https://www.mathworks.com/help/stats/fitrensemble.html
+   backgroundValue - the map value for non-contour pixels (default: 0)
 
  Return:
    scoreMap - one-channel map with the prediciton scores from Mdl written
@@ -50,7 +51,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>	histTable = histogramToTable(histogram,shortName,bins)</li></ul>
+<li><a href="predictContoursByStatsModel.html" class="code" title="function scores = predictContoursByStatsModel(vecLD,Mdl)">predictContoursByStatsModel</a>	scores = predictContoursByStatsModel(vecLD,Mdl)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 </ul>
@@ -59,7 +60,7 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function scoreMap = renderContoursByStatsModel(vecLD,Mdl)</a>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function scoreMap = renderContoursByStatsModel(vecLD,Mdl,backgroundValue)</a>
 0002 <span class="comment">% scoreMap = renderContoursByStatsModel(vecLD,Mdl)</span>
 0003 <span class="comment">%   Writes the predictions of Mdl for each contour into a one-channel map.</span>
 0004 <span class="comment">%</span>
@@ -74,55 +75,40 @@ This function is called by:
 0013 <span class="comment">%         https://www.mathworks.com/help/stats/fitlm.html</span>
 0014 <span class="comment">%         or a random forest model created with fitrensemble:</span>
 0015 <span class="comment">%         https://www.mathworks.com/help/stats/fitrensemble.html</span>
-0016 <span class="comment">%</span>
-0017 <span class="comment">% Return:</span>
-0018 <span class="comment">%   scoreMap - one-channel map with the prediciton scores from Mdl written</span>
-0019 <span class="comment">%              into the contour pixels, with all non-contour pixels zero</span>
-0020 
-0021 <span class="comment">% -----------------------------------------------------</span>
-0022 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0023 <span class="comment">% http://www.mlvtoolbox.org</span>
-0024 <span class="comment">%</span>
-0025 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0026 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0027 <span class="comment">%</span>
-0028 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0029 <span class="comment">%------------------------------------------------------</span>
-0030 
-0031 <span class="comment">% construct properties table</span>
-0032 numVar = length(Mdl.PredictorNames);
-0033 propTable = table(<span class="string">'Size'</span>,[vecLD.numContours,numVar],<span class="string">'VariableTypes'</span>,repmat({<span class="string">'double'</span>},1,numVar),<span class="string">'VariableNames'</span>,Mdl.PredictorNames);
-0034 
-0035 <span class="comment">% Now fill the table with the actual values</span>
-0036 shortNames = {<span class="string">'par'</span>,<span class="string">'mir'</span>,<span class="string">'sep'</span>,<span class="string">'len'</span>,<span class="string">'ori'</span>,<span class="string">'curv'</span>,<span class="string">'juncType'</span>};
-0037 histNames = {<span class="string">'parallelismNormHistograms'</span>,<span class="string">'mirrorNormHistograms'</span>,<span class="string">'separationNormHistograms'</span>,<span class="keyword">...</span>
-0038              <span class="string">'normLengthHistograms'</span>,<span class="string">'normOrientationHistograms'</span>,<span class="string">'normCurvatureHistograms'</span>,<span class="keyword">...</span>
-0039              <span class="string">'normJunctionContourHistograms'</span>};
-0040 predictors = Mdl.PredictorNames;
-0041 propTable = table();
-0042 <span class="keyword">for</span> h = 1:length(histNames)
-0043     <span class="keyword">if</span> ~isempty(strmatch(shortNames{h},predictors))
-0044         <span class="keyword">if</span> strcmp(shortNames{h},<span class="string">'juncType'</span>)
-0045             propTable = [propTable,<a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normJunctionContourHistograms, <span class="string">'juncType'</span>, vecLD.junctionTypeBins)];
-0046         <span class="keyword">else</span>
-0047             propTable = [propTable,<a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(getfield(vecLD,histNames{h}),shortNames{h})];
-0048         <span class="keyword">end</span>
-0049     <span class="keyword">end</span>
-0050 <span class="keyword">end</span>
-0051 
-0052 <span class="comment">% Now get the predictions from the stats model</span>
-0053 scores = predict(Mdl,propTable);
-0054 
-0055 <span class="comment">% write the predictions into the contour locations</span>
-0056 scoreMap = zeros(vecLD.imsize([2,1]));
-0057 <span class="keyword">for</span> c = 1:vecLD.numContours
-0058     thisContMap = zeros(vecLD.imsize(2),vecLD.imsize(1),3);
-0059     <span class="keyword">for</span> s = 1:size(vecLD.contours{c},1)
-0060         thisContMap = insertShape(thisContMap,<span class="string">'Line'</span>,vecLD.contours{c}(s,:),<span class="string">'Color'</span>,[1,0,0],<span class="string">'LineWidth'</span>,1,<span class="string">'Opacity'</span>,1,<span class="string">'SmoothEdges'</span>,false);
-0061     <span class="keyword">end</span>
-0062     thisContMap = thisContMap(:,:,1);
-0063     scoreMap(thisContMap &gt; 0) = scores(c);
-0064 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Wed 07-Dec-2022 11:30:11 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0016 <span class="comment">%   backgroundValue - the map value for non-contour pixels (default: 0)</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Return:</span>
+0019 <span class="comment">%   scoreMap - one-channel map with the prediciton scores from Mdl written</span>
+0020 <span class="comment">%              into the contour pixels, with all non-contour pixels zero</span>
+0021 
+0022 <span class="comment">% -----------------------------------------------------</span>
+0023 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0024 <span class="comment">% http://www.mlvtoolbox.org</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0027 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0030 <span class="comment">%------------------------------------------------------</span>
+0031 
+0032 <span class="keyword">if</span> nargin &lt; 3
+0033     backgroundValue = 0;
+0034 <span class="keyword">end</span>
+0035 
+0036 <span class="comment">% compute the predictions for the individual contours</span>
+0037 scores = <a href="predictContoursByStatsModel.html" class="code" title="function scores = predictContoursByStatsModel(vecLD,Mdl)">predictContoursByStatsModel</a>(vecLD,Mdl);
+0038 
+0039 <span class="comment">% write the predictions into the contour locations</span>
+0040 scoreMap = zeros(vecLD.imsize([2,1])) + backgroundValue;
+0041 
+0042 <span class="keyword">for</span> c = 1:vecLD.numContours
+0043     thisContMap = zeros(vecLD.imsize(2),vecLD.imsize(1),3);
+0044     <span class="keyword">for</span> s = 1:size(vecLD.contours{c},1)
+0045         thisContMap = insertShape(thisContMap,<span class="string">'Line'</span>,vecLD.contours{c}(s,:),<span class="string">'Color'</span>,[1,0,0],<span class="string">'LineWidth'</span>,1,<span class="string">'Opacity'</span>,1,<span class="string">'SmoothEdges'</span>,false);
+0046     <span class="keyword">end</span>
+0047     thisContMap = thisContMap(:,:,1);
+0048     scoreMap(thisContMap &gt; 0) = scores(c);
+0049 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 12-Dec-2022 17:51:18 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

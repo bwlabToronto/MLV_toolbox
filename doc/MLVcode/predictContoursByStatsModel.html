@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of predictContoursByStatsModel</title>
+  <meta name="keywords" content="predictContoursByStatsModel">
+  <meta name="description" content="scores = predictContoursByStatsModel(vecLD,Mdl)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; predictContoursByStatsModel.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>predictContoursByStatsModel
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>scores = predictContoursByStatsModel(vecLD,Mdl)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function scores = predictContoursByStatsModel(vecLD,Mdl) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> scores = predictContoursByStatsModel(vecLD,Mdl)
+   Generates predictions for the individual contours based on a
+   pre-trained statistical model.
+
+ Input:
+   vecLD - vectorized line drawing to be split. The structure should
+           already contain all relevant feature histograms. 
+           See also: <a href="getContourPropertiesStats.html" class="code" title="function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, whichStats, minmaxLen, minmaxCurv, junctionTypes)">getContourPropertiesStats</a>
+
+   Mdl - the pretrained regression model that should be applied to contour
+         features in order to split the drawing. For instancem this could
+         be a linear regression model created with fitlm:
+         https://www.mathworks.com/help/stats/fitlm.html
+         or a random forest model created with fitrensemble:
+         https://www.mathworks.com/help/stats/fitrensemble.html
+
+ Return:
+   scores - the predicted scores for the individual contours, in the same
+            order as the contours in vecLD.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>	histTable = histogramToTable(histogram,shortName,bins)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="renderContoursByStatsModel.html" class="code" title="function scoreMap = renderContoursByStatsModel(vecLD,Mdl,backgroundValue)">renderContoursByStatsModel</a>	scoreMap = renderContoursByStatsModel(vecLD,Mdl)</li><li><a href="splitLDbyStatsModel.html" class="code" title="function [topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)">splitLDbyStatsModel</a>	[topLD, bottomLD] = splitLDbyStatsModel(vecLD,Mdl,fraction)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function scores = predictContoursByStatsModel(vecLD,Mdl)</a>
+0002 <span class="comment">% scores = predictContoursByStatsModel(vecLD,Mdl)</span>
+0003 <span class="comment">%   Generates predictions for the individual contours based on a</span>
+0004 <span class="comment">%   pre-trained statistical model.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input:</span>
+0007 <span class="comment">%   vecLD - vectorized line drawing to be split. The structure should</span>
+0008 <span class="comment">%           already contain all relevant feature histograms.</span>
+0009 <span class="comment">%           See also: getContourPropertiesStats</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   Mdl - the pretrained regression model that should be applied to contour</span>
+0012 <span class="comment">%         features in order to split the drawing. For instancem this could</span>
+0013 <span class="comment">%         be a linear regression model created with fitlm:</span>
+0014 <span class="comment">%         https://www.mathworks.com/help/stats/fitlm.html</span>
+0015 <span class="comment">%         or a random forest model created with fitrensemble:</span>
+0016 <span class="comment">%         https://www.mathworks.com/help/stats/fitrensemble.html</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Return:</span>
+0019 <span class="comment">%   scores - the predicted scores for the individual contours, in the same</span>
+0020 <span class="comment">%            order as the contours in vecLD.</span>
+0021 
+0022 <span class="comment">% -----------------------------------------------------</span>
+0023 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0024 <span class="comment">% http://www.mlvtoolbox.org</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0027 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0030 <span class="comment">%------------------------------------------------------</span>
+0031 
+0032 <span class="comment">% construct properties table</span>
+0033 numVar = length(Mdl.PredictorNames);
+0034 propTable = table(<span class="string">'Size'</span>,[vecLD.numContours,numVar],<span class="string">'VariableTypes'</span>,repmat({<span class="string">'double'</span>},1,numVar),<span class="string">'VariableNames'</span>,Mdl.PredictorNames);
+0035 
+0036 <span class="comment">% Now fill the table with the actual values</span>
+0037 shortNames = {<span class="string">'par'</span>,<span class="string">'mir'</span>,<span class="string">'sep'</span>,<span class="string">'len'</span>,<span class="string">'ori'</span>,<span class="string">'curv'</span>,<span class="string">'juncType'</span>};
+0038 histNames = {<span class="string">'parallelismNormHistograms'</span>,<span class="string">'mirrorNormHistograms'</span>,<span class="string">'separationNormHistograms'</span>,<span class="keyword">...</span>
+0039              <span class="string">'normLengthHistograms'</span>,<span class="string">'normOrientationHistograms'</span>,<span class="string">'normCurvatureHistograms'</span>,<span class="keyword">...</span>
+0040              <span class="string">'normJunctionContourHistograms'</span>};
+0041 predictors = Mdl.PredictorNames;
+0042 propTable = table();
+0043 <span class="keyword">for</span> h = 1:length(histNames)
+0044     <span class="keyword">if</span> ~isempty(strmatch(shortNames{h},predictors))
+0045         <span class="keyword">if</span> strcmp(shortNames{h},<span class="string">'juncType'</span>)
+0046             propTable = [propTable,<a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(vecLD.normJunctionContourHistograms, <span class="string">'juncType'</span>, vecLD.junctionTypeBins)];
+0047         <span class="keyword">else</span>
+0048             propTable = [propTable,<a href="histogramToTable.html" class="code" title="function histTable = histogramToTable(histogram,shortName,bins)">histogramToTable</a>(getfield(vecLD,histNames{h}),shortNames{h})];
+0049         <span class="keyword">end</span>
+0050     <span class="keyword">end</span>
+0051 <span class="keyword">end</span>
+0052 
+0053 <span class="comment">% Now get the predictions from the stats model</span>
+0054 scores = predict(Mdl,propTable);
+0055 
+0056 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 12-Dec-2022 17:51:18 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
