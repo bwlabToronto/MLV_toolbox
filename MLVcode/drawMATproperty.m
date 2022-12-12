@@ -35,7 +35,7 @@ end
 drawLinedrawing(vecLD);
 hold on;
 scatter(vecLD.([property,'_allX']),vecLD.([property,'_allY']),markerSize,vecLD.([property,'_allScores']));
-colormap(jet);
+colormap(gca,jet);
 box on;
 set(gcf,'color','w');
 colorbar('Limits',[0,1],'Ticks',[0,0.5,1],'TickLabels',{'lowest','intermediate','highest'});

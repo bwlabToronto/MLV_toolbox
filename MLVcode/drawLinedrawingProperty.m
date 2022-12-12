@@ -50,7 +50,7 @@ end
 set(gca,'TickLength',[0,0]);
 
 % add a colorbar
-colormap(cmap);
+colormap(gca,cmap);
 switch property
     case 'length'
         colorbar('Ticks',[0,1],'TickLabels',{'short','long'});
