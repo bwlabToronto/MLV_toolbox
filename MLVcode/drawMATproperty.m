@@ -34,11 +34,10 @@ end
 
 drawLinedrawing(vecLD);
 hold on;
-scatter(vecLD.([property,'_allX']),vecLD.([property,'_allY']),markerSize,vecLD.([property,'_allScores']),'.');
-colormap(jet)
+scatter(vecLD.([property,'_allX']),vecLD.([property,'_allY']),markerSize,vecLD.([property,'_allScores']));
+colormap(jet);
 box on;
 set(gcf,'color','w');
-%colorbar('Limits',[0,1],'Ticks',[0,0.5,1],'TickLabels',{'lowest','intermediate','highest'},'FontSize',16);
 colorbar('Limits',[0,1],'Ticks',[0,0.5,1],'TickLabels',{'lowest','intermediate','highest'});
 axis ij image;
 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
