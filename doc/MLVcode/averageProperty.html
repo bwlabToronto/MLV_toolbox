@@ -101,38 +101,52 @@ This function is called by:
 0035 
 0036 <span class="keyword">switch</span> (lower(property))
 0037     <span class="keyword">case</span> <span class="string">'orientation'</span>
-0038         totalVec = [0,0];
-0039         <span class="keyword">for</span> c = 1:vecLD.numContours
-0040             totalVec = totalVec + vecLD.contours{c}(<span class="keyword">end</span>,3:4) - vecLD.contours{c}(1,1:2);
-0041         <span class="keyword">end</span>
-0042         meanProperty = mod(atan2d(totalVec(2),totalVec(1)),180);
+0038 
+0039         <span class="comment">% For orientation, all line segments get concatenated</span>
+0040         totalVec = [0,0];
+0041         <span class="keyword">for</span> c = 1:vecLD.numContours
+0042             theseVec = vecLD.contours{c}(:,3:4) - vecLD.contours{c}(:,1:2);
 0043 
-0044     <span class="keyword">case</span> <span class="string">'length'</span>
-0045         meanProperty = mean(vecLD.contourLengths);
-0046 
-0047     <span class="keyword">case</span> <span class="string">'curvature'</span>
-0048         meanProperty = 0;
-0049         <span class="keyword">for</span> c = 1:vecLD.numContours
-0050             meanProperty = meanProperty + sum(vecLD.curvatures{c} .* vecLD.lengths{c}');
-0051         <span class="keyword">end</span>
-0052         meanProperty = meanProperty / sum(vecLD.contourLengths);
-0053 
-0054     <span class="keyword">case</span> <span class="string">'junctions'</span>
-0055         meanProperty = sum(vecLD.normJunctionTypeHistogram);
-0056 
-0057     <span class="keyword">case</span> <span class="string">'mirror'</span>
-0058         meanProperty = mean(vecLD.mirror_allScores);
-0059 
-0060     <span class="keyword">case</span> <span class="string">'parallelism'</span>
-0061         meanProperty = mean(vecLD.parallelism_allScores);
-0062 
-0063     <span class="keyword">case</span> <span class="string">'separation'</span>
-0064         meanProperty = mean(vecLD.separation_allScores);
-0065 
-0066     <span class="keyword">otherwise</span>
-0067         error([<span class="string">'Unknown property string: '</span>,property]);
-0068 <span class="keyword">end</span>
-0069</pre></div>
-<hr><address>Generated on Mon 16-Jan-2023 22:11:23 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0044             <span class="comment">% For orientation we need to count line segments irrespective</span>
+0045             <span class="comment">% of the direciton in which they were drawn. So all line</span>
+0046             <span class="comment">% segments with an orientation angle between 180 and 360</span>
+0047             <span class="comment">% degrees get reversed before they are added to the total</span>
+0048             <span class="comment">% vector for the entire drawing.</span>
+0049             <span class="comment">% If we didn't do this, an alongated closed rectangle would</span>
+0050             <span class="comment">% have a totalVec of [0,0] - that's not what we mena by</span>
+0051             <span class="comment">% &quot;average angle&quot;.</span>
+0052             reverseIdx = vecLD.orientations{c} &gt; 180;
+0053             theseVec(reverseIdx,:) = -theseVec(reverseIdx,:);
+0054             totalVec = totalVec + sum(theseVec,1);
+0055         <span class="keyword">end</span>
+0056         meanProperty = mod(atan2d(totalVec(2),totalVec(1)),180);
+0057 
+0058     <span class="keyword">case</span> <span class="string">'length'</span>
+0059         meanProperty = mean(vecLD.contourLengths);
+0060 
+0061     <span class="keyword">case</span> <span class="string">'curvature'</span>
+0062         meanProperty = 0;
+0063         <span class="keyword">for</span> c = 1:vecLD.numContours
+0064             meanProperty = meanProperty + sum(vecLD.curvatures{c} .* vecLD.lengths{c}');
+0065         <span class="keyword">end</span>
+0066         meanProperty = meanProperty / sum(vecLD.contourLengths);
+0067 
+0068     <span class="keyword">case</span> <span class="string">'junctions'</span>
+0069         meanProperty = sum(vecLD.normJunctionTypeHistogram);
+0070 
+0071     <span class="keyword">case</span> <span class="string">'mirror'</span>
+0072         meanProperty = mean(vecLD.mirror_allScores);
+0073 
+0074     <span class="keyword">case</span> <span class="string">'parallelism'</span>
+0075         meanProperty = mean(vecLD.parallelism_allScores);
+0076 
+0077     <span class="keyword">case</span> <span class="string">'separation'</span>
+0078         meanProperty = mean(vecLD.separation_allScores);
+0079 
+0080     <span class="keyword">otherwise</span>
+0081         error([<span class="string">'Unknown property string: '</span>,property]);
+0082 <span class="keyword">end</span>
+0083</pre></div>
+<hr><address>Generated on Tue 17-Jan-2023 10:44:37 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

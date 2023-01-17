@@ -35,9 +35,23 @@ function meanProperty = averageProperty(vecLD,property)
 
 switch (lower(property))
     case 'orientation'
+
+        % For orientation, all line segments get concatenated
         totalVec = [0,0];
         for c = 1:vecLD.numContours
-            totalVec = totalVec + vecLD.contours{c}(end,3:4) - vecLD.contours{c}(1,1:2);
+            theseVec = vecLD.contours{c}(:,3:4) - vecLD.contours{c}(:,1:2);
+
+            % For orientation we need to count line segments irrespective
+            % of the direciton in which they were drawn. So all line
+            % segments with an orientation angle between 180 and 360
+            % degrees get reversed before they are added to the total
+            % vector for the entire drawing.
+            % If we didn't do this, an alongated closed rectangle would
+            % have a totalVec of [0,0] - that's not what we mena by 
+            % "average angle".
+            reverseIdx = vecLD.orientations{c} > 180;
+            theseVec(reverseIdx,:) = -theseVec(reverseIdx,:);
+            totalVec = totalVec + sum(theseVec,1);
         end
         meanProperty = mod(atan2d(totalVec(2),totalVec(1)),180);
 
