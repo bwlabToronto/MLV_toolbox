@@ -7,7 +7,7 @@ function vecLD = computeOrientation(vecLD)
 % Input:
 %   vecLD - vectorized line drawing data structure
 % Output:
-%   vecLD- a vector LD of structs with orientation information added
+%   vecLD - a vector LD of structs with orientation information added
 
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 

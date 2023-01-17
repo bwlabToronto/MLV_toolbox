@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of averageProperty</title>
+  <meta name="keywords" content="averageProperty">
+  <meta name="description" content="meanProperty = averageProperty(vecLD,property)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; averageProperty.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>averageProperty
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>meanProperty = averageProperty(vecLD,property)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function meanProperty = averageProperty(vecLD,property) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> meanProperty = averageProperty(vecLD,property)
+                computes the average value of a property over the entire
+                drawing vecLD.
+ Input:
+   vecLD - vectorized line drawing data structure
+   property - a string with the property name. The following are valid
+              options for property:
+     'orientation': concatenate all straight line segments and return the
+                    orientation of the resulting vector, unit: degrees
+     'length': Return the average of the lengths of the individual
+               contours, unit: pixels
+     'curvature': compute the mean curvature over all line segments,
+                  weighted by the number of pixels in the segments,
+                  unit: degrees / pixel
+     'junctions': compute the number of juncions per 10,000 pixels,
+                  comptued as the sum over normJunctionTypeHistogram,
+                  unit: count per 10,000 pixels
+     'mirror','parallelism','separation': compute the average value over
+                  all contour pixels, unit: number between 0 and 1
+
+ Output:
+   meanProperty: the mean value of property according to the 
+                 descriptions above.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function meanProperty = averageProperty(vecLD,property)</a>
+0002 <span class="comment">% meanProperty = averageProperty(vecLD,property)</span>
+0003 <span class="comment">%                computes the average value of a property over the entire</span>
+0004 <span class="comment">%                drawing vecLD.</span>
+0005 <span class="comment">% Input:</span>
+0006 <span class="comment">%   vecLD - vectorized line drawing data structure</span>
+0007 <span class="comment">%   property - a string with the property name. The following are valid</span>
+0008 <span class="comment">%              options for property:</span>
+0009 <span class="comment">%     'orientation': concatenate all straight line segments and return the</span>
+0010 <span class="comment">%                    orientation of the resulting vector, unit: degrees</span>
+0011 <span class="comment">%     'length': Return the average of the lengths of the individual</span>
+0012 <span class="comment">%               contours, unit: pixels</span>
+0013 <span class="comment">%     'curvature': compute the mean curvature over all line segments,</span>
+0014 <span class="comment">%                  weighted by the number of pixels in the segments,</span>
+0015 <span class="comment">%                  unit: degrees / pixel</span>
+0016 <span class="comment">%     'junctions': compute the number of juncions per 10,000 pixels,</span>
+0017 <span class="comment">%                  comptued as the sum over normJunctionTypeHistogram,</span>
+0018 <span class="comment">%                  unit: count per 10,000 pixels</span>
+0019 <span class="comment">%     'mirror','parallelism','separation': compute the average value over</span>
+0020 <span class="comment">%                  all contour pixels, unit: number between 0 and 1</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Output:</span>
+0023 <span class="comment">%   meanProperty: the mean value of property according to the</span>
+0024 <span class="comment">%                 descriptions above.</span>
+0025 
+0026 <span class="comment">% -----------------------------------------------------</span>
+0027 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0028 <span class="comment">% http://www.mlvtoolbox.org</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0031 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2023</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0034 <span class="comment">%------------------------------------------------------</span>
+0035 
+0036 <span class="keyword">switch</span> (lower(property))
+0037     <span class="keyword">case</span> <span class="string">'orientation'</span>
+0038         totalVec = [0,0];
+0039         <span class="keyword">for</span> c = 1:vecLD.numContours
+0040             totalVec = totalVec + vecLD.contours{c}(<span class="keyword">end</span>,3:4) - vecLD.contours{c}(1,1:2);
+0041         <span class="keyword">end</span>
+0042         meanProperty = mod(atan2d(totalVec(2),totalVec(1)),180);
+0043 
+0044     <span class="keyword">case</span> <span class="string">'length'</span>
+0045         meanProperty = mean(vecLD.contourLengths);
+0046 
+0047     <span class="keyword">case</span> <span class="string">'curvature'</span>
+0048         meanProperty = 0;
+0049         <span class="keyword">for</span> c = 1:vecLD.numContours
+0050             meanProperty = meanProperty + sum(vecLD.curvatures{c} .* vecLD.lengths{c}');
+0051         <span class="keyword">end</span>
+0052         meanProperty = meanProperty / sum(vecLD.contourLengths);
+0053 
+0054     <span class="keyword">case</span> <span class="string">'junctions'</span>
+0055         meanProperty = sum(vecLD.normJunctionTypeHistogram);
+0056 
+0057     <span class="keyword">case</span> <span class="string">'mirror'</span>
+0058         meanProperty = mean(vecLD.mirror_allScores);
+0059 
+0060     <span class="keyword">case</span> <span class="string">'parallelism'</span>
+0061         meanProperty = mean(vecLD.parallelism_allScores);
+0062 
+0063     <span class="keyword">case</span> <span class="string">'separation'</span>
+0064         meanProperty = mean(vecLD.separation_allScores);
+0065 
+0066     <span class="keyword">otherwise</span>
+0067         error([<span class="string">'Unknown property string: '</span>,property]);
+0068 <span class="keyword">end</span>
+0069</pre></div>
+<hr><address>Generated on Mon 16-Jan-2023 22:11:23 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
