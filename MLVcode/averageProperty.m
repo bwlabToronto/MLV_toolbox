@@ -53,7 +53,12 @@ switch (lower(property))
             theseVec(reverseIdx,:) = -theseVec(reverseIdx,:);
             totalVec = totalVec + sum(theseVec,1);
         end
-        meanProperty = mod(atan2d(totalVec(2),totalVec(1)),180);
+        meanProperty = mod(atan2d(-totalVec(2),totalVec(1)),180);
+
+        % overlaying mean orientation for debugging
+        %hold on;
+        %totalVec = totalVec/max(totalVec) * 200;
+        %plot(400+[0,totalVec(1)],300+[0,totalVec(2)],'r-','LineWidth',3);
 
     case 'length'
         meanProperty = mean(vecLD.contourLengths);

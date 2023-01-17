@@ -23,7 +23,7 @@ vecLD.orientations = {};
 
 for c = 1:vecLD.numContours
     thisCon = vecLD.contours{c};  
-    vecLD.orientations{c} = mod(atan2d((thisCon(:,4)-thisCon(:,2)),(thisCon(:,3)-thisCon(:,1))),360)';    
+    vecLD.orientations{c} = mod(atan2d((thisCon(:,2)-thisCon(:,4)),(thisCon(:,3)-thisCon(:,1))),360)';    
     vecLD.contours{c} = thisCon;
 end
 
