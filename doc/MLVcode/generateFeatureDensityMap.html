@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of generateFeatureDensityMap</title>
+  <meta name="keywords" content="generateFeatureDensityMap">
+  <meta name="description" content="FDM = generateFeatureDensityMap(vecLD,property,smoothingSigma,junctionTypes)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; generateFeatureDensityMap.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>generateFeatureDensityMap
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>FDM = generateFeatureDensityMap(vecLD,property,smoothingSigma,junctionTypes)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function FDM = generateFeatureDensityMap(vecLD,property,smoothingSigma,junctionTypes) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> FDM = generateFeatureDensityMap(vecLD,property,smoothingSigma,junctionTypes)
+   Generates a fixation density map for one of the contour properties and
+   optionally smoothes the map with a 2D Gaussian with standard devisation
+   smoothingSigma.
+
+ Input:
+   vecLD - the vectorized line drawing with the property already computed.
+   property - one of 'length','curvature','orientation', 'junctions',
+              'mirror','parallelism','separation'
+   smoothingSigma - the standard deviation of the 1D Gaussian smoothing
+                    kernel (in pixels). 
+                    When 0 (the default), no smoothing is performed.
+   junctionTypes - only relevant for property = 'junctions'. A cell array
+                   of the type(s) of junctions that should be considered. 
+                   Default: {} - all junctions.
+
+ Return:
+   FDM - the feature density map with the size as the image. The FDM is
+   generated using the raw feature values. No normalization is applied.
+   You may want to normalize it to sum to 1 (as a porbability
+   distribution) or to have 0 mean and unit standard deviation (for
+   normalizaed salience scanpath analysis).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function FDM = generateFeatureDensityMap(vecLD,property,smoothingSigma,junctionTypes)</a>
+0002 <span class="comment">% FDM = generateFeatureDensityMap(vecLD,property,smoothingSigma,junctionTypes)</span>
+0003 <span class="comment">%   Generates a fixation density map for one of the contour properties and</span>
+0004 <span class="comment">%   optionally smoothes the map with a 2D Gaussian with standard devisation</span>
+0005 <span class="comment">%   smoothingSigma.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Input:</span>
+0008 <span class="comment">%   vecLD - the vectorized line drawing with the property already computed.</span>
+0009 <span class="comment">%   property - one of 'length','curvature','orientation', 'junctions',</span>
+0010 <span class="comment">%              'mirror','parallelism','separation'</span>
+0011 <span class="comment">%   smoothingSigma - the standard deviation of the 1D Gaussian smoothing</span>
+0012 <span class="comment">%                    kernel (in pixels).</span>
+0013 <span class="comment">%                    When 0 (the default), no smoothing is performed.</span>
+0014 <span class="comment">%   junctionTypes - only relevant for property = 'junctions'. A cell array</span>
+0015 <span class="comment">%                   of the type(s) of junctions that should be considered.</span>
+0016 <span class="comment">%                   Default: {} - all junctions.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Return:</span>
+0019 <span class="comment">%   FDM - the feature density map with the size as the image. The FDM is</span>
+0020 <span class="comment">%   generated using the raw feature values. No normalization is applied.</span>
+0021 <span class="comment">%   You may want to normalize it to sum to 1 (as a porbability</span>
+0022 <span class="comment">%   distribution) or to have 0 mean and unit standard deviation (for</span>
+0023 <span class="comment">%   normalizaed salience scanpath analysis).</span>
+0024 
+0025 <span class="comment">% -----------------------------------------------------</span>
+0026 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0027 <span class="comment">% http://www.mlvtoolbox.org</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0030 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0033 <span class="comment">%------------------------------------------------------</span>
+0034 
+0035 <span class="keyword">if</span> nargin &lt; 3
+0036     smoothingSigma = 0;
+0037 <span class="keyword">end</span>
+0038 
+0039 FDM = zeros(vecLD.imsize([2,1]));
+0040 
+0041 <span class="keyword">switch</span> (lower(property))
+0042     <span class="keyword">case</span> <span class="string">'orientation'</span>
+0043         xMap = zeros(vecLD.imsize([2,1]));
+0044         yMap = zeros(vecLD.imsize([2,1]));
+0045 
+0046         <span class="keyword">for</span> c = 1:vecLD.numContours
+0047             oris = mod(vecLD.orientations{c},180);
+0048             sinAngle = sind(oris);
+0049             cosAngle = cosd(oris);
+0050             <span class="keyword">for</span> s = 1:size(vecLD.contours{c},1)
+0051                 thisMap = zeros(vecLD.imsize(2),vecLD.imsize(1),3);
+0052                 thisMap = insertShape(thisMap,<span class="string">'Line'</span>,vecLD.contours{c}(s,:),<span class="string">'Color'</span>,[1,0,0],<span class="string">'LineWidth'</span>,1,<span class="string">'Opacity'</span>,1,<span class="string">'SmoothEdges'</span>,false);
+0053                 thisMap = thisMap(:,:,1);
+0054                 thisIdx = (thisMap &gt; 0);
+0055                 xMap(thisIdx) = sinAngle(s);
+0056                 yMap(thisIdx) = cosAngle(s);
+0057             <span class="keyword">end</span>
+0058         <span class="keyword">end</span>
+0059         <span class="keyword">if</span> smoothingSigma &gt; 0
+0060             xMap = imgaussfilt(xMap,smoothingSigma);
+0061             yMap = imgaussfilt(yMap,smoothingSigma);
+0062         <span class="keyword">end</span>
+0063         FDM = atan2d(yMap,xMap);
+0064 
+0065     <span class="keyword">case</span> <span class="string">'length'</span>
+0066         <span class="keyword">for</span> c = 1:vecLD.numContours
+0067             thisMap = zeros(vecLD.imsize(2),vecLD.imsize(1),3);
+0068             <span class="keyword">for</span> s = 1:size(vecLD.contours,1)
+0069                 thisMap = insertShape(thisMap,<span class="string">'Line'</span>,vecLD.contours{c}(s,:),<span class="string">'Color'</span>,[1,0,0],<span class="string">'LineWidth'</span>,1,<span class="string">'Opacity'</span>,1,<span class="string">'SmoothEdges'</span>,false);
+0070             <span class="keyword">end</span>
+0071             thisMap = thisMap(:,:,1);
+0072             FDM(thisMap &gt; 0) = vecLD.contourLengths(c);
+0073         <span class="keyword">end</span>
+0074         <span class="keyword">if</span> smoothingSigma &gt; 0
+0075             FDM = imgaussfilt(FDM,smoothingSigma);
+0076         <span class="keyword">end</span>
+0077 
+0078     <span class="keyword">case</span> <span class="string">'curvature'</span>
+0079         <span class="keyword">for</span> c = 1:vecLD.numContours
+0080             <span class="keyword">for</span> s = 1:size(vecLD.contours,1)
+0081                 thisMap = zeros(vecLD.imsize(2),vecLD.imsize(1),3);
+0082                 thisMap = insertShape(thisMap,<span class="string">'Line'</span>,vecLD.contours{c}(s,:),<span class="string">'Color'</span>,[1,0,0],<span class="string">'LineWidth'</span>,1,<span class="string">'Opacity'</span>,1,<span class="string">'SmoothEdges'</span>,false);
+0083                 thisMap = thisMap(:,:,1);
+0084                 FDM(thisMap &gt; 0) = vecLD.curvatures{c}(s);
+0085             <span class="keyword">end</span>
+0086         <span class="keyword">end</span>
+0087         <span class="keyword">if</span> smoothingSigma &gt; 0
+0088             FDM = imgaussfilt(FDM,smoothingSigma);
+0089         <span class="keyword">end</span>
+0090 
+0091     <span class="keyword">case</span> <span class="string">'junctions'</span>
+0092         <span class="keyword">if</span> nargin &lt; 4
+0093             junctionTypes = {vecLD.junctions.type};
+0094         <span class="keyword">else</span>
+0095             <span class="keyword">if</span> isempty(junctionTypes)
+0096                 junctionTypes = {vecLD.junctions.type};
+0097             <span class="keyword">end</span>
+0098             <span class="keyword">if</span> ischar(junctionTypes)
+0099                 junctionTypes = {junctionTypes};
+0100             <span class="keyword">end</span>
+0101         <span class="keyword">end</span>
+0102 
+0103         <span class="keyword">for</span> j = 1:numel(vecLD.junctions)
+0104             <span class="keyword">if</span> ismember(vecLD.junctions(j).type,junctionTypes)
+0105                 pos = round(vecLD.junctions(j).position);
+0106                 FDM(pos(2),pos(1)) = 1;
+0107             <span class="keyword">end</span>
+0108         <span class="keyword">end</span>
+0109         <span class="keyword">if</span> smoothingSigma &gt; 0
+0110             FDM = imgaussfilt(FDM,smoothingSigma);
+0111         <span class="keyword">end</span>
+0112 
+0113     <span class="keyword">case</span> <span class="string">'mirror'</span>
+0114         <span class="keyword">for</span> p = 1:numel(vecLD.mirror_allScores)
+0115             FDM(vecLD.mirror_allY(p),vecLD.mirror_allX(p)) = vecLD.mirror_allScores(p);
+0116         <span class="keyword">end</span>
+0117         <span class="keyword">if</span> smoothingSigma &gt; 0
+0118             FDM = imgaussfilt(FDM,smoothingSigma);
+0119         <span class="keyword">end</span>
+0120 
+0121     <span class="keyword">case</span> <span class="string">'parallelism'</span>
+0122         <span class="keyword">for</span> p = 1:numel(vecLD.parallelism_allScores)
+0123             FDM(vecLD.parallelism_allY(p),vecLD.parallelism_allX(p)) = vecLD.parallelism_allScores(p);
+0124         <span class="keyword">end</span>
+0125         <span class="keyword">if</span> smoothingSigma &gt; 0
+0126             FDM = imgaussfilt(FDM,smoothingSigma);
+0127         <span class="keyword">end</span>
+0128 
+0129     <span class="keyword">case</span> <span class="string">'separation'</span>
+0130         <span class="keyword">for</span> p = 1:numel(vecLD.separation_allScores)
+0131             FDM(vecLD.separation_allY(p),vecLD.separation_allX(p)) = vecLD.separation_allScores(p);
+0132         <span class="keyword">end</span>
+0133         <span class="keyword">if</span> smoothingSigma &gt; 0
+0134             FDM = imgaussfilt(FDM,smoothingSigma);
+0135         <span class="keyword">end</span>
+0136 
+0137     <span class="keyword">otherwise</span>
+0138         error([<span class="string">'Unknown property string: '</span>,property]);
+0139 <span class="keyword">end</span>
+0140</pre></div>
+<hr><address>Generated on Thu 26-Jan-2023 15:27:11 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
