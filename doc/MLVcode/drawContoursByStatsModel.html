@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of drawContoursByStatsModel</title>
+  <meta name="keywords" content="drawContoursByStatsModel">
+  <meta name="description" content="drawLinedrawingProperty(vecLD,property,lineWidth)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">MLVcode</a> &gt; drawContoursByStatsModel.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for MLVcode&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>drawContoursByStatsModel
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>drawLinedrawingProperty(vecLD,property,lineWidth)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function drawContoursByStatsModel(vecLD,Mdl,lineWidth,includeColorbar) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> drawLinedrawingProperty(vecLD,property,lineWidth)
+   Draws a colored line drawing with line color determined by 
+   the predictions of Mdl for each contour into a figure.
+
+ Input:
+   vecLD - a line drawing structure
+   Mdl - the pretrained regression model that should be applied to contour
+         features in order to split the drawing. For instancem this could
+         be a linear regression model created with fitlm:
+         https://www.mathworks.com/help/stats/fitlm.html
+         or a random forest model created with fitrensemble:
+         https://www.mathworks.com/help/stats/fitrensemble.html
+   linewidth - the width of the contour lines in pixels.
+               default: 1
+   includeColorbar - 1 to include colorbar, 0 to omit it
+                     default: 1</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="predictContoursByStatsModel.html" class="code" title="function scores = predictContoursByStatsModel(vecLD,Mdl)">predictContoursByStatsModel</a>	scores = predictContoursByStatsModel(vecLD,Mdl)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function drawContoursByStatsModel(vecLD,Mdl,lineWidth,includeColorbar)</a>
+0002 <span class="comment">% drawLinedrawingProperty(vecLD,property,lineWidth)</span>
+0003 <span class="comment">%   Draws a colored line drawing with line color determined by</span>
+0004 <span class="comment">%   the predictions of Mdl for each contour into a figure.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input:</span>
+0007 <span class="comment">%   vecLD - a line drawing structure</span>
+0008 <span class="comment">%   Mdl - the pretrained regression model that should be applied to contour</span>
+0009 <span class="comment">%         features in order to split the drawing. For instancem this could</span>
+0010 <span class="comment">%         be a linear regression model created with fitlm:</span>
+0011 <span class="comment">%         https://www.mathworks.com/help/stats/fitlm.html</span>
+0012 <span class="comment">%         or a random forest model created with fitrensemble:</span>
+0013 <span class="comment">%         https://www.mathworks.com/help/stats/fitrensemble.html</span>
+0014 <span class="comment">%   linewidth - the width of the contour lines in pixels.</span>
+0015 <span class="comment">%               default: 1</span>
+0016 <span class="comment">%   includeColorbar - 1 to include colorbar, 0 to omit it</span>
+0017 <span class="comment">%                     default: 1</span>
+0018 
+0019 <span class="comment">% -----------------------------------------------------</span>
+0020 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0021 <span class="comment">% http://www.mlvtoolbox.org</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0024 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2023</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0027 <span class="comment">%------------------------------------------------------</span>
+0028 
+0029 <span class="keyword">if</span> nargin &lt; 4
+0030     includeColorbar = 1;
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="keyword">if</span> nargin &lt; 3
+0034     lineWidth = 1;
+0035 <span class="keyword">end</span>
+0036 
+0037 <span class="comment">% compute the predictions for the individual contours</span>
+0038 scores = <a href="predictContoursByStatsModel.html" class="code" title="function scores = predictContoursByStatsModel(vecLD,Mdl)">predictContoursByStatsModel</a>(vecLD,Mdl);
+0039 maxScore = max(scores);
+0040 minScore = min(scores);
+0041 normScores = (scores - minScore) / (maxScore - minScore);
+0042 
+0043 <span class="comment">% get the color index</span>
+0044 cmap = jet(256);
+0045 colorIdx = round(normScores * 255 + 1);
+0046 
+0047 <span class="comment">% draw the line segments one at a time</span>
+0048 <span class="keyword">for</span> c = 1:vecLD.numContours
+0049     thisC = vecLD.contours{c};
+0050     X = [thisC(:,1);thisC(<span class="keyword">end</span>,3)];
+0051     Y = [thisC(:,2);thisC(<span class="keyword">end</span>,4)];
+0052     plot(X,Y,<span class="string">'-'</span>,<span class="string">'Color'</span>,cmap(colorIdx(c),:),<span class="string">'LineWidth'</span>,lineWidth);
+0053     hold on;
+0054 <span class="keyword">end</span>
+0055 
+0056 set(gca,<span class="string">'TickLength'</span>,[0,0]);
+0057 
+0058 <span class="keyword">if</span> includeColorbar
+0059     <span class="comment">% add a colorbar</span>
+0060     colormap(gca,cmap);
+0061     colorbar(<span class="string">'Ticks'</span>,[0,0.5,1],<span class="string">'TickLabels'</span>,[minScore,(maxScore+minScore)/2,maxScore]);
+0062 <span class="keyword">end</span>
+0063 
+0064 axis ij image;
+0065 axis([1,vecLD.imsize(1),1,vecLD.imsize(2)]);
+0066</pre></div>
+<hr><address>Generated on Thu 23-Feb-2023 01:36:32 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
