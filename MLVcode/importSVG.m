@@ -31,14 +31,14 @@ if nargin < 2
     imsize = [];
 end
 
-% prepare vecLD data structures
+% prepare vecLD data structure
 vecLD.originalImage = svgFilename;
 vecLD.imsize = [];
 vecLD.lineMethod = mfilename;
 vecLD.numContours = 0;
 vecLD.contours = {};
 
-% parse the elements in the SVG file
+% recursively parse the elements in the SVG file
 tree = xmlread(svgFilename);
 vecLD = parseChildNodes(tree,vecLD);
 
