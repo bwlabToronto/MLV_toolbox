@@ -73,7 +73,7 @@ if ~isempty(name)
         case 'svg'
             coords = getValue(theNode,'viewBox');
             if ~isempty(coords)
-                vecLD.imsize = ceil(coords(3:4));
+                vecLD.imsize = ceil(coords(3:4))';
             end
 
         case 'line'
