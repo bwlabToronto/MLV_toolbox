@@ -11,9 +11,9 @@ function vecLD = importSVG(svgFilename, imsize)
 %   vecLD - a vecLD data structure with the contours from the SVG file
 %
 % NOTE: This function is experimental. It does not implement all aspects of
-% the SVG standard. In particular, it does not translate any Bezier curves,
-% text, or embedded images. Some aspects of this function are untested
-% because I couldn't find an SVG file that contain the relevant features. 
+% the SVG standard. In particular, it does not translate any text, or 
+% embedded images. Some aspects of this function are untested because I 
+% couldn't find an SVG file that contain the relevant features. 
 % If you find any errors, please email the SVG file that you were trying to 
 % load to: dirk.walther@gmail.com, and I will try my best to fix the function. 
 
@@ -48,14 +48,14 @@ end
 
 % if we have no valid image size, use the bounding box around all contours
 if isempty(vecLD.imsize)
-    maxX = [];
-    maxY = [];
+    maxX = -inf;
+    maxY = -inf;
     for c = 1:vecLD.numContours
         thisCont = vecLD.contours{c};
-        maxX(c) = max([thisCont(:,1);thisCont(:,3)]);
-        maxY(c) = max([thisCont(:,2);thisCont(:,4)]);
+        maxX = max(maxX,max([thisCont(:,1);thisCont(:,3)]));
+        maxY = max(maxY,max([thisCont(:,2);thisCont(:,4)]));
     end
-    vecLD.imsize = [max(maxX),max(maxY)];
+    vecLD.imsize = [maxX,maxY];
 end
 
 end
@@ -67,8 +67,9 @@ function vecLD = parseChildNodes(theNode,vecLD)
 
 name = char(theNode.getNodeName);
 if ~isempty(name)
-    %fprintf('Name: %s\n',name);
+    %fprintf('Node name: %s\n',name);
     thisContour = [];
+    contourBreaks = 1;
     switch name
         case 'svg'
             coords = getValue(theNode,'viewBox');
@@ -106,13 +107,13 @@ if ~isempty(name)
             cx = getValue(theNode,'cx');
             cy = getValue(theNode,'cy');
             if strcmp(name,'circle')
-                rx = getValue(theNode,'r');
+                rx = abs(getValue(theNode,'r'));
                 ry = rx;
             else
-                rx = getValue(theNode,'rx');
-                ry = getValue(theNode,'ry');
+                rx = abs(getValue(theNode,'rx'));
+                ry = abs(getValue(theNode,'ry'));
             end
-            numSeg = 36;
+            numSeg = max(8,round(2*pi*max(rx,ry) / 5));
             dAng = 360/numSeg;
             angles = [0:dAng:360]';
             x = rx * cosd(angles) + cx;
@@ -124,39 +125,67 @@ if ~isempty(name)
             commands(commands == ',') = ' ';
             idx = 1;
             prevPos = [];
-            while idx <= length(commands)
-                thisCom = commands(idx);
+            prevContr = [];
+            prevCom = '';
+            nextCom = '';
+            contourBreaks = [];
 
-                if thisCom == 'Z' || thisCom == 'z'
-                    % this is the "close path" command
-                    break;
+            while (idx <= length(commands)) || ~isempty(nextCom)
+                if isempty(nextCom)
+                    % read the command and coordinates from the command string
+                    thisCom = commands(idx);
+                    [coords,~,~,nextidx] = sscanf(commands(idx+1:end),'%f');
+                    idx = idx + nextidx;
+                else
+                    thisCom = nextCom;
+                    nextCom = '';
                 end
-
-                % read the coordinates from the command string
-                [coords,~,~,nextidx] = sscanf(commands(idx+1:end),'%f');
-                idx = idx + nextidx;
+                %fprintf('\tPath command: %c\n',thisCom);
 
                 switch thisCom
                     % draw sequence of line segments - lower case means
                     % relative coordinates
-                    case {'M','m','L','l'}
+
+                    % Move pen wihtout drawing - lower case means relative coordinates
+                    case {'M','m'}
+                        x = coords(1:2:end-1);
+                        y = coords(2:2:end);
+
+                        contourBreaks = [contourBreaks,size(thisContour,1)+1];
+
+                        % relative coords? cumulative addition of points
+                        if thisCom == 'm' 
+                            if ~isempty(prevPos)
+                                x(1) = x(1) + prevPos(1);
+                                y(1) = y(1) + prevPos(2);
+                            end
+                            x = cumsum(x);
+                            y = cumsum(y);
+                        end
+
+                        % add straight line segments if we have more than one point
+                        if numel(x) > 1
+                            thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+                        end
+                        prevPos = [x(end),y(end)];
+
+                    % draw sequence of line segments
+                    case {'L','l'}
                         x = coords(1:2:end-1);
                         y = coords(2:2:end);
 
                         % connect to previous point
-                        if thisCom == 'L' || thisCom == 'l'
-                            x = [prevPos(1); x];
-                            y = [prevPos(2); y];
-                        end
+                        x = [prevPos(1); x];
+                        y = [prevPos(2); y];
 
                         % relative coords? cumulative addition of points
-                        if thisCom == 'm' || thisCom == 'l'
+                        if thisCom == 'l'
                             x = cumsum(x);
                             y = cumsum(y);
                         end
-                        if numel(x) > 1
-                            thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
-                        end
+
+                        % add straight line segments 
+                        thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
                         prevPos = [x(end),y(end)];
 
                     % draw horizontal line(s)
@@ -179,15 +208,177 @@ if ~isempty(name)
                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
                         prevPos = [x(end),y(end)];
 
-                    % these are quadratic and cubic Bezier curves and arcs -
-                    % don't know how to deal with them here
-                    case {'Q','q','T','t','C','c','S','s','A','a'}
-                        fprintf('Ignoring path command %c\n',thisCom);
+                    % quadratic Bezier curves
+                    case {'Q','q','T','t'}
+                        P0 = prevPos;
+                        switch thisCom
+                            case 'Q'
+                                numCoord = 4;
+                                P1 = coords(1:2)';
+                                P2 = coords(3:4)';
+                            case 'q'
+                                numCoord = 4;
+                                P1 = coords(1:2)' + P0;
+                                P2 = coords(3:4)' + P0;
+                            case {'T','t'}
+                                numCoord = 2;
+                                if ismember(prevCom,{'Q','q','T','t'})
+                                    P1 = 2*P0 - prevContr;
+                                else
+                                    P1 = P0;
+                                end
+                                if thisCom == 'T';
+                                    P2 = coords(1:2)';
+                                else
+                                    P2 = coords(1:2)' + P0;
+                                end
+                        end
+                        dist = norm(P1-P0) + norm(P2-P1);
+                        numSeg = max(4,round(dist / 5));
+                        t = [0:1/numSeg:1]';
+                        x = (1-t).^2*P0(1) + 2*(1-t).*t*P1(1) + t.^2*P2(1);
+                        y = (1-t).^2*P0(2) + 2*(1-t).*t*P1(2) + t.^2*P2(2);
+
+                        thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+                        prevPos = P2;
+                        prevContr = P1;
+                        if numel(coords) > numCoord
+                            coords = coords(numCoord+1:end);
+                            nextCom = thisCom;
+                        else
+                            nextCom = '';
+                        end
+
+                    % cubic Bezier curves
+                    case {'C','c','S','s'}
+                        P0 = prevPos;
+                        switch thisCom
+                            case 'C'
+                                numCoord = 6;
+                                P1 = coords(1:2)';
+                                P2 = coords(3:4)';
+                                P3 = coords(5:6)';
+                            case 'c'
+                                numCoord = 6;
+                                P1 = coords(1:2)' + P0;
+                                P2 = coords(3:4)' + P0;
+                                P3 = coords(5:6)' + P0;
+                            case {'S','s'}
+                                numCoord = 4;
+                                if ismember(prevCom,{'C','c','S','s'})
+                                    P1 = 2*P0 - prevContr;
+                                else
+                                    P1 = P0;
+                                end
+                                if thisCom == 'S'
+                                    P2 = coords(1:2)';
+                                    P3 = coords(3:4)';
+                                else
+                                    P2 = coords(1:2)' + P0;
+                                    P3 = coords(3:4)' + P0;
+                                end
+                        end
+                        dist = norm(P1-P0) + norm(P2-P1) + norm(P3-P2);
+                        numSeg = max(4,round(dist / 5));
+                        t = [0:1/numSeg:1]';
+                        x = (1-t).^3*P0(1) + 3*(1-t).^2.*t*P1(1) + 3*(1-t).*t.^2*P2(1) + t.^3*P3(1);
+                        y = (1-t).^3*P0(2) + 3*(1-t).^2.*t*P1(2) + 3*(1-t).*t.^2*P2(2) + t.^3*P3(2);
+                        thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+                        prevPos = P3;
+                        prevContr = P2;
+                        if numel(coords) > numCoord
+                            coords = coords(numCoord+1:end);
+                            nextCom = thisCom;
+                        else
+                            nextCom = '';
+                        end
+
+
+                    % Arcs
+                    case {'A','a'}
+                        numCoord = 7;
+                        P0 = prevPos';
+                        rx = abs(coords(1)); rx2 = rx*rx;
+                        ry = abs(coords(2)); ry2 = ry*ry;
+                        rotAng = coords(3);
+                        fA = coords(4); % use large arc?
+                        fS = coords(5); % sweep clockwise?
+                        if thisCom == 'A'
+                            P1 = coords(6:7);
+                        else
+                            P1 = coords(6:7) + P0;
+                        end
+
+                        % math for conversion to center parametrization
+                        % from: https://www.w3.org/TR/SVG/implnote.html
+
+                        % rotation 
+                        cosA = cosd(rotAng);
+                        sinA = sind(rotAng);
+                        rotMat = [[cosA,sinA];[-sinA,cosA]];
+
+                        P0r = rotMat * (P0-P1)/2;
+                        P0r2 = P0r .* P0r;
+
+                        % This is the center of the ellipse in transformed
+                        % coordinates
+                        Cr = sqrt((rx2*ry2 - rx2*P0r2(2) - ry2*P0r2(1)) / (rx2*P0r2(2) + ry2*P0r2(1))) * [rx*P0r(2)/ry ; -ry*P0r(1)/rx];
+
+                        if fA == fS
+                            Cr = -Cr;
+                        end
+
+                        ang0 = atan2d((P0r(2) - Cr(2)) / ry, (P0r(1) - Cr(1)) / rx);
+                        ang1 = atan2d((-P0r(2) - Cr(2)) / ry, (-P0r(1) - Cr(1)) / rx);
+
+                        if fS
+                            if ang1 < ang0
+                                ang1 = ang1 + 360;
+                            end
+                        else
+                            if ang0 < ang1
+                                ang0 = ang0 + 360;
+                            end
+                        end
+
+                        % draw the arc in transformed coordinate space
+                        numSeg = max(4,round(2*pi*max(rx,ry)*(ang1-ang0)/360 / 5));
+                        dAng = (ang1 - ang0) / numSeg;
+                        angles = [ang0:dAng:ang1]';
+                        xR = rx * cosd(angles) + Cr(1);
+                        yR = ry * sind(angles) + Cr(2);
+
+                        % transform back to original space
+                        x = cosA*xR - sinA*yR + (P0(1) + P1(1)) / 2;
+                        y = sinA*xR + cosA*yR + (P0(2) + P1(2)) / 2;
+
+                        thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+                        prevPos = P1';
+                        if numel(coords) > numCoord
+                            coords = coords(numCoord+1:end);
+                            nextCom = thisCom;
+                        else
+                            nextCom = '';
+                        end
+
+                    % close path with a straight line if it isn't closed already
+                    case {'Z','z'}
+                        if thisContour(1,1) ~= prevPos(1) || thisContour(1,2) ~= prevPos(2)
+                            thisContour = cat(1,thisContour,[prevPos,thisContour(1,1:2)]);
+                        end
+                        prevPos = thisContour(end,3:4);
 
                     otherwise
                         fprintf('Unknown path command %c\n',thisCom);
                 end
+                prevCom = thisCom;
             end
+
+        case {'text','tspan','textPath'}
+            fprintf('Importing text is not implemented. Please covert text to paths in a graphics program, such as Inkscape or Illustrator.\n');
+
+        case {'image'}
+            fprintf('Importing embedded images is not implemented.\n')
 
         case {'#document','defs','style','#text','#comment','g'}
             % do nothing
@@ -196,7 +387,13 @@ if ~isempty(name)
             fprintf('Ignoring element <%s>\n',name)
     end
 
-    if ~isempty(thisContour)
+    if isempty(thisContour)
+        contourBreaks = [];
+    else
+        contourBreaks = [contourBreaks,size(thisContour,1)+1];
+    end
+    for b = 1:numel(contourBreaks)-1
+        cont = thisContour(contourBreaks(b):contourBreaks(b+1)-1,:);
 
         % any transformations?
         transCommand = getAttribute(theNode,'transform');
@@ -205,49 +402,53 @@ if ~isempty(name)
             closeBrackets = find(transCommand == ')');
             numTransforms = numel(openBrackets);
             closeBrackets = [-1,closeBrackets];
+
             for t = numTransforms:-1:1
                 thisCommand = transCommand(closeBrackets(t)+2:openBrackets(t)-1);
                 %fprintf('Transformation: %s\n',thisCommand)
-                values = sscanf(transCommand(openBrackets(t)+1:closeBrackets(t+1)-1),'%f');
+                valStr = transCommand(openBrackets(t)+1:closeBrackets(t+1)-1);
+                valStr(valStr == ',') = ' ';
+                values = sscanf(valStr,'%f');
+
                 switch thisCommand
                     case 'scale'
                         if numel(values) == 1
-                            thisContour = values * thisContour;
+                            cont = values * cont;
                         else
-                            thisContour(:,[1,3]) = values(1) * thisContour(:,[1,3]);
-                            thisContour(:,[2,4]) = values(2) * thisContour(:,[2,4]);
+                            cont(:,[1,3]) = values(1) * cont(:,[1,3]);
+                            cont(:,[2,4]) = values(2) * cont(:,[2,4]);
                         end
 
                     case 'translate'
                         if numel(values) == 1
                             values(2) = 0;
                         end
-                        thisContour(:,[1,3]) = thisContour(:,[1,3]) + values(1);
-                        thisContour(:,[2,4]) = thisContour(:,[2,4]) + values(2);
+                        cont(:,[1,3]) = cont(:,[1,3]) + values(1);
+                        cont(:,[2,4]) = cont(:,[2,4]) + values(2);
 
                     case 'rotate'
-                        cc = thisContour;
+                        cc = cont;
                         if numel(values) == 3
                             cc(:,[1,3]) = cc(:,[1,3]) + values(2);
                             cc(:,[2,4]) = cc(:,[2,4]) + values(3);
                         end
-                        thisContour(:,[1,3]) = cosd(values(1)) * cc(:,[1,3]) - sind(values(1)) * cc(:,[2,4]);
-                        thisContour(:,[2,4]) = sind(values(1)) * cc(:,[1,3]) + cosd(values(1)) * cc(:,[2,4]);
+                        cont(:,[1,3]) = cosd(values(1)) * cc(:,[1,3]) - sind(values(1)) * cc(:,[2,4]);
+                        cont(:,[2,4]) = sind(values(1)) * cc(:,[1,3]) + cosd(values(1)) * cc(:,[2,4]);
                         if numel(values) == 3
-                            thisContour(:,[1,3]) = thisContour(:,[1,3]) - values(2);
-                            thisContour(:,[2,4]) = thisContour(:,[2,4]) - values(3);
+                            cont(:,[1,3]) = cont(:,[1,3]) - values(2);
+                            cont(:,[2,4]) = cont(:,[2,4]) - values(3);
                         end
 
                     case 'skewX'
-                        thisContour(:,[1,3]) = thisContour(:,[1,3]) + tand(values(1)) * thisContour(:,[2,4]);
+                        cont(:,[1,3]) = cont(:,[1,3]) + tand(values(1)) * cont(:,[2,4]);
 
                     case 'skewY'
-                        thisContour(:,[2,4]) = thisContour(:,[2,4]) + tand(values(1)) * thisContour(:,[1,3]);
+                        cont(:,[2,4]) = cont(:,[2,4]) + tand(values(1)) * cont(:,[1,3]);
 
                     case 'matrix'
-                        cc = thisContour;
-                        thisContour(:,[1,3]) = values(1) * cc(:,[1,3]) + values(3) * cc(:,[2,4]) + values(5);
-                        thisContour(:,[2,4]) = values(2) * cc(:,[1,3]) + values(4) * cc(:,[2,4]) + values(6);
+                        cc = cont;
+                        cont(:,[1,3]) = values(1) * cc(:,[1,3]) + values(3) * cc(:,[2,4]) + values(5);
+                        cont(:,[2,4]) = values(2) * cc(:,[1,3]) + values(4) * cc(:,[2,4]) + values(6);
 
                     otherwise
                         fprintf('Unknown transformation: %s\n',thisCommand);
@@ -257,12 +458,12 @@ if ~isempty(name)
 
         % add the contour to the vecLD structure
         vecLD.numContours = vecLD.numContours + 1;
-        vecLD.contours{vecLD.numContours} = round(thisContour);
+        vecLD.contours{vecLD.numContours} = cont;
     end
 
 end
 
-% this is where the recursion happens
+% Recurse to all child nodes
 if theNode.hasChildNodes
     childNodes = theNode.getChildNodes;
     numChildNodes = childNodes.getLength;
@@ -276,7 +477,6 @@ end
 
 % local function to read an attribute from a node
 function attribute = getAttribute(theNode,attrName)
-
 attribute = [];
 if theNode.hasAttributes
    theAttributes = theNode.getAttributes;
