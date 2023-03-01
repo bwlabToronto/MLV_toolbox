@@ -69,11 +69,6 @@ if ~isempty(name)
     thisContour = [];
     contourBreaks = 1;
     switch name
-%         case 'svg'
-%             coords = getValue(theNode,'viewBox');
-%             if ~isempty(coords)
-%                 vecLD.imsize = ceil(coords(3:4))';
-%             end
 
         case 'line'
             thisContour = [0,0,0,0];
@@ -243,8 +238,6 @@ if ~isempty(name)
                         if numel(coords) > numCoord
                             coords = coords(numCoord+1:end);
                             nextCom = thisCom;
-                        else
-                            nextCom = '';
                         end
 
                     % cubic Bezier curves
@@ -287,8 +280,6 @@ if ~isempty(name)
                         if numel(coords) > numCoord
                             coords = coords(numCoord+1:end);
                             nextCom = thisCom;
-                        else
-                            nextCom = '';
                         end
 
 
@@ -355,8 +346,6 @@ if ~isempty(name)
                         if numel(coords) > numCoord
                             coords = coords(numCoord+1:end);
                             nextCom = thisCom;
-                        else
-                            nextCom = '';
                         end
 
                     % close path with a straight line if it isn't closed already
