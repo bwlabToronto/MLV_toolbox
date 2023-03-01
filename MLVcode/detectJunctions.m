@@ -1,10 +1,16 @@
-function Junctions = detectJunctions(vecLD)
+function Junctions = detectJunctions(vecLD,AE, RE)
 % Junctions = detectJunctions(vecLD)
 %       detects any junctions between contours in the vectorized line drawing
 %       vecLD.
 %
 % Input: 
 %    vecLD: the vectorized line drawing
+%    AE: absolute epsilon for detecting junctions across gaps 
+%        (default: 1 pixel)
+%    RE: relative epsilon for detecting junctions across gaps as a fraction
+%        of the participating line segment (default: 0.3)
+%    For the junciton detection, the minimum of the two epsilon measures is
+%    used.
 %
 % Output:
 %    Junctions: a vector of structs with the following fields:
@@ -29,9 +35,13 @@ function Junctions = detectJunctions(vecLD)
 
 
 % parameters for heuristic detection
-AE = 1; % absolute epsilon to accept two lines as "intersecting" even when they may be seprated by 0 pixels
-RE = 0.3; % relative epsilon - the same relative to the lentgh of a segment - the stricter of the two criteria will be applied
-   
+if nargin < 3
+    RE = 0.3; % relative epsilon - the same relative to the lentgh of a segment - the stricter of the two criteria will be applied
+end
+if nargin < 2
+    AE = 1; % absolute epsilon to accept two lines as "intersecting" even when they may be seprated by 0 pixels
+end
+
 Junctions=[];
 count=0;
 

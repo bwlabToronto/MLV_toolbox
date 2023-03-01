@@ -5,9 +5,7 @@ function vecLD = importSVG(svgFilename, imsize)
 % Input:
 %   svgFilename - file name for an SVG file
 %   imsize - the image size (optional). If nothing is provided, the image
-%            size will be determined from the SVG file. This doesn't always
-%            work reliably, depending on the graphics program that
-%            generated the SVG. If in doubt, please provide imsize.
+%            size will be determined from the SVG file.
 %
 % Output:
 %   vecLD - a vecLD data structure with the contours from the SVG file
@@ -44,12 +42,10 @@ vecLD.contours = {};
 tree = xmlread(svgFilename);
 vecLD = parseChildNodes(tree,vecLD);
 
+% if we have no valid image size, use the bounding box around all contours
 if ~isempty(imsize)
     vecLD.imsize = imsize;
-end
-
-% if we have no valid image size, use the bounding box around all contours
-if isempty(vecLD.imsize)
+else
     maxX = -inf;
     maxY = -inf;
     for c = 1:vecLD.numContours
@@ -73,11 +69,11 @@ if ~isempty(name)
     thisContour = [];
     contourBreaks = 1;
     switch name
-        case 'svg'
-            coords = getValue(theNode,'viewBox');
-            if ~isempty(coords)
-                vecLD.imsize = ceil(coords(3:4))';
-            end
+%         case 'svg'
+%             coords = getValue(theNode,'viewBox');
+%             if ~isempty(coords)
+%                 vecLD.imsize = ceil(coords(3:4))';
+%             end
 
         case 'line'
             thisContour = [0,0,0,0];
@@ -127,6 +123,7 @@ if ~isempty(name)
             commands(commands == ',') = ' ';
             idx = 1;
             prevPos = [];
+            pathStartPos = [];
             prevContr = [];
             prevCom = '';
             nextCom = '';
@@ -168,6 +165,7 @@ if ~isempty(name)
                             thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
                         end
                         prevPos = [x(end),y(end)];
+                        pathStartPos = [x(1),y(1)];
 
                     % draw sequence of line segments
                     case {'L','l'}
@@ -363,10 +361,11 @@ if ~isempty(name)
 
                     % close path with a straight line if it isn't closed already
                     case {'Z','z'}
-                        if thisContour(1,1) ~= prevPos(1) || thisContour(1,2) ~= prevPos(2)
-                            thisContour = cat(1,thisContour,[prevPos,thisContour(1,1:2)]);
+                        if pathStartPos(1) ~= prevPos(1) || pathStartPos(2) ~= prevPos(2)
+                            thisContour = cat(1,thisContour,[prevPos,pathStartPos]);
                         end
                         prevPos = thisContour(end,3:4);
+                        pathStartPos = [];
 
                     otherwise
                         fprintf('Unknown path command %c\n',thisCom);
@@ -380,7 +379,7 @@ if ~isempty(name)
         case {'image'}
             fprintf('Importing embedded images is not implemented.\n')
 
-        case {'#document','defs','style','#text','#comment','g'}
+        case {'svg','#document','defs','style','#text','#comment','g'}
             % do nothing
 
         otherwise
@@ -399,7 +398,7 @@ if ~isempty(name)
 
             for t = numTransforms:-1:1
                 thisCommand = transCommand(closeBrackets(t)+2:openBrackets(t)-1);
-                %fprintf('Transformation: %s\n',thisCommand)
+                fprintf('Transformation: %s\n',thisCommand)
                 valStr = transCommand(openBrackets(t)+1:closeBrackets(t+1)-1);
                 valStr(valStr == ',') = ' ';
                 values = sscanf(valStr,'%f');
