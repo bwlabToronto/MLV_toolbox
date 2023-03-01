@@ -5,13 +5,89 @@
 % http://www.mlvtoolbox.org
 %
 % Copyright Dirk Bernhardt-Walther
-% University of Toronto, Toronto, Ontario, Canada, 2022
+% University of Toronto, Toronto, Ontario, Canada, 2023
 %
 % Contact: dirk.walther@gmail.com
 %------------------------------------------------------
 
+%% simple test patterns
+% import from SVG and compute properties
+testLD = importSVG('testPatterns.svg');
+testLD = computeContourProperties(testLD);
+[testLD,MAT] = computeAllMATfromVecLD(testLD);
 
-%% If the line drawing already exists, load it
+%% figures for simple test pattern
+thisFig = figure;
+subplot(2,5,1);
+drawLinedrawingProperty(testLD,'Orientation');
+set(gca,'XTick',[],'YTick',[]);
+
+subplot(2,5,2);
+drawLinedrawingProperty(testLD,'Length');
+set(gca,'XTick',[],'YTick',[]);
+
+subplot(2,5,3);
+drawLinedrawingProperty(testLD,'Curvature');
+set(gca,'XTick',[],'YTick',[]);
+
+subplot(2,5,4);
+drawLinedrawingProperty(testLD,'Junctions');
+set(gca,'XTick',[],'YTick',[]);
+
+% distance function
+subplot(2,5,5);
+imagesc(MAT.distance_map);
+hold on;
+colormap(gca,jet);
+drawLinedrawing(testLD,1,'white');
+c = colorbar;
+c.Label.String = 'Distance to the closest contour';
+set(gca,'XTick',[],'YTick',[]);
+
+% average outward flux map
+subplot(2,5,6);
+negMap = -MAT.AOF;
+negMap(negMap < 0) = 0;
+negMap = imdilate(negMap,strel('disk',2));
+posMap = MAT.AOF;
+posMap(posMap < 0) = 0;
+posMap = imdilate(posMap,strel('disk',2));
+thisMap = negMap - posMap;
+imagesc(thisMap);
+colormap(gca,redblue);
+hold on;
+drawLinedrawing(testLD,1);
+set(gca,'XTick',[],'YTick',[]);
+
+subplot(2,5,7);
+thisMap = 1 - MAT.skeleton;
+imshow(cat(3,ones(size(thisMap)),thisMap,thisMap));
+hold on;
+drawLinedrawing(testLD);
+set(gca,'XTick',[],'YTick',[]);
+box on;
+
+% Parallelism
+subplot(2,5,8);
+drawMATproperty(testLD,'parallelism');
+set(gca,'XTick',[],'YTick',[]);
+
+% Separation
+subplot(2,5,9);
+drawMATproperty(testLD,'Separation');
+set(gca,'XTick',[],'YTick',[]);
+
+% Mirror Symmetry
+subplot(2,5,10);
+drawMATproperty(testLD,'Mirror');
+set(gca,'XTick',[],'YTick',[]);
+
+thisFig.WindowState = 'maximized';
+exportgraphics(thisFig,'Figure_testPatterns.pdf','BackgroundColor','none','ContentType','vector');
+
+
+%% Forest image
+% If the line drawing already exists, load it
 LDname = 'Forest_DBW.mat';
 if exist(LDname) == 2
     load(LDname);
@@ -87,7 +163,14 @@ set(gca,'XTick',[],'YTick',[]);
 
 % average outward flux map
 subplot(2,3,2);
-imagesc(-(MAT.AOF));
+negMap = -MAT.AOF;
+negMap(negMap < 0) = 0;
+negMap = imdilate(negMap,strel('disk',2));
+posMap = MAT.AOF;
+posMap(posMap < 0) = 0;
+posMap = imdilate(posMap,strel('disk',2));
+thisMap = negMap - posMap;
+imagesc(thisMap);
 colormap(gca,redblue);
 hold on;
 drawLinedrawing(vecLD,1);
@@ -95,7 +178,8 @@ set(gca,'XTick',[],'YTick',[]);
 
 % medial axis
 subplot(2,3,3);
-imshow(cat(3,ones(size(MAT.skeleton)),1-MAT.skeleton,1-MAT.skeleton));
+thisMap = 1 - imdilate(MAT.skeleton,strel('disk',2));
+imshow(cat(3,ones(size(thisMap)),thisMap,thisMap));
 hold on;
 drawLinedrawing(vecLD);
 set(gca,'XTick',[],'YTick',[]);
