@@ -5,15 +5,17 @@ function vecLD = importSVG(svgFilename, imsize)
 % Input:
 %   svgFilename - file name for an SVG file
 %   imsize - the image size (optional). If nothing is provided, the image
-%            size will be determined from the SVG file
+%            size will be determined from the SVG file. This doesn't always
+%            work reliably, depending on the graphics program that
+%            generated the SVG. If in doubt, please provide imsize.
 %
 % Output:
 %   vecLD - a vecLD data structure with the contours from the SVG file
 %
 % NOTE: This function is experimental. It does not implement all aspects of
-% the SVG standard. In particular, it does not translate any text, or 
-% embedded images. Some aspects of this function are untested because I 
-% couldn't find an SVG file that contain the relevant features. 
+% the SVG standard. In particular, it does not translate any text,  
+% embedded images, shape fill, or gradients. Some aspects of this function are 
+% untested because I couldn't find an SVG file that contain the relevant features. 
 % If you find any errors, please email the SVG file that you were trying to 
 % load to: dirk.walther@gmail.com, and I will try my best to fix the function. 
 
@@ -143,10 +145,8 @@ if ~isempty(name)
                 %fprintf('\tPath command: %c\n',thisCom);
 
                 switch thisCom
-                    % draw sequence of line segments - lower case means
-                    % relative coordinates
 
-                    % Move pen wihtout drawing - lower case means relative coordinates
+                    % Move pen without drawing - lower case means relative coordinates
                     case {'M','m'}
                         x = coords(1:2:end-1);
                         y = coords(2:2:end);
@@ -227,7 +227,7 @@ if ~isempty(name)
                                 else
                                     P1 = P0;
                                 end
-                                if thisCom == 'T';
+                                if thisCom == 'T'
                                     P2 = coords(1:2)';
                                 else
                                     P2 = coords(1:2)' + P0;
@@ -387,13 +387,7 @@ if ~isempty(name)
             fprintf('Ignoring element <%s>\n',name)
     end
 
-    if isempty(thisContour)
-        contourBreaks = [];
-    else
-        contourBreaks = [contourBreaks,size(thisContour,1)+1];
-    end
-    for b = 1:numel(contourBreaks)-1
-        cont = thisContour(contourBreaks(b):contourBreaks(b+1)-1,:);
+    if ~isempty(thisContour)
 
         % any transformations?
         transCommand = getAttribute(theNode,'transform');
@@ -413,42 +407,42 @@ if ~isempty(name)
                 switch thisCommand
                     case 'scale'
                         if numel(values) == 1
-                            cont = values * cont;
+                            thisContour = values * thisContour;
                         else
-                            cont(:,[1,3]) = values(1) * cont(:,[1,3]);
-                            cont(:,[2,4]) = values(2) * cont(:,[2,4]);
+                            thisContour(:,[1,3]) = values(1) * thisContour(:,[1,3]);
+                            thisContour(:,[2,4]) = values(2) * thisContour(:,[2,4]);
                         end
 
                     case 'translate'
                         if numel(values) == 1
                             values(2) = 0;
                         end
-                        cont(:,[1,3]) = cont(:,[1,3]) + values(1);
-                        cont(:,[2,4]) = cont(:,[2,4]) + values(2);
+                        thisContour(:,[1,3]) = thisContour(:,[1,3]) + values(1);
+                        thisContour(:,[2,4]) = thisContour(:,[2,4]) + values(2);
 
                     case 'rotate'
-                        cc = cont;
+                        cc = thisContour;
                         if numel(values) == 3
                             cc(:,[1,3]) = cc(:,[1,3]) + values(2);
                             cc(:,[2,4]) = cc(:,[2,4]) + values(3);
                         end
-                        cont(:,[1,3]) = cosd(values(1)) * cc(:,[1,3]) - sind(values(1)) * cc(:,[2,4]);
-                        cont(:,[2,4]) = sind(values(1)) * cc(:,[1,3]) + cosd(values(1)) * cc(:,[2,4]);
+                        thisContour(:,[1,3]) = cosd(values(1)) * cc(:,[1,3]) - sind(values(1)) * cc(:,[2,4]);
+                        thisContour(:,[2,4]) = sind(values(1)) * cc(:,[1,3]) + cosd(values(1)) * cc(:,[2,4]);
                         if numel(values) == 3
-                            cont(:,[1,3]) = cont(:,[1,3]) - values(2);
-                            cont(:,[2,4]) = cont(:,[2,4]) - values(3);
+                            thisContour(:,[1,3]) = thisContour(:,[1,3]) - values(2);
+                            thisContour(:,[2,4]) = thisContour(:,[2,4]) - values(3);
                         end
 
                     case 'skewX'
-                        cont(:,[1,3]) = cont(:,[1,3]) + tand(values(1)) * cont(:,[2,4]);
+                        thisContour(:,[1,3]) = thisContour(:,[1,3]) + tand(values(1)) * thisContour(:,[2,4]);
 
                     case 'skewY'
-                        cont(:,[2,4]) = cont(:,[2,4]) + tand(values(1)) * cont(:,[1,3]);
+                        thisContour(:,[2,4]) = thisContour(:,[2,4]) + tand(values(1)) * thisContour(:,[1,3]);
 
                     case 'matrix'
-                        cc = cont;
-                        cont(:,[1,3]) = values(1) * cc(:,[1,3]) + values(3) * cc(:,[2,4]) + values(5);
-                        cont(:,[2,4]) = values(2) * cc(:,[1,3]) + values(4) * cc(:,[2,4]) + values(6);
+                        cc = thisContour;
+                        thisContour(:,[1,3]) = values(1) * cc(:,[1,3]) + values(3) * cc(:,[2,4]) + values(5);
+                        thisContour(:,[2,4]) = values(2) * cc(:,[1,3]) + values(4) * cc(:,[2,4]) + values(6);
 
                     otherwise
                         fprintf('Unknown transformation: %s\n',thisCommand);
@@ -456,11 +450,14 @@ if ~isempty(name)
             end
         end
 
-        % add the contour to the vecLD structure
-        vecLD.numContours = vecLD.numContours + 1;
-        vecLD.contours{vecLD.numContours} = cont;
+        % If the contour needs to be broken up because of M or m path commands,
+        % save each piece separately
+        contourBreaks = [contourBreaks,size(thisContour,1)+1];
+        for b = 1:numel(contourBreaks)-1
+            vecLD.numContours = vecLD.numContours + 1;
+            vecLD.contours{vecLD.numContours} = thisContour(contourBreaks(b):contourBreaks(b+1)-1,:);
+        end
     end
-
 end
 
 % Recurse to all child nodes
