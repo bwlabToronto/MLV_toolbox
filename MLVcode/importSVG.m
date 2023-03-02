@@ -53,7 +53,7 @@ else
         maxX = max(maxX,max([thisCont(:,1);thisCont(:,3)]));
         maxY = max(maxY,max([thisCont(:,2);thisCont(:,4)]));
     end
-    vecLD.imsize = [maxX,maxY];
+    vecLD.imsize = ceil([maxX,maxY]);
 end
 
 end
