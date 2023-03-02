@@ -68,7 +68,14 @@ if ~isempty(name)
     switch name
 
         case 'g'
-            groupTransform = getAttribute(theNode,'transform');
+            thisTransform = getAttribute(theNode,'transform');
+            if ~isempty(thisTransform)
+                if isempty(groupTransform)
+                    groupTransform = thisTransform;
+                else
+                    groupTransform = [groupTransform,' ',thisTransform];
+                end
+            end
 
         case 'svg'
             viewBox = getValue(theNode,'viewBox');
@@ -389,7 +396,7 @@ if ~isempty(name)
         if isempty(transCommand)
             transCommand = groupTransform;
         elseif ~isempty(groupTransform)
-            transCommand = [transCommand,' ',transCommand];
+            transCommand = [groupTransform,' ',transCommand];
         end
 
         if ~isempty(transCommand)
