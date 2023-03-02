@@ -27,10 +27,6 @@ function vecLD = importSVG(svgFilename, imsize)
 % Contact: dirk.walther@gmail.com
 %------------------------------------------------------
 
-if nargin < 2
-    imsize = [];
-end
-
 % prepare vecLD data structure
 vecLD.originalImage = svgFilename;
 vecLD.imsize = [];
@@ -40,12 +36,13 @@ vecLD.contours = {};
 
 % recursively parse the elements in the SVG file
 tree = xmlread(svgFilename);
-vecLD = parseChildNodes(tree,vecLD);
+vecLD = parseChildNodes(tree,vecLD,'');
 
 % if we have no valid image size, use the bounding box around all contours
-if ~isempty(imsize)
+if nargin >= 2
     vecLD.imsize = imsize;
-else
+end
+if isempty(vecLD.imsize)
     maxX = -inf;
     maxY = -inf;
     for c = 1:vecLD.numContours
@@ -61,7 +58,7 @@ end
 
 % local recursive function that traverses the SVG tree and fills
 % in the vecLD data structure along the way
-function vecLD = parseChildNodes(theNode,vecLD)
+function vecLD = parseChildNodes(theNode,vecLD,groupTransform)
 
 name = char(theNode.getNodeName);
 if ~isempty(name)
@@ -69,6 +66,16 @@ if ~isempty(name)
     thisContour = [];
     contourBreaks = 1;
     switch name
+
+        case 'g'
+            groupTransform = getAttribute(theNode,'transform');
+
+        case 'svg'
+            viewBox = getValue(theNode,'viewBox');
+            if ~isempty(viewBox)
+                vecLD.imsize = viewBox(3:4)';
+            end
+
 
         case 'line'
             thisContour = [0,0,0,0];
@@ -368,7 +375,7 @@ if ~isempty(name)
         case {'image'}
             fprintf('Importing embedded images is not implemented.\n')
 
-        case {'svg','#document','defs','style','#text','#comment','g'}
+        case {'#document','defs','style','#text','#comment'}
             % do nothing
 
         otherwise
@@ -379,6 +386,12 @@ if ~isempty(name)
 
         % any transformations?
         transCommand = getAttribute(theNode,'transform');
+        if isempty(transCommand)
+            transCommand = groupTransform;
+        elseif ~isempty(groupTransform)
+            transCommand = [transCommand,' ',transCommand];
+        end
+
         if ~isempty(transCommand)
             openBrackets = find(transCommand == '(');
             closeBrackets = find(transCommand == ')');
@@ -387,7 +400,7 @@ if ~isempty(name)
 
             for t = numTransforms:-1:1
                 thisCommand = transCommand(closeBrackets(t)+2:openBrackets(t)-1);
-                fprintf('Transformation: %s\n',thisCommand)
+                %fprintf('Transformation: %s\n',thisCommand);
                 valStr = transCommand(openBrackets(t)+1:closeBrackets(t+1)-1);
                 valStr(valStr == ',') = ' ';
                 values = sscanf(valStr,'%f');
@@ -434,6 +447,7 @@ if ~isempty(name)
 
                     otherwise
                         fprintf('Unknown transformation: %s\n',thisCommand);
+
                 end
             end
         end
@@ -453,7 +467,7 @@ if theNode.hasChildNodes
     childNodes = theNode.getChildNodes;
     numChildNodes = childNodes.getLength;
     for c = 1:numChildNodes
-        vecLD = parseChildNodes(childNodes.item(c-1),vecLD);
+        vecLD = parseChildNodes(childNodes.item(c-1),vecLD,groupTransform);
     end
 end
 end
