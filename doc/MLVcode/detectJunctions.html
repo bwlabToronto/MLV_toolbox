@@ -24,7 +24,7 @@
 <div class="box"><strong>Junctions = detectJunctions(vecLD)</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="box"><strong>function Junctions = detectJunctions(vecLD) </strong></div>
+<div class="box"><strong>function Junctions = detectJunctions(vecLD,AE, RE) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre class="comment"> Junctions = detectJunctions(vecLD)
@@ -33,6 +33,12 @@
 
  Input: 
     vecLD: the vectorized line drawing
+    AE: absolute epsilon for detecting junctions across gaps 
+        (default: 1 pixel)
+    RE: relative epsilon for detecting junctions across gaps as a fraction
+        of the participating line segment (default: 0.3)
+    For the junciton detection, the minimum of the two epsilon measures is
+    used.
 
  Output:
     Junctions: a vector of structs with the following fields:
@@ -58,68 +64,78 @@ This function is called by:
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
-<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Junctions = detectJunctions(vecLD)</a>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Junctions = detectJunctions(vecLD,AE, RE)</a>
 0002 <span class="comment">% Junctions = detectJunctions(vecLD)</span>
 0003 <span class="comment">%       detects any junctions between contours in the vectorized line drawing</span>
 0004 <span class="comment">%       vecLD.</span>
 0005 <span class="comment">%</span>
 0006 <span class="comment">% Input:</span>
 0007 <span class="comment">%    vecLD: the vectorized line drawing</span>
-0008 <span class="comment">%</span>
-0009 <span class="comment">% Output:</span>
-0010 <span class="comment">%    Junctions: a vector of structs with the following fields:</span>
-0011 <span class="comment">%               Position - the [x,y] coordinates of the junction point</span>
-0012 <span class="comment">%               contourIDs - a vector with the indices of the contours</span>
-0013 <span class="comment">%               participating in this junction - this will always be two as</span>
-0014 <span class="comment">%               an output of this function. See cleanupJunctions for more.</span>
-0015 <span class="comment">%               segmentIDs - a vector with the indices to the line segments</span>
-0016 <span class="comment">%               within the participating contours.</span>
-0017 <span class="comment">%</span>
-0018 <span class="comment">% See also computeJunctions</span>
-0019 
-0020 <span class="comment">% -----------------------------------------------------</span>
-0021 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0022 <span class="comment">% http://www.mlvtoolbox.org</span>
+0008 <span class="comment">%    AE: absolute epsilon for detecting junctions across gaps</span>
+0009 <span class="comment">%        (default: 1 pixel)</span>
+0010 <span class="comment">%    RE: relative epsilon for detecting junctions across gaps as a fraction</span>
+0011 <span class="comment">%        of the participating line segment (default: 0.3)</span>
+0012 <span class="comment">%    For the junciton detection, the minimum of the two epsilon measures is</span>
+0013 <span class="comment">%    used.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Output:</span>
+0016 <span class="comment">%    Junctions: a vector of structs with the following fields:</span>
+0017 <span class="comment">%               Position - the [x,y] coordinates of the junction point</span>
+0018 <span class="comment">%               contourIDs - a vector with the indices of the contours</span>
+0019 <span class="comment">%               participating in this junction - this will always be two as</span>
+0020 <span class="comment">%               an output of this function. See cleanupJunctions for more.</span>
+0021 <span class="comment">%               segmentIDs - a vector with the indices to the line segments</span>
+0022 <span class="comment">%               within the participating contours.</span>
 0023 <span class="comment">%</span>
-0024 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0025 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
-0026 <span class="comment">%</span>
-0027 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0028 <span class="comment">%------------------------------------------------------</span>
-0029 
-0030 
-0031 <span class="comment">% parameters for heuristic detection</span>
-0032 AE = 1; <span class="comment">% absolute epsilon to accept two lines as &quot;intersecting&quot; even when they may be seprated by 0 pixels</span>
-0033 RE = 0.3; <span class="comment">% relative epsilon - the same relative to the lentgh of a segment - the stricter of the two criteria will be applied</span>
-0034    
-0035 Junctions=[];
-0036 count=0;
-0037 
-0038 <span class="keyword">for</span> queryC = 1:vecLD.numContours <span class="comment">% loop over the query curves</span>
-0039     <span class="keyword">if</span> vecLD.contourLengths(queryC) &lt; AE <span class="comment">% if the curve is too short, then don't consider it</span>
-0040         <span class="keyword">continue</span>;
-0041     <span class="keyword">end</span>
-0042     queryCurve = vecLD.contours{queryC};
-0043     <span class="keyword">for</span> queryS = 1:size(queryCurve,1) <span class="comment">% loop over the query line segments</span>
-0044         <span class="keyword">for</span> refC = queryC+1:vecLD.numContours <span class="comment">% we don't consider intersections fo the curve with itself</span>
-0045             <span class="keyword">if</span> vecLD.contourLengths(refC) &lt; AE <span class="comment">% if the curve is too short, then don't consider it</span>
-0046                 <span class="keyword">continue</span>;
-0047             <span class="keyword">end</span>
-0048             refCurve = vecLD.contours{refC};
-0049 
-0050             <span class="keyword">for</span> refS = 1:size(refCurve,1) <span class="comment">% loop over reference line segments</span>
-0051                 pos = <a href="lineIntersection.html" class="code" title="function Position = lineIntersection(queryLine,refLine,RE,AE)">lineIntersection</a>(queryCurve(queryS,:),refCurve(refS,:),RE,AE);
-0052                 <span class="keyword">if</span> ~isempty(pos)
-0053                     count = count + 1;
-0054                     Junctions(count).position = pos;
-0055                     Junctions(count).contourIDs = [queryC,refC];
-0056                     Junctions(count).segmentIDs = [queryS,refS];
-0057                 <span class="keyword">end</span>
-0058             <span class="keyword">end</span>
-0059         <span class="keyword">end</span>
-0060     <span class="keyword">end</span>
-0061 <span class="keyword">end</span>
-0062</pre></div>
-<hr><address>Generated on Tue 28-Feb-2023 22:42:22 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0024 <span class="comment">% See also computeJunctions</span>
+0025 
+0026 <span class="comment">% -----------------------------------------------------</span>
+0027 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0028 <span class="comment">% http://www.mlvtoolbox.org</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0031 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2022</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0034 <span class="comment">%------------------------------------------------------</span>
+0035 
+0036 
+0037 <span class="comment">% parameters for heuristic detection</span>
+0038 <span class="keyword">if</span> nargin &lt; 3
+0039     RE = 0.3; <span class="comment">% relative epsilon - the same relative to the lentgh of a segment - the stricter of the two criteria will be applied</span>
+0040 <span class="keyword">end</span>
+0041 <span class="keyword">if</span> nargin &lt; 2
+0042     AE = 1; <span class="comment">% absolute epsilon to accept two lines as &quot;intersecting&quot; even when they may be seprated by 0 pixels</span>
+0043 <span class="keyword">end</span>
+0044 
+0045 Junctions=[];
+0046 count=0;
+0047 
+0048 <span class="keyword">for</span> queryC = 1:vecLD.numContours <span class="comment">% loop over the query curves</span>
+0049     <span class="keyword">if</span> vecLD.contourLengths(queryC) &lt; AE <span class="comment">% if the curve is too short, then don't consider it</span>
+0050         <span class="keyword">continue</span>;
+0051     <span class="keyword">end</span>
+0052     queryCurve = vecLD.contours{queryC};
+0053     <span class="keyword">for</span> queryS = 1:size(queryCurve,1) <span class="comment">% loop over the query line segments</span>
+0054         <span class="keyword">for</span> refC = queryC+1:vecLD.numContours <span class="comment">% we don't consider intersections fo the curve with itself</span>
+0055             <span class="keyword">if</span> vecLD.contourLengths(refC) &lt; AE <span class="comment">% if the curve is too short, then don't consider it</span>
+0056                 <span class="keyword">continue</span>;
+0057             <span class="keyword">end</span>
+0058             refCurve = vecLD.contours{refC};
+0059 
+0060             <span class="keyword">for</span> refS = 1:size(refCurve,1) <span class="comment">% loop over reference line segments</span>
+0061                 pos = <a href="lineIntersection.html" class="code" title="function Position = lineIntersection(queryLine,refLine,RE,AE)">lineIntersection</a>(queryCurve(queryS,:),refCurve(refS,:),RE,AE);
+0062                 <span class="keyword">if</span> ~isempty(pos)
+0063                     count = count + 1;
+0064                     Junctions(count).position = pos;
+0065                     Junctions(count).contourIDs = [queryC,refC];
+0066                     Junctions(count).segmentIDs = [queryS,refS];
+0067                 <span class="keyword">end</span>
+0068             <span class="keyword">end</span>
+0069         <span class="keyword">end</span>
+0070     <span class="keyword">end</span>
+0071 <span class="keyword">end</span>
+0072</pre></div>
+<hr><address>Generated on Fri 03-Mar-2023 22:56:46 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

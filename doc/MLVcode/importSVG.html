@@ -33,9 +33,7 @@
  Input:
    svgFilename - file name for an SVG file
    imsize - the image size (optional). If nothing is provided, the image
-            size will be determined from the SVG file. This doesn't always
-            work reliably, depending on the graphics program that
-            generated the SVG. If in doubt, please provide imsize.
+            size will be determined from the SVG file.
 
  Output:
    vecLD - a vecLD data structure with the contours from the SVG file
@@ -59,7 +57,7 @@ This function is called by:
 
 <h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="#_sub1" class="code">function vecLD = parseChildNodes(theNode,vecLD)</a></li><li><a href="#_sub2" class="code">function attribute = getAttribute(theNode,attrName)</a></li><li><a href="#_sub3" class="code">function attrValue = getValue(theNode,attrName)</a></li></ul>
+<li><a href="#_sub1" class="code">function vecLD = parseChildNodes(theNode,vecLD,groupTransform)</a></li><li><a href="#_sub2" class="code">function attribute = getAttribute(theNode,attrName)</a></li><li><a href="#_sub3" class="code">function attrValue = getValue(theNode,attrName)</a></li></ul>
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vecLD = importSVG(svgFilename, imsize)</a>
@@ -69,498 +67,507 @@ This function is called by:
 0005 <span class="comment">% Input:</span>
 0006 <span class="comment">%   svgFilename - file name for an SVG file</span>
 0007 <span class="comment">%   imsize - the image size (optional). If nothing is provided, the image</span>
-0008 <span class="comment">%            size will be determined from the SVG file. This doesn't always</span>
-0009 <span class="comment">%            work reliably, depending on the graphics program that</span>
-0010 <span class="comment">%            generated the SVG. If in doubt, please provide imsize.</span>
-0011 <span class="comment">%</span>
-0012 <span class="comment">% Output:</span>
-0013 <span class="comment">%   vecLD - a vecLD data structure with the contours from the SVG file</span>
-0014 <span class="comment">%</span>
-0015 <span class="comment">% NOTE: This function is experimental. It does not implement all aspects of</span>
-0016 <span class="comment">% the SVG standard. In particular, it does not translate any text,</span>
-0017 <span class="comment">% embedded images, shape fill, or gradients. Some aspects of this function are</span>
-0018 <span class="comment">% untested because I couldn't find an SVG file that contain the relevant features.</span>
-0019 <span class="comment">% If you find any errors, please email the SVG file that you were trying to</span>
-0020 <span class="comment">% load to: dirk.walther@gmail.com, and I will try my best to fix the function.</span>
-0021 
-0022 <span class="comment">% -----------------------------------------------------</span>
-0023 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
-0024 <span class="comment">% http://www.mlvtoolbox.org</span>
-0025 <span class="comment">%</span>
-0026 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
-0027 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2023</span>
-0028 <span class="comment">%</span>
-0029 <span class="comment">% Contact: dirk.walther@gmail.com</span>
-0030 <span class="comment">%------------------------------------------------------</span>
-0031 
-0032 <span class="keyword">if</span> nargin &lt; 2
-0033     imsize = [];
-0034 <span class="keyword">end</span>
-0035 
-0036 <span class="comment">% prepare vecLD data structure</span>
-0037 vecLD.originalImage = svgFilename;
-0038 vecLD.imsize = [];
-0039 vecLD.lineMethod = mfilename;
-0040 vecLD.numContours = 0;
-0041 vecLD.contours = {};
-0042 
-0043 <span class="comment">% recursively parse the elements in the SVG file</span>
-0044 tree = xmlread(svgFilename);
-0045 vecLD = <a href="#_sub1" class="code" title="subfunction vecLD = parseChildNodes(theNode,vecLD)">parseChildNodes</a>(tree,vecLD);
-0046 
-0047 <span class="keyword">if</span> ~isempty(imsize)
-0048     vecLD.imsize = imsize;
-0049 <span class="keyword">end</span>
-0050 
-0051 <span class="comment">% if we have no valid image size, use the bounding box around all contours</span>
-0052 <span class="keyword">if</span> isempty(vecLD.imsize)
-0053     maxX = -inf;
-0054     maxY = -inf;
-0055     <span class="keyword">for</span> c = 1:vecLD.numContours
-0056         thisCont = vecLD.contours{c};
-0057         maxX = max(maxX,max([thisCont(:,1);thisCont(:,3)]));
-0058         maxY = max(maxY,max([thisCont(:,2);thisCont(:,4)]));
-0059     <span class="keyword">end</span>
-0060     vecLD.imsize = [maxX,maxY];
-0061 <span class="keyword">end</span>
+0008 <span class="comment">%            size will be determined from the SVG file.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% Output:</span>
+0011 <span class="comment">%   vecLD - a vecLD data structure with the contours from the SVG file</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% NOTE: This function is experimental. It does not implement all aspects of</span>
+0014 <span class="comment">% the SVG standard. In particular, it does not translate any text,</span>
+0015 <span class="comment">% embedded images, shape fill, or gradients. Some aspects of this function are</span>
+0016 <span class="comment">% untested because I couldn't find an SVG file that contain the relevant features.</span>
+0017 <span class="comment">% If you find any errors, please email the SVG file that you were trying to</span>
+0018 <span class="comment">% load to: dirk.walther@gmail.com, and I will try my best to fix the function.</span>
+0019 
+0020 <span class="comment">% -----------------------------------------------------</span>
+0021 <span class="comment">% This file is part of the Mid Level Vision Toolbox:</span>
+0022 <span class="comment">% http://www.mlvtoolbox.org</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Copyright Dirk Bernhardt-Walther</span>
+0025 <span class="comment">% University of Toronto, Toronto, Ontario, Canada, 2023</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Contact: dirk.walther@gmail.com</span>
+0028 <span class="comment">%------------------------------------------------------</span>
+0029 
+0030 <span class="comment">% prepare vecLD data structure</span>
+0031 vecLD.originalImage = svgFilename;
+0032 vecLD.imsize = [];
+0033 vecLD.lineMethod = mfilename;
+0034 vecLD.numContours = 0;
+0035 vecLD.contours = {};
+0036 
+0037 <span class="comment">% recursively parse the elements in the SVG file</span>
+0038 tree = xmlread(svgFilename);
+0039 vecLD = <a href="#_sub1" class="code" title="subfunction vecLD = parseChildNodes(theNode,vecLD,groupTransform)">parseChildNodes</a>(tree,vecLD,<span class="string">''</span>);
+0040 
+0041 <span class="comment">% if we have no valid image size, use the bounding box around all contours</span>
+0042 <span class="keyword">if</span> nargin &gt;= 2
+0043     vecLD.imsize = imsize;
+0044 <span class="keyword">end</span>
+0045 <span class="keyword">if</span> isempty(vecLD.imsize)
+0046     maxX = -inf;
+0047     maxY = -inf;
+0048     <span class="keyword">for</span> c = 1:vecLD.numContours
+0049         thisCont = vecLD.contours{c};
+0050         maxX = max(maxX,max([thisCont(:,1);thisCont(:,3)]));
+0051         maxY = max(maxY,max([thisCont(:,2);thisCont(:,4)]));
+0052     <span class="keyword">end</span>
+0053     vecLD.imsize = ceil([maxX,maxY]);
+0054 <span class="keyword">end</span>
+0055 
+0056 <span class="keyword">end</span>
+0057 
+0058 
+0059 <span class="comment">% local recursive function that traverses the SVG tree and fills</span>
+0060 <span class="comment">% in the vecLD data structure along the way</span>
+0061 <a name="_sub1" href="#_subfunctions" class="code">function vecLD = parseChildNodes(theNode,vecLD,groupTransform)</a>
 0062 
-0063 <span class="keyword">end</span>
-0064 
-0065 
-0066 <span class="comment">% local recursive function that traverses the SVG tree and fills</span>
-0067 <span class="comment">% in the vecLD data structure along the way</span>
-0068 <a name="_sub1" href="#_subfunctions" class="code">function vecLD = parseChildNodes(theNode,vecLD)</a>
+0063 name = char(theNode.getNodeName);
+0064 <span class="keyword">if</span> ~isempty(name)
+0065     <span class="comment">%fprintf('Node name: %s\n',name);</span>
+0066     thisContour = [];
+0067     contourBreaks = 1;
+0068     <span class="keyword">switch</span> name
 0069 
-0070 name = char(theNode.getNodeName);
-0071 <span class="keyword">if</span> ~isempty(name)
-0072     <span class="comment">%fprintf('Node name: %s\n',name);</span>
-0073     thisContour = [];
-0074     contourBreaks = 1;
-0075     <span class="keyword">switch</span> name
-0076         <span class="keyword">case</span> <span class="string">'svg'</span>
-0077             coords = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'viewBox'</span>);
-0078             <span class="keyword">if</span> ~isempty(coords)
-0079                 vecLD.imsize = ceil(coords(3:4))';
-0080             <span class="keyword">end</span>
-0081 
-0082         <span class="keyword">case</span> <span class="string">'line'</span>
-0083             thisContour = [0,0,0,0];
-0084             thisContour(1) = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'x1'</span>);
-0085             thisContour(2) = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'y1'</span>);
-0086             thisContour(3) = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'x2'</span>);
-0087             thisContour(4) = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'y2'</span>);
-0088 
-0089         <span class="keyword">case</span> {<span class="string">'polygon'</span>,<span class="string">'polyline'</span>}
-0090             points = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'points'</span>);
-0091             x = points(1:2:end-1);
-0092             y = points(2:2:end);
+0070         <span class="keyword">case</span> <span class="string">'g'</span>
+0071             thisTransform = <a href="#_sub2" class="code" title="subfunction attribute = getAttribute(theNode,attrName)">getAttribute</a>(theNode,<span class="string">'transform'</span>);
+0072             <span class="keyword">if</span> ~isempty(thisTransform)
+0073                 <span class="keyword">if</span> isempty(groupTransform)
+0074                     groupTransform = thisTransform;
+0075                 <span class="keyword">else</span>
+0076                     groupTransform = [groupTransform,<span class="string">' '</span>,thisTransform];
+0077                 <span class="keyword">end</span>
+0078             <span class="keyword">end</span>
+0079 
+0080         <span class="keyword">case</span> <span class="string">'svg'</span>
+0081             viewBox = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'viewBox'</span>);
+0082             <span class="keyword">if</span> ~isempty(viewBox)
+0083                 vecLD.imsize = viewBox(3:4)';
+0084             <span class="keyword">end</span>
+0085 
+0086 
+0087         <span class="keyword">case</span> <span class="string">'line'</span>
+0088             thisContour = [0,0,0,0];
+0089             thisContour(1) = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'x1'</span>);
+0090             thisContour(2) = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'y1'</span>);
+0091             thisContour(3) = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'x2'</span>);
+0092             thisContour(4) = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'y2'</span>);
 0093 
-0094             <span class="comment">% if polgyon isn't closed, close it</span>
-0095             <span class="keyword">if</span> strcmp(name,<span class="string">'polygon'</span>) &amp;&amp; (x(1)~=x(end) || y(1) ~= y(end))
-0096                 x(end+1) = x(1);
-0097                 y(end+1) = y(1);
-0098             <span class="keyword">end</span>
-0099             thisContour = [x(1:end-1), y(1:end-1), x(2:end), y(2:end)];
-0100 
-0101         <span class="keyword">case</span> <span class="string">'rect'</span>
-0102             x = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'x'</span>);
-0103             y = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'y'</span>);
-0104             w = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'width'</span>);
-0105             h = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'height'</span>);
-0106             thisContour = [[x,y,x+w,y];[x+w,y,x+w,y+h];[x+w,y+h,x,y+h];[x,y+h,x,y]];
-0107 
-0108         <span class="keyword">case</span> {<span class="string">'circle'</span>,<span class="string">'ellipse'</span>}
-0109             cx = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'cx'</span>);
-0110             cy = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'cy'</span>);
-0111             <span class="keyword">if</span> strcmp(name,<span class="string">'circle'</span>)
-0112                 rx = abs(<a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'r'</span>));
-0113                 ry = rx;
-0114             <span class="keyword">else</span>
-0115                 rx = abs(<a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'rx'</span>));
-0116                 ry = abs(<a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'ry'</span>));
-0117             <span class="keyword">end</span>
-0118             numSeg = max(8,round(2*pi*max(rx,ry) / 5));
-0119             dAng = 360/numSeg;
-0120             angles = [0:dAng:360]';
-0121             x = rx * cosd(angles) + cx;
-0122             y = ry * sind(angles) + cy;
-0123             thisContour = [x(1:end-1),y(1:end-1),x(2:end),y(2:end)];
-0124 
-0125         <span class="keyword">case</span> <span class="string">'path'</span>
-0126             commands = <a href="#_sub2" class="code" title="subfunction attribute = getAttribute(theNode,attrName)">getAttribute</a>(theNode,<span class="string">'d'</span>);
-0127             commands(commands == <span class="string">','</span>) = <span class="string">' '</span>;
-0128             idx = 1;
-0129             prevPos = [];
-0130             prevContr = [];
-0131             prevCom = <span class="string">''</span>;
-0132             nextCom = <span class="string">''</span>;
-0133             contourBreaks = [];
-0134 
-0135             <span class="keyword">while</span> (idx &lt;= length(commands)) || ~isempty(nextCom)
-0136                 <span class="keyword">if</span> isempty(nextCom)
-0137                     <span class="comment">% read the command and coordinates from the command string</span>
-0138                     thisCom = commands(idx);
-0139                     [coords,~,~,nextidx] = sscanf(commands(idx+1:end),<span class="string">'%f'</span>);
-0140                     idx = idx + nextidx;
-0141                 <span class="keyword">else</span>
-0142                     thisCom = nextCom;
-0143                     nextCom = <span class="string">''</span>;
-0144                 <span class="keyword">end</span>
-0145                 <span class="comment">%fprintf('\tPath command: %c\n',thisCom);</span>
-0146 
-0147                 <span class="keyword">switch</span> thisCom
-0148 
-0149                     <span class="comment">% Move pen without drawing - lower case means relative coordinates</span>
-0150                     <span class="keyword">case</span> {<span class="string">'M'</span>,<span class="string">'m'</span>}
-0151                         x = coords(1:2:end-1);
-0152                         y = coords(2:2:end);
-0153 
-0154                         contourBreaks = [contourBreaks,size(thisContour,1)+1];
-0155 
-0156                         <span class="comment">% relative coords? cumulative addition of points</span>
-0157                         <span class="keyword">if</span> thisCom == <span class="string">'m'</span> 
-0158                             <span class="keyword">if</span> ~isempty(prevPos)
-0159                                 x(1) = x(1) + prevPos(1);
-0160                                 y(1) = y(1) + prevPos(2);
-0161                             <span class="keyword">end</span>
-0162                             x = cumsum(x);
-0163                             y = cumsum(y);
-0164                         <span class="keyword">end</span>
-0165 
-0166                         <span class="comment">% add straight line segments if we have more than one point</span>
-0167                         <span class="keyword">if</span> numel(x) &gt; 1
-0168                             thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
-0169                         <span class="keyword">end</span>
-0170                         prevPos = [x(end),y(end)];
+0094         <span class="keyword">case</span> {<span class="string">'polygon'</span>,<span class="string">'polyline'</span>}
+0095             points = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'points'</span>);
+0096             x = points(1:2:end-1);
+0097             y = points(2:2:end);
+0098 
+0099             <span class="comment">% if polgyon isn't closed, close it</span>
+0100             <span class="keyword">if</span> strcmp(name,<span class="string">'polygon'</span>) &amp;&amp; (x(1)~=x(end) || y(1) ~= y(end))
+0101                 x(end+1) = x(1);
+0102                 y(end+1) = y(1);
+0103             <span class="keyword">end</span>
+0104             thisContour = [x(1:end-1), y(1:end-1), x(2:end), y(2:end)];
+0105 
+0106         <span class="keyword">case</span> <span class="string">'rect'</span>
+0107             x = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'x'</span>);
+0108             y = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'y'</span>);
+0109             w = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'width'</span>);
+0110             h = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'height'</span>);
+0111             thisContour = [[x,y,x+w,y];[x+w,y,x+w,y+h];[x+w,y+h,x,y+h];[x,y+h,x,y]];
+0112 
+0113         <span class="keyword">case</span> {<span class="string">'circle'</span>,<span class="string">'ellipse'</span>}
+0114             cx = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'cx'</span>);
+0115             cy = <a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'cy'</span>);
+0116             <span class="keyword">if</span> strcmp(name,<span class="string">'circle'</span>)
+0117                 rx = abs(<a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'r'</span>));
+0118                 ry = rx;
+0119             <span class="keyword">else</span>
+0120                 rx = abs(<a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'rx'</span>));
+0121                 ry = abs(<a href="#_sub3" class="code" title="subfunction attrValue = getValue(theNode,attrName)">getValue</a>(theNode,<span class="string">'ry'</span>));
+0122             <span class="keyword">end</span>
+0123             numSeg = max(8,round(2*pi*max(rx,ry) / 5));
+0124             dAng = 360/numSeg;
+0125             angles = [0:dAng:360]';
+0126             x = rx * cosd(angles) + cx;
+0127             y = ry * sind(angles) + cy;
+0128             thisContour = [x(1:end-1),y(1:end-1),x(2:end),y(2:end)];
+0129 
+0130         <span class="keyword">case</span> <span class="string">'path'</span>
+0131             commands = <a href="#_sub2" class="code" title="subfunction attribute = getAttribute(theNode,attrName)">getAttribute</a>(theNode,<span class="string">'d'</span>);
+0132             commands(commands == <span class="string">','</span>) = <span class="string">' '</span>;
+0133             idx = 1;
+0134             prevPos = [];
+0135             pathStartPos = [];
+0136             prevContr = [];
+0137             prevCom = <span class="string">''</span>;
+0138             nextCom = <span class="string">''</span>;
+0139             contourBreaks = [];
+0140 
+0141             <span class="keyword">while</span> (idx &lt;= length(commands)) || ~isempty(nextCom)
+0142                 <span class="keyword">if</span> isempty(nextCom)
+0143                     <span class="comment">% read the command and coordinates from the command string</span>
+0144                     thisCom = commands(idx);
+0145                     [coords,~,~,nextidx] = sscanf(commands(idx+1:end),<span class="string">'%f'</span>);
+0146                     idx = idx + nextidx;
+0147                 <span class="keyword">else</span>
+0148                     thisCom = nextCom;
+0149                     nextCom = <span class="string">''</span>;
+0150                 <span class="keyword">end</span>
+0151                 <span class="comment">%fprintf('\tPath command: %c\n',thisCom);</span>
+0152 
+0153                 <span class="keyword">switch</span> thisCom
+0154 
+0155                     <span class="comment">% Move pen without drawing - lower case means relative coordinates</span>
+0156                     <span class="keyword">case</span> {<span class="string">'M'</span>,<span class="string">'m'</span>}
+0157                         x = coords(1:2:end-1);
+0158                         y = coords(2:2:end);
+0159 
+0160                         contourBreaks = [contourBreaks,size(thisContour,1)+1];
+0161 
+0162                         <span class="comment">% relative coords? cumulative addition of points</span>
+0163                         <span class="keyword">if</span> thisCom == <span class="string">'m'</span> 
+0164                             <span class="keyword">if</span> ~isempty(prevPos)
+0165                                 x(1) = x(1) + prevPos(1);
+0166                                 y(1) = y(1) + prevPos(2);
+0167                             <span class="keyword">end</span>
+0168                             x = cumsum(x);
+0169                             y = cumsum(y);
+0170                         <span class="keyword">end</span>
 0171 
-0172                     <span class="comment">% draw sequence of line segments</span>
-0173                     <span class="keyword">case</span> {<span class="string">'L'</span>,<span class="string">'l'</span>}
-0174                         x = coords(1:2:end-1);
-0175                         y = coords(2:2:end);
-0176 
-0177                         <span class="comment">% connect to previous point</span>
-0178                         x = [prevPos(1); x];
-0179                         y = [prevPos(2); y];
-0180 
-0181                         <span class="comment">% relative coords? cumulative addition of points</span>
-0182                         <span class="keyword">if</span> thisCom == <span class="string">'l'</span>
-0183                             x = cumsum(x);
-0184                             y = cumsum(y);
-0185                         <span class="keyword">end</span>
-0186 
-0187                         <span class="comment">% add straight line segments</span>
-0188                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
-0189                         prevPos = [x(end),y(end)];
-0190 
-0191                     <span class="comment">% draw horizontal line(s)</span>
-0192                     <span class="keyword">case</span> {<span class="string">'H'</span>,<span class="string">'h'</span>}
-0193                         x = [prevPos(1); coords];
-0194                         y = prevPos(2) + zeros(size(x));
-0195                         <span class="keyword">if</span> thisCom == <span class="string">'h'</span>
-0196                             x = cumsum(x);
-0197                         <span class="keyword">end</span>
-0198                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
-0199                         prevPos = [x(end),y(end)];
-0200 
-0201                     <span class="comment">% draw vertical line(s)</span>
-0202                     <span class="keyword">case</span> {<span class="string">'V'</span>,<span class="string">'v'</span>}
-0203                         y = [prevPos(2); coords];
-0204                         x = prevPos(1) + zeros(size(y));
-0205                         <span class="keyword">if</span> thisCom == <span class="string">'v'</span>
-0206                             y = cumsum(y);
-0207                         <span class="keyword">end</span>
-0208                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
-0209                         prevPos = [x(end),y(end)];
-0210 
-0211                     <span class="comment">% quadratic Bezier curves</span>
-0212                     <span class="keyword">case</span> {<span class="string">'Q'</span>,<span class="string">'q'</span>,<span class="string">'T'</span>,<span class="string">'t'</span>}
-0213                         P0 = prevPos;
-0214                         <span class="keyword">switch</span> thisCom
-0215                             <span class="keyword">case</span> <span class="string">'Q'</span>
-0216                                 numCoord = 4;
-0217                                 P1 = coords(1:2)';
-0218                                 P2 = coords(3:4)';
-0219                             <span class="keyword">case</span> <span class="string">'q'</span>
-0220                                 numCoord = 4;
-0221                                 P1 = coords(1:2)' + P0;
-0222                                 P2 = coords(3:4)' + P0;
-0223                             <span class="keyword">case</span> {<span class="string">'T'</span>,<span class="string">'t'</span>}
-0224                                 numCoord = 2;
-0225                                 <span class="keyword">if</span> ismember(prevCom,{<span class="string">'Q'</span>,<span class="string">'q'</span>,<span class="string">'T'</span>,<span class="string">'t'</span>})
-0226                                     P1 = 2*P0 - prevContr;
-0227                                 <span class="keyword">else</span>
-0228                                     P1 = P0;
-0229                                 <span class="keyword">end</span>
-0230                                 <span class="keyword">if</span> thisCom == <span class="string">'T'</span>
-0231                                     P2 = coords(1:2)';
-0232                                 <span class="keyword">else</span>
-0233                                     P2 = coords(1:2)' + P0;
-0234                                 <span class="keyword">end</span>
-0235                         <span class="keyword">end</span>
-0236                         dist = norm(P1-P0) + norm(P2-P1);
-0237                         numSeg = max(4,round(dist / 5));
-0238                         t = [0:1/numSeg:1]';
-0239                         x = (1-t).^2*P0(1) + 2*(1-t).*t*P1(1) + t.^2*P2(1);
-0240                         y = (1-t).^2*P0(2) + 2*(1-t).*t*P1(2) + t.^2*P2(2);
-0241 
-0242                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
-0243                         prevPos = P2;
-0244                         prevContr = P1;
-0245                         <span class="keyword">if</span> numel(coords) &gt; numCoord
-0246                             coords = coords(numCoord+1:end);
-0247                             nextCom = thisCom;
-0248                         <span class="keyword">else</span>
-0249                             nextCom = <span class="string">''</span>;
-0250                         <span class="keyword">end</span>
-0251 
-0252                     <span class="comment">% cubic Bezier curves</span>
-0253                     <span class="keyword">case</span> {<span class="string">'C'</span>,<span class="string">'c'</span>,<span class="string">'S'</span>,<span class="string">'s'</span>}
-0254                         P0 = prevPos;
-0255                         <span class="keyword">switch</span> thisCom
-0256                             <span class="keyword">case</span> <span class="string">'C'</span>
-0257                                 numCoord = 6;
-0258                                 P1 = coords(1:2)';
-0259                                 P2 = coords(3:4)';
-0260                                 P3 = coords(5:6)';
-0261                             <span class="keyword">case</span> <span class="string">'c'</span>
+0172                         <span class="comment">% add straight line segments if we have more than one point</span>
+0173                         <span class="keyword">if</span> numel(x) &gt; 1
+0174                             thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+0175                         <span class="keyword">end</span>
+0176                         prevPos = [x(end),y(end)];
+0177                         pathStartPos = [x(1),y(1)];
+0178 
+0179                     <span class="comment">% draw sequence of line segments</span>
+0180                     <span class="keyword">case</span> {<span class="string">'L'</span>,<span class="string">'l'</span>}
+0181                         x = coords(1:2:end-1);
+0182                         y = coords(2:2:end);
+0183 
+0184                         <span class="comment">% connect to previous point</span>
+0185                         x = [prevPos(1); x];
+0186                         y = [prevPos(2); y];
+0187 
+0188                         <span class="comment">% relative coords? cumulative addition of points</span>
+0189                         <span class="keyword">if</span> thisCom == <span class="string">'l'</span>
+0190                             x = cumsum(x);
+0191                             y = cumsum(y);
+0192                         <span class="keyword">end</span>
+0193 
+0194                         <span class="comment">% add straight line segments</span>
+0195                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+0196                         prevPos = [x(end),y(end)];
+0197 
+0198                     <span class="comment">% draw horizontal line(s)</span>
+0199                     <span class="keyword">case</span> {<span class="string">'H'</span>,<span class="string">'h'</span>}
+0200                         x = [prevPos(1); coords];
+0201                         y = prevPos(2) + zeros(size(x));
+0202                         <span class="keyword">if</span> thisCom == <span class="string">'h'</span>
+0203                             x = cumsum(x);
+0204                         <span class="keyword">end</span>
+0205                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+0206                         prevPos = [x(end),y(end)];
+0207 
+0208                     <span class="comment">% draw vertical line(s)</span>
+0209                     <span class="keyword">case</span> {<span class="string">'V'</span>,<span class="string">'v'</span>}
+0210                         y = [prevPos(2); coords];
+0211                         x = prevPos(1) + zeros(size(y));
+0212                         <span class="keyword">if</span> thisCom == <span class="string">'v'</span>
+0213                             y = cumsum(y);
+0214                         <span class="keyword">end</span>
+0215                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+0216                         prevPos = [x(end),y(end)];
+0217 
+0218                     <span class="comment">% quadratic Bezier curves</span>
+0219                     <span class="keyword">case</span> {<span class="string">'Q'</span>,<span class="string">'q'</span>,<span class="string">'T'</span>,<span class="string">'t'</span>}
+0220                         P0 = prevPos;
+0221                         <span class="keyword">switch</span> thisCom
+0222                             <span class="keyword">case</span> <span class="string">'Q'</span>
+0223                                 numCoord = 4;
+0224                                 P1 = coords(1:2)';
+0225                                 P2 = coords(3:4)';
+0226                             <span class="keyword">case</span> <span class="string">'q'</span>
+0227                                 numCoord = 4;
+0228                                 P1 = coords(1:2)' + P0;
+0229                                 P2 = coords(3:4)' + P0;
+0230                             <span class="keyword">case</span> {<span class="string">'T'</span>,<span class="string">'t'</span>}
+0231                                 numCoord = 2;
+0232                                 <span class="keyword">if</span> ismember(prevCom,{<span class="string">'Q'</span>,<span class="string">'q'</span>,<span class="string">'T'</span>,<span class="string">'t'</span>})
+0233                                     P1 = 2*P0 - prevContr;
+0234                                 <span class="keyword">else</span>
+0235                                     P1 = P0;
+0236                                 <span class="keyword">end</span>
+0237                                 <span class="keyword">if</span> thisCom == <span class="string">'T'</span>
+0238                                     P2 = coords(1:2)';
+0239                                 <span class="keyword">else</span>
+0240                                     P2 = coords(1:2)' + P0;
+0241                                 <span class="keyword">end</span>
+0242                         <span class="keyword">end</span>
+0243                         dist = norm(P1-P0) + norm(P2-P1);
+0244                         numSeg = max(4,round(dist / 5));
+0245                         t = [0:1/numSeg:1]';
+0246                         x = (1-t).^2*P0(1) + 2*(1-t).*t*P1(1) + t.^2*P2(1);
+0247                         y = (1-t).^2*P0(2) + 2*(1-t).*t*P1(2) + t.^2*P2(2);
+0248 
+0249                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+0250                         prevPos = P2;
+0251                         prevContr = P1;
+0252                         <span class="keyword">if</span> numel(coords) &gt; numCoord
+0253                             coords = coords(numCoord+1:end);
+0254                             nextCom = thisCom;
+0255                         <span class="keyword">end</span>
+0256 
+0257                     <span class="comment">% cubic Bezier curves</span>
+0258                     <span class="keyword">case</span> {<span class="string">'C'</span>,<span class="string">'c'</span>,<span class="string">'S'</span>,<span class="string">'s'</span>}
+0259                         P0 = prevPos;
+0260                         <span class="keyword">switch</span> thisCom
+0261                             <span class="keyword">case</span> <span class="string">'C'</span>
 0262                                 numCoord = 6;
-0263                                 P1 = coords(1:2)' + P0;
-0264                                 P2 = coords(3:4)' + P0;
-0265                                 P3 = coords(5:6)' + P0;
-0266                             <span class="keyword">case</span> {<span class="string">'S'</span>,<span class="string">'s'</span>}
-0267                                 numCoord = 4;
-0268                                 <span class="keyword">if</span> ismember(prevCom,{<span class="string">'C'</span>,<span class="string">'c'</span>,<span class="string">'S'</span>,<span class="string">'s'</span>})
-0269                                     P1 = 2*P0 - prevContr;
-0270                                 <span class="keyword">else</span>
-0271                                     P1 = P0;
-0272                                 <span class="keyword">end</span>
-0273                                 <span class="keyword">if</span> thisCom == <span class="string">'S'</span>
-0274                                     P2 = coords(1:2)';
-0275                                     P3 = coords(3:4)';
-0276                                 <span class="keyword">else</span>
-0277                                     P2 = coords(1:2)' + P0;
-0278                                     P3 = coords(3:4)' + P0;
-0279                                 <span class="keyword">end</span>
-0280                         <span class="keyword">end</span>
-0281                         dist = norm(P1-P0) + norm(P2-P1) + norm(P3-P2);
-0282                         numSeg = max(4,round(dist / 5));
-0283                         t = [0:1/numSeg:1]';
-0284                         x = (1-t).^3*P0(1) + 3*(1-t).^2.*t*P1(1) + 3*(1-t).*t.^2*P2(1) + t.^3*P3(1);
-0285                         y = (1-t).^3*P0(2) + 3*(1-t).^2.*t*P1(2) + 3*(1-t).*t.^2*P2(2) + t.^3*P3(2);
-0286                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
-0287                         prevPos = P3;
-0288                         prevContr = P2;
-0289                         <span class="keyword">if</span> numel(coords) &gt; numCoord
-0290                             coords = coords(numCoord+1:end);
-0291                             nextCom = thisCom;
-0292                         <span class="keyword">else</span>
-0293                             nextCom = <span class="string">''</span>;
-0294                         <span class="keyword">end</span>
-0295 
-0296 
-0297                     <span class="comment">% Arcs</span>
-0298                     <span class="keyword">case</span> {<span class="string">'A'</span>,<span class="string">'a'</span>}
-0299                         numCoord = 7;
-0300                         P0 = prevPos';
-0301                         rx = abs(coords(1)); rx2 = rx*rx;
-0302                         ry = abs(coords(2)); ry2 = ry*ry;
-0303                         rotAng = coords(3);
-0304                         fA = coords(4); <span class="comment">% use large arc?</span>
-0305                         fS = coords(5); <span class="comment">% sweep clockwise?</span>
-0306                         <span class="keyword">if</span> thisCom == <span class="string">'A'</span>
-0307                             P1 = coords(6:7);
-0308                         <span class="keyword">else</span>
-0309                             P1 = coords(6:7) + P0;
-0310                         <span class="keyword">end</span>
-0311 
-0312                         <span class="comment">% math for conversion to center parametrization</span>
-0313                         <span class="comment">% from: https://www.w3.org/TR/SVG/implnote.html</span>
+0263                                 P1 = coords(1:2)';
+0264                                 P2 = coords(3:4)';
+0265                                 P3 = coords(5:6)';
+0266                             <span class="keyword">case</span> <span class="string">'c'</span>
+0267                                 numCoord = 6;
+0268                                 P1 = coords(1:2)' + P0;
+0269                                 P2 = coords(3:4)' + P0;
+0270                                 P3 = coords(5:6)' + P0;
+0271                             <span class="keyword">case</span> {<span class="string">'S'</span>,<span class="string">'s'</span>}
+0272                                 numCoord = 4;
+0273                                 <span class="keyword">if</span> ismember(prevCom,{<span class="string">'C'</span>,<span class="string">'c'</span>,<span class="string">'S'</span>,<span class="string">'s'</span>})
+0274                                     P1 = 2*P0 - prevContr;
+0275                                 <span class="keyword">else</span>
+0276                                     P1 = P0;
+0277                                 <span class="keyword">end</span>
+0278                                 <span class="keyword">if</span> thisCom == <span class="string">'S'</span>
+0279                                     P2 = coords(1:2)';
+0280                                     P3 = coords(3:4)';
+0281                                 <span class="keyword">else</span>
+0282                                     P2 = coords(1:2)' + P0;
+0283                                     P3 = coords(3:4)' + P0;
+0284                                 <span class="keyword">end</span>
+0285                         <span class="keyword">end</span>
+0286                         dist = norm(P1-P0) + norm(P2-P1) + norm(P3-P2);
+0287                         numSeg = max(4,round(dist / 5));
+0288                         t = [0:1/numSeg:1]';
+0289                         x = (1-t).^3*P0(1) + 3*(1-t).^2.*t*P1(1) + 3*(1-t).*t.^2*P2(1) + t.^3*P3(1);
+0290                         y = (1-t).^3*P0(2) + 3*(1-t).^2.*t*P1(2) + 3*(1-t).*t.^2*P2(2) + t.^3*P3(2);
+0291                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+0292                         prevPos = P3;
+0293                         prevContr = P2;
+0294                         <span class="keyword">if</span> numel(coords) &gt; numCoord
+0295                             coords = coords(numCoord+1:end);
+0296                             nextCom = thisCom;
+0297                         <span class="keyword">end</span>
+0298 
+0299 
+0300                     <span class="comment">% Arcs</span>
+0301                     <span class="keyword">case</span> {<span class="string">'A'</span>,<span class="string">'a'</span>}
+0302                         numCoord = 7;
+0303                         P0 = prevPos';
+0304                         rx = abs(coords(1)); rx2 = rx*rx;
+0305                         ry = abs(coords(2)); ry2 = ry*ry;
+0306                         rotAng = coords(3);
+0307                         fA = coords(4); <span class="comment">% use large arc?</span>
+0308                         fS = coords(5); <span class="comment">% sweep clockwise?</span>
+0309                         <span class="keyword">if</span> thisCom == <span class="string">'A'</span>
+0310                             P1 = coords(6:7);
+0311                         <span class="keyword">else</span>
+0312                             P1 = coords(6:7) + P0;
+0313                         <span class="keyword">end</span>
 0314 
-0315                         <span class="comment">% rotation</span>
-0316                         cosA = cosd(rotAng);
-0317                         sinA = sind(rotAng);
-0318                         rotMat = [[cosA,sinA];[-sinA,cosA]];
-0319 
-0320                         P0r = rotMat * (P0-P1)/2;
-0321                         P0r2 = P0r .* P0r;
+0315                         <span class="comment">% math for conversion to center parametrization</span>
+0316                         <span class="comment">% from: https://www.w3.org/TR/SVG/implnote.html</span>
+0317 
+0318                         <span class="comment">% rotation</span>
+0319                         cosA = cosd(rotAng);
+0320                         sinA = sind(rotAng);
+0321                         rotMat = [[cosA,sinA];[-sinA,cosA]];
 0322 
-0323                         <span class="comment">% This is the center of the ellipse in transformed</span>
-0324                         <span class="comment">% coordinates</span>
-0325                         Cr = sqrt((rx2*ry2 - rx2*P0r2(2) - ry2*P0r2(1)) / (rx2*P0r2(2) + ry2*P0r2(1))) * [rx*P0r(2)/ry ; -ry*P0r(1)/rx];
-0326 
-0327                         <span class="keyword">if</span> fA == fS
-0328                             Cr = -Cr;
-0329                         <span class="keyword">end</span>
-0330 
-0331                         ang0 = atan2d((P0r(2) - Cr(2)) / ry, (P0r(1) - Cr(1)) / rx);
-0332                         ang1 = atan2d((-P0r(2) - Cr(2)) / ry, (-P0r(1) - Cr(1)) / rx);
+0323                         P0r = rotMat * (P0-P1)/2;
+0324                         P0r2 = P0r .* P0r;
+0325 
+0326                         <span class="comment">% This is the center of the ellipse in transformed</span>
+0327                         <span class="comment">% coordinates</span>
+0328                         Cr = sqrt((rx2*ry2 - rx2*P0r2(2) - ry2*P0r2(1)) / (rx2*P0r2(2) + ry2*P0r2(1))) * [rx*P0r(2)/ry ; -ry*P0r(1)/rx];
+0329 
+0330                         <span class="keyword">if</span> fA == fS
+0331                             Cr = -Cr;
+0332                         <span class="keyword">end</span>
 0333 
-0334                         <span class="keyword">if</span> fS
-0335                             <span class="keyword">if</span> ang1 &lt; ang0
-0336                                 ang1 = ang1 + 360;
-0337                             <span class="keyword">end</span>
-0338                         <span class="keyword">else</span>
-0339                             <span class="keyword">if</span> ang0 &lt; ang1
-0340                                 ang0 = ang0 + 360;
-0341                             <span class="keyword">end</span>
-0342                         <span class="keyword">end</span>
-0343 
-0344                         <span class="comment">% draw the arc in transformed coordinate space</span>
-0345                         numSeg = max(4,round(2*pi*max(rx,ry)*(ang1-ang0)/360 / 5));
-0346                         dAng = (ang1 - ang0) / numSeg;
-0347                         angles = [ang0:dAng:ang1]';
-0348                         xR = rx * cosd(angles) + Cr(1);
-0349                         yR = ry * sind(angles) + Cr(2);
-0350 
-0351                         <span class="comment">% transform back to original space</span>
-0352                         x = cosA*xR - sinA*yR + (P0(1) + P1(1)) / 2;
-0353                         y = sinA*xR + cosA*yR + (P0(2) + P1(2)) / 2;
-0354 
-0355                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
-0356                         prevPos = P1';
-0357                         <span class="keyword">if</span> numel(coords) &gt; numCoord
-0358                             coords = coords(numCoord+1:end);
-0359                             nextCom = thisCom;
-0360                         <span class="keyword">else</span>
-0361                             nextCom = <span class="string">''</span>;
-0362                         <span class="keyword">end</span>
-0363 
-0364                     <span class="comment">% close path with a straight line if it isn't closed already</span>
-0365                     <span class="keyword">case</span> {<span class="string">'Z'</span>,<span class="string">'z'</span>}
-0366                         <span class="keyword">if</span> thisContour(1,1) ~= prevPos(1) || thisContour(1,2) ~= prevPos(2)
-0367                             thisContour = cat(1,thisContour,[prevPos,thisContour(1,1:2)]);
-0368                         <span class="keyword">end</span>
-0369                         prevPos = thisContour(<span class="keyword">end</span>,3:4);
-0370 
-0371                     <span class="keyword">otherwise</span>
-0372                         fprintf(<span class="string">'Unknown path command %c\n'</span>,thisCom);
-0373                 <span class="keyword">end</span>
-0374                 prevCom = thisCom;
-0375             <span class="keyword">end</span>
-0376 
-0377         <span class="keyword">case</span> {<span class="string">'text'</span>,<span class="string">'tspan'</span>,<span class="string">'textPath'</span>}
-0378             fprintf(<span class="string">'Importing text is not implemented. Please covert text to paths in a graphics program, such as Inkscape or Illustrator.\n'</span>);
-0379 
-0380         <span class="keyword">case</span> {<span class="string">'image'</span>}
-0381             fprintf(<span class="string">'Importing embedded images is not implemented.\n'</span>)
-0382 
-0383         <span class="keyword">case</span> {<span class="string">'#document'</span>,<span class="string">'defs'</span>,<span class="string">'style'</span>,<span class="string">'#text'</span>,<span class="string">'#comment'</span>,<span class="string">'g'</span>}
-0384             <span class="comment">% do nothing</span>
-0385 
-0386         <span class="keyword">otherwise</span>
-0387             fprintf(<span class="string">'Ignoring element &lt;%s&gt;\n'</span>,name)
-0388     <span class="keyword">end</span>
-0389 
-0390     <span class="keyword">if</span> ~isempty(thisContour)
+0334                         ang0 = atan2d((P0r(2) - Cr(2)) / ry, (P0r(1) - Cr(1)) / rx);
+0335                         ang1 = atan2d((-P0r(2) - Cr(2)) / ry, (-P0r(1) - Cr(1)) / rx);
+0336 
+0337                         <span class="keyword">if</span> fS
+0338                             <span class="keyword">if</span> ang1 &lt; ang0
+0339                                 ang1 = ang1 + 360;
+0340                             <span class="keyword">end</span>
+0341                         <span class="keyword">else</span>
+0342                             <span class="keyword">if</span> ang0 &lt; ang1
+0343                                 ang0 = ang0 + 360;
+0344                             <span class="keyword">end</span>
+0345                         <span class="keyword">end</span>
+0346 
+0347                         <span class="comment">% draw the arc in transformed coordinate space</span>
+0348                         numSeg = max(4,round(2*pi*max(rx,ry)*(ang1-ang0)/360 / 5));
+0349                         dAng = (ang1 - ang0) / numSeg;
+0350                         angles = [ang0:dAng:ang1]';
+0351                         xR = rx * cosd(angles) + Cr(1);
+0352                         yR = ry * sind(angles) + Cr(2);
+0353 
+0354                         <span class="comment">% transform back to original space</span>
+0355                         x = cosA*xR - sinA*yR + (P0(1) + P1(1)) / 2;
+0356                         y = sinA*xR + cosA*yR + (P0(2) + P1(2)) / 2;
+0357 
+0358                         thisContour = cat(1,thisContour,cat(2,x(1:end-1),y(1:end-1),x(2:end),y(2:end)));
+0359                         prevPos = P1';
+0360                         <span class="keyword">if</span> numel(coords) &gt; numCoord
+0361                             coords = coords(numCoord+1:end);
+0362                             nextCom = thisCom;
+0363                         <span class="keyword">end</span>
+0364 
+0365                     <span class="comment">% close path with a straight line if it isn't closed already</span>
+0366                     <span class="keyword">case</span> {<span class="string">'Z'</span>,<span class="string">'z'</span>}
+0367                         <span class="keyword">if</span> pathStartPos(1) ~= prevPos(1) || pathStartPos(2) ~= prevPos(2)
+0368                             thisContour = cat(1,thisContour,[prevPos,pathStartPos]);
+0369                         <span class="keyword">end</span>
+0370                         prevPos = thisContour(<span class="keyword">end</span>,3:4);
+0371                         pathStartPos = [];
+0372 
+0373                     <span class="keyword">otherwise</span>
+0374                         fprintf(<span class="string">'Unknown path command %c\n'</span>,thisCom);
+0375                 <span class="keyword">end</span>
+0376                 prevCom = thisCom;
+0377             <span class="keyword">end</span>
+0378 
+0379         <span class="keyword">case</span> {<span class="string">'text'</span>,<span class="string">'tspan'</span>,<span class="string">'textPath'</span>}
+0380             fprintf(<span class="string">'Importing text is not implemented. Please covert text to paths in a graphics program, such as Inkscape or Illustrator.\n'</span>);
+0381 
+0382         <span class="keyword">case</span> {<span class="string">'image'</span>}
+0383             fprintf(<span class="string">'Importing embedded images is not implemented.\n'</span>)
+0384 
+0385         <span class="keyword">case</span> {<span class="string">'#document'</span>,<span class="string">'defs'</span>,<span class="string">'style'</span>,<span class="string">'#text'</span>,<span class="string">'#comment'</span>}
+0386             <span class="comment">% do nothing</span>
+0387 
+0388         <span class="keyword">otherwise</span>
+0389             fprintf(<span class="string">'Ignoring element &lt;%s&gt;\n'</span>,name)
+0390     <span class="keyword">end</span>
 0391 
-0392         <span class="comment">% any transformations?</span>
-0393         transCommand = <a href="#_sub2" class="code" title="subfunction attribute = getAttribute(theNode,attrName)">getAttribute</a>(theNode,<span class="string">'transform'</span>);
-0394         <span class="keyword">if</span> ~isempty(transCommand)
-0395             openBrackets = find(transCommand == <span class="string">'('</span>);
-0396             closeBrackets = find(transCommand == <span class="string">')'</span>);
-0397             numTransforms = numel(openBrackets);
-0398             closeBrackets = [-1,closeBrackets];
-0399 
-0400             <span class="keyword">for</span> t = numTransforms:-1:1
-0401                 thisCommand = transCommand(closeBrackets(t)+2:openBrackets(t)-1);
-0402                 <span class="comment">%fprintf('Transformation: %s\n',thisCommand)</span>
-0403                 valStr = transCommand(openBrackets(t)+1:closeBrackets(t+1)-1);
-0404                 valStr(valStr == <span class="string">','</span>) = <span class="string">' '</span>;
-0405                 values = sscanf(valStr,<span class="string">'%f'</span>);
-0406 
-0407                 <span class="keyword">switch</span> thisCommand
-0408                     <span class="keyword">case</span> <span class="string">'scale'</span>
-0409                         <span class="keyword">if</span> numel(values) == 1
-0410                             thisContour = values * thisContour;
-0411                         <span class="keyword">else</span>
-0412                             thisContour(:,[1,3]) = values(1) * thisContour(:,[1,3]);
-0413                             thisContour(:,[2,4]) = values(2) * thisContour(:,[2,4]);
-0414                         <span class="keyword">end</span>
-0415 
-0416                     <span class="keyword">case</span> <span class="string">'translate'</span>
+0392     <span class="keyword">if</span> ~isempty(thisContour)
+0393 
+0394         <span class="comment">% any transformations?</span>
+0395         transCommand = <a href="#_sub2" class="code" title="subfunction attribute = getAttribute(theNode,attrName)">getAttribute</a>(theNode,<span class="string">'transform'</span>);
+0396         <span class="keyword">if</span> isempty(transCommand)
+0397             transCommand = groupTransform;
+0398         <span class="keyword">elseif</span> ~isempty(groupTransform)
+0399             transCommand = [groupTransform,<span class="string">' '</span>,transCommand];
+0400         <span class="keyword">end</span>
+0401 
+0402         <span class="keyword">if</span> ~isempty(transCommand)
+0403             openBrackets = find(transCommand == <span class="string">'('</span>);
+0404             closeBrackets = find(transCommand == <span class="string">')'</span>);
+0405             numTransforms = numel(openBrackets);
+0406             closeBrackets = [-1,closeBrackets];
+0407 
+0408             <span class="keyword">for</span> t = numTransforms:-1:1
+0409                 thisCommand = transCommand(closeBrackets(t)+2:openBrackets(t)-1);
+0410                 <span class="comment">%fprintf('Transformation: %s\n',thisCommand);</span>
+0411                 valStr = transCommand(openBrackets(t)+1:closeBrackets(t+1)-1);
+0412                 valStr(valStr == <span class="string">','</span>) = <span class="string">' '</span>;
+0413                 values = sscanf(valStr,<span class="string">'%f'</span>);
+0414 
+0415                 <span class="keyword">switch</span> thisCommand
+0416                     <span class="keyword">case</span> <span class="string">'scale'</span>
 0417                         <span class="keyword">if</span> numel(values) == 1
-0418                             values(2) = 0;
-0419                         <span class="keyword">end</span>
-0420                         thisContour(:,[1,3]) = thisContour(:,[1,3]) + values(1);
-0421                         thisContour(:,[2,4]) = thisContour(:,[2,4]) + values(2);
-0422 
-0423                     <span class="keyword">case</span> <span class="string">'rotate'</span>
-0424                         cc = thisContour;
-0425                         <span class="keyword">if</span> numel(values) == 3
-0426                             cc(:,[1,3]) = cc(:,[1,3]) + values(2);
-0427                             cc(:,[2,4]) = cc(:,[2,4]) + values(3);
-0428                         <span class="keyword">end</span>
-0429                         thisContour(:,[1,3]) = cosd(values(1)) * cc(:,[1,3]) - sind(values(1)) * cc(:,[2,4]);
-0430                         thisContour(:,[2,4]) = sind(values(1)) * cc(:,[1,3]) + cosd(values(1)) * cc(:,[2,4]);
-0431                         <span class="keyword">if</span> numel(values) == 3
-0432                             thisContour(:,[1,3]) = thisContour(:,[1,3]) - values(2);
-0433                             thisContour(:,[2,4]) = thisContour(:,[2,4]) - values(3);
-0434                         <span class="keyword">end</span>
-0435 
-0436                     <span class="keyword">case</span> <span class="string">'skewX'</span>
-0437                         thisContour(:,[1,3]) = thisContour(:,[1,3]) + tand(values(1)) * thisContour(:,[2,4]);
-0438 
-0439                     <span class="keyword">case</span> <span class="string">'skewY'</span>
-0440                         thisContour(:,[2,4]) = thisContour(:,[2,4]) + tand(values(1)) * thisContour(:,[1,3]);
-0441 
-0442                     <span class="keyword">case</span> <span class="string">'matrix'</span>
-0443                         cc = thisContour;
-0444                         thisContour(:,[1,3]) = values(1) * cc(:,[1,3]) + values(3) * cc(:,[2,4]) + values(5);
-0445                         thisContour(:,[2,4]) = values(2) * cc(:,[1,3]) + values(4) * cc(:,[2,4]) + values(6);
+0418                             thisContour = values * thisContour;
+0419                         <span class="keyword">else</span>
+0420                             thisContour(:,[1,3]) = values(1) * thisContour(:,[1,3]);
+0421                             thisContour(:,[2,4]) = values(2) * thisContour(:,[2,4]);
+0422                         <span class="keyword">end</span>
+0423 
+0424                     <span class="keyword">case</span> <span class="string">'translate'</span>
+0425                         <span class="keyword">if</span> numel(values) == 1
+0426                             values(2) = 0;
+0427                         <span class="keyword">end</span>
+0428                         thisContour(:,[1,3]) = thisContour(:,[1,3]) + values(1);
+0429                         thisContour(:,[2,4]) = thisContour(:,[2,4]) + values(2);
+0430 
+0431                     <span class="keyword">case</span> <span class="string">'rotate'</span>
+0432                         cc = thisContour;
+0433                         <span class="keyword">if</span> numel(values) == 3
+0434                             cc(:,[1,3]) = cc(:,[1,3]) + values(2);
+0435                             cc(:,[2,4]) = cc(:,[2,4]) + values(3);
+0436                         <span class="keyword">end</span>
+0437                         thisContour(:,[1,3]) = cosd(values(1)) * cc(:,[1,3]) - sind(values(1)) * cc(:,[2,4]);
+0438                         thisContour(:,[2,4]) = sind(values(1)) * cc(:,[1,3]) + cosd(values(1)) * cc(:,[2,4]);
+0439                         <span class="keyword">if</span> numel(values) == 3
+0440                             thisContour(:,[1,3]) = thisContour(:,[1,3]) - values(2);
+0441                             thisContour(:,[2,4]) = thisContour(:,[2,4]) - values(3);
+0442                         <span class="keyword">end</span>
+0443 
+0444                     <span class="keyword">case</span> <span class="string">'skewX'</span>
+0445                         thisContour(:,[1,3]) = thisContour(:,[1,3]) + tand(values(1)) * thisContour(:,[2,4]);
 0446 
-0447                     <span class="keyword">otherwise</span>
-0448                         fprintf(<span class="string">'Unknown transformation: %s\n'</span>,thisCommand);
-0449                 <span class="keyword">end</span>
-0450             <span class="keyword">end</span>
-0451         <span class="keyword">end</span>
-0452 
-0453         <span class="comment">% If the contour needs to be broken up because of M or m path commands,</span>
-0454         <span class="comment">% save each piece separately</span>
-0455         contourBreaks = [contourBreaks,size(thisContour,1)+1];
-0456         <span class="keyword">for</span> b = 1:numel(contourBreaks)-1
-0457             vecLD.numContours = vecLD.numContours + 1;
-0458             vecLD.contours{vecLD.numContours} = thisContour(contourBreaks(b):contourBreaks(b+1)-1,:);
-0459         <span class="keyword">end</span>
-0460     <span class="keyword">end</span>
-0461 <span class="keyword">end</span>
-0462 
-0463 <span class="comment">% Recurse to all child nodes</span>
-0464 <span class="keyword">if</span> theNode.hasChildNodes
-0465     childNodes = theNode.getChildNodes;
-0466     numChildNodes = childNodes.getLength;
-0467     <span class="keyword">for</span> c = 1:numChildNodes
-0468         vecLD = <a href="#_sub1" class="code" title="subfunction vecLD = parseChildNodes(theNode,vecLD)">parseChildNodes</a>(childNodes.item(c-1),vecLD);
+0447                     <span class="keyword">case</span> <span class="string">'skewY'</span>
+0448                         thisContour(:,[2,4]) = thisContour(:,[2,4]) + tand(values(1)) * thisContour(:,[1,3]);
+0449 
+0450                     <span class="keyword">case</span> <span class="string">'matrix'</span>
+0451                         cc = thisContour;
+0452                         thisContour(:,[1,3]) = values(1) * cc(:,[1,3]) + values(3) * cc(:,[2,4]) + values(5);
+0453                         thisContour(:,[2,4]) = values(2) * cc(:,[1,3]) + values(4) * cc(:,[2,4]) + values(6);
+0454 
+0455                     <span class="keyword">otherwise</span>
+0456                         fprintf(<span class="string">'Unknown transformation: %s\n'</span>,thisCommand);
+0457 
+0458                 <span class="keyword">end</span>
+0459             <span class="keyword">end</span>
+0460         <span class="keyword">end</span>
+0461 
+0462         <span class="comment">% If the contour needs to be broken up because of M or m path commands,</span>
+0463         <span class="comment">% save each piece separately</span>
+0464         contourBreaks = [contourBreaks,size(thisContour,1)+1];
+0465         <span class="keyword">for</span> b = 1:numel(contourBreaks)-1
+0466             vecLD.numContours = vecLD.numContours + 1;
+0467             vecLD.contours{vecLD.numContours} = thisContour(contourBreaks(b):contourBreaks(b+1)-1,:);
+0468         <span class="keyword">end</span>
 0469     <span class="keyword">end</span>
 0470 <span class="keyword">end</span>
-0471 <span class="keyword">end</span>
-0472 
-0473 
-0474 
-0475 <span class="comment">% local function to read an attribute from a node</span>
-0476 <a name="_sub2" href="#_subfunctions" class="code">function attribute = getAttribute(theNode,attrName)</a>
-0477 attribute = [];
-0478 <span class="keyword">if</span> theNode.hasAttributes
-0479    theAttributes = theNode.getAttributes;
-0480    numAttributes = theAttributes.getLength;
-0481    <span class="keyword">for</span> a = 1:numAttributes
-0482        thisAttr = theAttributes.item(a-1);
-0483        <span class="keyword">if</span> strcmp(thisAttr.getName,attrName)
-0484            attribute = char(thisAttr.getValue);
-0485            <span class="keyword">break</span>;
-0486        <span class="keyword">end</span>
-0487    <span class="keyword">end</span>
-0488 <span class="keyword">end</span>
-0489 <span class="keyword">end</span>
-0490 
-0491 <span class="comment">% local function to get attribute values</span>
-0492 <a name="_sub3" href="#_subfunctions" class="code">function attrValue = getValue(theNode,attrName)</a>
-0493 attrString = <a href="#_sub2" class="code" title="subfunction attribute = getAttribute(theNode,attrName)">getAttribute</a>(theNode,attrName);
-0494 <span class="keyword">if</span> isempty(attrString)
-0495     attrValue = [];
-0496 <span class="keyword">else</span>
-0497     attrValue = sscanf(attrString,<span class="string">'%f'</span>);
+0471 
+0472 <span class="comment">% Recurse to all child nodes</span>
+0473 <span class="keyword">if</span> theNode.hasChildNodes
+0474     childNodes = theNode.getChildNodes;
+0475     numChildNodes = childNodes.getLength;
+0476     <span class="keyword">for</span> c = 1:numChildNodes
+0477         vecLD = <a href="#_sub1" class="code" title="subfunction vecLD = parseChildNodes(theNode,vecLD,groupTransform)">parseChildNodes</a>(childNodes.item(c-1),vecLD,groupTransform);
+0478     <span class="keyword">end</span>
+0479 <span class="keyword">end</span>
+0480 <span class="keyword">end</span>
+0481 
+0482 
+0483 
+0484 <span class="comment">% local function to read an attribute from a node</span>
+0485 <a name="_sub2" href="#_subfunctions" class="code">function attribute = getAttribute(theNode,attrName)</a>
+0486 attribute = [];
+0487 <span class="keyword">if</span> theNode.hasAttributes
+0488    theAttributes = theNode.getAttributes;
+0489    numAttributes = theAttributes.getLength;
+0490    <span class="keyword">for</span> a = 1:numAttributes
+0491        thisAttr = theAttributes.item(a-1);
+0492        <span class="keyword">if</span> strcmp(thisAttr.getName,attrName)
+0493            attribute = char(thisAttr.getValue);
+0494            <span class="keyword">break</span>;
+0495        <span class="keyword">end</span>
+0496    <span class="keyword">end</span>
+0497 <span class="keyword">end</span>
 0498 <span class="keyword">end</span>
-0499 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 28-Feb-2023 22:42:22 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0499 
+0500 <span class="comment">% local function to get attribute values</span>
+0501 <a name="_sub3" href="#_subfunctions" class="code">function attrValue = getValue(theNode,attrName)</a>
+0502 attrString = <a href="#_sub2" class="code" title="subfunction attribute = getAttribute(theNode,attrName)">getAttribute</a>(theNode,attrName);
+0503 <span class="keyword">if</span> isempty(attrString)
+0504     attrValue = [];
+0505 <span class="keyword">else</span>
+0506     attrValue = sscanf(attrString,<span class="string">'%f'</span>);
+0507 <span class="keyword">end</span>
+0508 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 03-Mar-2023 22:56:46 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

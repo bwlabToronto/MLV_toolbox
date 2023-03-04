@@ -47,13 +47,13 @@
                 'Arrow': arrow juctions - three segments: a &gt; 200
                 'Star': Star junctions - more than four segments
 
- See also <a href="detectJunctions.html" class="code" title="function Junctions = detectJunctions(vecLD)">detectJunctions</a>, <a href="cleanupJunctions.html" class="code" title="function cleanedJunctions = cleanupJunctions(Junctions, Thresh)">cleanupJunctions</a>, <a href="computeJunctionAnglesTypes.html" class="code" title="function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)">computeJunctionAnglesTypes</a></pre></div>
+ See also <a href="detectJunctions.html" class="code" title="function Junctions = detectJunctions(vecLD,AE, RE)">detectJunctions</a>, <a href="cleanupJunctions.html" class="code" title="function cleanedJunctions = cleanupJunctions(Junctions, Thresh)">cleanupJunctions</a>, <a href="computeJunctionAnglesTypes.html" class="code" title="function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)">computeJunctionAnglesTypes</a></pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../matlabicon.gif)">
-<li><a href="cleanupJunctions.html" class="code" title="function cleanedJunctions = cleanupJunctions(Junctions, Thresh)">cleanupJunctions</a>	cleanedJunctions = cleanupJunctions(Junctions, Thresh)</li><li><a href="computeJunctionAnglesTypes.html" class="code" title="function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)">computeJunctionAnglesTypes</a>	Junctions = computeJunctionAnglesTypes(Junctions,vecLD)</li><li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>	vecLD = computeLength(vecLD)</li><li><a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>	vecLD = computeOrientation(vecLD)</li><li><a href="detectJunctions.html" class="code" title="function Junctions = detectJunctions(vecLD)">detectJunctions</a>	Junctions = detectJunctions(vecLD)</li></ul>
+<li><a href="cleanupJunctions.html" class="code" title="function cleanedJunctions = cleanupJunctions(Junctions, Thresh)">cleanupJunctions</a>	cleanedJunctions = cleanupJunctions(Junctions, Thresh)</li><li><a href="computeJunctionAnglesTypes.html" class="code" title="function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)">computeJunctionAnglesTypes</a>	Junctions = computeJunctionAnglesTypes(Junctions,vecLD)</li><li><a href="computeLength.html" class="code" title="function vecLD = computeLength(vecLD)">computeLength</a>	vecLD = computeLength(vecLD)</li><li><a href="computeOrientation.html" class="code" title="function vecLD = computeOrientation(vecLD)">computeOrientation</a>	vecLD = computeOrientation(vecLD)</li><li><a href="detectJunctions.html" class="code" title="function Junctions = detectJunctions(vecLD,AE, RE)">detectJunctions</a>	Junctions = detectJunctions(vecLD)</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../matlabicon.gif)">
 <li><a href="computeContourProperties.html" class="code" title="function vecLD = computeContourProperties(vecLD,whichProps)">computeContourProperties</a>	vecLD = computeContourProperties(vecLD,whichProps)</li><li><a href="getJunctionStats.html" class="code" title="function [vecLD,histograms,bins,shortNames] = getJunctionStats(vecLD,numAngleBins,junctionTypes)">getJunctionStats</a>	vecLD = getJunctionStats(vecLD,numAngleBins,junctionTypes)</li><li><a href="segmentContoursAtJunctions.html" class="code" title="function newLD = segmentContoursAtJunctions(vecLD)">segmentContoursAtJunctions</a>	newLD = segmentContoursAtJunctions(vecLD)</li></ul>
@@ -105,7 +105,7 @@ This function is called by:
 0041 <span class="comment">% 3-step process</span>
 0042 
 0043 <span class="comment">% 1. detect any intersections between line segments</span>
-0044 jcts = <a href="detectJunctions.html" class="code" title="function Junctions = detectJunctions(vecLD)">detectJunctions</a>(vecLD);
+0044 jcts = <a href="detectJunctions.html" class="code" title="function Junctions = detectJunctions(vecLD,AE, RE)">detectJunctions</a>(vecLD);
 0045 
 0046 <span class="comment">% 2. merge junctions that are close by</span>
 0047 jcts = <a href="cleanupJunctions.html" class="code" title="function cleanedJunctions = cleanupJunctions(Junctions, Thresh)">cleanupJunctions</a>(jcts);
@@ -113,6 +113,6 @@ This function is called by:
 0049 <span class="comment">% 3. measure angles and classify junctions</span>
 0050 vecLD.junctions = <a href="computeJunctionAnglesTypes.html" class="code" title="function Junctions = computeJunctionAnglesTypes(Junctions,vecLD)">computeJunctionAnglesTypes</a>(jcts,vecLD);
 0051</pre></div>
-<hr><address>Generated on Tue 28-Feb-2023 22:42:22 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 03-Mar-2023 22:56:46 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
