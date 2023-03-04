@@ -208,43 +208,29 @@ thisFig = figure;
 
 % Orientation
 [top,bottom] = splitLDbyProperties(vecLD,'Orientation',0.5);
-subplot(3,3,1);
+subplot(2,3,1);
 drawLinedrawing(bottom,1,'b');
 hold on;
 drawLinedrawing(top,1,'r');
 set(gca,'XTick',[],'YTick',[]);
-subplot(3,3,2);
+subplot(2,3,2);
 drawLinedrawing(top);
 set(gca,'XTick',[],'YTick',[]);
-subplot(3,3,3);
-drawLinedrawing(bottom);
-set(gca,'XTick',[],'YTick',[]);
-
-% Length
-[top,bottom] = splitLDbyProperties(vecLD,'Length',0.5);
-subplot(3,3,4);
-drawLinedrawing(bottom,1,'b');
-hold on;
-drawLinedrawing(top,1,'r');
-set(gca,'XTick',[],'YTick',[]);
-subplot(3,3,5);
-drawLinedrawing(top);
-set(gca,'XTick',[],'YTick',[]);
-subplot(3,3,6);
+subplot(2,3,3);
 drawLinedrawing(bottom);
 set(gca,'XTick',[],'YTick',[]);
 
 % Curvature
 [top,bottom] = splitLDbyProperties(vecLD,'Curvature',0.5);
-subplot(3,3,7);
+subplot(2,3,4);
 drawLinedrawing(bottom,1,'b');
 hold on;
 drawLinedrawing(top,1,'r');
 set(gca,'XTick',[],'YTick',[]);
-subplot(3,3,8);
+subplot(2,3,5);
 drawLinedrawing(top);
 set(gca,'XTick',[],'YTick',[]);
-subplot(3,3,9);
+subplot(2,3,6);
 drawLinedrawing(bottom);
 set(gca,'XTick',[],'YTick',[]);
 
