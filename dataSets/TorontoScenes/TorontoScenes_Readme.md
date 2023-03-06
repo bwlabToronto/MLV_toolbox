@@ -1,3 +1,4 @@
+## Toronto Scenes
 The photographs for this image set are available at: https://osf.io/9squn/
 
 This set of line drawings was drawn by trained artists at the 
@@ -50,6 +51,7 @@ Wilder, J., Rezanejad, M., Dickinson, S., Siddiqi, K., Jepson, A.,
 & Walther, D. B. (2022). Neural correlates of local parallelism 
 during naturalistic vision. Plos one, 17(1), e0260266.
 
-
 For questions, please contact Dirk Bernhardt-Walther:
-dirk.walther@gmail.com
+[dirk.walther@gmail.com](mailto:dirk.walther@gmail.com)
+
+Return to [MLV Toolbox](../../README.md).
