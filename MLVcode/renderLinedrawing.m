@@ -50,7 +50,7 @@ if isempty(img)
     img = ones([imsize(2),imsize(1),3]);
 end
 
-% define a evctor for scaling the coordinates up or down as needed
+% define a vector for scaling the coordinates up or down as needed
 scaleVec = imsize ./ vecLD.imsize;
 scaleVec = [scaleVec,scaleVec];
 

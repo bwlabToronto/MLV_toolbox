@@ -158,6 +158,7 @@ We include several data sets, alread processed as vectorized line drawings:
 * International Affective Picture System ([IAPS](dataSets/IAPS/IAPS_Readme.md))
 * A set of 200 [Architectural Scenes](dataSets/ArchitecturalScenes/ArchitecturalScenes_Readme.md)
 * The Open Affective Standardized Image Set ([OASIS](dataSets/OASIS/OASIS_Readme.md))
+* The 260 line drawings of objects from [Snodgrass and Vanderwart (1980)](dataSets/Snodgrass_Vanderwart/Snodgrass_Vanderwart_Readme.md)
 
 ## FAQs
 
