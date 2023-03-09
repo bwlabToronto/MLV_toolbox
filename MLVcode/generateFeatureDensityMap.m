@@ -89,7 +89,9 @@ switch (lower(property))
         end
 
     case 'junctions'
-        if nargin < 4
+        if isempty(vecLD.junctions)
+            junctionTypes = {};
+        elseif nargin < 4
             junctionTypes = {vecLD.junctions.type};
         else
             if isempty(junctionTypes)
@@ -103,6 +105,14 @@ switch (lower(property))
         for j = 1:numel(vecLD.junctions)
             if ismember(vecLD.junctions(j).type,junctionTypes)
                 pos = round(vecLD.junctions(j).position);
+                
+                % make sure we're in bounds
+                if pos(1) < 1; pos(1) = 1; end
+                if pos(1) > vecLD.imsize(1); pos(1) = vecLD.imsize(1); end
+                if pos(2) < 1; pos(2) = 1; end
+                if pos(2) > vecLD.imsize(2); pos(2) = vecLD.imsize(2); end
+
+                % set the point in the map
                 FDM(pos(2),pos(1)) = 1;
             end
         end
