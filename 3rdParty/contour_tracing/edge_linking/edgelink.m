@@ -107,6 +107,7 @@ function [edgelist, edgeim] = edgelink(im, minlength, location)
     % points.  As it finds the points the edge image pixels are labeled
     % with the -ve of their edge No
     
+    edgelist = {};
     for r = 1:ROWS
         for c = 1:COLS
             if EDGEIM(r,c) == 1
@@ -124,7 +125,7 @@ function [edgelist, edgeim] = edgelink(im, minlength, location)
     
     % Eliminate isolated edges and spurs that are below the minimum length
 
-    if nargin >= 2 && ~isempty(minlength)
+    if nargin >= 2 && ~isempty(minlength) && ~isempty(edgelist)
         edgelist = cleanedgelist(edgelist, minlength);
     
     else  % Call cleanedgelist with 0 minlength anyway to fix spurrious nodes
