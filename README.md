@@ -166,9 +166,18 @@ We are working on this section, please make sure to check back here in the futur
 
 ## References
 
-If you use the MLV toolbox, we appreciate it if you cite the following papers:
+If you use the MLV toolbox, we appreciate it if you cite the following papers as appropriate:
 
 ```
+@article{walther2023mid,
+  title={The mid-level vision toolbox for computing structural properties of real-world images},
+  author={Walther, Dirk B and Farzanfar, Delaram and Han, Seohee and Rezanejad, Morteza},
+  journal={Frontiers in Psychology},
+  volume={14},
+  pages={1322},
+  year={2023},
+  publisher={Frontiers}
+}
 @InProceedings{rezanejad2019scene,
 author = {Rezanejad, Morteza and Downs, Gabriel and Wilder, John and Walther, Dirk B and Jepson, Allan and Dickinson, Sven and Siddiqi, Kaleem},
 title = {Scene Categorization from Contours: Medial Axis Based Salience Measures},
