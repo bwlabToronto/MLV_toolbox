@@ -169,6 +169,19 @@ We are working on this section, please make sure to check back here in the futur
 If you use the MLV toolbox, we appreciate it if you cite the following papers as appropriate:
 
 ```
+Walther, D. B., Farzanfar, D., Han, S., & Rezanejad, M. (2023). The mid-level vision toolbox for computing structural properties of real-world images. Frontiers in Psychology, 14, 1322.
+
+Rezanejad, M., Downs, G., Wilder, J., Walther, D. B., Jepson, A., Dickinson, S., & Siddiqi, K. (2019). Scene categorization from contours: Medial axis based salience measures. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (pp. 4116-4124).
+
+Walther, D. B., & Shen, D. (2014). Nonaccidental properties underlie human categorization of complex natural scenes. Psychological science, 25(4), 851-860.
+
+Rezanejad, M., & Siddiqi, K. (2013). Flux graphs for 2D shape analysis (pp. 41-54). Springer London.
+
+```
+
+```
+Bibtex:
+
 @article{walther2023mid,
   title={The mid-level vision toolbox for computing structural properties of real-world images},
   author={Walther, Dirk B and Farzanfar, Delaram and Han, Seohee and Rezanejad, Morteza},
