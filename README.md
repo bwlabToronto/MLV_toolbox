@@ -46,7 +46,7 @@ Example usage:
 
 ```
 fileName= 'example.jpg';
-vecLD = lineDrawingTracing(fileName);
+vecLD = traceLineDrawingFromRGB(fileName);
 figure;
 subplot(1,2,1);
 imshow(imread('example.jpg'));
