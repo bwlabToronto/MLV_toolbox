@@ -51,7 +51,6 @@ figure;
 subplot(1,2,1);
 imshow(imread('example.jpg'));
 subplot(1,2,2);
-drawLinedrawing(vecLD,3,'b');
 ```
 
 Output:
@@ -168,7 +167,7 @@ We are working on this section, please make sure to check back here in the futur
 
 If you use the MLV toolbox, we appreciate it if you cite the following papers as appropriate:
 
-Walther, D. B., Farzanfar, D., Han, S., & Rezanejad, M. (2023). The mid-level vision toolbox for computing structural properties of real-world images. *Frontiers in Psychology*, **14**, 1322. [PDF](https://drive.google.com/file/d/12V5L3g_TfV3wDn7mHEuX8qxNlK9TVERc/view?usp=drive_link)
+Walther, D. B., Farzanfar, D., Han, S., & Rezanejad, M. (2023). The mid-level vision toolbox for computing structural properties of real-world images. *Frontiers in Computer Science*, **5**.[Abstract](https://www.frontiersin.org/articles/10.3389/fcomp.2023.1140723) [preliminary PDF](https://drive.google.com/file/d/12V5L3g_TfV3wDn7mHEuX8qxNlK9TVERc/view?usp=drive_link)
 
 Rezanejad, M., Downs, G., Wilder, J., Walther, D. B., Jepson, A., Dickinson, S., & Siddiqi, K. (2019). Scene categorization from contours: Medial axis based salience measures. In *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition* (pp. 4116-4124). [PDF](https://drive.google.com/file/d/1uEVoTjrYzdF-N0ZeR4_B8Le6N4jRtjyf/view?usp=drive_link)
 
