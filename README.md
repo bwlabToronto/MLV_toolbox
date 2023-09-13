@@ -182,9 +182,8 @@ Bibtex:
 @article{walther2023mid,
   title={The mid-level vision toolbox for computing structural properties of real-world images},
   author={Walther, Dirk B and Farzanfar, Delaram and Han, Seohee and Rezanejad, Morteza},
-  journal={Frontiers in Psychology},
-  volume={14},
-  pages={1322},
+  journal={Frontiers in Computer Sciene},
+  volume={5},
   year={2023},
   publisher={Frontiers}
 }
