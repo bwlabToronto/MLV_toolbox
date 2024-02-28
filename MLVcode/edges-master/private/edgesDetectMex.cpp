@@ -96,11 +96,19 @@ void mexFunction( int nl, mxArray *pl[], int nr, const mxArray *pr[] )
   buildLookupSs( cids1, cids2, (int*)chnDims, imWidth/shrink, nCells );
 
   // create outputs
-  pl[0] = mxCreateNumericArray(3,outDims,mxSINGLE_CLASS,mxREAL);
+  mwSize outDims_mwSize[] = {static_cast<mwSize>(outDims[0]), static_cast<mwSize>(outDims[1]), static_cast<mwSize>(outDims[2])};
+  pl[0] = mxCreateNumericArray(3, outDims_mwSize, mxSINGLE_CLASS, mxREAL);
+  // pl[0] = mxCreateNumericArray(3,outDims,mxSINGLE_CLASS,mxREAL); // Previous Version
   float *E = (float*) mxGetData(pl[0]);
-  pl[1] = mxCreateNumericArray(3,indDims,mxUINT32_CLASS,mxREAL);
+  mwSize indDims_mwSize[] = {static_cast<mwSize>(indDims[0]), static_cast<mwSize>(indDims[1]), static_cast<mwSize>(indDims[2])};
+  pl[1] = mxCreateNumericArray(3, indDims_mwSize, mxUINT32_CLASS, mxREAL);
+  // pl[1] = mxCreateNumericArray(3,indDims,mxUINT32_CLASS,mxREAL); // Previous Version
   uint32 *ind = (uint32*) mxGetData(pl[1]);
-  if(nl>2) pl[2] = mxCreateNumericArray(5,segDims,mxUINT8_CLASS,mxREAL);
+  if(nl>2) {
+      mwSize segDims_mwSize[] = {static_cast<mwSize>(segDims[0]), static_cast<mwSize>(segDims[1]), static_cast<mwSize>(segDims[2]), static_cast<mwSize>(segDims[3]), static_cast<mwSize>(segDims[4])};
+      pl[2] = mxCreateNumericArray(5, segDims_mwSize, mxUINT8_CLASS, mxREAL);
+      // pl[2] = mxCreateNumericArray(5,segDims,mxUINT8_CLASS,mxREAL); // Previous Version
+  }
   uint8 *segsOut; if(nl>2) segsOut = (uint8*) mxGetData(pl[2]);
 
   // apply forest to all patches and store leaf inds
