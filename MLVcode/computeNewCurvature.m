@@ -29,112 +29,179 @@ if ~isfield(vecLD,'lengths')
     vecLD = computeLength(vecLD);
 end
 
-vecLD.Newcurvatures = {};
+vecLD.NewCurvatures = {};
 for c = 1:vecLD.numContours
     thisCon = vecLD.contours{c};
     numSegments = size(thisCon,1);
-    vecLD.Newcurvatures{c} = [];
+    vecLD.NewCurvatures{c} = [];
     if numSegments == 1
-        vecLD.Newcurvatures{c} = 0; % special case of only one straight segment
+        vecLD.NewCurvatures{c} = 0; % special case of only one straight segment
         continue;
     end
     
-    s=1;
-    startSeg = 1;
-    endSeg=startSeg;
-    startCenDis = 0;
-    % startPoint = vecLD.contours{c}(s,1:2);
-    while endSeg < numSegments
-        totalLength = sum(vecLD.lengths{c}(startSeg:endSeg));
-        if s == 1  % first segment
-            if totalLength >= windowSize
-                jump = vecLD.lengths{c}(startSeg) - windowSize;
-                endCenDis = startCenDis + windowSize/2+ jump;
-            else
-                endCenDis = vecLD.lengths{c}(startSeg)/2;
-            end
-            turnAngle = 0;
-            vecLD.Newcurvatures{c} = [startSeg,startCenDis,endSeg,endCenDis,turnAngle,jump];
-            startCenDis = endCenDis;
+    % s=1;
+    % startSeg = 1;
+    % endSeg=startSeg;
+    % startCenDis = 0;
+    % startCenSeg = 1;
+    % endCenSeg=startCenSeg;
+    % % startPoint = vecLD.contours{c}(s,1:2);
+    % while endSeg < numSegments
+    %     totalLength = sum(vecLD.lengths{c}(startSeg:endSeg));
+    %     if s == 1  % first segment
+    %         if totalLength >= windowSize
+    %             jump = vecLD.lengths{c}(startSeg) - windowSize/2;
+    %         else
+    %             jump = vecLD.lengths{c}(startSeg)/2;
+    %         end
+    %          endCenDis = startCenDis + jump;
+    %         turnAngle = 0;
+    %         vecLD.NewCurvatures{c} = [startSeg,startCenSeg,startCenDis,endSeg,endCenSeg,endCenDis,turnAngle,jump];
+    %         startCenDis = endCenDis;
+    %         endSeg = endSeg+1;
+    %         s=s+1;
+    %     else
+    %         if vecLD.lengths{c}(endSeg)>=windowSize
+    %             jump = windowSize/2;
+    %             endCenDis = jump;
+    %             totalJump = vecLD.lengths{c}(startSeg) -  endCenDis + jump;
+    %             endCenSeg = endCenSeg+1;
+    %             turnAngle = vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg);
+    %             vecLD.NewCurvatures{c} = [vecLD.NewCurvatures{c};startSeg,startCenSeg,startCenDis,endSeg,endCenSeg,endCenDis,turnAngle,totalJump];
+    %             startSeg = startSeg+1;
+    %         else
+    %             jump = vecLD.lengths{c}(endSeg);
+    %             endCenDis = endCenDis+jump;
+    %             if endCenDis >= vecLD.lengths{c}(startSeg)
+    %                 endCenDis = endCenDis - vecLD.lengths{c}(startSeg);
+    %                 endCenSeg = endCenSeg+1;
+    %             end
+    %             totalJump = jump;
+    %             turnAngle = vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg);
+    %             vecLD.NewCurvatures{c} = [vecLD.NewCurvatures{c};startSeg,startCenSeg,startCenDis,endSeg,endCenSeg,endCenDis,turnAngle,totalJump];
+    %             endSeg = endSeg+1;
+    %         end
+    %         startCenDis = endCenDis;
+    %         startCenSeg = endCenSeg;
+    % 
+    % 
+    % 
+    %         jump = windowSize/2;
+    %         totalJump = vecLD.lengths{c}(startSeg) -  endCenDis + jump;
+    %         endCenDis = jump;
+    %         if endCenDis >= vecLD.lengths{c}(startSeg+1)
+    %             endCenDis = endCenDis - vecLD.lengths{c}(startSeg+1);
+    %             endCenSeg = endCenSeg+2;   
+    %         end
+    %         turnAngle = vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg);
+    %         vecLD.NewCurvatures{c} = [vecLD.NewCurvatures{c};startSeg,startCenSeg,startCenDis,endSeg,endCenSeg,endCenDis,turnAngle,totalJump];
+    %         startSeg = startSeg+1;
+    %         startCenDis = endCenDis;
+    %         startCenSeg = endCenSeg;
+    % 
+    % 
+    %     end
+    % end
+
+
+
+    %%
+ 
+    startSeg=1;
+    endSeg =1;
+    distStart=0;
+    distEnd=0;
+
+    curWinSize = 0;
+
+    keepgoing = true;
+    vecLD.NewCurvatures{c} = [1, 0, 0];
+
+while keepgoing 
+    if curWinSize < windowSize
+        jump = vecLD.lengths{c}(endSeg)-distEnd;
+        if jump <= windowSize - curWinSize
             endSeg = endSeg+1;
-            s=s+1;
+            distEnd = 0;
+            curWinSize = curWinSize+jump;
         else
-            if vecLD.lengths{c}(endSeg)>=windowSize
-                jump = windowSize/2;
-                endCenDis = jump;
-                totalJump = windowSize/2 + jump;
-                turnAngle = vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg);
-                vecLD.Newcurvatures{c} = [vecLD.Newcurvatures{c};startSeg,startCenDis,endSeg,endCenDis,turnAngle,totalJump];
-                startSeg=startSeg+1;
-
-            else
-                jump = vecLD.lengths{c}(endSeg)/2;
-                endCenDis = jump;
-                totalJump = windowSize/2 + jump;
-                turnAngle = vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg);
-                vecLD.Newcurvatures{c} = [vecLD.Newcurvatures{c};startSeg,startCenDis,endSeg,endCenDis,turnAngle,totalJump];
-                endSeg = endSeg+1;
-            end
-            startCenDis = endCenDis;
-
-
-            vecLD.lengths{c}(startSeg)
-            vecLD.lengths{c}(endSeg)
-
-
+            distEnd = distEnd + windowSize - curWinSize;
+            curWinSize = windowSize;
         end
+    else
+
+        jump = min((vecLD.lengths{c}(startSeg)-distStart), (vecLD.lengths{c}(endSeg)-distEnd));
+        distStart = distStart+jump;
+        [startSeg, distStart, theEnd]=convertDist(vecLD.lengths{c}, startSeg, distStart);
+        if theEnd
+            break;
+        end
+        endSeg = startSeg;
+        distEnd = distStart+windowSize;
     end
+    [endSeg, distEnd]=convertDist(vecLD.lengths{c}, endSeg, distEnd);
+    
+   
+    curDist = distEnd - distStart;
+    if endSeg > startSeg
+        curDist = curDist + sum(vecLD.lengths{c}(startSeg:endSeg-1));
+    end
+    distCen = distStart + curDist/2;
+    [cenSeg, distCen]=convertDist(vecLD.lengths{c}, startSeg, distCen);
+    turnAngle = vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg);
+    vecLD.NewCurvatures{c} = [vecLD.NewCurvatures{c};cenSeg, distCen,turnAngle];
+end
 
 
 
 
+
+    if endSeg == 1
+        distEnd = vecLD.lengths{c}(endSeg);
+        turnAngle = vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg);
+        endSeg = endSeg+1;
+        jump = vecLD.lengths{c}(endSeg);
+
+    elseif endSeg == numSegments
+        distEnd = vecLD.lengths{c}(endSeg);
+        turnAngle = vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg);
+        jump = vecLD.lengths{c}(endSeg);
+    else
+        endSeg = startSeg;
+        distEnd = distStart+windowSize;
+        [endSeg, distEnd]=convertDist(vecLD.lengths{c}, endSeg, distEnd);
+        turnAngle = vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg);
+    end
+    vecLD.NewCurvatures{c} = [vecLD.NewCurvatures{c};startSeg,distStart,endSeg,distEnd,turnAngle,jump];
+
+    jump = min((vecLD.lengths{c}(startSeg)-distStart), (vecLD.lengths{c}(endSeg)-distEnd));
+    distStart = distStart+jump;
+    [startSeg, distStart]=convertDist(vecLD.lengths{c}, startSeg, distStart);
 
 
     
+
+
 end
+
+
+
+
+end
+
+    
+
+    
+
+
+%%
         
-
-        vecLD.Newcurvatures{c}(s,:) = [startSeg,startCenDis,endSeg,endCenDis,turnAngle,jump];
-
-
-
-
-       while distance > vecLD.lengths{c}(startSeg)-windowSize
-           endSeg = endSeg+1;
-           distance = distance - vecLD.lengths{c}(startSeg);
-           
-       end
-
-    elseif vecLD.lengths{c}(startSeg) < windowSize
-        distance = 0;
-    curWinSize = 1;
-    distance = distance + curWinSize;
-
-        s2 = startSeg+1;
-
-    end
-
-    if curWinSize < windowSize
-        curWinSize = min(curWinSize+jump, windowSize);
-    end
-
-
-            
-            distance = distance + windowSize;
-
-           
-
-
-           
+end
 
 
 
 
-
-
-    vecLD.lengths{c} = sqrt((thisCon(:,3)-thisCon(:,1)).^2+(thisCon(:,4)-thisCon(:,2)).^2);
-
-
+      
 
 
 
@@ -150,8 +217,23 @@ end
         if angleDiff > 180
             angleDiff = 360 - angleDiff; % for angles > 180 we use the opposite angle
         end
-        vecLD.Newcurvatures{c}(startSeg) = angleDiff / vecLD.lengths{c}(startSeg);
+        vecLD.NewCurvatures{c}(startSeg) = angleDiff / vecLD.lengths{c}(startSeg);
     end
 end
 
 
+
+function [seg, dist, theEnd]=convertDist(lengths, seg, dist)
+    theEnd = false;
+    while dist >= lengths(seg)
+        dist = dist - lengths(seg);
+        seg = seg+1;
+        if seg > numel(lengths)
+            seg = numel(lengths);
+            dist = lengths(seg);
+            theEnd = true;
+            return;
+
+        end
+    end
+end
