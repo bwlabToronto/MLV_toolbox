@@ -1,9 +1,7 @@
 function [seg, dist, theEnd]=convertDist(lengths, seg, dist)
 theEnd = false;
-if dist < lengths(seg)
-    theEnd = true;
-end
-while dist >= lengths(seg)
+eps = 1e-10;
+while dist >= lengths(seg)-eps %% small difference
     dist = dist - lengths(seg);
     seg = seg+1;
     if seg > numel(lengths)
@@ -12,5 +10,4 @@ while dist >= lengths(seg)
         theEnd = true;
         return;
     end
-end
 end
