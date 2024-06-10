@@ -5,7 +5,7 @@ function vecLD = computeContourProperties(vecLD,whichProps)
 %   vecLD - vectorized line drawing data structure
 %   whichProps - string or cell array of strings that defines which
 %                propertiest to compute. Options are:
-%                'orientation','length','curvature','junctions'
+%                'orientation','length','curvature', 'newcurvature','junctions'
 %                default: {'orientation','length','curvature','junctions'}
 % Output:
 %   vecLD - a vector LD of structs with the requested contour properties added
@@ -38,6 +38,8 @@ for prop = 1:length(whichProps)
             vecLD = computeLength(vecLD);
         case 'curvature'
             vecLD = computeCurvature(vecLD);
+        case 'newcurvature'
+            vecLD = computeNewCurvature(vecLD);
         case 'junctions'
             vecLD = computeJunctions(vecLD);
         otherwise
