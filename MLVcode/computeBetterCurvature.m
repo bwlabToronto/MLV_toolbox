@@ -77,11 +77,11 @@ for c = 1:vecLD.numContours
         while ~theEnd
             if curWinSize < windowSize
                 jump = vecLD.lengths{c}(endSeg)-distEnd;
-                if jump < eps
+                if abs(jump) < eps
                     break;
                 elseif jump <= windowSize - curWinSize
                     curWinSize = curWinSize+jump;
-                    distEnd = distStart + curWinSize;
+                    distEnd = distEnd + jump;
                 else
                     distEnd = distEnd + windowSize - curWinSize;
                     curWinSize = windowSize;
@@ -122,7 +122,10 @@ end
 function [seg, dist, theEnd]=convertDist(lengths, seg, dist)
 theEnd = false;
 eps = 1e-10;
-while dist >= lengths(seg)-eps %% small difference
+if abs(dist-lengths(seg)) < eps %% small difference
+    dist = lengths(seg);
+end
+while dist>=lengths(seg)
     dist = dist - lengths(seg);
     seg = seg+1;
     if seg > numel(lengths)
@@ -130,6 +133,9 @@ while dist >= lengths(seg)-eps %% small difference
         dist = lengths(seg);
         theEnd = true;
         return;
+    end
+    if abs(dist-lengths(seg)) < eps %% small difference
+        dist = lengths(seg);
     end
 end
 end

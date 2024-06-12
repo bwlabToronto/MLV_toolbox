@@ -6,7 +6,7 @@ function [colorIdx,cmap] = computeColorIndex(vecLD,property)
 %
 % Input:
 %   vecLD - the vectorized line drawing with its properteis computed
-%   property - one of 'length','curvature','orientation'
+%   property - one of 'length','curvature','betterCurvature','orientation'
 %
 % Return:
 %   colorIdx - a cell array with on vector per cell, with entries for each
@@ -45,6 +45,16 @@ switch property
         minProp = min(allCurv);
         for c = 1:vecLD.numContours
             colorIdx{c} = min(round((log10(vecLD.curvatures{c}+1) - minProp) / (maxProp-minProp) * (numCols-1) + 1),numCols);
+        end
+        cmap = jet(numCols);
+
+    case 'bettercurvature'
+        for c = 1:vecLD.numContours
+            if vecLD.betterCurvatures{c} == 0
+                colorIdx{c} = round(vecLD.betterCurvatures{c} / 180 * (numCols-1) + 1);
+            else
+                colorIdx{c} = round(vecLD.betterCurvatures{c}(:,3)' / 180 * (numCols-1) + 1);
+            end
         end
         cmap = jet(numCols);
 

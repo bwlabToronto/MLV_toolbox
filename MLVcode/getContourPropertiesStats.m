@@ -5,7 +5,7 @@ function [vecLD,histograms,bins,statsNames] = getContourPropertiesStats(vecLD, w
 %   vecLD - vectorized line drawing data structure
 %   whichStats - string or cell array of strings that defines which
 %                properties to compute. Options are:
-%                'orientation','length','curvature','curvatureLinear','junctions'
+%                'orientation','length','curvature','bettercurvature','junctions'
 %                default: {'orientation','length','curvature','junctions'}
 %   minmaxLen - this minimum and maximum for the length histogram 
 %               default: [2, width+length of the image]
@@ -73,11 +73,11 @@ for s = 1:length(whichStats)
             else
                 [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getCurvatureStats(vecLD,numBins,minmaxCurv);
             end
-        case 'curvaturelinear'
+        case 'bettercurvature'
             if isempty(minmaxCurv)
-                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getCurvatureLinearStats(vecLD,numBins);
+                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getBetterCurvatureStats(vecLD,numBins);
             else
-                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getCurvatureLinearStats(vecLD,numBins,minmaxCurv);
+                [vecLD,histograms{end+1},bins{end+1},statsNames{end+1}] = getBetterCurvatureStats(vecLD,numBins,minmaxCurv);
             end
         case 'junctions'
             if isempty(junctionTypes)

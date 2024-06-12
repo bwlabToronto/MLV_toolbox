@@ -1,4 +1,4 @@
-function [vecLD,curvatureLinearHistogram,bins,shortName] = getCurvatureLinearStats(vecLD,numBins,minmaxCurvature)
+function [vecLD,betterCurvatureHistogram,bins,shortName] = getBetterCurvatureStats(vecLD,numBins,minmaxCurvature)
 % [vecLD,curvatureHistogram,bins] = getCurvatureLinearStats(vecLD,numBins,minmaxCurvature)
 %       computes the curvature histogram with linearly scaled bins, weighted by segment length
 %
@@ -6,7 +6,7 @@ function [vecLD,curvatureLinearHistogram,bins,shortName] = getCurvatureLinearSta
 %   vecLD - vectorized line drawing
 %   numBins - number of histogram bins; default: 8
 %   minmaxCurvature - the minimum and maximum curvature: used as the lower bound of the histogram
-%                  (default: [0,90])
+%                  (default: [0,180])
 %
 % Output:
 %   vecLD: the line drawing structure with curvature histogram added for
@@ -14,7 +14,7 @@ function [vecLD,curvatureLinearHistogram,bins,shortName] = getCurvatureLinearSta
 %   curvatureHistogram: the histogram of curvature of line segments, 
 %                    weighted by their lengths
 %   bins: a vector with the bin centers
-%   shortName: 'curvLinear'
+%   shortName: 'betterCurv'
 
 % -----------------------------------------------------
 % This file is part of the Mid Level Vision Toolbox: 
@@ -30,36 +30,36 @@ if ~isfield(vecLD, 'curvatures')
     vecLD = computeCurvature(vecLD);
 end
 if nargin < 3
-    minmaxCurvature = [0,90];
+    minmaxCurvature = [0,180];
 end
 if nargin < 2
     numBins = 8;
 end
 
 
-binWidth = 90 / numBins;
-binBoundary = [0 : binWidth : 90];
+binWidth = 180 / numBins;
+binBoundary = [0 : binWidth : 180];
 bins = binBoundary(2:end) - binWidth/2;
 
-vecLD.curvatureLinearHistograms = zeros(vecLD.numContours,numBins);
-vecLD.normCurvatureLinearHistograms = zeros(vecLD.numContours,numBins);
+vecLD.betterCurvatureHistograms = zeros(vecLD.numContours,numBins);
+vecLD.normbetterCurvatureHistograms = zeros(vecLD.numContours,numBins);
 for c = 1:vecLD.numContours
     Curvatures = vecLD.curvatures{c};
     for s = 1:numel(Curvatures)
         for b = 1:numBins
             if Curvatures(s) < binBoundary(b+1) || (b == numBins)
-                vecLD.curvatureLinearHistograms(c,b) = vecLD.curvatureLinearHistograms(c,b) + vecLD.lengths{c}(s);
+                vecLD.betterCurvatureHistograms(c,b) = vecLD.betterCurvatureHistograms(c,b) + vecLD.lengths{c}(s);
                 break;
             end
         end
     end
-    vecLD.normCurvatureLinearHistograms(c,:) = vecLD.curvatureLinearHistograms(c,:) / vecLD.contourLengths(c) * 10000;
+    vecLD.normbetterCurvatureHistograms(c,:) = vecLD.betterCurvatureHistograms(c,:) / vecLD.contourLengths(c) * 10000;
 end
 
-vecLD.sumCurvatureLinearHistogram = sum(vecLD.curvatureLinearHistograms,1);
-vecLD.normSumCurvatureLinearHistogram = vecLD.sumCurvatureLinearHistogram / sum(vecLD.contourLengths) * 10000;
-curvatureLinearHistogram = vecLD.sumCurvatureLinearHistogram;
-vecLD.curvatureLinearBins = bins;
-shortName = 'curvLinear';
+vecLD.sumBetterCurvatureHistogram = sum(vecLD.betterCurvatureHistograms,1);
+vecLD.normSumBetterCurvatureHistogram = vecLD.sumBetterCurvatureHistogram / sum(vecLD.contourLengths) * 10000;
+betterCurvatureHistogram = vecLD.sumBetterCurvatureHistogram;
+vecLD.betterCurvatureBins = bins;
+shortName = 'betterCurv';
 
 
