@@ -105,8 +105,23 @@ for c = 1:vecLD.numContours
             if turnAngle > 180
                 turnAngle = 360 - turnAngle;
             end
-
             vecLD.betterCurvatures{c} = [vecLD.betterCurvatures{c};cenSeg, distCen,turnAngle];
+            
+            if theEnd == true
+                while startSeg < endSeg
+                    startSeg=startSeg+1;
+                    curDist = sum(vecLD.lengths{c}(startSeg:endSeg));
+                    distCen = curDist / 2;
+                    [cenSeg, distCen]=convertDist(vecLD.lengths{c}, startSeg, distCen);
+                    turnAngle = mod(vecLD.orientations{c}(endSeg) - vecLD.orientations{c}(startSeg),360);
+                    if turnAngle > 180
+                        turnAngle = 360 - turnAngle;
+                    end
+
+                    vecLD.betterCurvatures{c} = [vecLD.betterCurvatures{c};cenSeg, distCen,turnAngle];
+                end
+            end
+
         end
          vecLD.betterCurvatures{c} = [vecLD.betterCurvatures{c};endSeg,vecLD.lengths{c}(endSeg),0];
     end

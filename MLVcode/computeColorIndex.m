@@ -50,11 +50,7 @@ switch property
 
     case 'bettercurvature'
         for c = 1:vecLD.numContours
-            if vecLD.betterCurvatures{c} == 0
-                colorIdx{c} = round(vecLD.betterCurvatures{c} / 180 * (numCols-1) + 1);
-            else
-                colorIdx{c} = round(vecLD.betterCurvatures{c}(:,3)' / 180 * (numCols-1) + 1);
-            end
+                colorIdx{c} = round(vecLD.betterCurvatureContours{c}(:,5)' / 180 * (numCols-1) + 1);
         end
         cmap = jet(numCols);
 
