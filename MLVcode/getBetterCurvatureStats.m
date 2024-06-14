@@ -26,8 +26,8 @@ function [vecLD,betterCurvatureHistogram,bins,shortName] = getBetterCurvatureSta
 % Contact: dirk.walther@gmail.com
 %------------------------------------------------------
 
-if ~isfield(vecLD, 'curvatures')
-    vecLD = computeCurvature(vecLD);
+if ~isfield(vecLD, 'betterCurvatures')
+    vecLD = computeBetterCurvature(vecLD);
 end
 if nargin < 3
     minmaxCurvature = [0,180];
@@ -44,11 +44,11 @@ bins = binBoundary(2:end) - binWidth/2;
 vecLD.betterCurvatureHistograms = zeros(vecLD.numContours,numBins);
 vecLD.normbetterCurvatureHistograms = zeros(vecLD.numContours,numBins);
 for c = 1:vecLD.numContours
-    Curvatures = vecLD.curvatures{c};
+    Curvatures = vecLD.betterCurvatureContours{c}(:,5);
     for s = 1:numel(Curvatures)
         for b = 1:numBins
             if Curvatures(s) < binBoundary(b+1) || (b == numBins)
-                vecLD.betterCurvatureHistograms(c,b) = vecLD.betterCurvatureHistograms(c,b) + vecLD.lengths{c}(s);
+                vecLD.betterCurvatureHistograms(c,b) = vecLD.betterCurvatureHistograms(c,b) + vecLD.betterCurvatureLengths{c}(s);
                 break;
             end
         end

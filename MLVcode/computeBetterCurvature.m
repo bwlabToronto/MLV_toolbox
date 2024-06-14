@@ -126,10 +126,63 @@ for c = 1:vecLD.numContours
          vecLD.betterCurvatures{c} = [vecLD.betterCurvatures{c};endSeg,vecLD.lengths{c}(endSeg),0];
     end
 
-    %%
+    
    
 
 end
+
+
+
+%% betterCurvatureContours 
+    vecLD.betterCurvatureContours = {};
+    for c = 1:length(vecLD.betterCurvatures)
+        thisBC = vecLD.betterCurvatures{c};
+        thisC = vecLD.contours{c};
+        thisL = vecLD.lengths{c};
+        vecLD.betterCurvatureContours{c} = thisC(1,1:2);
+        if length(thisBC) > 1
+            curCon = 1;
+            j=1;
+            k=2;
+            while k <= length(thisBC)-1
+                    if thisBC(k,1) == curCon
+                        X = thisC(thisBC(k,1),[1,3]);
+                        Y = thisC(thisBC(k,1),[2,4]);
+                        frac = thisBC(k,2)/thisL(thisBC(k,1)); %fraction
+                        newX  = X(1) + frac*(X(2) - X(1));
+                        newY  = Y(1) + frac*(Y(2) - Y(1));
+                        vecLD.betterCurvatureContours{c}(j, 3:4) = [newX, newY];
+                        vecLD.betterCurvatureContours{c}(j, 5) = thisBC(k-1,3);
+                        vecLD.betterCurvatureContours{c}(j+1, 1:2) = [newX, newY];
+                        j=j+1;
+                        k=k+1;
+                    else
+                        vecLD.betterCurvatureContours{c}(j, 3:4) = [thisC(curCon,3:4)];
+                        vecLD.betterCurvatureContours{c}(j, 5) = thisBC(k-1,3);
+                        vecLD.betterCurvatureContours{c}(j+1, 1:2) = [thisC(curCon,3:4)];
+                        curCon = curCon+1;
+                        j=j+1;
+                    end
+            % keyboard;
+            end
+            vecLD.betterCurvatureContours{c}(j, 3:4) = [thisC(curCon,3:4)];
+            vecLD.betterCurvatureContours{c}(j, 5) = thisBC(k-1,3);
+        else   % only one contour segment
+            vecLD.betterCurvatureContours{c}(1, 3:4) = thisC(1,3:4);
+            vecLD.betterCurvatureContours{c}(1, 5) = 0;
+
+        end
+    end
+
+%% betterCurvatureLengths
+vecLD.betterCurvatureLengths = {};
+for c = 1:vecLD.numContours
+    thisCon = vecLD.betterCurvatureContours{c};
+    vecLD.betterCurvatureLengths{c} = sqrt((thisCon(:,3)-thisCon(:,1)).^2+(thisCon(:,4)-thisCon(:,2)).^2);
+end
+
+
+
 end
 
 
