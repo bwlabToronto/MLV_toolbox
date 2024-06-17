@@ -18,7 +18,8 @@ function vecLD = computeBetterCurvature(vecLD, windowSize)
 % Contact: dirk.walther@gmail.com
 %------------------------------------------------------
 if nargin < 2
-    windowSize = 30;
+    fraction = 1/10;
+    windowSize = max(vecLD.imsize(1),vecLD.imsize(2))*fraction;
 end
 
 if ~isfield(vecLD,'orientations')
