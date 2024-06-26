@@ -13,6 +13,9 @@ function meanProperty = averageProperty(vecLD,property)
 %     'curvature': compute the mean curvature over all line segments,
 %                  weighted by the number of pixels in the segments,
 %                  unit: degrees / pixel
+%     'betterCurvature': compute the mean curvature over all line segments,
+%                  weighted by the number of pixels in the segments,
+%                  unit: degrees / pixel
 %     'junctions': compute the number of juncions per 10,000 pixels,
 %                  comptued as the sum over normJunctionTypeHistogram,
 %                  unit: count per 10,000 pixels
@@ -47,7 +50,7 @@ switch (lower(property))
             % degrees get reversed before they are added to the total
             % vector for the entire drawing.
             % If we didn't do this, an alongated closed rectangle would
-            % have a totalVec of [0,0] - that's not what we mena by 
+            % have a totalVec of [0,0] - that's not what we mean by 
             % "average angle".
             reverseIdx = vecLD.orientations{c} > 180;
             theseVec(reverseIdx,:) = -theseVec(reverseIdx,:);
@@ -67,6 +70,13 @@ switch (lower(property))
         meanProperty = 0;
         for c = 1:vecLD.numContours
             meanProperty = meanProperty + sum(vecLD.curvatures{c} .* vecLD.lengths{c}');
+        end
+        meanProperty = meanProperty / sum(vecLD.contourLengths);
+
+    case 'bettercurvature'
+        meanProperty = 0;
+        for c = 1:vecLD.numContours
+            meanProperty = meanProperty + sum(vecLD.betterCurvatureContours{c}(:,5)' .* vecLD.betterCurvatureLengths{c}');
         end
         meanProperty = meanProperty / sum(vecLD.contourLengths);
 
