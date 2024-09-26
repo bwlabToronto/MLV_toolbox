@@ -65,7 +65,7 @@ switch (lower(property))
     case 'length'
         for c = 1:vecLD.numContours
             thisMap = zeros(vecLD.imsize(2),vecLD.imsize(1),3);
-            for s = 1:size(vecLD.contours,1)
+            for s = 1:size(vecLD.contours{c},1)
                 thisMap = insertShape(thisMap,'Line',vecLD.contours{c}(s,:),'Color',[1,0,0],'LineWidth',1,'Opacity',1,'SmoothEdges',false);
             end
             thisMap = thisMap(:,:,1);
