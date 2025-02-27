@@ -1,0 +1,27 @@
+Images found: Forest_DBW.jpg, beach.jpg, city.jpg, city2.jpg, example_tower.jpg, indoor.jpg, indoor2.jpg, mountain.jpg
+Image Number: 1 
+Processed Forest_DBW.jpg. 
+Elapsed time: 86.78 seconds
+Image Number: 2 
+Processed beach.jpg. 
+Elapsed time: 131.19 seconds
+Image Number: 3 
+Processed city.jpg. 
+Elapsed time: 318.07 seconds
+Image Number: 4 
+Processed city2.jpg. 
+Elapsed time: 370.36 seconds
+Image Number: 5 
+Processed example_tower.jpg. 
+Elapsed time: 678.84 seconds
+Image Number: 6 
+Processed indoor.jpg. 
+Elapsed time: 761.91 seconds
+Image Number: 7 
+Processed indoor2.jpg. 
+Elapsed time: 843.76 seconds
+Image Number: 8 
+Processed mountain.jpg. 
+Elapsed time: 856.43 seconds
+Processing complete. Results saved in output_images_SED/
+Total elapsed time: 856.43 seconds
