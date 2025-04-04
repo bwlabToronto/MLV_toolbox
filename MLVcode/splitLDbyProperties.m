@@ -10,7 +10,8 @@ function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weigh
 %
 %   properties - the property or properties to be considered.
 %                These properties are implemented:
-%                'Length','Orientation','Curvature','Junctions','Random'
+%                'Length','Orientation','Curvature','Junctions','Random',
+%                'parallelism', 'mirror', 'separation', 'taper',    
 %                properties can either be one of these strings
 %                or a cell array of more than one. If more than one
 %                property is included, the rankings according to the
@@ -25,6 +26,9 @@ function [topLD, bottomLD] = splitLDbyProperties(vecLD,properties,fraction,weigh
 %                  'Junctions': weighted by the total number of junctions
 %                               that the contour participates in.
 %                               topLD: most junctions; bottomLD: least junctions
+%                  'parallelism', 'mirror', 'separation', 'taper': by the average symmetry, 
+%                           weighted by segment length
+%                           topLD: most symmetrical; bottomLD: least symmetrical 
 %                  'Random': a random split of the contours
 %
 %   fraction - the fraction of pixels to preserve. default: 0.5
@@ -92,6 +96,26 @@ for p = 1:length(properties)
 
         case 'random'
             thisCriterion = randperm(vecLD.numContours);
+        
+        case 'parallelism'
+            for c = 1:vecLD.numContours
+                thisCriterion(c) = sum(vecLD.parallelismMeans(c) .* vecLD.contourLengths(c),2);
+            end
+
+        case 'separation'
+            for c = 1:vecLD.numContours
+                thisCriterion(c) = sum(vecLD.separationMeans(c) .* vecLD.contourLengths(c),2);
+            end
+
+        case 'mirror'
+            for c = 1:vecLD.numContours
+                thisCriterion(c) = sum(vecLD.mirrorMeans(c) .* vecLD.contourLengths(c),2);
+            end
+
+        case 'taper'
+            for c = 1:vecLD.numContours
+                thisCriterion(c) = sum(vecLD.taperMeans(c) .* vecLD.contourLengths(c),2);
+            end
 
         otherwise
             error(['Unknown property: ',properties{p}]);        
