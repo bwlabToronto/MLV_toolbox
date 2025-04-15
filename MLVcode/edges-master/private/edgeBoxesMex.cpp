@@ -436,8 +436,10 @@ void mexFunction( int nl, mxArray *pl[], int nr, const mxArray *pr[] )
 
   // optionally create memory for visualization
   arrayf V; if( nl>1 ) {
-    const int ds[3] = {h,w,3};
-    pl[1] = mxCreateNumericArray(3,ds,mxSINGLE_CLASS,mxREAL);
+    // const int ds[3] = {h,w,3}; // Old Version
+    // pl[1] = mxCreateNumericArray(3,ds,mxSINGLE_CLASS,mxREAL); // Old Version
+    const mwSize ds[3] = {static_cast<mwSize>(h), static_cast<mwSize>(w), 3};
+    pl[1] = mxCreateNumericArray(3, ds, mxSINGLE_CLASS, mxREAL);
     V._x = (float*) mxGetData(pl[1]); V._h=h; V._w=w;
   }
 
