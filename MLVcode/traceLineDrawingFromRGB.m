@@ -5,8 +5,8 @@ function [vecLD,img] = traceLineDrawingFromRGB(fileName,method,scoreThreshold, i
 % Input:
 %   fileName - RGB image file
 %   method - optional, method specification. 'StructuredEdgeDetection' for
-%   original method, 'SAM' for segment anything. If method is omitted,
-%   defaults to 'StructuredEdgeDetection'
+%   original method, 'SAM' for segment anything, 'SAM-GPU' for GPU acceleration.
+%   If method is omitted defaults to 'StructuredEdgeDetection'
 %   scoreThreshold - optional, used to set a threshold for SAM. Default 
 %   threshold set to 0.5. (Please see SAM documentation for more details).
 %   img - optional, the RGB image. If img is omitted, the image data are
@@ -87,6 +87,23 @@ switch upper(method)
                  "Image Processing Toolbox Model for Segment Anything Model, Deep Learning Toolbox.")
         end 
         [masks,~] = imsegsam(img,ScoreThreshold=scoreThreshold);
+        labelMatrix = labelmatrix(masks);
+        image = labelMatrix2edges(labelMatrix);
+
+    % Segment Anything with GPU acceleration
+    case 'SAM-GPU'
+        addons = matlab.addons.installedAddons;
+        if ~ismember("Image Processing Toolbox Model for Segment Anything Model", addons.Name) || ~ismember("Deep Learning Toolbox", addons.Name)
+            error("One or more of the required addons to run the Segment Anything Model (SAM) are not installed: " + ...
+                 "Image Processing Toolbox Model for Segment Anything Model, Deep Learning Toolbox.")
+        end
+        
+        % check for gpu
+        if ~canUseGPU()
+            error("No GPU is detected")   
+        end
+
+        [masks,~] = imsegsam(img,ScoreThreshold=scoreThreshold, ExecutionEnvironment="gpu");
         labelMatrix = labelmatrix(masks);
         image = labelMatrix2edges(labelMatrix);
 
